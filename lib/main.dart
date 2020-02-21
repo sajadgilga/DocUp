@@ -26,26 +26,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   bool _isSelected = false;
 
-  void _radio(){
+  void _radio() {
     setState(() {
       _isSelected = !_isSelected;
     });
   }
 
   Widget radioButton(bool isSelected) => Container(
-    width: 16,
-    height: 16,
-    padding: EdgeInsets.all(2.0),
-    decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black, width: 2.0)),
-    child: isSelected ? Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black),
-    ) : Container(),
-  );
+        width: 16,
+        height: 16,
+        padding: EdgeInsets.all(2.0),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.black, width: 2.0)),
+        child: isSelected
+            ? Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.black),
+              )
+            : Container(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("ثبت نام در داک آپ به عنوان",),
+              Text(
+                "ثبت نام در داک آپ به عنوان",
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -75,12 +81,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               SizedBox(height: 80),
-              Text("پزشک همراه شما",
+              Text(
+                "پزشک همراه شما",
                 style: TextStyle(
                   color: Colors.red,
                 ),
               ),
-              Text("ثبت‌نام کنید و آنلاین پیگیر روند بهبود خود باشید",
+              Text(
+                "ثبت‌نام کنید و آنلاین پیگیر روند بهبود خود باشید",
               ),
               SizedBox(height: 50),
               TextField(
@@ -89,16 +97,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     hintStyle: TextStyle(
                       color: Colors.grey,
                       fontSize: 16.0,
-                    )
-                ),
+                    )),
               ),
-              InkWell(
-                child: Center(
-                  child: Text("دریافت"),
-                ),
-              )
+              RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.red)),
+                  onPressed: () {},
+                  color: Colors.red,
+                  textColor: Colors.white,
+                  padding: EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.arrow_back_ios,
+                        size: 18.0,
+                      ),
+                      Text("دریافت", style: TextStyle(fontSize: 16)),
+                    ],
+                  ))
             ],
-          )
+          ),
         ],
       ),
     );
