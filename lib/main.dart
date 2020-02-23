@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'UI/main_pageUI/main_page.dart';
+import 'constants/colors.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -9,9 +11,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: 'iransans',
-        primarySwatch: Colors.amber,
+        primarySwatch: MaterialColor(0xFF880E4F, swatch),
       ),
-      home: MyHomePage(title: 'DocUp'),
+//      home: MyHomePage(title: 'DocUp'),
+      home: MainPage(),
     );
   }
 }
