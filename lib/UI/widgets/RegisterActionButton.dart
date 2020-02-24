@@ -3,28 +3,29 @@ import 'package:docup/constants/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+// ignore: must_be_immutable
 class RegisterActionButton extends StatelessWidget {
-  const RegisterActionButton({
-    Key key,
-  }) : super(key: key);
+  Color color;
+
+  RegisterActionButton(Color color) {
+    this.color = color;
+  }
 
   @override
   Widget build(BuildContext context) {
     return RaisedButton.icon(
       shape: new RoundedRectangleBorder(
           borderRadius: new BorderRadius.circular(25.0),
-          side: BorderSide(color: Colors.red)),
+          side: BorderSide(color: color)),
       onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => MainPage()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MainPage()));
       },
-      color: Colors.red,
+      color: color,
       textColor: Colors.white,
       label: Padding(
-        padding:
-        EdgeInsets.only(bottom: 10.0, top: 10.0, right: 10.0),
-        child: Text(Strings.registerAction,
-            style: TextStyle(fontSize: 16)),
+        padding: EdgeInsets.only(bottom: 10.0, top: 10.0, right: 10.0),
+        child: Text(Strings.registerAction, style: TextStyle(fontSize: 16)),
       ),
       icon: Padding(
           padding: EdgeInsets.only(bottom: 10.0, top: 10.0),

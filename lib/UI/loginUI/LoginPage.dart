@@ -19,9 +19,19 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   StreamController<RoleType> _controller = BehaviorSubject();
+  RoleType currentRoleType = RoleType.PATIENT;
+
+  @override
+  void initState() {
+    switchRole(currentRoleType);
+    super.initState();
+  }
 
   void switchRole(RoleType roleType) {
     _controller.add(roleType);
+    setState(() {
+      currentRoleType = roleType;
+    });
   }
 
   @override
@@ -62,15 +72,19 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 40),
               Text(
-                Strings.yourDoctorMessage,
+                currentRoleType == RoleType.PATIENT
+                    ? Strings.yourDoctorMessage
+                    : Strings.yourPatientMessage,
                 style: TextStyle(
-                    color: Colors.red,
+                    color: currentRoleType.color,
                     fontSize: 16,
                     fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 5),
               Text(
-                Strings.registerMessage,
+                currentRoleType == RoleType.PATIENT
+                    ? Strings.patientRegisterMessage
+                    : Strings.doctorRegisterMessage,
                 style: TextStyle(fontSize: 13),
               ),
               SizedBox(height: 50),
@@ -85,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(height: 80.0),
-              RegisterActionButton(),
+              RegisterActionButton(currentRoleType.color),
               SizedBox(height: 20.0),
               Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                     Text(Strings.enterAction,
                         style: TextStyle(
                             fontSize: 13,
-                            color: Colors.red,
+                            color: currentRoleType.color,
                             decoration: TextDecoration.underline)),
                     SizedBox(
                       width: 10.0,
