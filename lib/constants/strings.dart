@@ -11,4 +11,9 @@ class Strings {
   static const String registerAction = "دریافت";
   static const String enterAction = "ورود";
   static const String accountQuestion = "حساب کاربری دارید؟";
+  static final String searchBoxHint = 'جستجو';
+  static final String docUpIntroHomePart1 = 'داک‌ آپ،' ;
+  static final String docUpIntroHomePart2 = 'پل ارتباطی بین پزشک و بیمار';
+  static final String medicineReminder = 'یادآوری داروها';
+
 }

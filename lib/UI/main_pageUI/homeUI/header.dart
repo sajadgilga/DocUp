@@ -13,12 +13,12 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Container(child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-           HomeNotification(),
-          _docUpIcon(),
-        ],
-    );
+      children: <Widget>[
+        HomeNotification(),
+        _docUpIcon(),
+      ],
+    ), padding: EdgeInsets.only(left: 20, right: 10),);
   }
 }
