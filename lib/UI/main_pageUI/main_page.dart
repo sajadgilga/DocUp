@@ -1,3 +1,4 @@
+import 'package:docup/UI/doctorDetailUI/DoctorDetailPage.dart';
 import 'package:flutter/material.dart';
 
 import '../navigator_destination.dart';
@@ -15,6 +16,12 @@ class _MainPageState extends State<MainPage> {
   int _count = 0;
 
   void _change_text() => setState(() => _text = 'something${_count++}');
+
+  _open_doctor_detail(){
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context) => DoctorDetailPage()
+    ));
+  }
 
   List<BottomNavigationBarItem> _bottomNavigationItems() {
     return navigator_destinations
@@ -39,7 +46,7 @@ class _MainPageState extends State<MainPage> {
   Widget _bottomNavigationBar() {
     return BottomNavigationBar(
       items: _bottomNavigationItems(),
-      onTap: (int index) => _change_text(),
+      onTap: (int index) => _open_doctor_detail(),
       backgroundColor: Colors.white,
       unselectedItemColor: navigator_destinations[0].color,
       selectedItemColor: Colors.red,
