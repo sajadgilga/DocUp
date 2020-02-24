@@ -12,7 +12,7 @@ class SearchBox extends StatelessWidget {
       width: MediaQuery.of(context).size.width * .85,
       padding: EdgeInsets.only(top: 5, bottom: 20, left: MediaQuery.of(context).size.width * .07, right: MediaQuery.of(context).size.width * .04),
       decoration: BoxDecoration(
-          color: Colors.black12,
+          color: Color.fromRGBO(247, 247, 247, .9),
           borderRadius: BorderRadius.all(Radius.circular(80))),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -22,13 +22,13 @@ class SearchBox extends StatelessWidget {
               ),
               child: SizedBox(
                   width: _getSearchBoxWidth(MediaQuery.of(context).size.width),
-                  height: 60,
+                  height: 50,
                   child: TextField(
                     controller: TextEditingController(),
                     textAlign: TextAlign.end,
                     textDirection: TextDirection.ltr,
                     decoration: InputDecoration(
-                        labelText:
+                        hintText:
                             Strings.searchBoxHint,
                         prefixIcon: Icon(
                           Icons.search,

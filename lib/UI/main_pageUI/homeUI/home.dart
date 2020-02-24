@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'header.dart';
 import 'search_box.dart';
-import '../../widgets/medicine_reminder.dart';
+import 'reminder_list.dart';
 import '../../../constants/strings.dart';
 
 class Home extends StatelessWidget {
@@ -37,8 +37,10 @@ class Home extends StatelessWidget {
         Container(height: 20,),
         SearchBox(),
         SizedBox(height: 30,),
-        Text(Strings.medicineReminder, textAlign: TextAlign.center,),
-        MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد')
+        Text(Strings.medicineReminder, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white), ),
+        SizedBox(width: 20, height: 20,child: Divider(thickness: 2, color: Colors.white,)),
+        SizedBox(height: 10,),
+        ReminderList()
       ],
     ));
   }

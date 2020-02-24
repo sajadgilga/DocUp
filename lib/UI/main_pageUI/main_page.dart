@@ -49,12 +49,22 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(242, 242, 242, 1),
       bottomNavigationBar: SizedBox(
         child: _bottomNavigationBar(),
       ),
       body: SingleChildScrollView(
-        child: Home(),
-        padding: EdgeInsets.all(10),
+
+        child: Stack(
+              children: <Widget>[
+                Image(
+                  image: AssetImage('assets/backgroundHome.png'),
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.fitWidth,
+                ),
+                Home()
+              ],
+            ),
       ),
     );
   }
