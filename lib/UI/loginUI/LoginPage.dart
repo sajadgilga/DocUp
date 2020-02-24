@@ -8,24 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../constants/colors.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: Strings.appTitle,
-      theme: ThemeData(
-        fontFamily: 'iransans',
-        primarySwatch: MaterialColor(0xFF880E4F, swatch),
-      ),
-      home: LoginPage(),
-    );
-  }
-}
-
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
 
