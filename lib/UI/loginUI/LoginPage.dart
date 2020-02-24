@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:docup/UI/loginUI/RoleType.dart';
+import 'package:docup/UI/widgets/InputField.dart';
 import 'package:docup/UI/widgets/OptionButton.dart';
 import 'package:docup/UI/widgets/RegisterActionButton.dart';
 import 'package:docup/constants/strings.dart';
@@ -34,90 +35,87 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  _inputFields() => Container(
+      child: currentRoleType == RoleType.PATIENT
+          ? InputField(Strings.emailInputHint)
+          : Column(
+              children: <Widget>[
+                InputField(Strings.doctorIdInputHint),
+                InputField(Strings.emailInputHint)
+              ],
+            ));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true,
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                Strings.registerHeaderMessage,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () => switchRole(RoleType.DOCTOR),
-                        child: OptionButton(RoleType.DOCTOR,
-                            stream: _controller.stream),
-                      ),
-                      SizedBox(width: 10),
-                      GestureDetector(
-                        onTap: () => switchRole(RoleType.PATIENT),
-                        child: OptionButton(RoleType.PATIENT,
-                            stream: _controller.stream),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 40),
-              Text(
-                currentRoleType == RoleType.PATIENT
-                    ? Strings.yourDoctorMessage
-                    : Strings.yourPatientMessage,
-                style: TextStyle(
-                    color: currentRoleType.color,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 5),
-              Text(
-                currentRoleType == RoleType.PATIENT
-                    ? Strings.patientRegisterMessage
-                    : Strings.doctorRegisterMessage,
-                style: TextStyle(fontSize: 13),
-              ),
-              SizedBox(height: 50),
-              Padding(
-                padding: EdgeInsets.only(left: 40.0, right: 40.0),
-                child: TextFormField(
-                  textAlign: TextAlign.right,
-                  decoration: InputDecoration(
-                      hintText: Strings.registerInputHint,
-                      hintStyle: TextStyle(color: Colors.black, fontSize: 16.0),
-                      labelStyle: TextStyle(color: Colors.black)),
-                ),
-              ),
-              SizedBox(height: 80.0),
-              RegisterActionButton(currentRoleType.color),
-              SizedBox(height: 20.0),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 80),
+            Text(
+              Strings.registerHeaderMessage,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
                   children: <Widget>[
-                    Text(Strings.enterAction,
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: currentRoleType.color,
-                            decoration: TextDecoration.underline)),
-                    SizedBox(
-                      width: 10.0,
+                    GestureDetector(
+                      onTap: () => switchRole(RoleType.DOCTOR),
+                      child: OptionButton(RoleType.DOCTOR,
+                          stream: _controller.stream),
                     ),
-                    Text(Strings.accountQuestion,
-                        style: TextStyle(fontSize: 13)),
-                  ])
-            ],
-          ),
-        ],
+                    SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () => switchRole(RoleType.PATIENT),
+                      child: OptionButton(RoleType.PATIENT,
+                          stream: _controller.stream),
+                    )
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 40),
+            Text(
+              currentRoleType == RoleType.PATIENT
+                  ? Strings.yourDoctorMessage
+                  : Strings.yourPatientMessage,
+              style: TextStyle(
+                  color: currentRoleType.color,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              currentRoleType == RoleType.PATIENT
+                  ? Strings.patientRegisterMessage
+                  : Strings.doctorRegisterMessage,
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 50),
+            Padding(
+              padding: EdgeInsets.only(left: 40.0, right: 40.0),
+              child: _inputFields(),
+            ),
+            SizedBox(height: 80.0),
+            RegisterActionButton(currentRoleType.color),
+            SizedBox(height: 20.0),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+              Text(Strings.enterAction,
+                  style: TextStyle(
+                      fontSize: 13,
+                      color: currentRoleType.color,
+                      decoration: TextDecoration.underline)),
+              SizedBox(
+                width: 10.0,
+              ),
+              Text(Strings.accountQuestion, style: TextStyle(fontSize: 13)),
+            ])
+          ],
+        ),
       ),
     );
   }
