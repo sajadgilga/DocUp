@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants/colors.dart';
+
 class HomeNotification extends StatefulWidget {
   HomeNotification({Key key}) : super(key: key);
 
@@ -33,12 +35,12 @@ class _HomeNotificationState extends State<HomeNotification> {
               child: Text('$newNotificationCount',
                   style: TextStyle(color: Colors.white, fontSize: 12)),
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(254, 95, 85, 1),
+                  color: IColors.red,
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(8)),
                   boxShadow: [
                     BoxShadow(
-                        color: Color.fromRGBO(254, 95, 85, .9),
+                        color: IColors.red,
                         offset: Offset(1, 3),
                         blurRadius: 10)
                   ])),

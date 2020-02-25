@@ -1,9 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../constants/colors.dart';
+
 enum Medicine { capsule, syrup, ointment }
 
+extension MedicineExtension on Medicine {
+  String get asset {
+    switch (this) {
+      case Medicine.capsule:
+        return 'assets/capsule.svg';
+      case Medicine.syrup:
+        return 'assets/syrup.svg';
+      case Medicine.ointment:
+        return 'assets/ointment.svg';
+      default:
+        return '';
+    }
+  }
+}
+
 enum ReminderState { done, overdue, near }
+
+extension ReminderStateExtension on ReminderState {
+  Color get color {
+    switch (this) {
+      case ReminderState.done:
+        return Colors.green;
+      case ReminderState.near:
+        return IColors.red;
+      case ReminderState.overdue:
+        return Colors.grey;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  Border get border {
+    switch (this) {
+      case ReminderState.done:
+        return Border.all(width: 0);
+      case ReminderState.near:
+        return Border.all(width: 4.0, color: this.color);
+      case ReminderState.overdue:
+        return Border.all(width: 4.0, color: this.color);
+      default:
+        return Border.all(width: 0);
+    }
+  }
+
+  Color get shadow {
+    switch (this) {
+      case ReminderState.done:
+        return Colors.white;
+      case ReminderState.near:
+        return Colors.black;
+      case ReminderState.overdue:
+        return Colors.black;
+      default:
+        return Colors.black;
+    }
+  }
+}
 
 // ignore: must_be_immutable
 class MedicineReminder extends StatefulWidget {
@@ -25,11 +83,11 @@ class MedicineReminder extends StatefulWidget {
 class _MedicineReminderState extends State<MedicineReminder> {
   ReminderState _reminderState = ReminderState.near;
 
-  Color getCurrentColor() {
-    return (_reminderState == ReminderState.near
-        ? Color.fromRGBO(254, 95, 85, 1)
-        : (_reminderState == ReminderState.done ? Colors.green : Colors.grey));
-  }
+//  Color getCurrentColor() {
+//    return (_reminderState == ReminderState.near
+//        ? IColors.red
+//        : (_reminderState == ReminderState.done ? Colors.green : Colors.grey));
+//  }
 
   void _finishReminder() {
     setState(() {
@@ -39,13 +97,13 @@ class _MedicineReminderState extends State<MedicineReminder> {
     });
   }
 
-  String _getAsset() {
-    return (widget.type == Medicine.capsule
-        ? 'assets/capsule.svg'
-        : (widget.type == Medicine.syrup)
-            ? 'assets/syrup.svg'
-            : 'assets/ointment.svg');
-  }
+//  String _getAsset() {
+//    return (widget.type == Medicine.capsule
+//        ? 'assets/capsule.svg'
+//        : (widget.type == Medicine.syrup)
+//            ? 'assets/syrup.svg'
+//            : 'assets/ointment.svg');
+//  }
 
   Widget radioButton(bool isSelected) => Container(
         width: 16,
@@ -53,13 +111,13 @@ class _MedicineReminderState extends State<MedicineReminder> {
         padding: EdgeInsets.all(2.0),
         decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: getCurrentColor(), width: 2.0)),
+            border: Border.all(color: _reminderState.color, width: 2.0)),
         child: isSelected
             ? Container(
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: getCurrentColor()),
+                    shape: BoxShape.circle, color: _reminderState.color),
               )
             : Container(),
       );
@@ -73,7 +131,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 10,
-                color: getCurrentColor(),
+                color: _reminderState.color,
                 fontWeight: FontWeight.bold),
           ),
           SizedBox(width: 10),
@@ -86,9 +144,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
   BoxDecoration _reminderBoxDecoration() => BoxDecoration(
         color: Colors.white,
         shape: BoxShape.rectangle,
-        border: (_reminderState == ReminderState.done
-            ? Border.all(width: 0.0)
-            : Border.all(width: 2.0, color: getCurrentColor())),
+        border: _reminderState.border,
         borderRadius: BorderRadius.all(Radius.circular(10)),
       );
 
@@ -107,9 +163,9 @@ class _MedicineReminderState extends State<MedicineReminder> {
                       height: 10,
                     ),
                     SvgPicture.asset(
-                      _getAsset(),
+                      widget.type.asset,
                       alignment: Alignment.center,
-                      color: getCurrentColor(),
+                      color: _reminderState.color,
                       width: 15,
                       height: 15,
                     ),
@@ -118,7 +174,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 8,
-                          color: getCurrentColor(),
+                          color: _reminderState.color,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
@@ -126,7 +182,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 12,
-                          color: getCurrentColor(),
+                          color: _reminderState.color,
                           fontWeight: FontWeight.w900),
                     ),
                   ])),
@@ -148,9 +204,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
             elevation: (_reminderState == ReminderState.done) ? 0 : 10.0,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            shadowColor: (_reminderState == ReminderState.done)
-                ? Colors.black
-                : Colors.white,
+            shadowColor: _reminderState.shadow,
             color: Colors.transparent,
             child: _reminderBox()),
       ),

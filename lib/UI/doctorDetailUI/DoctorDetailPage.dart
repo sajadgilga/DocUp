@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../constants/colors.dart';
+
 class DoctorDetailPage extends StatefulWidget {
   DoctorDetailPage({Key key}) : super(key: key);
 
@@ -39,7 +41,7 @@ class DoctorInfoWidget extends StatelessWidget {
       children: <Widget>[
         SvgPicture.asset(
           "assets/down_arrow.svg",
-          color: Colors.red,
+          color: IColors.red,
           width: 24,
           height: 24,
         ),

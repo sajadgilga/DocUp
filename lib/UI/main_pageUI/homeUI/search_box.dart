@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../constants/strings.dart';
+import '../../../constants/colors.dart';
 
 class SearchBox extends StatelessWidget {
   double _getSearchBoxWidth(width) {
@@ -34,8 +35,8 @@ class SearchBox extends StatelessWidget {
                           Icons.search,
                           size: 30,
                         ),
-                        focusColor: Color.fromRGBO(254, 95, 85, 1),
-                        fillColor: Color.fromRGBO(254, 95, 85, 1)),
+                        focusColor: IColors.red,
+                        fillColor: IColors.red),
                   )),
             ),
             Row(

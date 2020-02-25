@@ -18,7 +18,7 @@ class ReminderListState extends State<ReminderList> {
           MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
           MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
           MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
-
+          MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
         ],
       ),
     );

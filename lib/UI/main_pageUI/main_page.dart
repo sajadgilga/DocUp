@@ -1,8 +1,10 @@
 import 'package:docup/UI/doctorDetailUI/DoctorDetailPage.dart';
 import 'package:flutter/material.dart';
+import 'package:polygon_clipper/polygon_clipper.dart';
 
 import '../navigator_destination.dart';
 import 'homeUI/home.dart';
+import '../../constants/colors.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -17,10 +19,9 @@ class _MainPageState extends State<MainPage> {
 
   void _change_text() => setState(() => _text = 'something${_count++}');
 
-  _open_doctor_detail(){
-    Navigator.push(context, MaterialPageRoute(
-        builder: (context) => DoctorDetailPage()
-    ));
+  _open_doctor_detail() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => DoctorDetailPage()));
   }
 
   List<BottomNavigationBarItem> _bottomNavigationItems() {
@@ -28,9 +29,19 @@ class _MainPageState extends State<MainPage> {
         .map<BottomNavigationBarItem>((Destination destination) {
       return BottomNavigationBarItem(
           icon: (destination.hasImage
-              ? CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTecOfjQvwGtwJf2sKG67szwVAPx__kvg2NbHDZaW_Ul6-Ojsj-'),
+              ? Container(
+                  width: MediaQuery.of(context).size.width * .09,
+                  child: ClipPolygon(
+                    sides: 6,
+                    rotate: 90,
+                    boxShadows: [
+                      PolygonBoxShadow(color: Colors.black, elevation: 1.0),
+                      PolygonBoxShadow(color: Colors.grey, elevation: 2.0)
+                    ],
+                    child: Image(
+                      image: destination.image,
+                    ),
+                  ),
                 )
               : Icon(
                   destination.icon,
@@ -56,35 +67,22 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(242, 242, 242, 1),
+      backgroundColor: IColors.background,
       bottomNavigationBar: SizedBox(
         child: _bottomNavigationBar(),
       ),
       body: SingleChildScrollView(
-
         child: Stack(
-              children: <Widget>[
-                Image(
-                  image: AssetImage('assets/backgroundHome.png'),
-                  width: MediaQuery.of(context).size.width,
-                  fit: BoxFit.fitWidth,
-                ),
-                Home()
-              ],
+          children: <Widget>[
+            Image(
+              image: AssetImage('assets/backgroundHome.png'),
+              width: MediaQuery.of(context).size.width,
+              fit: BoxFit.fitWidth,
             ),
+            Home()
+          ],
+        ),
       ),
     );
   }
 }
-
-// For hexagon image
-//                  icon: Stack(alignment: Alignment.center,children: <Widget>[
-//                    Image(
-//                      image: destination.image,
-//                      width: MediaQuery.of(context).size.width * .08,
-//                    ),
-//                    Image(
-//                      image: AssetImage('assets/hex.png'),
-//                      width: MediaQuery.of(context).size.width * .08,
-//                    )
-//                  ]),

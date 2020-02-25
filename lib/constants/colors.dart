@@ -12,3 +12,8 @@ const Map<int, Color> swatch = {
   800: Color.fromRGBO(254, 95, 85, .9),
   900: Color.fromRGBO(254, 95, 85, 1),
 };
+
+class IColors {
+  static Color red = Color.fromRGBO(254, 95, 85, 1);
+  static Color background = Color.fromRGBO(242, 242, 242, 1);
+}
