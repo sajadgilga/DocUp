@@ -17,12 +17,16 @@ class _HomeNotificationState extends State<HomeNotification> {
   Widget _notificationIcon() {
     return Container(
         alignment: Alignment.bottomCenter,
-        child: InkWell(
-          onTap: () {},
-          child: Icon(
-            Icons.notifications,
-            size: 35,
+        child: Material(
+          child: InkWell(
+            onTap: () {},
+            child: Icon(
+              Icons.notifications,
+              size: 35,
+            ),
+            hoverColor:  Colors.white,
           ),
+          color: Colors.transparent,
         ));
   }
 

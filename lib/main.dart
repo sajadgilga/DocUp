@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: Strings.appTitle,
       theme: ThemeData(
         fontFamily: 'iransans',
-        primarySwatch: MaterialColor(0xFFFFFFFF, swatch),
+        primarySwatch: MaterialColor(IColors.red.value, swatch),
       ),
       home: LoginPage(),
     );

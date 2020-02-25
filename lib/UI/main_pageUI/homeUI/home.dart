@@ -4,6 +4,8 @@ import 'header.dart';
 import 'search_box.dart';
 import 'reminder_list.dart';
 import '../../../constants/strings.dart';
+import 'IDoctor.dart';
+import '../../../models/Doctor.dart';
 
 class Home extends StatelessWidget {
   Widget _intro(double width) => ListView(
@@ -40,7 +42,9 @@ class Home extends StatelessWidget {
         Text(Strings.medicineReminder, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white), ),
         SizedBox(width: 20, height: 20,child: Divider(thickness: 2, color: Colors.white,)),
         SizedBox(height: 10,),
-        ReminderList()
+        ReminderList(),
+        SizedBox(height: 10,),
+        IDoctor(),
       ],
     ));
   }
