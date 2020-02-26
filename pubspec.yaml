@@ -27,6 +27,7 @@ dependencies:
   rxdart: ^0.23.1
   sliding_up_panel: ^1.0.0
   polygon_clipper: ^1.0.2
+  shadow: ^0.1.5
 
 
 

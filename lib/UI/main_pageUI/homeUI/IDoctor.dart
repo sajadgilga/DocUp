@@ -5,6 +5,9 @@ import '../../../models/Doctor.dart';
 import '../../widgets/DoctorSummary.dart';
 
 class IDoctor extends StatelessWidget {
+  final Doctor doctor;
+
+  IDoctor({Key key, this.doctor}) : super(key: key);
 
   Widget _IDoctorLabel() => Container(
         constraints: BoxConstraints(maxHeight: 35),
@@ -36,14 +39,14 @@ class IDoctor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10),
-      padding: EdgeInsets.only(left: 15, right: 15, bottom: 30),
+      margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+      padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
       decoration: _IDoctorDecoration(),
-      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width, maxHeight: 140),
       child: Column(
         children: <Widget>[
           _IDoctorLabel(),
-          IDoctorBody(doctor: Doctor('دکتر زهرا شادلو', 'متخصص پوست', 'اقدسیه', Image(image: AssetImage(' ')), null),),
+          Expanded(child: IDoctorBody(doctor: doctor,),),
         ],
       ),
     );

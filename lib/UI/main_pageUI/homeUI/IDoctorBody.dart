@@ -14,7 +14,7 @@ class IDoctorBody extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        ChatBox(),
+        Expanded(child: ChatBox()),
         SizedBox(width: 5,),
         SizedBox(
           height: 60,

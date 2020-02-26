@@ -201,7 +201,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
         child: AnimatedPhysicalModel(
             duration: const Duration(milliseconds: 500),
             curve: Curves.fastOutSlowIn,
-            elevation: (_reminderState == ReminderState.done) ? 0 : 10.0,
+            elevation: (_reminderState == ReminderState.done) ? 0 : 8.0,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.all(Radius.circular(10)),
             shadowColor: _reminderState.shadow,

@@ -11,7 +11,7 @@ class ReminderListState extends State<ReminderList> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(
+      child: Container(height: 160, child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
@@ -21,6 +21,6 @@ class ReminderListState extends State<ReminderList> {
           MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
         ],
       ),
-    );
+    ));
   }
 }

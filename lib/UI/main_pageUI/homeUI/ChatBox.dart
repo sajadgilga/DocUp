@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../widgets/ChatBubble.dart';
+import '../../../constants/colors.dart';
+
 class ChatBox extends StatefulWidget {
   @override
   _ChatBoxState createState() {
@@ -9,7 +12,21 @@ class ChatBox extends StatefulWidget {
 }
 
 class _ChatBoxState extends State<ChatBox> {
-  Widget _myMessages() =>
+  Widget _myMessages() => Column(children: <Widget>[
+        _myMessagesIcon(),
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          'پیام‌های اخیر',
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w900,
+          ),
+        )
+      ]);
+
+  Widget _myMessagesIcon() =>
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         SvgPicture.asset(
           'assets/chatBox.svg',
@@ -20,20 +37,39 @@ class _ChatBoxState extends State<ChatBox> {
         )
       ]);
 
+  Widget _chatList() => Container(
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            ChatBubble(
+              text: 'من من من',
+              dateTime: DateTime.now(),
+              color: IColors.background,
+            ),
+            ChatBubble(
+              text: 'من من من',
+              dateTime: DateTime.now(),
+              color: IColors.background,
+            ),
+            ChatBubble(
+              text: 'من من من',
+              dateTime: DateTime.now(),
+              color: IColors.background,
+            ),
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      _myMessages(),
-      SizedBox(
-        height: 5,
-      ),
-      Text(
-        'پیام‌های اخیر',
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w900,
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: _chatList(),
+          flex: 2,
         ),
-      )
-    ]);
+        _myMessages(),
+      ],
+    );
   }
 }

@@ -43,8 +43,7 @@ class Home extends StatelessWidget {
         SizedBox(width: 20, height: 20,child: Divider(thickness: 2, color: Colors.white,)),
         SizedBox(height: 10,),
         ReminderList(),
-        SizedBox(height: 10,),
-        IDoctor(),
+        IDoctor(doctor: Doctor('دکتر زهرا شادلو', 'متخصص پوست', 'اقدسیه', Image(image: AssetImage(' ')), null),),
       ],
     ));
   }
