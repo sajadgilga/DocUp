@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shadow/shadow.dart';
 
 import '../../constants/colors.dart';
 

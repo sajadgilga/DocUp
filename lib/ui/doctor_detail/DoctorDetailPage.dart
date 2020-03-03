@@ -1,8 +1,11 @@
-import 'dart:math';
+import 'dart:async';
 
+import 'package:docup/UI/widgets/ActionButton.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -16,14 +19,19 @@ class DoctorDetailPage extends StatefulWidget {
 }
 
 class _DoctorDetailPageState extends State<DoctorDetailPage> {
+  Completer<GoogleMapController> _controller = Completer();
+
+  static const LatLng _center = const LatLng(45.521563, -122.677433);
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller.complete(controller);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SlidingUpPanel(
         panel: Center(child: DoctorInfoWidget()),
-        body: Center(
-          child: Text("This is the Widget behind the sliding panel"),
-        ),
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
     );
@@ -31,9 +39,13 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
 }
 
 class DoctorInfoWidget extends StatelessWidget {
-  const DoctorInfoWidget({
-    Key key,
-  }) : super(key: key);
+  Completer<GoogleMapController> _controller = Completer();
+
+  static const LatLng _center = const LatLng(45.521563, -122.677433);
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller.complete(controller);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +77,7 @@ class DoctorInfoWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
             )),
+        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -72,13 +85,31 @@ class DoctorInfoWidget extends StatelessWidget {
               "متخصص و جراح پوست، مو و زیبایی",
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(width: 10,),
+            SizedBox(width: 20),
             Icon(
               Icons.info_outline,
               color: Colors.black,
             )
           ],
-        )
+        ),
+        Container(
+          width: 100,
+          height: 100,
+          child: GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: _center,
+              zoom: 5.0,
+            ),
+          ),
+        ),
+        ActionButton(
+            Colors.red,
+            Strings.requestAction,
+            Icon(
+              Icons.send,
+              size: 18.0,
+            ), true, (){})
       ],
     );
   }

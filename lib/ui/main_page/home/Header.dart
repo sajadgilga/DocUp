@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'notification.dart';
+import 'Notification.dart';
 
 class Header extends StatelessWidget {
   Widget _docUpIcon() {

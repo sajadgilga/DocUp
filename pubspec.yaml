@@ -24,10 +24,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   flutter_svg: ^0.17.1
-  rxdart: ^0.23.1
   sliding_up_panel: ^1.0.0
   polygon_clipper: ^1.0.2
+  google_maps_flutter: ^0.5.24+1
+  http: ^0.12.0+4
   shadow: ^0.1.5
+  flutter_bloc: ^0.15.0
+  equatable: ^0.2.0
 
 
 

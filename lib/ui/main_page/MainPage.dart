@@ -1,9 +1,9 @@
-import 'package:docup/UI/doctorDetailUI/DoctorDetailPage.dart';
+import 'package:docup/ui/doctor_detail/DoctorDetailPage.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
 import '../navigator_destination.dart';
-import 'homeUI/home.dart';
+import 'home/Home.dart';
 import '../../constants/colors.dart';
 
 class MainPage extends StatefulWidget {

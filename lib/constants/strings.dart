@@ -6,9 +6,12 @@ class Strings {
   static const String yourPatientMessage = "همگام با بیمار";
   static const String patientRegisterMessage = "ثبت‌نام کنید و آنلاین پیگیر روند بهبود خود باشید";
   static const String doctorRegisterMessage = "ثبت‌نام کنید و وضعیت مراجعین را آنلاین دنبال نمایید";
+  static const String verificationCodeMessage = "کد ارسال شده به ایمیل یا شماره همراه خود را وارد کنید";
   static const String emailInputHint = "ایمیل یا شماره همراه";
+  static const String verificationHint = "ورود کد ارسال شده";
   static const String doctorIdInputHint = "شماره نظام پزشکی";
   static const String registerAction = "دریافت";
+  static const String requestAction = "درخواست";
   static const String enterAction = "ورود";
   static const String accountQuestion = "حساب کاربری دارید؟";
   static final String searchBoxHint = 'جستجو';
