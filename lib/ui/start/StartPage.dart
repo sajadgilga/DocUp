@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/bloc/TimerEvent.dart';
-import 'package:docup/UI/widgets/InputField.dart';
-import 'package:docup/UI/widgets/OptionButton.dart';
-import 'package:docup/UI/widgets/ActionButton.dart';
-import 'package:docup/UI/widgets/Timer.dart';
+import 'package:docup/ui/widgets/InputField.dart';
+import 'package:docup/ui/widgets/OptionButton.dart';
+import 'package:docup/ui/widgets/Timer.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,12 +46,25 @@ class _StartPageState extends State<StartPage> {
   }
 
   void submit() {
-    if (startType == StartType.SIGN_UP) {
-      setState(() {
-        startType = StartType.LOGIN;
-        _timerBloc.dispatch(Start(duration: 60));
-      });
-    }
+    setState(() {
+      switch (startType) {
+        case StartType.SIGN_UP:
+          startType = StartType.LOGIN;
+          _timerBloc.dispatch(Start(duration: 60));
+          break;
+        case StartType.LOGIN:
+          startType = StartType.REGISTER;
+          break;
+        case StartType.REGISTER:
+          break;
+      }
+    });
+  }
+
+  void back() {
+    setState(() {
+      startType = StartType.SIGN_UP;
+    });
   }
 
   @override
@@ -71,6 +84,7 @@ class _StartPageState extends State<StartPage> {
             _messageWidget(),
             SizedBox(height: 50),
             _inputFieldsWidget(),
+            SizedBox(height: 10),
             _timerWidget(),
             SizedBox(height: 80),
             _actionWidget(),
@@ -84,7 +98,7 @@ class _StartPageState extends State<StartPage> {
 
   _timerWidget() => startType == StartType.LOGIN
       ? Padding(
-          padding: EdgeInsets.only(top: 10, right: 40),
+          padding: EdgeInsets.only(right: 40),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
@@ -95,15 +109,59 @@ class _StartPageState extends State<StartPage> {
         )
       : SizedBox.shrink();
 
-  _actionWidget() => ActionButton(
-      currentRoleType.color,
-      Strings.registerAction,
-      Icon(
-        Icons.arrow_back_ios,
-        size: 18.0,
-      ),
-      false,
-      submit);
+  _actionWidget() {
+    switch (startType) {
+      case StartType.SIGN_UP:
+        return _signUpActionWidget();
+      case StartType.LOGIN:
+        return _loginActionWidget();
+      case StartType.REGISTER:
+        return _registerActionWidget();
+    }
+  }
+
+  _loginActionWidget() => Padding(
+      padding: EdgeInsets.only(left: 40.0, right: 40.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          ActionButton(
+            color: Colors.grey,
+            title: Strings.continueAction,
+            callBack: submit,
+          ),
+          ActionButton(
+            color: currentRoleType.color,
+            icon: Icon(
+              Icons.arrow_forward_ios,
+              size: 18,
+            ),
+            callBack: back,
+          ),
+        ],
+      ));
+
+  _signUpActionWidget() => ActionButton(
+        color: currentRoleType.color,
+        title: Strings.verifyAction,
+        icon: Icon(
+          Icons.arrow_back_ios,
+          size: 18,
+        ),
+        rtl: false,
+        callBack: submit,
+      );
+
+  _registerActionWidget() => ActionButton(
+        color: currentRoleType.color,
+        title: Strings.registerAction,
+        icon: Icon(
+          Icons.arrow_back_ios,
+          size: 18,
+        ),
+        rtl: false,
+        callBack: submit,
+      );
 
   _headerWidget() => Text(
         Strings.registerHeaderMessage,
@@ -135,7 +193,7 @@ class _StartPageState extends State<StartPage> {
         maintainSize: true,
         maintainAnimation: true,
         maintainState: true,
-        visible: startType == StartType.SIGN_UP,
+        visible: startType != StartType.LOGIN,
         child: Text(
           getTitleText(),
           style: TextStyle(
@@ -163,29 +221,54 @@ class _StartPageState extends State<StartPage> {
 
   _inputFieldsWidget() => Padding(
       padding: EdgeInsets.only(left: 40.0, right: 40.0),
-      child: Container(
-          child: startType == StartType.LOGIN
-              ? InputField(Strings.verificationHint)
-              : currentRoleType == RoleType.PATIENT
-                  ? InputField(Strings.emailInputHint)
-                  : Column(
-                      children: <Widget>[
-                        InputField(Strings.doctorIdInputHint),
-                        InputField(Strings.emailInputHint)
-                      ],
-                    )));
+      child: Container(child: _inputFieldsInnerWidget()));
+
+  _inputFieldsInnerWidget() {
+    switch (startType) {
+      case StartType.SIGN_UP:
+        return currentRoleType == RoleType.PATIENT
+            ? InputField(Strings.emailInputHint)
+            : Column(
+                children: <Widget>[
+                  InputField(Strings.doctorIdInputHint),
+                  InputField(Strings.emailInputHint)
+                ],
+              );
+      case StartType.LOGIN:
+        return InputField(Strings.verificationHint);
+      case StartType.REGISTER:
+        return Column(
+          children: <Widget>[
+            InputField(Strings.nameInputHint),
+            InputField(Strings.passInputHint)
+          ],
+        );
+    }
+  }
 
   getTitleText() {
-    return currentRoleType == RoleType.PATIENT
-        ? Strings.yourDoctorMessage
-        : Strings.yourPatientMessage;
+    switch (startType) {
+      case StartType.SIGN_UP:
+        return currentRoleType == RoleType.PATIENT
+            ? Strings.yourDoctorMessage
+            : Strings.yourPatientMessage;
+      default:
+        return Strings.welcome;
+    }
   }
 
   getMessageText() {
-    return startType == StartType.LOGIN
-        ? Strings.verificationCodeMessage
-        : currentRoleType == RoleType.PATIENT
+    switch (startType) {
+      case StartType.SIGN_UP:
+        return currentRoleType == RoleType.PATIENT
             ? Strings.patientRegisterMessage
             : Strings.doctorRegisterMessage;
+      case StartType.LOGIN:
+        return Strings.verificationCodeMessage;
+      case StartType.REGISTER:
+        return currentRoleType == RoleType.PATIENT
+            ? Strings.oneStepToDoctorMessage
+            : Strings.oneStepToOfficeMessage;
+    }
   }
 }
