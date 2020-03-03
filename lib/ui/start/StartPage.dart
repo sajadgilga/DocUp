@@ -35,7 +35,6 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     switchRole(currentRoleType);
-    _timerBloc.dispatch(Start(duration: 60));
     super.initState();
   }
 
@@ -50,6 +49,7 @@ class _StartPageState extends State<StartPage> {
     if (startType == StartType.SIGN_UP) {
       setState(() {
         startType = StartType.LOGIN;
+        _timerBloc.dispatch(Start(duration: 60));
       });
     }
   }
@@ -72,10 +72,6 @@ class _StartPageState extends State<StartPage> {
             SizedBox(height: 50),
             _inputFieldsWidget(),
             _timerWidget(),
-            BlocProvider(
-              bloc: _timerBloc,
-              child: Timer()
-            ),
             SizedBox(height: 80),
             _actionWidget(),
             SizedBox(height: 20),
@@ -88,8 +84,14 @@ class _StartPageState extends State<StartPage> {
 
   _timerWidget() => startType == StartType.LOGIN
       ? Padding(
-          padding: EdgeInsets.only(top: 10),
-          child: Text("ارسال مجدد کد", style: TextStyle(color: Colors.red)),
+          padding: EdgeInsets.only(top: 10, right: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              BlocProvider(bloc: _timerBloc, child: Timer()),
+              Text(" : ارسال مجدد کد ", style: TextStyle(color: Colors.red)),
+            ],
+          ),
         )
       : SizedBox.shrink();
 

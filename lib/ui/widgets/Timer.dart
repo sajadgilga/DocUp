@@ -5,8 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Timer extends StatelessWidget {
   static const TextStyle timerTextStyle = TextStyle(
-    fontSize: 60,
-    fontWeight: FontWeight.bold,
+    fontSize: 14,
+    color: Colors.red,
+    fontFamily: 'iransans',
   );
 
   @override
