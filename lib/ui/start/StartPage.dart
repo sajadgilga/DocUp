@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:docup/ui/main_page/MainPage.dart';
+import 'package:docup/ui/notification/NotificationPage.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/bloc/TimerEvent.dart';
 import 'package:docup/ui/widgets/InputField.dart';
@@ -56,6 +58,7 @@ class _StartPageState extends State<StartPage> {
           startType = StartType.REGISTER;
           break;
         case StartType.REGISTER:
+          Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
           break;
       }
     });

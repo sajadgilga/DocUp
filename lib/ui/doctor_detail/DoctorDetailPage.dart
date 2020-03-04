@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:docup/UI/widgets/ActionButton.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -104,12 +104,12 @@ class DoctorInfoWidget extends StatelessWidget {
           ),
         ),
         ActionButton(
-            Colors.red,
-            Strings.requestAction,
-            Icon(
+            color: Colors.red,
+            title: Strings.requestAction,
+            icon: Icon(
               Icons.send,
               size: 18.0,
-            ), true, (){})
+            ))
       ],
     );
   }
