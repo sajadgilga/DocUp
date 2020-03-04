@@ -23,10 +23,13 @@ class Header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           GestureDetector(
-            onTap: (){  Navigator.push(context,
-                MaterialPageRoute(builder: (context) => NotificationPage()));},
-            child: HomeNotification(),
-          ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationPage()));
+              },
+              child: HomeNotification()),
           _docUpIcon(),
         ],
       ),

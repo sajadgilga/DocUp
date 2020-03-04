@@ -32,40 +32,55 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.black,
-        child: CustomPaint(
-            painter: MyPainter(),
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                  left: MediaQuery.of(context).size.width * 0.25,
-                  top: MediaQuery.of(context).size.height * 0.15 - 17.5,
-                  child: Icon(
-                    Icons.notifications,
-                    size: 35,
-                    color: IColors.red,
+    return Scaffold(
+      backgroundColor: IColors.background,
+      body: Stack(
+        children: <Widget>[
+          Image(
+            image: AssetImage('assets/backgroundHome.png'),
+            width: MediaQuery.of(context).size.width,
+            fit: BoxFit.fitWidth,
+          ),
+          CustomPaint(
+              painter: MyPainter(),
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    left: MediaQuery.of(context).size.width * 0.25,
+                    top: MediaQuery.of(context).size.height * 0.15 - 17.5,
+                    child: Hero(
+                      tag: "notif",
+                      child: Icon(
+                        Icons.notifications,
+                        size: 35,
+                        color: IColors.red,
+                      ),
+                    ),
                   ),
-                ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width * 0.6,
-                  top: MediaQuery.of(context).size.height * 0.3,
-                  child: Text(
-                    "اعلانات",
-                    style: TextStyle(fontSize: 24),
+                  Positioned(
+                    left: MediaQuery.of(context).size.width * 0.6,
+                    top: MediaQuery.of(context).size.height * 0.3,
+                    child: Text(
+                      "اعلانات",
+                      style: TextStyle(fontSize: 24),
+                    ),
                   ),
-                ),
-                Positioned(
-                    left: MediaQuery.of(context).size.width * 0.55,
-                    top: MediaQuery.of(context).size.height * 0.29,
-                    child: _notificationCountCircle()),
-                Positioned(
-                  right: MediaQuery.of(context).size.width * 0.15,
-                  top: MediaQuery.of(context).size.height * 0.4,
-                  child: NotificationItem(),
-                )
-              ],
-            )));
+                  Positioned(
+                      left: MediaQuery.of(context).size.width * 0.55,
+                      top: MediaQuery.of(context).size.height * 0.29,
+                      child: Hero(
+                          tag: "notificationCount",
+                          child: _notificationCountCircle())),
+                  Positioned(
+                    right: MediaQuery.of(context).size.width * 0.15,
+                    top: MediaQuery.of(context).size.height * 0.4,
+                    child: NotificationItem(),
+                  )
+                ],
+              ))
+        ],
+      ),
+    );
   }
 }
 
@@ -95,7 +110,9 @@ class NotificationItem extends StatelessWidget {
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 5,
+                ),
                 Row(
                   textDirection: TextDirection.rtl,
                   children: <Widget>[
@@ -126,7 +143,10 @@ class NotificationItem extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 20.0),
                   child: Row(
                     children: <Widget>[
-                      Text("اقدسیه", style: TextStyle(color: IColors.darkGrey),),
+                      Text(
+                        "اقدسیه",
+                        style: TextStyle(color: IColors.darkGrey),
+                      ),
                       Icon(
                         Icons.location_on,
                         size: 16,

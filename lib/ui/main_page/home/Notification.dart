@@ -19,12 +19,11 @@ class _HomeNotificationState extends State<HomeNotification> {
         alignment: Alignment.bottomCenter,
         child: Material(
           child: InkWell(
-            onTap: () {},
             child: Icon(
               Icons.notifications,
               size: 35,
             ),
-            hoverColor:  Colors.white,
+            hoverColor: Colors.white,
           ),
           color: Colors.transparent,
         ));
@@ -57,7 +56,10 @@ class _HomeNotificationState extends State<HomeNotification> {
         width: 50,
         height: 50,
         child: Stack(
-          children: <Widget>[_notificationIcon(), _notificationCountCircle()],
+          children: <Widget>[
+            Hero(tag: "notif", child: _notificationIcon()),
+            Hero(tag: "notificationCount", child: _notificationCountCircle())
+          ],
         ));
   }
 }

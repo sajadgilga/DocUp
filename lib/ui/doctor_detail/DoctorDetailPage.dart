@@ -104,12 +104,13 @@ class DoctorInfoWidget extends StatelessWidget {
           ),
         ),
         ActionButton(
-            color: Colors.red,
+            color: IColors.red,
             title: Strings.requestAction,
             icon: Icon(
               Icons.send,
               size: 18.0,
-            ))
+            ),
+        callBack: (){},)
       ],
     );
   }
