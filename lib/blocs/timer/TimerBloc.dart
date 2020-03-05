@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:docup/blocs/timer/TimerEvent.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
-import 'TimerEvent.dart';
 import 'TimerState.dart';
 import 'Tricker.dart';
 

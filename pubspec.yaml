@@ -32,6 +32,7 @@ dependencies:
   flutter_bloc: ^0.15.0
   equatable: ^0.2.0
   icon_shadow: ^1.0.1
+  progress_dialog: ^1.2.1
 
 
 

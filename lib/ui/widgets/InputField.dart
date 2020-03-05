@@ -5,14 +5,14 @@ import 'package:flutter/widgets.dart';
 
 class InputField extends StatelessWidget {
   String inputHint;
+  TextEditingController controller;
 
-  InputField(String inputHint) {
-    this.inputHint = inputHint;
-  }
+  InputField({this.inputHint, this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       textAlign: TextAlign.right,
       decoration: InputDecoration(
           hintText: inputHint,

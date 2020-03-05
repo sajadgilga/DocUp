@@ -1,9 +1,9 @@
 import 'dart:async';
-
+import 'package:docup/blocs/StartBLOC.dart';
+import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/main_page/MainPage.dart';
-import 'package:docup/ui/notification/NotificationPage.dart';
 import 'package:docup/ui/start/RoleType.dart';
-import 'package:docup/bloc/TimerEvent.dart';
+import 'package:docup/blocs/timer/TimerEvent.dart';
 import 'package:docup/ui/widgets/InputField.dart';
 import 'package:docup/ui/widgets/OptionButton.dart';
 import 'package:docup/ui/widgets/Timer.dart';
@@ -12,10 +12,11 @@ import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../bloc/TimerBloc.dart';
-import '../../bloc/Tricker.dart';
+import '../../blocs/timer/TimerBloc.dart';
+import '../../blocs/timer/Tricker.dart';
 
 enum StartType { SIGN_UP, LOGIN, REGISTER }
 
@@ -30,13 +31,36 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   final TimerBloc _timerBloc = TimerBloc(ticker: Ticker());
+  final StartBloc _startBloc = StartBloc();
+
   StreamController<RoleType> _controller = BehaviorSubject();
+  final _inputController = TextEditingController();
+
   RoleType currentRoleType = RoleType.PATIENT;
   StartType startType = StartType.SIGN_UP;
+  ProgressDialog progressDialog;
 
   @override
   void initState() {
     switchRole(currentRoleType);
+    _startBloc.startDataStream.listen((data) {
+      switch (data.status) {
+        case Status.LOADING:
+          progressDialog.show();
+          break;
+        case Status.COMPLETED:
+          progressDialog.dismiss();
+          _inputController.clear();
+          setState(() {
+            startType = StartType.LOGIN;
+          });
+          _timerBloc.dispatch(Start(duration: 60));
+          break;
+        case Status.ERROR:
+          progressDialog.dismiss();
+          break;
+      }
+    });
     super.initState();
   }
 
@@ -51,14 +75,14 @@ class _StartPageState extends State<StartPage> {
     setState(() {
       switch (startType) {
         case StartType.SIGN_UP:
-          startType = StartType.LOGIN;
-          _timerBloc.dispatch(Start(duration: 60));
+          _startBloc.login(_inputController.text);
           break;
         case StartType.LOGIN:
           startType = StartType.REGISTER;
           break;
         case StartType.REGISTER:
-          Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => MainPage()));
           break;
       }
     });
@@ -72,6 +96,9 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
+    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
+    progressDialog.style(message: "لطفا منتظر بمانید");
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -97,6 +124,12 @@ class _StartPageState extends State<StartPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _inputController.dispose();
+    super.dispose();
   }
 
   _timerWidget() => startType == StartType.LOGIN
@@ -230,20 +263,35 @@ class _StartPageState extends State<StartPage> {
     switch (startType) {
       case StartType.SIGN_UP:
         return currentRoleType == RoleType.PATIENT
-            ? InputField(Strings.emailInputHint)
+            ? InputField(
+                inputHint: Strings.emailInputHint,
+                controller: _inputController,
+              )
             : Column(
                 children: <Widget>[
-                  InputField(Strings.doctorIdInputHint),
-                  InputField(Strings.emailInputHint)
+                  InputField(
+                    inputHint: Strings.doctorIdInputHint,
+                    /*controller: _inputController*/
+                  ),
+                  InputField(
+                    inputHint:
+                        Strings.emailInputHint, /*controller: _inputController*/
+                  )
                 ],
               );
       case StartType.LOGIN:
-        return InputField(Strings.verificationHint);
+        return InputField(
+          inputHint: Strings.verificationHint, /*controller: _inputController*/
+        );
       case StartType.REGISTER:
         return Column(
           children: <Widget>[
-            InputField(Strings.nameInputHint),
-            InputField(Strings.passInputHint)
+            InputField(
+              inputHint: Strings.nameInputHint, /*controller: _inputController*/
+            ),
+            InputField(
+              inputHint: Strings.passInputHint, /*controller: _inputController*/
+            )
           ],
         );
     }
