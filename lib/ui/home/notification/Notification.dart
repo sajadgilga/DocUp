@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/colors.dart';
+import 'package:docup/constants/colors.dart';
 
 class HomeNotification extends StatefulWidget {
   HomeNotification({Key key}) : super(key: key);

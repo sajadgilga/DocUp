@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../navigator_destination.dart';
+import 'package:docup/ui/main_page/navigator_destination.dart';
 import 'MainPage.dart';
-import 'home/Home.dart';
+import '../home/Home.dart';
 
 class DestinationView extends StatefulWidget {
   final Destination destination;

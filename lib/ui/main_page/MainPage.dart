@@ -2,8 +2,7 @@ import 'package:docup/ui/doctor_detail/DoctorDetailPage.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
-import '../navigator_destination.dart';
-import 'home/Home.dart';
+import 'package:docup/ui/main_page/navigator_destination.dart';
 import 'DestinationView.dart';
 import '../../constants/colors.dart';
 

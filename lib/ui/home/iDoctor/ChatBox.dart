@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../widgets/ChatBubble.dart';
-import '../../../constants/colors.dart';
+import 'package:docup/ui/widgets/ChatBubble.dart';
+import 'package:docup/constants/colors.dart';
 
 class ChatBox extends StatefulWidget {
   @override

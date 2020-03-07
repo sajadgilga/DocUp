@@ -1,7 +1,7 @@
-import 'package:docup/ui/notification/NotificationPage.dart';
+import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:flutter/material.dart';
 
-import 'Notification.dart';
+import 'notification/Notification.dart';
 
 class Header extends StatelessWidget {
   Widget _docUpIcon() {

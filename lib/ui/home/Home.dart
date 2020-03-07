@@ -1,11 +1,11 @@
-import 'package:docup/ui/main_page/home/Header.dart';
-import 'package:docup/ui/main_page/home/ReminderList.dart';
-import 'package:docup/ui/main_page/home/SearchBox.dart';
+import 'package:docup/ui/home/Header.dart';
+import 'package:docup/ui/home/ReminderList.dart';
+import 'package:docup/ui/home/SearchBox.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants/strings.dart';
-import 'IDoctor.dart';
-import '../../../models/Doctor.dart';
+import '../../constants/strings.dart';
+import 'package:docup/ui/home/iDoctor/IDoctor.dart';
+import '../../models/Doctor.dart';
 
 class Home extends StatelessWidget {
   Widget _intro(double width) => ListView(

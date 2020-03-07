@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/MedicineReminder.dart';
+import '../widgets/MedicineReminder.dart';
 class ReminderList extends StatefulWidget {
   @override
   ReminderListState createState() => ReminderListState();

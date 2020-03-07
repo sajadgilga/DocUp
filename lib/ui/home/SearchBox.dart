@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../constants/strings.dart';
-import '../../../constants/colors.dart';
+import '../../constants/strings.dart';
+import '../../constants/colors.dart';
 
 class SearchBox extends StatelessWidget {
   double _getSearchBoxWidth(width) {
@@ -11,7 +11,11 @@ class SearchBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * .85,
-      padding: EdgeInsets.only(top: 5, bottom: 20, left: MediaQuery.of(context).size.width * .07, right: MediaQuery.of(context).size.width * .04),
+      padding: EdgeInsets.only(
+          top: 5,
+          bottom: 20,
+          left: MediaQuery.of(context).size.width * .07,
+          right: MediaQuery.of(context).size.width * .04),
       decoration: BoxDecoration(
           color: Color.fromRGBO(247, 247, 247, .9),
           borderRadius: BorderRadius.all(Radius.circular(80))),
@@ -19,8 +23,7 @@ class SearchBox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-              constraints: BoxConstraints(
-              ),
+              constraints: BoxConstraints(),
               child: SizedBox(
                   width: _getSearchBoxWidth(MediaQuery.of(context).size.width),
                   height: 50,
@@ -29,8 +32,7 @@ class SearchBox extends StatelessWidget {
                     textAlign: TextAlign.end,
                     textDirection: TextDirection.ltr,
                     decoration: InputDecoration(
-                        hintText:
-                            Strings.searchBoxHint,
+                        hintText: Strings.searchBoxHint,
                         prefixIcon: Icon(
                           Icons.search,
                           size: 30,

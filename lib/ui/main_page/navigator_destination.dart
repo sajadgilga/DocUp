@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/colors.dart';
+import 'package:docup/constants/colors.dart';
 
 /// Destination item data container for bottom navigation in main page.
 ///

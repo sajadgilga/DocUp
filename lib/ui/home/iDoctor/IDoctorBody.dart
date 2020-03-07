@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'ChatBox.dart';
-import '../../../models/Doctor.dart';
-import '../../widgets/DoctorSummary.dart';
+import 'package:docup/ui/home/iDoctor/ChatBox.dart';
+import 'package:docup/models/Doctor.dart';
+import 'package:docup/ui/widgets/DoctorSummary.dart';
 
 class IDoctorBody extends StatelessWidget {
   final Doctor doctor;
