@@ -9,7 +9,7 @@ class Strings {
   static const String verificationCodeMessage = "کد ارسال شده به ایمیل یا شماره همراه خود را وارد کنید";
   static const String oneStepToDoctorMessage = "یک قدم تا پزشک فاصله دارید";
   static const String oneStepToOfficeMessage = ".یک قدم تا مطب مجازی خود فاصله دارید";
-  static const String emailInputHint = "ایمیل یا شماره همراه";
+  static const String usernameInputHint = "ایمیل یا شماره همراه";
   static const String verificationHint = "ورود کد ارسال شده";
   static const String doctorIdInputHint = "شماره نظام پزشکی";
   static const String nameInputHint = "نام و نام خانوادگی";
