@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:docup/blocs/StartBLOC.dart';
+import 'package:docup/blocs/StartBloc.dart';
 import 'package:docup/models/LoginResponseEntity.dart';
 import 'package:docup/models/VerifyResponseEntity.dart';
 import 'package:docup/networking/Response.dart';
