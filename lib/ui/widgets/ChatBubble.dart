@@ -7,7 +7,17 @@ class ChatBubble extends StatefulWidget {
   final String text;
   final DateTime dateTime;
 
-  ChatBubble({Key key, this.text, this.dateTime, this.color}) : super(key: key);
+  final bool isSelfChat;
+  final bool isHomePageChat;
+
+  ChatBubble(
+      {Key key,
+      this.text,
+      this.dateTime,
+      this.color,
+      this.isSelfChat = false,
+      this.isHomePageChat = true})
+      : super(key: key);
 
   @override
   _ChatBubbleState createState() => _ChatBubbleState();
@@ -22,45 +32,54 @@ class _ChatBubbleState extends State<ChatBubble> {
       ];
 
   BorderRadius _borderRadius() => BorderRadius.only(
-      bottomRight: Radius.circular(5), topRight: Radius.circular(5), bottomLeft: Radius.circular(5));
+      bottomRight: Radius.circular(5), topRight: Radius.circular(5));
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 25),
-        child: Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment(-1, 0),
-                    child: CustomPaint(
-                      painter: ChatTriangle(),
-                    ),
-                  ),Material(
-                elevation: 0,
-                shadowColor: Colors.black,
-                      child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: widget.color,
-                      borderRadius: _borderRadius(),
-                      shape: BoxShape.rectangle,
-                      boxShadow: [BoxShadow(offset: Offset(3, 3), color: Color.fromRGBO(20, 20, 20, .3),blurRadius: 2)]
-                    ),
-                    child: InkWell(splashColor: Colors.blue,onTap: (){}, child: Text(
-                      'من من من',
-                      textAlign: TextAlign.right,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ))),
-
-                ],
-              ),
-            );
+      margin: EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 25),
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment(-1, 0),
+            child: CustomPaint(
+              painter: ChatTriangle(widget.isSelfChat, widget.isHomePageChat),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: widget.color,
+                borderRadius: _borderRadius(),
+                shape: BoxShape.rectangle,
+                boxShadow: [
+                  BoxShadow(
+                      offset: Offset(3, 3),
+                      color: Color.fromRGBO(20, 20, 20, .3),
+                      blurRadius: 2)
+                ]),
+            child: Text(
+              'من من من',
+              textAlign: TextAlign.right,
+              textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 12),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
 class ChatTriangle extends CustomPainter {
+  final bool isSelfChat;
+  final bool isHomePageChat;
+
+  ChatTriangle(
+    this.isSelfChat,
+    this.isHomePageChat,
+  );
+
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;

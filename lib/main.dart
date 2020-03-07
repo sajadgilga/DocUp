@@ -1,8 +1,11 @@
 import 'package:docup/ui/start/StartPage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'constants/colors.dart';
 import 'constants/strings.dart';
+
+import 'ui/main_page/MainPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,7 +18,8 @@ class MyApp extends StatelessWidget {
         fontFamily: 'iransans',
         primarySwatch: MaterialColor(IColors.red.value, swatch),
       ),
-      home: StartPage(),
+//      home: StartPage(),
+      home: MainPage(),
     );
   }
 }

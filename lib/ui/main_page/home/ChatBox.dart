@@ -12,7 +12,9 @@ class ChatBox extends StatefulWidget {
 }
 
 class _ChatBoxState extends State<ChatBox> {
-  Widget _myMessages() => Column(children: <Widget>[
+  Widget _myMessages() => Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
         _myMessagesIcon(),
         SizedBox(
           height: 5,
@@ -39,6 +41,7 @@ class _ChatBoxState extends State<ChatBox> {
 
   Widget _chatList() => Container(
         child: ListView(
+          reverse:true,
           scrollDirection: Axis.vertical,
           children: <Widget>[
             ChatBubble(
@@ -63,6 +66,7 @@ class _ChatBoxState extends State<ChatBox> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Expanded(
           child: _chatList(),

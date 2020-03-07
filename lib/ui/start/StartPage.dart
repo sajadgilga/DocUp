@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:docup/blocs/StartBLOC.dart';
+import 'package:docup/blocs/StartBloc.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/main_page/MainPage.dart';
 import 'package:docup/ui/start/RoleType.dart';

@@ -4,6 +4,7 @@ import 'package:polygon_clipper/polygon_clipper.dart';
 
 import '../navigator_destination.dart';
 import 'home/Home.dart';
+import 'DestinationView.dart';
 import '../../constants/colors.dart';
 
 class MainPage extends StatefulWidget {
@@ -14,10 +15,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  String _text = 'goodi';
-  int _count = 0;
-
-  void _change_text() => setState(() => _text = 'something${_count++}');
+  int _currentIndex = 0;
 
   _open_doctor_detail() {
     Navigator.push(
@@ -57,7 +55,12 @@ class _MainPageState extends State<MainPage> {
   Widget _bottomNavigationBar() {
     return BottomNavigationBar(
       items: _bottomNavigationItems(),
-      onTap: (int index) => _open_doctor_detail(),
+      currentIndex: _currentIndex,
+      onTap: (int index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
       backgroundColor: Colors.white,
       unselectedItemColor: navigator_destinations[0].color,
       selectedItemColor: Colors.red,
@@ -67,22 +70,13 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: IColors.background,
-      bottomNavigationBar: SizedBox(
-        child: _bottomNavigationBar(),
-      ),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: <Widget>[
-            Image(
-              image: AssetImage('assets/backgroundHome.png'),
-              width: MediaQuery.of(context).size.width,
-              fit: BoxFit.fitWidth,
-            ),
-            Home()
-          ],
+        backgroundColor: IColors.background,
+        bottomNavigationBar: SizedBox(
+          child: _bottomNavigationBar(),
         ),
-      ),
-    );
+        body: DestinationView(
+          destination: navigator_destinations[0],
+          onNavigation: () {},
+        ));
   }
 }

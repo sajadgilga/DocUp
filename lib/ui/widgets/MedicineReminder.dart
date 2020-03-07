@@ -187,8 +187,17 @@ class _MedicineReminderState extends State<MedicineReminder> {
                     ),
                   ])),
             ),
-            onTap: _finishReminder,
-          )
+          ),
+          Positioned.fill(
+              child: new Material(
+                  color: Colors.transparent,
+                  child: new InkWell(
+                    onTap: () {
+                      _finishReminder();
+                    },
+                  )
+              )
+          ),
         ],
       ));
 
@@ -196,18 +205,15 @@ class _MedicineReminderState extends State<MedicineReminder> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10),
-      child: InkWell(
-        onTap: () {},
-        child: AnimatedPhysicalModel(
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.fastOutSlowIn,
-            elevation: (_reminderState == ReminderState.done) ? 0 : 8.0,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            shadowColor: _reminderState.shadow,
-            color: Colors.transparent,
-            child: _reminderBox()),
-      ),
+      child: AnimatedPhysicalModel(
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.fastOutSlowIn,
+          elevation: (_reminderState == ReminderState.done) ? 0 : 8.0,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          shadowColor: _reminderState.shadow,
+          color: Colors.transparent,
+          child: _reminderBox()),
     );
   }
 }
