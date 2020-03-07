@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:docup/blocs/StartBLOC.dart';
+import 'package:docup/models/LoginResponseEntity.dart';
+import 'package:docup/models/VerifyResponseEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/main_page/MainPage.dart';
 import 'package:docup/ui/start/RoleType.dart';
@@ -34,7 +36,8 @@ class _StartPageState extends State<StartPage> {
   final StartBloc _startBloc = StartBloc();
 
   StreamController<RoleType> _controller = BehaviorSubject();
-  final _inputController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _verificationController = TextEditingController();
 
   RoleType currentRoleType = RoleType.PATIENT;
   StartType startType = StartType.SIGN_UP;
@@ -49,12 +52,16 @@ class _StartPageState extends State<StartPage> {
           progressDialog.show();
           break;
         case Status.COMPLETED:
-          progressDialog.dismiss();
-          _inputController.clear();
-          setState(() {
-            startType = StartType.LOGIN;
-          });
-          _timerBloc.dispatch(Start(duration: 60));
+          if(data is LoginResponseEntity) {
+            progressDialog.dismiss();
+            _usernameController.clear();
+            setState(() {
+              startType = StartType.LOGIN;
+            });
+            _timerBloc.dispatch(Start(duration: 60));
+          } else if (data is VerifyResponseEntity) {
+            startType = StartType.REGISTER;
+          }
           break;
         case Status.ERROR:
           progressDialog.dismiss();
@@ -75,10 +82,10 @@ class _StartPageState extends State<StartPage> {
     setState(() {
       switch (startType) {
         case StartType.SIGN_UP:
-          _startBloc.login(_inputController.text);
+          _startBloc.login(_usernameController.text);
           break;
         case StartType.LOGIN:
-          startType = StartType.REGISTER;
+          _startBloc.verify(_usernameController.text, _verificationController.text);
           break;
         case StartType.REGISTER:
           Navigator.push(
@@ -128,7 +135,8 @@ class _StartPageState extends State<StartPage> {
 
   @override
   void dispose() {
-    _inputController.dispose();
+    _usernameController.dispose();
+    _verificationController.dispose();
     super.dispose();
   }
 
@@ -264,8 +272,8 @@ class _StartPageState extends State<StartPage> {
       case StartType.SIGN_UP:
         return currentRoleType == RoleType.PATIENT
             ? InputField(
-                inputHint: Strings.emailInputHint,
-                controller: _inputController,
+                inputHint: Strings.usernameInputHint,
+                controller: _usernameController,
               )
             : Column(
                 children: <Widget>[
@@ -275,13 +283,14 @@ class _StartPageState extends State<StartPage> {
                   ),
                   InputField(
                     inputHint:
-                        Strings.emailInputHint, /*controller: _inputController*/
+                        Strings.usernameInputHint, /*controller: _inputController*/
                   )
                 ],
               );
       case StartType.LOGIN:
         return InputField(
-          inputHint: Strings.verificationHint, /*controller: _inputController*/
+          inputHint: Strings.verificationHint,
+          controller: _verificationController,/*controller: _inputController*/
         );
       case StartType.REGISTER:
         return Column(
