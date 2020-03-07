@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'constants/colors.dart';
 import 'constants/strings.dart';
 
-import 'ui/main_page/MainPage.dart';
+import 'ui/mainPage/MainPage.dart';
 
 void main() => runApp(MyApp());
 

@@ -1,9 +1,10 @@
-import 'package:docup/ui/doctor_detail/DoctorDetailPage.dart';
+import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
+import 'package:docup/ui/home/Home.dart';
+import 'package:docup/ui/panel/Panel.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
-import 'package:docup/ui/main_page/navigator_destination.dart';
-import 'DestinationView.dart';
+import 'package:docup/ui/mainPage/navigator_destination.dart';
 import '../../constants/colors.dart';
 
 class MainPage extends StatefulWidget {
@@ -14,6 +15,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  List<Widget> _children = [Home(), Panel()];
   int _currentIndex = 0;
 
   _open_doctor_detail() {
@@ -73,9 +75,6 @@ class _MainPageState extends State<MainPage> {
         bottomNavigationBar: SizedBox(
           child: _bottomNavigationBar(),
         ),
-        body: DestinationView(
-          destination: navigator_destinations[0],
-          onNavigation: () {},
-        ));
+        body: _children[_currentIndex]);
   }
 }

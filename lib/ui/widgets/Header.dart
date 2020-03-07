@@ -1,9 +1,10 @@
-import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:flutter/material.dart';
 
-import 'notification/Notification.dart';
-
 class Header extends StatelessWidget {
+  final Widget child;
+
+  Header({Key key, this.child}) : super(key: key);
+
   Widget _docUpIcon() {
     return Container(
       padding: EdgeInsets.only(top: 10),
@@ -22,14 +23,7 @@ class Header extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NotificationPage()));
-              },
-              child: HomeNotification()),
+          child,
           _docUpIcon(),
         ],
       ),

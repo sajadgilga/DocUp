@@ -1,6 +1,7 @@
+import 'package:docup/ui/panel/Panel.dart';
 import 'package:flutter/material.dart';
 
-import 'package:docup/ui/main_page/navigator_destination.dart';
+import 'package:docup/ui/mainPage/navigator_destination.dart';
 import 'MainPage.dart';
 import '../home/Home.dart';
 
@@ -24,18 +25,9 @@ class DestinationViewState extends State<DestinationView> {
         builder: (BuildContext context) {
           switch (settings.name) {
             case '/':
-              return SingleChildScrollView(
-                child: Stack(
-                  children: <Widget>[
-                    Image(
-                      image: AssetImage('assets/backgroundHome.png'),
-                      width: MediaQuery.of(context).size.width,
-                      fit: BoxFit.fitWidth,
-                    ),
-                    Home()
-                  ],
-                ),
-              );
+              return Home();
+            case '/panel':
+              return Panel();
             default:
               return MainPage();
           }

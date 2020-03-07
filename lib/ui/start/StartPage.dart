@@ -3,7 +3,7 @@ import 'package:docup/blocs/StartBloc.dart';
 import 'package:docup/models/LoginResponseEntity.dart';
 import 'package:docup/models/VerifyResponseEntity.dart';
 import 'package:docup/networking/Response.dart';
-import 'package:docup/ui/main_page/MainPage.dart';
+import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/blocs/timer/TimerEvent.dart';
 import 'package:docup/ui/widgets/InputField.dart';
