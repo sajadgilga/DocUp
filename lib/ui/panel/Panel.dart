@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:docup/ui/panel/chatPage/ChatPage.dart';
 
+import 'PanelMenu.dart';
+
 enum PanelStates { PATIENT_DATA, DOCTOR_CHAT, VIDEO_CALL }
 
 class Panel extends StatefulWidget {
@@ -21,11 +23,15 @@ class Panel extends StatefulWidget {
 class PanelState extends State<Panel> {
   PanelStates _state = PanelStates.DOCTOR_CHAT;
 
+  void _showPanelMenu() {
+    Navigator.pushNamedAndRemoveUntil(context, '/panelMenu', (route) => true);
+  }
+
   Widget _header() => Header(
           child: Row(
         children: <Widget>[
           GestureDetector(
-              onTap: () {},
+              onTap: () {_showPanelMenu();},
               child: Container(
                 padding: EdgeInsets.only(top: 15, right: 10),
                 child: Image(

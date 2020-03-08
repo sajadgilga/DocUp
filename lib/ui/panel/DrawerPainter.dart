@@ -54,6 +54,8 @@ class DrawerPainter extends CustomPainter {
       ..lineTo(bottomLeft.dx, bottomRight.dy)
       ..close();
 
+    canvas.drawShadow(path, Colors.black, 30, false);
+
     canvas.drawPath(path, paint);
   }
 }

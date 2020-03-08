@@ -25,5 +25,17 @@ class Strings {
   static final String docUpIntroHomePart1 = 'داک‌ آپ،' ;
   static final String docUpIntroHomePart2 = 'پل ارتباطی بین پزشک و بیمار';
   static final String medicineReminder = 'یادآوری داروها';
+  static final String panelMenuLabel = 'پنل کاربری';
 
+  static final String panelIDoctorLabel = 'پزشکان من';
+  static final String panelHealthFileLabel = 'پرونده سلامت';
+  static final String panelHealthScheduleLabel = 'تقویم سلامت';
+
+  static final String panelDocumentSubLabel = 'مدارک';
+  static final String panelResultsSubLabel = 'نتایج آزمایش';
+  static final String panelMedicinesSubLabel = 'داروها و نسخه‌ها';
+  static final String panelPicturesSubLabel = 'تصاویر عارضه';
+
+  static final String panelReminderSubLabel = 'یادآوری داروها';
+  static final String panelVisitsSubLabel = 'زمان‌های ویزیت';
 }

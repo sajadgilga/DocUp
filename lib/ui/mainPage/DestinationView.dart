@@ -1,4 +1,6 @@
+import 'package:docup/models/Doctor.dart';
 import 'package:docup/ui/panel/Panel.dart';
+import 'package:docup/ui/panel/PanelMenu.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/mainPage/navigator_destination.dart';
@@ -6,11 +8,23 @@ import 'MainPage.dart';
 import '../home/Home.dart';
 
 class DestinationView extends StatefulWidget {
-  final Destination destination;
+  final int index;
   final VoidCallback onNavigation;
+  List<Widget> _children = [
+    Home(),
+    Panel(
+      doctor: Doctor(
+          "دکتر زهرا شادلو",
+          "متخصص پوست",
+          "اقدسیه",
+          Image(
+            image: AssetImage('assets/lion.jpg'),
+          ),
+          []),
+    )
+  ];
 
-  DestinationView({Key key, this.destination, this.onNavigation})
-      : super(key: key);
+  DestinationView({Key key, this.index, this.onNavigation}) : super(key: key);
 
   @override
   DestinationViewState createState() {
@@ -25,9 +39,9 @@ class DestinationViewState extends State<DestinationView> {
         builder: (BuildContext context) {
           switch (settings.name) {
             case '/':
-              return Home();
-            case '/panel':
-              return Panel();
+              return widget._children[widget.index];
+            case '/panelMenu':
+              return PanelMenu();
             default:
               return MainPage();
           }

@@ -7,6 +7,7 @@ import 'package:polygon_clipper/polygon_clipper.dart';
 
 import 'package:docup/ui/mainPage/navigator_destination.dart';
 import '../../constants/colors.dart';
+import 'DestinationView.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class _MainPageState extends State<MainPage> {
       return BottomNavigationBarItem(
           icon: (destination.hasImage
               ? Container(
-                  width: MediaQuery.of(context).size.width * .09,
+                  width: 50,
                   child: ClipPolygon(
                     sides: 6,
                     rotate: 90,
@@ -57,7 +58,7 @@ class _MainPageState extends State<MainPage> {
                 )
               : Icon(
                   destination.icon,
-                  size: MediaQuery.of(context).size.width * .06,
+                  size: 30,
                 )),
           title: Text(
             destination.title,
@@ -83,11 +84,18 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: IColors.background,
-        bottomNavigationBar: SizedBox(
-          child: _bottomNavigationBar(),
-        ),
-        body: _children[_currentIndex]);
+    return WillPopScope(
+        child: Scaffold(
+            backgroundColor: IColors.background,
+            bottomNavigationBar: SizedBox(
+              child: _bottomNavigationBar(),
+            ),
+            body: DestinationView(
+              index: _currentIndex,
+              onNavigation: () {},
+            )),
+        onWillPop: () async {
+          return false;
+        });
   }
 }
