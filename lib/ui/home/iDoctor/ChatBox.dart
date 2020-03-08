@@ -1,3 +1,4 @@
+import 'package:docup/models/ChatMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -12,9 +13,8 @@ class ChatBox extends StatefulWidget {
 }
 
 class _ChatBoxState extends State<ChatBox> {
-  Widget _myMessages() => Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
+  Widget _myMessages() =>
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         _myMessagesIcon(),
         SizedBox(
           height: 5,
@@ -39,29 +39,30 @@ class _ChatBoxState extends State<ChatBox> {
         )
       ]);
 
-  Widget _chatList() => Container(
-        child: ListView(
-          reverse:true,
-          scrollDirection: Axis.vertical,
-          children: <Widget>[
-            ChatBubble(
-              text: 'من من من',
-              dateTime: DateTime.now(),
-              color: IColors.background,
-            ),
-            ChatBubble(
-              text: 'من من من',
-              dateTime: DateTime.now(),
-              color: IColors.background,
-            ),
-            ChatBubble(
-              text: 'من من من',
-              dateTime: DateTime.now(),
-              color: IColors.background,
-            ),
-          ],
-        ),
-      );
+  Widget _chatList() {
+    var message = ChatMessage.fromDoctor(
+        text: 'من من من',
+        sentDate: DateTime.now(),
+        doctor: null,
+        patient: null);
+    return Container(
+      child: ListView(
+        reverse: true,
+        scrollDirection: Axis.vertical,
+        children: <Widget>[
+          ChatBubble(
+            message: message,
+          ),
+          ChatBubble(
+            message: message,
+          ),
+          ChatBubble(
+            message: message,
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

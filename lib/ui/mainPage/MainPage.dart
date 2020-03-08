@@ -1,3 +1,4 @@
+import 'package:docup/models/Doctor.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/home/Home.dart';
 import 'package:docup/ui/panel/Panel.dart';
@@ -15,7 +16,19 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  List<Widget> _children = [Home(), Panel()];
+  List<Widget> _children = [
+    Home(),
+    Panel(
+      doctor: Doctor(
+          "دکتر زهرا شادلو",
+          "متخصص پوست",
+          "اقدسیه",
+          Image(
+            image: AssetImage('assets/lion.jpg'),
+          ),
+          []),
+    )
+  ];
   int _currentIndex = 0;
 
   _open_doctor_detail() {

@@ -16,6 +16,10 @@ const Map<int, Color> swatch = {
 class IColors {
   static Color red = Color.fromRGBO(254, 95, 85, 1);
   static Color background = Color.fromRGBO(242, 242, 242, 1);
+  static Color doctorChatBubble = Color.fromRGBO(242, 242, 242, 1);
+  static Color selfChatBubble = Color.fromRGBO(254, 95, 85, 1);
+  static Color doctorChatText = Colors.black;
+  static Color selfChatText = Colors.white;
   static Color grey = Color.fromRGBO(245, 245, 245, 1);
   static Color darkGrey = Color.fromRGBO(144, 144, 144, 1);
 }

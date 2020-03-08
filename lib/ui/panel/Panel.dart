@@ -1,4 +1,5 @@
 import 'package:docup/constants/colors.dart';
+import 'package:docup/models/Doctor.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,10 @@ import 'ChatPage.dart';
 enum PanelStates { PATIENT_DATA, DOCTOR_CHAT, VIDEO_CALL }
 
 class Panel extends StatefulWidget {
+  final Doctor doctor;
+
+  Panel({Key key, this.doctor}) : super(key: key);
+
   @override
   PanelState createState() {
     return PanelState();
@@ -129,7 +134,8 @@ class PanelState extends State<Panel> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+      constraints:
+          BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
       child: Column(
         children: <Widget>[
           _header(),
@@ -137,9 +143,10 @@ class PanelState extends State<Panel> {
             height: 20,
           ),
           _tabs(MediaQuery.of(context).size.width),
-          SizedBox(height: 20,),
-
-          Expanded(flex: 2, child: ChatPage())
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(flex: 2, child: ChatPage(doctor: widget.doctor,))
         ],
       ),
     );
