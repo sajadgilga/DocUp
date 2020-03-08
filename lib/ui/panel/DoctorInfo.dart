@@ -79,7 +79,7 @@ class DoctorInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(30),
+      padding: EdgeInsets.only(top: 20, left: 30, right: 30, bottom: 10),
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

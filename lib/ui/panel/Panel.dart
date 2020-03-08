@@ -139,9 +139,6 @@ class PanelState extends State<Panel> {
       child: Column(
         children: <Widget>[
           _header(),
-          SizedBox(
-            height: 20,
-          ),
           _tabs(MediaQuery.of(context).size.width),
           SizedBox(
             height: 20,

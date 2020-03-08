@@ -3,6 +3,7 @@ import 'package:docup/models/ChatMessage.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 import 'DoctorInfo.dart';
 
@@ -93,18 +94,21 @@ class _ChatBoxState extends State<_ChatBox> {
 
   @override
   Widget build(BuildContext context) {
-    var doctorMsg = ChatMessage.fromDoctor(
-        text: 'من من من',
-        sentDate: DateTime.now(),
-        doctor: widget.doctor,
-        patient: null);
-    var patientMsg = ChatMessage.fromPatient(
-        text: 'من من من',
-        sentDate: DateTime.now(),
-        doctor: widget.doctor,
-        patient: null);
-    _messages.add(doctorMsg);
-    _messages.add(patientMsg);
+    var rng = Random();
+    for (int i = 0; i < 10; i++) {
+      var doctorMsg = ChatMessage.fromDoctor(
+          text: 'من من من' * (rng.nextInt(10) + 1),
+          sentDate: DateTime.now(),
+          doctor: widget.doctor,
+          patient: null);
+      var patientMsg = ChatMessage.fromPatient(
+          text: 'من من من' * (rng.nextInt(10) + 1),
+          sentDate: DateTime.now(),
+          doctor: widget.doctor,
+          patient: null);
+      _messages.add(doctorMsg);
+      _messages.add(patientMsg);
+    }
     var messages = <Widget>[];
     for (var message in _messages) {
       messages.add(ChatBubble(
@@ -116,6 +120,7 @@ class _ChatBoxState extends State<_ChatBox> {
       flex: 2,
       child: Container(
         child: ListView(
+          reverse: true,
           children: messages,
         ),
       ),

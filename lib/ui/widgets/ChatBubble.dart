@@ -1,5 +1,6 @@
 import 'package:docup/models/ChatMessage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../constants/colors.dart';
 
@@ -44,6 +45,28 @@ class _ChatBubbleState extends State<ChatBubble> {
       ? EdgeInsets.only(top: 5, bottom: 5, right: 25, left: 5)
       : EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 25));
 
+  Widget _chatBubble(width) => Container(
+        constraints: BoxConstraints(maxWidth: width * .7),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: (widget.message.fromPatient
+                ? IColors.selfChatBubble
+                : IColors.doctorChatBubble),
+            borderRadius: _borderRadius(),
+            shape: BoxShape.rectangle,
+            boxShadow: _shadow()),
+        child: Text(
+          widget.message.text,
+          textAlign: TextAlign.right,
+          textDirection: TextDirection.rtl,
+          style: TextStyle(
+              fontSize: 12,
+              color: (widget.message.fromPatient
+                  ? IColors.selfChatText
+                  : IColors.doctorChatText)),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,26 +79,45 @@ class _ChatBubbleState extends State<ChatBubble> {
                   ? Alignment.centerRight
                   : Alignment.centerLeft),
               child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: (widget.message.fromPatient
-                        ? IColors.selfChatBubble
-                        : IColors.doctorChatBubble),
-                    borderRadius: _borderRadius(),
-                    shape: BoxShape.rectangle,
-                    boxShadow: _shadow()),
-                child: Text(
-                  widget.message.text,
-                  textAlign: TextAlign.right,
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: (widget.message.fromPatient
-                          ? IColors.selfChatText
-                          : IColors.doctorChatText)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: (widget.message.fromPatient
+                      ? CrossAxisAlignment.start
+                      : CrossAxisAlignment.end),
+                  children: <Widget>[
+                    _chatBubble(MediaQuery.of(context).size.width),
+                    _dateAndStatus()
+                  ],
                 ),
-              )),
+              ))
         ],
+      ),
+    );
+  }
+
+  _dateAndStatus() {
+    var dateAndStatus = <Widget>[
+      Text(
+        '${widget.message.sentDate.hour}:${widget.message.sentDate.minute}',
+        style: TextStyle(fontSize: 8),
+      ),
+    ];
+    if (widget.message.fromPatient) {
+      dateAndStatus.add(Container(
+          padding: EdgeInsets.only(left: 5),
+          child: SvgPicture.asset(
+            'assets/whatsapp.svg',
+            color: Colors.green,
+            width: 10,
+            height: 10,
+          )));
+    }
+
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: dateAndStatus,
       ),
     );
   }
