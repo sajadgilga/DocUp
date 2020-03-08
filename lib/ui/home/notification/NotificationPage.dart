@@ -1,5 +1,6 @@
 import 'package:docup/constants/colors.dart';
-import 'package:docup/ui/home/notification/DrawerPainter.dart';
+import 'package:docup/ui/panel/DrawerPainter.dart';
+//import 'package:docup/ui/home/notification/DrawerPainter.dart';
 import 'package:flutter/material.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 
@@ -42,7 +43,8 @@ class _NotificationPageState extends State<NotificationPage> {
             fit: BoxFit.fitWidth,
           ),
           CustomPaint(
-              painter: MyPainter(),
+              painter: DrawerPainter(),
+//              painter: MyPainter(),
               child: Stack(
                 children: <Widget>[
                   Positioned(

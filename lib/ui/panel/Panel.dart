@@ -3,7 +3,7 @@ import 'package:docup/models/Doctor.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
-import 'ChatPage.dart';
+import 'package:docup/ui/panel/chatPage/ChatPage.dart';
 
 enum PanelStates { PATIENT_DATA, DOCTOR_CHAT, VIDEO_CALL }
 
