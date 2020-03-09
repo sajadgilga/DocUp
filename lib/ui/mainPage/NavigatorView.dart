@@ -86,7 +86,7 @@ class NavigatorView extends StatelessWidget {
     return Navigator(
       key: navigatorKey,
       initialRoute: NavigatorRoutes.root,
-      observers: <NavigatorObserver>[],
+      observers: <NavigatorObserver>[HeroController()],
       onGenerateRoute: (settings) => _route(settings, context),
     );
   }

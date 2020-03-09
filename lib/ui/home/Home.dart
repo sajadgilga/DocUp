@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:docup/ui/home/ReminderList.dart';
 import 'package:docup/ui/home/SearchBox.dart';
-import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/home/notification/Notification.dart';
 
 import 'package:docup/ui/home/iDoctor/IDoctor.dart';
@@ -49,10 +48,6 @@ class Home extends StatelessWidget {
                   child: GestureDetector(
                       onTap: () {
                         onPush(NavigatorRoutes.notificationView);
-//                        Navigator.push(
-//                            context,
-//                            MaterialPageRoute(
-//                                builder: (context) => NotificationPage()));
                       },
                       child: HomeNotification())),
               Container(

@@ -133,7 +133,11 @@ class PanelMenu extends StatelessWidget {
           Container(
               constraints: BoxConstraints(maxHeight: 100),
               alignment: Alignment.topCenter,
-              child: _header()),
+              child: Hero(
+                tag: "panelHeader",
+                transitionOnUserGestures: true,
+                child: _header(),
+              )),
         ],
       ),
     );
@@ -215,7 +219,6 @@ class _PanelMenuMainItem extends StatelessWidget {
           ]),
         ),
         onWillPop: () async {
-
           Navigator.of(context).pop();
           return false;
         });

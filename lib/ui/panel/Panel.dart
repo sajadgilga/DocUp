@@ -52,7 +52,7 @@ class PanelState extends State<Panel> {
                 _showPanelMenu();
               },
               child: Container(
-                padding: EdgeInsets.only(top: 15, right: 10),
+                padding: EdgeInsets.only(top: 15, left: 10, right: 10),
                 child: Image(
                   image: AssetImage('assets/panelList.png'),
                   height: 40,
@@ -176,7 +176,11 @@ class PanelState extends State<Panel> {
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
       child: Column(
         children: <Widget>[
-          _header(),
+          Hero(
+            tag: "panelHeader",
+            transitionOnUserGestures: true,
+            child: _header(),
+          ),
           _tabs(MediaQuery.of(context).size.width),
           SizedBox(
             height: 20,

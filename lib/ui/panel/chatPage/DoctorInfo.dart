@@ -32,11 +32,13 @@ class DoctorInfo extends StatelessWidget {
             children: <Widget>[
               Container(
                   width: 70,
-                  child: ClipPolygon(
-                    sides: 6,
-                    rotate: 90,
-                    child: doctor.image,
-                  )),
+                  child: Hero(
+                      tag: 'doctorImage',
+                      child: ClipPolygon(
+                        sides: 6,
+                        rotate: 90,
+                        child: doctor.image,
+                      ))),
               Align(alignment: Alignment(-.75, 1), child: _isOnline())
             ],
           )));

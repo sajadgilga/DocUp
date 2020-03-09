@@ -13,17 +13,20 @@ class DoctorSummary extends StatelessWidget {
       padding: EdgeInsets.all(10),
       child: Container(
         width: 50,
-        child: ClipPolygon(
-          sides: 6,
-          rotate: 90,
-          boxShadows: [
-            PolygonBoxShadow(color: Colors.black, elevation: 1.0),
-            PolygonBoxShadow(color: Colors.grey, elevation: 2.0)
-          ],
-          child: Image(
-            image: AssetImage('assets/lion.jpg'),
-          ),
-        ),
+        child: Hero(
+            tag: 'doctorImage',
+            transitionOnUserGestures: true,
+            child: ClipPolygon(
+              sides: 6,
+              rotate: 90,
+              boxShadows: [
+                PolygonBoxShadow(color: Colors.black, elevation: 1.0),
+                PolygonBoxShadow(color: Colors.grey, elevation: 2.0)
+              ],
+              child: Image(
+                image: AssetImage('assets/lion.jpg'),
+              ),
+            )),
       ));
 
   Widget _description() => Column(
@@ -40,16 +43,23 @@ class DoctorSummary extends StatelessWidget {
             textDirection: TextDirection.rtl,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-            Text(
-              location,
-              textDirection: TextDirection.rtl,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-            ),
-            SizedBox(width: 5,),
-            Icon(Icons.add_location, size: 15,),
-  ],)
-
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                location,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Icon(
+                Icons.add_location,
+                size: 15,
+              ),
+            ],
+          )
         ],
       );
 

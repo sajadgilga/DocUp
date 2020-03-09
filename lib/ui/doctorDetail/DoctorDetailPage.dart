@@ -60,15 +60,18 @@ class DoctorInfoWidget extends StatelessWidget {
         SizedBox(height: 30),
         Container(
           width: 100,
-          child: ClipPolygon(
-            sides: 6,
-            rotate: 90,
-            boxShadows: [
-              PolygonBoxShadow(color: Colors.black, elevation: 1.0),
-              PolygonBoxShadow(color: Colors.grey, elevation: 5.0)
-            ],
-            child: Image.asset("assets/lion.jpg"),
-          ),
+          child: Hero(
+              tag: 'doctorImage',
+              transitionOnUserGestures: true,
+              child: ClipPolygon(
+                sides: 6,
+                rotate: 90,
+                boxShadows: [
+                  PolygonBoxShadow(color: Colors.black, elevation: 1.0),
+                  PolygonBoxShadow(color: Colors.grey, elevation: 5.0)
+                ],
+                child: Image.asset("assets/lion.jpg"),
+              )),
         ),
         SizedBox(height: 10),
         Text("دکتر یاسر عسکری سبزکوهی",
@@ -104,13 +107,14 @@ class DoctorInfoWidget extends StatelessWidget {
           ),
         ),
         ActionButton(
-            color: IColors.red,
-            title: Strings.requestAction,
-            icon: Icon(
-              Icons.send,
-              size: 18.0,
-            ),
-        callBack: (){},)
+          color: IColors.red,
+          title: Strings.requestAction,
+          icon: Icon(
+            Icons.send,
+            size: 18.0,
+          ),
+          callBack: () {},
+        )
       ],
     );
   }
