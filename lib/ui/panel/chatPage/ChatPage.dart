@@ -9,8 +9,9 @@ import 'DoctorInfo.dart';
 
 class ChatPage extends StatefulWidget {
   final Doctor doctor;
+  final ValueChanged<String> onPush;
 
-  ChatPage({Key key, this.doctor}) : super(key: key);
+  ChatPage({Key key, this.doctor, @required this.onPush}) : super(key: key);
 
   @override
   _ChatPageState createState() {
@@ -67,6 +68,7 @@ class _ChatPageState extends State<ChatPage> {
         children: <Widget>[
           DoctorInfo(
             doctor: widget.doctor,
+            onPush: widget.onPush,
           ),
           _ChatBox(
             doctor: widget.doctor,

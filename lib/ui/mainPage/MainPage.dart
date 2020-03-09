@@ -1,13 +1,9 @@
-import 'package:docup/models/Doctor.dart';
-import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
-import 'package:docup/ui/home/Home.dart';
-import 'package:docup/ui/panel/Panel.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
 import 'package:docup/ui/mainPage/navigator_destination.dart';
 import '../../constants/colors.dart';
-import 'DestinationView.dart';
+import 'NavigatorView.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -17,24 +13,22 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  List<Widget> _children = [
-    Home(),
-    Panel(
-      doctor: Doctor(
-          "دکتر زهرا شادلو",
-          "متخصص پوست",
-          "اقدسیه",
-          Image(
-            image: AssetImage('assets/lion.jpg'),
-          ),
-          []),
-    )
-  ];
   int _currentIndex = 0;
+  Map<int, GlobalKey<NavigatorState>> _navigatorKeys = {
+    0: GlobalKey<NavigatorState>(),
+    1: GlobalKey<NavigatorState>(),
+    2: GlobalKey<NavigatorState>(),
+    3: GlobalKey<NavigatorState>(),
+  };
 
-  _open_doctor_detail() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => DoctorDetailPage()));
+  void _selectPage(int index) {
+    if (_currentIndex == index) {
+      _navigatorKeys[index].currentState.popUntil((route) => route.isFirst);
+    } else {
+      setState(() {
+        _currentIndex = index;
+      });
+    }
   }
 
   List<BottomNavigationBarItem> _bottomNavigationItems() {
@@ -72,13 +66,18 @@ class _MainPageState extends State<MainPage> {
       items: _bottomNavigationItems(),
       currentIndex: _currentIndex,
       onTap: (int index) {
-        setState(() {
-          _currentIndex = index;
-        });
+        _selectPage(index);
       },
       backgroundColor: Colors.white,
       unselectedItemColor: navigator_destinations[0].color,
       selectedItemColor: Colors.red,
+    );
+  }
+
+  Widget _buildOffstageNavigator(int index) {
+    return Offstage(
+      offstage: _currentIndex != index,
+      child: NavigatorView(navigatorKey: _navigatorKeys[index], index: index),
     );
   }
 
@@ -90,12 +89,22 @@ class _MainPageState extends State<MainPage> {
             bottomNavigationBar: SizedBox(
               child: _bottomNavigationBar(),
             ),
-            body: DestinationView(
-              index: _currentIndex,
-              onNavigation: () {},
+            body: Stack(
+              children: <Widget>[
+                _buildOffstageNavigator(0),
+                _buildOffstageNavigator(1),
+              ],
             )),
         onWillPop: () async {
-          return false;
+          final isFirstRouteInCurrentRoute =
+              !await _navigatorKeys[_currentIndex].currentState.maybePop();
+          if (isFirstRouteInCurrentRoute) {
+            if (_currentIndex != 0) {
+              _selectPage(0);
+              return false;
+            }
+          }
+          return isFirstRouteInCurrentRoute;
         });
   }
 }

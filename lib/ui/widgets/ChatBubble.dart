@@ -97,14 +97,16 @@ class _ChatBubbleState extends State<ChatBubble> {
 
   _dateAndStatus() {
     var dateAndStatus = <Widget>[
-      Text(
-        '${widget.message.sentDate.hour}:${widget.message.sentDate.minute}',
-        style: TextStyle(fontSize: 8),
-      ),
+      Container(
+          padding: EdgeInsets.only(top: 5),
+          child: Text(
+            '${widget.message.sentDate.hour}:${widget.message.sentDate.minute}',
+            style: TextStyle(fontSize: 8),
+          )),
     ];
     if (widget.message.fromPatient) {
       dateAndStatus.add(Container(
-          padding: EdgeInsets.only(left: 5),
+          padding: EdgeInsets.only(left: 5, top: 5),
           child: SvgPicture.asset(
             'assets/whatsapp.svg',
             color: Colors.green,

@@ -1,11 +1,13 @@
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
 class DoctorInfo extends StatelessWidget {
   final Doctor doctor;
+  final ValueChanged<String> onPush;
 
-  DoctorInfo({Key key, this.doctor}) : super(key: key);
+  DoctorInfo({Key key, this.doctor, @required this.onPush}) : super(key: key);
 
   Widget _isOnline() => Container(
         width: 15,
@@ -16,24 +18,28 @@ class DoctorInfo extends StatelessWidget {
             border: Border.all(color: Colors.white, width: 2.5)),
       );
 
-  Widget _image() => Container(
-      width: 80,
-      height: 70,
-      child: Stack(
-        fit: StackFit.loose,
-        children: <Widget>[
-          Container(
-              width: 70,
-              child: ClipPolygon(
-                sides: 6,
-                rotate: 90,
-                child: Image(
-                  image: AssetImage('assets/lion.jpg'),
-                ),
-              )),
-          Align(alignment: Alignment(-.75, 1), child: _isOnline())
-        ],
-      ));
+  void _showDoctorDialogue() {
+    onPush(NavigatorRoutes.doctorDialogue);
+  }
+
+  Widget _image() => GestureDetector(
+      onTap: _showDoctorDialogue,
+      child: Container(
+          width: 80,
+          height: 70,
+          child: Stack(
+            fit: StackFit.loose,
+            children: <Widget>[
+              Container(
+                  width: 70,
+                  child: ClipPolygon(
+                    sides: 6,
+                    rotate: 90,
+                    child: doctor.image,
+                  )),
+              Align(alignment: Alignment(-.75, 1), child: _isOnline())
+            ],
+          )));
 
   Widget _info() => Column(
         children: <Widget>[

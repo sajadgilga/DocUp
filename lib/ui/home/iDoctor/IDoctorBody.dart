@@ -1,3 +1,4 @@
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/home/iDoctor/ChatBox.dart';
@@ -6,8 +7,13 @@ import 'package:docup/ui/widgets/DoctorSummary.dart';
 
 class IDoctorBody extends StatelessWidget {
   final Doctor doctor;
+  final ValueChanged<String> onPush;
 
-  IDoctorBody({Key key, this.doctor}) : super(key: key);
+  IDoctorBody({Key key, this.doctor, @required this.onPush}) : super(key: key);
+
+  void _showDoctorDialogue() {
+    onPush(NavigatorRoutes.doctorDialogue);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +21,9 @@ class IDoctorBody extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Expanded(child: ChatBox()),
-        SizedBox(width: 5,),
+        SizedBox(
+          width: 5,
+        ),
         SizedBox(
           height: 60,
           child: VerticalDivider(
@@ -24,8 +32,15 @@ class IDoctorBody extends StatelessWidget {
             width: 10,
           ),
         ),
-        SizedBox(width: 3,),
-        DoctorSummary(doctor.name, doctor.speciality, doctor.location),
+        SizedBox(
+          width: 3,
+        ),
+        GestureDetector(
+          onTap: () {
+            _showDoctorDialogue();
+          },
+          child: DoctorSummary(doctor.name, doctor.speciality, doctor.location),
+        )
       ],
     );
   }
