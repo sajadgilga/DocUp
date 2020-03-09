@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: MaterialColor(IColors.red.value, swatch),
       ),
 //      home: StartPage(),
-      home: MainPage(),
+      home: StartPage(),
     );
   }
 }

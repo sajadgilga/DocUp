@@ -16,7 +16,7 @@ class StartBloc {
       _startDataController.stream;
 
   StartBloc() {
-    _startDataController = StreamController<Response<LoginResponseEntity>>();
+    _startDataController = StreamController<Response<dynamic>>();
     _startRepository = StartRepository();
   }
 

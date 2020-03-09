@@ -4,6 +4,7 @@ import 'package:docup/models/LoginResponseEntity.dart';
 import 'package:docup/models/VerifyResponseEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/blocs/timer/TimerEvent.dart';
 import 'package:docup/ui/widgets/InputField.dart';
@@ -46,28 +47,28 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     switchRole(currentRoleType);
-    _startBloc.startDataStream.listen((data) {
-      switch (data.status) {
-        case Status.LOADING:
-          progressDialog.show();
-          break;
-        case Status.COMPLETED:
-          if(data is LoginResponseEntity) {
-            progressDialog.dismiss();
-            _usernameController.clear();
-            setState(() {
-              startType = StartType.LOGIN;
-            });
-            _timerBloc.dispatch(Start(duration: 60));
-          } else if (data is VerifyResponseEntity) {
-            startType = StartType.REGISTER;
-          }
-          break;
-        case Status.ERROR:
-          progressDialog.dismiss();
-          break;
-      }
-    });
+//    _startBloc.startDataStream.listen((data) {
+//      switch (data.status) {
+//        case Status.LOADING:
+//          progressDialog.show();
+//          break;
+//        case Status.COMPLETED:
+//          if(data is LoginResponseEntity) {
+//            progressDialog.dismiss();
+//            _usernameController.clear();
+//            setState(() {
+//              startType = StartType.LOGIN;
+//            });
+//            _timerBloc.dispatch(Start(duration: 60));
+//          } else if (data is VerifyResponseEntity) {
+//            startType = StartType.REGISTER;
+//          }
+//          break;
+//        case Status.ERROR:
+//          progressDialog.dismiss();
+//          break;
+//      }
+//    });
     super.initState();
   }
 
@@ -82,10 +83,14 @@ class _StartPageState extends State<StartPage> {
     setState(() {
       switch (startType) {
         case StartType.SIGN_UP:
-          _startBloc.login(_usernameController.text);
+          startType = StartType.LOGIN;
+          _timerBloc.dispatch(Start(duration: 60));
+          _usernameController.clear();
+//          _startBloc.login(_usernameController.text);
           break;
         case StartType.LOGIN:
-          _startBloc.verify(_usernameController.text, _verificationController.text);
+          startType = StartType.REGISTER;
+//          _startBloc.verify(_usernameController.text, _verificationController.text);
           break;
         case StartType.REGISTER:
           Navigator.push(
@@ -282,15 +287,15 @@ class _StartPageState extends State<StartPage> {
                     /*controller: _inputController*/
                   ),
                   InputField(
-                    inputHint:
-                        Strings.usernameInputHint, /*controller: _inputController*/
+                    inputHint: Strings
+                        .usernameInputHint, /*controller: _inputController*/
                   )
                 ],
               );
       case StartType.LOGIN:
         return InputField(
           inputHint: Strings.verificationHint,
-          controller: _verificationController,/*controller: _inputController*/
+          controller: _verificationController, /*controller: _inputController*/
         );
       case StartType.REGISTER:
         return Column(
