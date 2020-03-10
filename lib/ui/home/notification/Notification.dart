@@ -57,8 +57,8 @@ class _HomeNotificationState extends State<HomeNotification> {
         height: 50,
         child: Stack(
           children: <Widget>[
-            Hero(tag: "notif", child: _notificationIcon()),
-            Hero(tag: "notificationCount", child: _notificationCountCircle())
+            _notificationIcon(),
+            _notificationCountCircle()
           ],
         ));
   }

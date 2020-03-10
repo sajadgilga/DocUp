@@ -33,6 +33,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SlidingUpPanel(
+        defaultPanelState: PanelState.OPEN,
         panel: Center(child: DoctorInfoWidget(doctor: widget.doctor,)),
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
@@ -100,17 +101,23 @@ class DoctorInfoWidget extends StatelessWidget {
             )
           ],
         ),
-        Container(
-          width: 100,
-          height: 100,
-          child: GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: _center,
-              zoom: 5.0,
+        SizedBox(height: 10,),
+        ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          child: Container(
+            width: 200,
+            height: 150,
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: _center,
+                zoom: 5.0,
+              ),
             ),
           ),
         ),
+
+        SizedBox(height: 10,),
         ActionButton(
           color: IColors.red,
           title: Strings.requestAction,

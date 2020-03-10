@@ -49,18 +49,6 @@ class _NotificationPageState extends State<NotificationPage> {
               child: Stack(
                 children: <Widget>[
                   Positioned(
-                    left: MediaQuery.of(context).size.width * 0.25,
-                    top: MediaQuery.of(context).size.height * 0.15 - 17.5,
-                    child: Hero(
-                      tag: "notif",
-                      child: Icon(
-                        Icons.notifications,
-                        size: 35,
-                        color: IColors.red,
-                      ),
-                    ),
-                  ),
-                  Positioned(
                     left: MediaQuery.of(context).size.width * 0.6,
                     top: MediaQuery.of(context).size.height * 0.3,
                     child: Text(
@@ -71,16 +59,23 @@ class _NotificationPageState extends State<NotificationPage> {
                   Positioned(
                       left: MediaQuery.of(context).size.width * 0.55,
                       top: MediaQuery.of(context).size.height * 0.29,
-                      child: Hero(
-                          tag: "notificationCount",
-                          child: _notificationCountCircle())),
+                      child: _notificationCountCircle()),
                   Positioned(
                     right: MediaQuery.of(context).size.width * 0.15,
                     top: MediaQuery.of(context).size.height * 0.4,
                     child: NotificationItem(),
                   )
                 ],
-              ))
+              )),
+          Container(
+            width: 100,
+            height: 120,
+            child: Icon(
+              Icons.notifications,
+              size: 35,
+              color: IColors.red,
+            ),
+          ),
         ],
       ),
     );
