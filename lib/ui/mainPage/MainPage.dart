@@ -89,7 +89,8 @@ class _MainPageState extends State<MainPage> {
             bottomNavigationBar: SizedBox(
               child: _bottomNavigationBar(),
             ),
-            body: Stack(
+            body: IndexedStack(
+              index: _currentIndex,
               children: <Widget>[
                 _buildOffstageNavigator(0),
                 _buildOffstageNavigator(1),

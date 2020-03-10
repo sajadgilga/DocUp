@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:docup/ui/panel/chatPage/ChatPage.dart';
 
 import 'PanelMenu.dart';
+import 'illnessPage/IllnessPage.dart';
 
 enum PanelStates { PATIENT_DATA, DOCTOR_CHAT, VIDEO_CALL }
 
@@ -26,7 +27,7 @@ class PanelState extends State<Panel> {
   PanelStates _state = PanelStates.DOCTOR_CHAT;
 
   Map<PanelStates, Widget> children() => {
-        PanelStates.PATIENT_DATA: ChatPage(
+        PanelStates.PATIENT_DATA: IllnessPage(
           doctor: widget.doctor,
           onPush: widget.onPush,
         ),
@@ -42,6 +43,10 @@ class PanelState extends State<Panel> {
 
   void _showPanelMenu() {
     widget.onPush(NavigatorRoutes.panelMenu);
+  }
+
+  void _showSearchPage() {
+    widget.onPush(NavigatorRoutes.searchView);
   }
 
   Widget _header() => Header(
@@ -62,7 +67,7 @@ class PanelState extends State<Panel> {
           Container(
             padding: EdgeInsets.only(top: 15, left: 5),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {_showSearchPage();},
               child: Icon(
                 Icons.search,
                 size: 30,
@@ -182,9 +187,6 @@ class PanelState extends State<Panel> {
             child: _header(),
           ),
           _tabs(MediaQuery.of(context).size.width),
-          SizedBox(
-            height: 20,
-          ),
           Expanded(flex: 2, child: children()[_state])
         ],
       ),

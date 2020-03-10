@@ -38,4 +38,9 @@ class Strings {
 
   static final String panelReminderSubLabel = 'یادآوری داروها';
   static final String panelVisitsSubLabel = 'زمان‌های ویزیت';
+
+  static final String illnessPicListLabel = 'تصاویر عارضه';
+  static final String illnessPicUploadLabel = 'آپلود تصویر';
+  static final String illnessPicShowLabel = 'مشاهده همه (شش مورد)';
+  static final String illnessLastPicsLabel = 'تصاویر پیشین';
 }

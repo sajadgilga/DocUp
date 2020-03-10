@@ -11,15 +11,17 @@ class ChatPage extends StatefulWidget {
   final Doctor doctor;
   final ValueChanged<String> onPush;
 
-  ChatPage({Key key, this.doctor, @required this.onPush}) : super(key: key);
+  ChatPage({Key key, this.doctor , @required this.onPush}) : super(key: key);
 
   @override
   _ChatPageState createState() {
     return _ChatPageState();
   }
+
 }
 
 class _ChatPageState extends State<ChatPage> {
+
   Widget _submitButton() => Container(
         width: 50,
         height: 35,
@@ -59,6 +61,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(top: 20),
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
       decoration: BoxDecoration(
           color: Colors.white,

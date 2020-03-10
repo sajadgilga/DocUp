@@ -1,10 +1,26 @@
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import '../../constants/strings.dart';
 import '../../constants/colors.dart';
 
 class SearchBox extends StatelessWidget {
+  ValueChanged<String> onPush;
+  TextEditingController _controller;
+
+  SearchBox({this.onPush});
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _controller.dispose();
+  }
+
   double _getSearchBoxWidth(width) {
     return (width > 550 ? width * .6 : (width > 400 ? width * .5 : width * .4));
+  }
+
+  void _search() {
+    onPush(NavigatorRoutes.searchView);
   }
 
   @override
@@ -28,7 +44,10 @@ class SearchBox extends StatelessWidget {
                   width: _getSearchBoxWidth(MediaQuery.of(context).size.width),
                   height: 50,
                   child: TextField(
-                    controller: TextEditingController(),
+                    controller: _controller,
+                    onSubmitted: (text) {
+                      _search();
+                    },
                     textAlign: TextAlign.end,
                     textDirection: TextDirection.ltr,
                     decoration: InputDecoration(

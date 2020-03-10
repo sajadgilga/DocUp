@@ -3,14 +3,18 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
-import 'DrawerPainter.dart';
+import 'package:docup/ui/customPainter/DrawerPainter.dart';
 
 class PanelMenu extends StatelessWidget {
+  final VoidCallback onPop;
+
+  PanelMenu(this.onPop);
+
   Widget _header() => Header(
           child: Row(
         children: <Widget>[
           GestureDetector(
-              onTap: () {},
+              onTap: () {_popMenu();},
               child: Container(
                 padding: EdgeInsets.only(top: 15, left: 10, right: 10),
                 child: Image(
@@ -22,7 +26,7 @@ class PanelMenu extends StatelessWidget {
           Container(
             padding: EdgeInsets.only(top: 15, left: 10),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {_popMenu();},
               child: Icon(
                 Icons.search,
                 size: 30,
@@ -130,17 +134,25 @@ class PanelMenu extends StatelessWidget {
                 padding: EdgeInsets.only(top: 100, right: 60),
                 child: _menu(MediaQuery.of(context).size.height)),
           ),
-          Container(
-              constraints: BoxConstraints(maxHeight: 100),
-              alignment: Alignment.topCenter,
-              child: Hero(
-                tag: "panelHeader",
-                transitionOnUserGestures: true,
-                child: _header(),
-              )),
+          GestureDetector(
+              onTap: () {
+                _popMenu();
+              },
+              child: Container(
+                  constraints: BoxConstraints(maxHeight: 100),
+                  alignment: Alignment.topCenter,
+                  child: Hero(
+                    tag: "panelHeader",
+                    transitionOnUserGestures: true,
+                    child: _header(),
+                  ))),
         ],
       ),
     );
+  }
+
+  void _popMenu() {
+    onPop();
   }
 }
 

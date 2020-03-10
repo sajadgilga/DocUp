@@ -33,6 +33,7 @@ dependencies:
   equatable: ^0.2.0
   icon_shadow: ^1.0.1
   progress_dialog: ^1.2.1
+  dashed_container: ">=1.0.1"
 
 
 

@@ -14,7 +14,7 @@ class DoctorSummary extends StatelessWidget {
       child: Container(
         width: 50,
         child: Hero(
-            tag: 'doctorImage',
+            tag: 'doctorImage$name',
             transitionOnUserGestures: true,
             child: ClipPolygon(
               sides: 6,

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:docup/constants/strings.dart';
+import 'package:docup/models/Doctor.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,8 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../../constants/colors.dart';
 
 class DoctorDetailPage extends StatefulWidget {
-  DoctorDetailPage({Key key}) : super(key: key);
+  final Doctor doctor;
+  DoctorDetailPage({Key key, this.doctor}) : super(key: key);
 
   @override
   _DoctorDetailPageState createState() => _DoctorDetailPageState();
@@ -31,7 +33,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SlidingUpPanel(
-        panel: Center(child: DoctorInfoWidget()),
+        panel: Center(child: DoctorInfoWidget(doctor: widget.doctor,)),
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
     );
@@ -40,6 +42,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
 
 class DoctorInfoWidget extends StatelessWidget {
   Completer<GoogleMapController> _controller = Completer();
+  final Doctor doctor;
+
+  DoctorInfoWidget({Key key, this.doctor}) : super(key: key);
 
   static const LatLng _center = const LatLng(45.521563, -122.677433);
 
@@ -61,7 +66,7 @@ class DoctorInfoWidget extends StatelessWidget {
         Container(
           width: 100,
           child: Hero(
-              tag: 'doctorImage',
+              tag: 'doctorImage${doctor.name}',
               transitionOnUserGestures: true,
               child: ClipPolygon(
                 sides: 6,
@@ -70,7 +75,7 @@ class DoctorInfoWidget extends StatelessWidget {
                   PolygonBoxShadow(color: Colors.black, elevation: 1.0),
                   PolygonBoxShadow(color: Colors.grey, elevation: 5.0)
                 ],
-                child: Image.asset("assets/lion.jpg"),
+                child: doctor.image,
               )),
         ),
         SizedBox(height: 10),

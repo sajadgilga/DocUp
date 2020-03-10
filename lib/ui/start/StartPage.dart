@@ -93,7 +93,7 @@ class _StartPageState extends State<StartPage> {
 //          _startBloc.verify(_usernameController.text, _verificationController.text);
           break;
         case StartType.REGISTER:
-          Navigator.push(
+          Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => MainPage()));
           break;
       }

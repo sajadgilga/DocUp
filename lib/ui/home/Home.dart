@@ -57,7 +57,9 @@ class Home extends StatelessWidget {
               Container(
                 height: 20,
               ),
-              SearchBox(),
+              SearchBox(
+                onPush: onPush
+              ),
               SizedBox(
                 height: 30,
               ),
