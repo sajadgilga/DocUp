@@ -2,7 +2,7 @@ import 'package:docup/models/LoginResponseEntity.dart';
 import 'package:docup/models/VerifyResponseEntity.dart';
 import 'package:docup/networking/ApiProvider.dart';
 
-class StartRepository {
+class AuthRepository {
   ApiProvider _provider = ApiProvider();
 
   Future<LoginResponseEntity> login(String username) async {

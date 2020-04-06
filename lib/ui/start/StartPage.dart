@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'package:docup/blocs/StartBloc.dart';
-import 'package:docup/models/LoginResponseEntity.dart';
-import 'package:docup/models/VerifyResponseEntity.dart';
+import 'package:docup/blocs/LoginBloc.dart';
+import 'package:docup/blocs/UpdatePatientBloc.dart';
+import 'package:docup/blocs/VerifyBloc.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/blocs/timer/TimerEvent.dart';
 import 'package:docup/ui/widgets/InputField.dart';
@@ -34,41 +33,65 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   final TimerBloc _timerBloc = TimerBloc(ticker: Ticker());
-  final StartBloc _startBloc = StartBloc();
+  final LoginBloc _loginBloc = LoginBloc();
+  final VerifyBloc _verifyBloc = VerifyBloc();
+  final UpdatePatientBloc _updatePatientBloc = UpdatePatientBloc();
 
   StreamController<RoleType> _controller = BehaviorSubject();
   final _usernameController = TextEditingController();
   final _verificationController = TextEditingController();
+  final _fullNameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   RoleType currentRoleType = RoleType.PATIENT;
   StartType startType = StartType.SIGN_UP;
   ProgressDialog progressDialog;
 
+  String currentUserName;
+
+  handle(ProgressDialog pd, Response response) {
+    switch (response.status) {
+      case Status.LOADING:
+        pd.show();
+        return false;
+      case Status.ERROR:
+        pd.dismiss();
+        return false;
+      default:
+        pd.dismiss();
+        return true;
+    }
+  }
+
   @override
   void initState() {
     switchRole(currentRoleType);
-//    _startBloc.startDataStream.listen((data) {
-//      switch (data.status) {
-//        case Status.LOADING:
-//          progressDialog.show();
-//          break;
-//        case Status.COMPLETED:
-//          if(data is LoginResponseEntity) {
-//            progressDialog.dismiss();
-//            _usernameController.clear();
-//            setState(() {
-//              startType = StartType.LOGIN;
-//            });
-//            _timerBloc.dispatch(Start(duration: 60));
-//          } else if (data is VerifyResponseEntity) {
-//            startType = StartType.REGISTER;
-//          }
-//          break;
-//        case Status.ERROR:
-//          progressDialog.dismiss();
-//          break;
-//      }
-//    });
+    _loginBloc.dataStream.listen((data) {
+      if (handle(progressDialog, data)) {
+        currentUserName = _usernameController.text;
+        _usernameController.clear();
+        setState(() {
+          startType = StartType.LOGIN;
+        });
+        _timerBloc.dispatch(Start(duration: 60));
+      }
+    });
+
+    _verifyBloc.dataStream.listen((data) {
+      if (handle(progressDialog, data)) {
+        setState(() {
+          startType = StartType.REGISTER;
+        });
+      }
+    });
+
+    _updatePatientBloc.dataStream.listen((data) {
+      if (handle(progressDialog, data)) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MainPage()));
+      }
+    });
+
     super.initState();
   }
 
@@ -83,18 +106,14 @@ class _StartPageState extends State<StartPage> {
     setState(() {
       switch (startType) {
         case StartType.SIGN_UP:
-          startType = StartType.LOGIN;
-          _timerBloc.dispatch(Start(duration: 60));
-          _usernameController.clear();
-//          _startBloc.login(_usernameController.text);
+          _loginBloc.login(_usernameController.text);
           break;
         case StartType.LOGIN:
-          startType = StartType.REGISTER;
-//          _startBloc.verify(_usernameController.text, _verificationController.text);
+          _verifyBloc.verify(currentUserName, _verificationController.text);
           break;
         case StartType.REGISTER:
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => MainPage()));
+          _updatePatientBloc.update(
+              _fullNameController.text, _passwordController.text);
           break;
       }
     });
@@ -142,6 +161,8 @@ class _StartPageState extends State<StartPage> {
   void dispose() {
     _usernameController.dispose();
     _verificationController.dispose();
+    _fullNameController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -301,10 +322,14 @@ class _StartPageState extends State<StartPage> {
         return Column(
           children: <Widget>[
             InputField(
-              inputHint: Strings.nameInputHint, /*controller: _inputController*/
+              inputHint: Strings.nameInputHint,
+              /*controller: _inputController*/
+              controller: _fullNameController,
             ),
             InputField(
-              inputHint: Strings.passInputHint, /*controller: _inputController*/
+              inputHint: Strings.passInputHint,
+              /*controller: _inputController*/
+              controller: _passwordController, /*controller: _inputController*/
             )
           ],
         );

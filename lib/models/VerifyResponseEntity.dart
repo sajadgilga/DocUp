@@ -1,19 +1,18 @@
-
 class VerifyResponseEntity {
-	final bool success;
+	final String token;
 
 	VerifyResponseEntity(
-			{this.success});
+			{this.token});
 
 	factory VerifyResponseEntity.fromJson(Map<String, dynamic> json) {
 		return VerifyResponseEntity(
-			success: json['success'],
+			token: json['token'],
 		);
 	}
 
 	Map<String, dynamic> toJson() {
 		final Map<String, dynamic> data = new Map<String, dynamic>();
-		data['success'] = this.success;
+		data['token'] = this.token;
 		return data;
 	}
 }

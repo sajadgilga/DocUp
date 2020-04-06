@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:docup/networking/CustomException.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
   final String _baseUrl = "http://185.252.30.163/";
@@ -21,11 +22,33 @@ class ApiProvider {
   Future<dynamic> post(String url, {Map body}) async {
     var responseJson;
     try {
-      final response =
-          await http.post(_baseUrl + url, body: jsonEncode(body), headers: {
-        HttpHeaders.contentTypeHeader: "application/json",
-        HttpHeaders.acceptHeader: "application/json"
-      });
+      final response = await http.post(_baseUrl + url,
+          body: jsonEncode(body), headers: getHeaders());
+      responseJson = _response(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  getHeaders() async {
+    final headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.acceptHeader: "application/json"
+    };
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    if (token.isNotEmpty) {
+      headers.addAll({HttpHeaders.authorizationHeader: "JWT " + token});
+    }
+    return headers;
+  }
+
+  Future<dynamic> patch(String url, {Map body}) async {
+    var responseJson;
+    try {
+      final response = await http.patch(_baseUrl + url,
+          body: jsonEncode(body), headers: getHeaders());
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
