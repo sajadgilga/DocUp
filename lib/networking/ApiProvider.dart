@@ -22,8 +22,9 @@ class ApiProvider {
   Future<dynamic> post(String url, {Map body}) async {
     var responseJson;
     try {
+      final headers = await getHeaders();
       final response = await http.post(_baseUrl + url,
-          body: jsonEncode(body), headers: getHeaders());
+          body: jsonEncode(body), headers: headers);
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -38,7 +39,7 @@ class ApiProvider {
     };
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
-    if (token.isNotEmpty) {
+    if (token != null && token.isNotEmpty) {
       headers.addAll({HttpHeaders.authorizationHeader: "JWT " + token});
     }
     return headers;
@@ -47,8 +48,9 @@ class ApiProvider {
   Future<dynamic> patch(String url, {Map body}) async {
     var responseJson;
     try {
+      final headers = await getHeaders();
       final response = await http.patch(_baseUrl + url,
-          body: jsonEncode(body), headers: getHeaders());
+          body: jsonEncode(body),headers: headers);
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');

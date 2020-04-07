@@ -1,9 +1,5 @@
-import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 enum RoleType {
-  PATIENT, DOCTOR
+  PATIENT, DOCTOR, CLINIC
 }
 
 extension RoleTypeExtension on RoleType {
@@ -13,6 +9,8 @@ extension RoleTypeExtension on RoleType {
           return "سلامت‌جو";
         case RoleType.DOCTOR:
           return "پزشک";
+        case RoleType.DOCTOR:
+          return "کلینیک";
         default:
           return null;
       }
@@ -24,19 +22,11 @@ extension RoleTypeExtension on RoleType {
           return "assets/team.svg";
         case RoleType.DOCTOR:
           return "assets/doctor.svg";
+        case RoleType.CLINIC:
+          return "assets/doctor.svg";
         default:
           return null;
       }
     }
 
-    Color get color {
-      switch(this){
-        case RoleType.PATIENT:
-          return Colors.red;
-        case RoleType.DOCTOR:
-          return Colors.green;
-        default:
-          return null;
-      }
-    }
 }

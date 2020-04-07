@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,7 +28,7 @@ class _OptionButtonState extends State<OptionButton> {
     this.roleType = roleType;
   }
 
-  Color getCurrentColor() => _isSelected ? roleType.color : Colors.grey;
+  Color getCurrentColor() => _isSelected ? IColors.themeColor : Colors.grey;
 
   Widget radioButton() => Container(
         width: 16,
@@ -68,7 +69,7 @@ class _OptionButtonState extends State<OptionButton> {
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     border: _isSelected
-                        ? Border.all(width: 2.0, color: roleType.color)
+                        ? Border.all(width: 2.0, color: IColors.themeColor)
                         : Border.all(width: 0.0),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Padding(

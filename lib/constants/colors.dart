@@ -1,3 +1,4 @@
+import 'package:docup/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 
 const Map<int, Color> swatch = {
@@ -13,16 +14,10 @@ const Map<int, Color> swatch = {
   900: Color.fromRGBO(254, 95, 85, 1),
 };
 
-enum Theme {
-  PATIENT,
-  DOCTOR,
-  CLINIC
-}
-
 class IColors {
   static const Color red = Color.fromRGBO(254, 95, 85, 1);
   static const Color blue = Color.fromRGBO(50, 200, 240, 1);
-  static const Color green = Color.fromRGBO(254, 95, 85, 1);
+  static const Color green = Color.fromRGBO(74, 157, 134, 1);
   static const Color background = Color.fromRGBO(242, 242, 242, 1);
   static const Color doctorChatBubble = Color.fromRGBO(242, 242, 242, 1);
   static Color themeColor = blue;
@@ -32,15 +27,15 @@ class IColors {
   static Color grey = Color.fromRGBO(245, 245, 245, 1);
   static Color darkGrey = Color.fromRGBO(144, 144, 144, 1);
 
-  static void changeThemeColor(Theme theme) {
-    switch(theme) {
-      case Theme.PATIENT:
+  static void changeThemeColor(RoleType roleType) {
+    switch(roleType) {
+      case RoleType.PATIENT:
         themeColor = blue;
         break;
-      case Theme.CLINIC:
+      case RoleType.CLINIC:
         themeColor = red;
         break;
-      case Theme.DOCTOR:
+      case RoleType.DOCTOR:
         themeColor = green;
     }
     selfChatBubble = themeColor;

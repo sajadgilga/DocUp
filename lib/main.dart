@@ -18,8 +18,8 @@ class MyApp extends StatelessWidget {
         fontFamily: 'iransans',
         primarySwatch: MaterialColor(IColors.themeColor.value, swatch),
       ),
-      home: MainPage(),
-//      home: StartPage(),
+//      home: MainPage(),
+      home: StartPage(),
     );
   }
 }

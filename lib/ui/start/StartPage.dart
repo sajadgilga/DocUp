@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:docup/blocs/LoginBloc.dart';
 import 'package:docup/blocs/UpdatePatientBloc.dart';
 import 'package:docup/blocs/VerifyBloc.dart';
+import 'package:docup/constants/colors.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/start/RoleType.dart';
@@ -98,6 +99,7 @@ class _StartPageState extends State<StartPage> {
   void switchRole(RoleType roleType) {
     _controller.add(roleType);
     setState(() {
+      IColors.changeThemeColor(roleType);
       currentRoleType = roleType;
     });
   }
@@ -173,7 +175,8 @@ class _StartPageState extends State<StartPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               BlocProvider(bloc: _timerBloc, child: Timer()),
-              Text(" : ارسال مجدد کد ", style: TextStyle(color: Colors.red)),
+              Text(" : ارسال مجدد کد ",
+                  style: TextStyle(color: IColors.themeColor)),
             ],
           ),
         )
@@ -201,7 +204,7 @@ class _StartPageState extends State<StartPage> {
             callBack: submit,
           ),
           ActionButton(
-            color: currentRoleType.color,
+            color: IColors.themeColor,
             icon: Icon(
               Icons.arrow_forward_ios,
               size: 18,
@@ -212,7 +215,7 @@ class _StartPageState extends State<StartPage> {
       ));
 
   _signUpActionWidget() => ActionButton(
-        color: currentRoleType.color,
+        color: IColors.themeColor,
         title: Strings.verifyAction,
         icon: Icon(
           Icons.arrow_back_ios,
@@ -223,7 +226,7 @@ class _StartPageState extends State<StartPage> {
       );
 
   _registerActionWidget() => ActionButton(
-        color: currentRoleType.color,
+        color: IColors.themeColor,
         title: Strings.registerAction,
         icon: Icon(
           Icons.arrow_back_ios,
@@ -241,14 +244,22 @@ class _StartPageState extends State<StartPage> {
   _optionsWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          GestureDetector(
-            onTap: () => switchRole(RoleType.DOCTOR),
-            child: OptionButton(RoleType.DOCTOR, stream: _controller.stream),
-          ),
+          Visibility(
+              visible: currentRoleType == RoleType.DOCTOR ||
+                  startType == StartType.SIGN_UP,
+              child: GestureDetector(
+                onTap: () => switchRole(RoleType.DOCTOR),
+                child:
+                    OptionButton(RoleType.DOCTOR, stream: _controller.stream),
+              )),
           SizedBox(width: 10),
-          GestureDetector(
-            onTap: () => switchRole(RoleType.PATIENT),
-            child: OptionButton(RoleType.PATIENT, stream: _controller.stream),
+          Visibility(
+            visible: currentRoleType == RoleType.PATIENT ||
+                startType == StartType.SIGN_UP,
+            child: GestureDetector(
+              onTap: () => switchRole(RoleType.PATIENT),
+              child: OptionButton(RoleType.PATIENT, stream: _controller.stream),
+            ),
           )
         ],
       );
@@ -267,7 +278,7 @@ class _StartPageState extends State<StartPage> {
         child: Text(
           getTitleText(),
           style: TextStyle(
-              color: currentRoleType.color,
+              color: IColors.themeColor,
               fontSize: 16,
               fontWeight: FontWeight.bold),
         ),
@@ -280,7 +291,7 @@ class _StartPageState extends State<StartPage> {
           Text(Strings.enterAction,
               style: TextStyle(
                   fontSize: 13,
-                  color: currentRoleType.color,
+                  color: IColors.themeColor,
                   decoration: TextDecoration.underline)),
           SizedBox(
             width: 10.0,

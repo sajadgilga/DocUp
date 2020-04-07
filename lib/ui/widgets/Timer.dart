@@ -1,14 +1,10 @@
 import 'package:docup/blocs/timer/TimerBloc.dart';
+import 'package:docup/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Timer extends StatelessWidget {
-  static const TextStyle timerTextStyle = TextStyle(
-    fontSize: 14,
-    color: Colors.red,
-    fontFamily: 'iransans',
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +18,11 @@ class Timer extends StatelessWidget {
             (state.duration % 60).floor().toString().padLeft(2, '0');
         return Text(
           '$minutesStr:$secondsStr',
-          style: Timer.timerTextStyle,
+          style: TextStyle(
+            fontSize: 14,
+            color: IColors.themeColor,
+            fontFamily: 'iransans',
+          ),
         );
       },
     );
