@@ -7,6 +7,12 @@ import 'package:dashed_container/dashed_container.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PicList extends StatefulWidget {
+  final String picLabel;
+  final String recentLabel;
+  final Widget asset;
+
+  PicList({Key key, this.picLabel, this.recentLabel, this.asset}) : super(key: key);
+
   @override
   _PicListState createState() => _PicListState();
 }
@@ -15,9 +21,11 @@ class _PicListState extends State<PicList> {
   Widget _label() => Container(
         padding: EdgeInsets.only(bottom: 15),
         child: Text(
-          Strings.illnessPicListLabel,
+          widget.picLabel,
           style: TextStyle(
-              color: IColors.red, fontSize: 14, fontWeight: FontWeight.bold),
+              color: IColors.darkGrey,
+              fontSize: 14,
+              fontWeight: FontWeight.bold),
           textAlign: TextAlign.right,
         ),
       );
@@ -27,16 +35,13 @@ class _PicListState extends State<PicList> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SvgPicture.asset(
-            "assets/cloud.svg",
-            height: 35,
-            width: 35,
-            color: IColors.red,
-          ),
+          widget.asset,
           Text(
-            Strings.illnessPicUploadLabel,
+            Strings.illnessInfoPicUploadLabel,
             style: TextStyle(
-                fontSize: 8, color: IColors.red, fontWeight: FontWeight.bold),
+                fontSize: 8,
+                color: IColors.themeColor,
+                fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           )
         ],
@@ -52,7 +57,7 @@ class _PicListState extends State<PicList> {
           )),
           child: _uploadBoxLabel(),
         ),
-        dashColor: IColors.red,
+        dashColor: IColors.themeColor,
         borderRadius: 10.0,
         dashedLength: 10,
         blankLength: 10,
@@ -63,18 +68,33 @@ class _PicListState extends State<PicList> {
     List<Widget> pictures = [];
     for (int i = 0; i < _calculatePossiblePicCount(width); i++) {
       pictures.add(Container(
-        width: 100.0,
-        height: 100.0,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              fit: BoxFit.cover, image: AssetImage('assets/hand1.jpg')),
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-          child: Container(
-            color: Colors.white.withOpacity(.4),
-          ),
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: 150.0,
+              height: 100.0,
+//        margin: EdgeInsets.only(left: 10, right: 10),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.cover, image: AssetImage('assets/hand1.jpg')),
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                child: Container(
+                  color: Colors.white.withOpacity(.4),
+                ),
+              ),
+            ),
+            Text(
+              'تصویر',
+              style: TextStyle(
+                fontSize: 8,
+                fontWeight: FontWeight.bold,
+                color: IColors.darkGrey,
+              ),
+            )
+          ],
         ),
       ));
     }
@@ -88,7 +108,7 @@ class _PicListState extends State<PicList> {
   }
 
   int _calculatePossiblePicCount(width) {
-    return ((width - 190) / 110).toInt();
+    return ((width - 50) / 160).toInt();
   }
 
   Widget _picListHeader() => Container(
@@ -98,9 +118,9 @@ class _PicListState extends State<PicList> {
           children: <Widget>[
             Container(
               child: Text(
-                Strings.illnessPicShowLabel,
+                Strings.illnessInfoPicShowLabel,
                 style: TextStyle(
-                    color: IColors.red,
+                    color: IColors.themeColor,
                     fontSize: 8,
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.left,
@@ -112,7 +132,7 @@ class _PicListState extends State<PicList> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    Strings.illnessLastPicsLabel,
+                    widget.recentLabel,
                     textAlign: TextAlign.right,
                     style: TextStyle(
                         color: Colors.black54,
@@ -143,6 +163,35 @@ class _PicListState extends State<PicList> {
         ),
       );
 
+  Widget _recentPics() => Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            _picList(MediaQuery.of(context).size.width),
+          ],
+        ),
+      );
+
+  Widget _uploadPic() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+        child: FractionallySizedBox(
+            widthFactor: 1,
+//        decoration: BoxDecoration(
+//          color: Colors.blue,
+//        ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                _label(),
+                Container(
+                  alignment: Alignment.center,
+                  child: _uploadBox(),
+                )
+              ],
+            )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -151,18 +200,9 @@ class _PicListState extends State<PicList> {
           minWidth: MediaQuery.of(context).size.width - 50,
           maxWidth: MediaQuery.of(context).size.width - 50),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          _label(),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                _picList(MediaQuery.of(context).size.width),
-                _uploadBox(),
-              ],
-            ),
-          )
+          _uploadPic(),
+          _recentPics(),
         ],
       ),
     );

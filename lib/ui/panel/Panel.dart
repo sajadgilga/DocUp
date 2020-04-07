@@ -99,7 +99,7 @@ class PanelState extends State<Panel> {
                     _switchTab(PanelStates.VIDEO_CALL);
                   },
                   color: (_state == PanelStates.VIDEO_CALL
-                      ? IColors.red
+                      ? IColors.themeColor
                       : Colors.white),
                   child: Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10),
@@ -122,7 +122,7 @@ class PanelState extends State<Panel> {
                     _switchTab(PanelStates.DOCTOR_CHAT);
                   },
                   color: (_state == PanelStates.DOCTOR_CHAT
-                      ? IColors.red
+                      ? IColors.themeColor
                       : Colors.white),
                   child: Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10),
@@ -144,7 +144,7 @@ class PanelState extends State<Panel> {
                     _switchTab(PanelStates.PATIENT_DATA);
                   },
                   color: (_state == PanelStates.PATIENT_DATA
-                      ? IColors.red
+                      ? IColors.themeColor
                       : Colors.white),
                   child: Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10),

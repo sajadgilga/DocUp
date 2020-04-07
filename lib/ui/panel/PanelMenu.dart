@@ -70,7 +70,7 @@ class PanelMenu extends StatelessWidget {
             ],
             label: Strings.panelIDoctorLabel,
             icon: Icons.person,
-            color: IColors.red,
+            color: IColors.themeColor,
           ),
           _PanelMenuMainItem(
               subItems: [
@@ -129,7 +129,7 @@ class PanelMenu extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           CustomPaint(
-            painter: DrawerPainter(),
+            painter: DrawerPainter(arcStart: 20),
             child: Container(
                 padding: EdgeInsets.only(top: 100, right: 60),
                 child: _menu(MediaQuery.of(context).size.height)),

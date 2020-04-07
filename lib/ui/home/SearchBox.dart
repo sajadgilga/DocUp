@@ -56,8 +56,8 @@ class SearchBox extends StatelessWidget {
                           Icons.search,
                           size: 30,
                         ),
-                        focusColor: IColors.red,
-                        fillColor: IColors.red),
+                        focusColor: IColors.themeColor,
+                        fillColor: IColors.themeColor),
                   )),
             ),
             Row(

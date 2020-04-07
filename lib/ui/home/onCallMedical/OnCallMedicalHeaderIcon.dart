@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:docup/constants/colors.dart';
 
-class HomeNotification extends StatefulWidget {
-  HomeNotification({Key key}) : super(key: key);
+class OnCallMedicalHeaderIcon extends StatefulWidget {
+  OnCallMedicalHeaderIcon({Key key}) : super(key: key);
 
   @override
-  _HomeNotificationState createState() {
-    return _HomeNotificationState();
+  _OnCallMedicalHeaderIconState createState() {
+    return _OnCallMedicalHeaderIconState();
   }
 }
 
-class _HomeNotificationState extends State<HomeNotification> {
-  int newNotificationCount = 15;
+class _OnCallMedicalHeaderIconState extends State<OnCallMedicalHeaderIcon> {
+  int newNotificationCount = 1;
 
   Widget _notificationIcon() {
     return Container(
@@ -20,7 +20,7 @@ class _HomeNotificationState extends State<HomeNotification> {
         child: Material(
           child: InkWell(
             child: Icon(
-              Icons.notifications,
+              Icons.person,
               size: 35,
             ),
             hoverColor: Colors.white,

@@ -19,6 +19,7 @@ class _MainPageState extends State<MainPage> {
     1: GlobalKey<NavigatorState>(),
     2: GlobalKey<NavigatorState>(),
     3: GlobalKey<NavigatorState>(),
+    4: GlobalKey<NavigatorState>(),
   };
 
   void _selectPage(int index) {
@@ -35,25 +36,35 @@ class _MainPageState extends State<MainPage> {
     return navigator_destinations
         .map<BottomNavigationBarItem>((Destination destination) {
       return BottomNavigationBarItem(
-          icon: (destination.hasImage
-              ? Container(
-                  width: 50,
-                  child: ClipPolygon(
-                    sides: 6,
-                    rotate: 90,
-                    boxShadows: [
-                      PolygonBoxShadow(color: Colors.black, elevation: 1.0),
-                      PolygonBoxShadow(color: Colors.grey, elevation: 2.0)
-                    ],
-                    child: Image(
-                      image: destination.image,
-                    ),
-                  ),
-                )
-              : Icon(
-                  destination.icon,
-                  size: 30,
-                )),
+          icon: Stack(
+            children: <Widget>[
+              Align(alignment: Alignment.center, child: (destination.hasImage
+                  ? Container(
+                      width: 50,
+                      child: ClipPolygon(
+                        sides: 6,
+                        rotate: 90,
+                        boxShadows: [
+                          PolygonBoxShadow(color: Colors.black, elevation: 1.0),
+                          PolygonBoxShadow(color: Colors.grey, elevation: 2.0)
+                        ],
+                        child: Image(
+                          image: destination.image,
+                        ),
+                      ),
+                    )
+                  : Icon(
+                      destination.icon,
+                      size: 30,
+                    ))),
+//              Align(alignment: Alignment(0, -1), child: Container(
+//                decoration:
+//                    BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+//                width: 10,
+//                height: 10,
+//              ))
+            ],
+          ),
           title: Text(
             destination.title,
           ),
@@ -64,13 +75,14 @@ class _MainPageState extends State<MainPage> {
   Widget _bottomNavigationBar() {
     return BottomNavigationBar(
       items: _bottomNavigationItems(),
+//      tabs: [OverflowBox(maxWidth: 50, maxHeight: 50, child: ,),],
       currentIndex: _currentIndex,
       onTap: (int index) {
         _selectPage(index);
       },
       backgroundColor: Colors.white,
       unselectedItemColor: navigator_destinations[0].color,
-      selectedItemColor: Colors.red,
+      selectedItemColor: IColors.themeColor,
     );
   }
 
@@ -94,6 +106,7 @@ class _MainPageState extends State<MainPage> {
               children: <Widget>[
                 _buildOffstageNavigator(0),
                 _buildOffstageNavigator(1),
+                _buildOffstageNavigator(2),
               ],
             )),
         onWillPop: () async {

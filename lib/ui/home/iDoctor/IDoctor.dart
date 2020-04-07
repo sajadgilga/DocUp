@@ -1,3 +1,4 @@
+import 'package:docup/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/home/iDoctor/IDoctorBody.dart';
@@ -20,7 +21,7 @@ class IDoctor extends StatelessWidget {
                 bottomRight: Radius.circular(15)),
             child: Container(
               alignment: Alignment.center,
-              color: Colors.red,
+              color: IColors.themeColor,
               width: 60,
               height: 30,
               child: Text(

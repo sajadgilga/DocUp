@@ -18,7 +18,7 @@ class _VisitBoxState extends State<VisitBox> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(15)),
             border: (time.isNear
-                ? Border.all(width: 2, color: IColors.red)
+                ? Border.all(width: 2, color: IColors.themeColor)
                 : Border.all(width: 0, color: Colors.transparent))),
         child: Container(
           padding: EdgeInsets.all(3),
@@ -30,14 +30,14 @@ class _VisitBoxState extends State<VisitBox> {
                 style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: (time.isNear ? IColors.red : Colors.black54)),
+                    color: (time.isNear ? IColors.themeColor : Colors.black54)),
               ),
               Text(
                 time.month.name,
                 style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.normal,
-                    color: (time.isNear ? IColors.red : Colors.black54)),
+                    color: (time.isNear ? IColors.themeColor : Colors.black54)),
               )
             ],
           ),
@@ -60,7 +60,7 @@ class _VisitBoxState extends State<VisitBox> {
               margin: EdgeInsets.only(bottom: 10),
               padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
               decoration: BoxDecoration(
-                  color: IColors.red,
+                  color: IColors.themeColor,
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(10),
                       bottomRight: Radius.circular(10))),
@@ -74,7 +74,7 @@ class _VisitBoxState extends State<VisitBox> {
               '۱۳۹۸',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: IColors.red,
+                  color: IColors.themeColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 10),
             ),

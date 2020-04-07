@@ -13,13 +13,36 @@ const Map<int, Color> swatch = {
   900: Color.fromRGBO(254, 95, 85, 1),
 };
 
+enum Theme {
+  PATIENT,
+  DOCTOR,
+  CLINIC
+}
+
 class IColors {
-  static Color red = Color.fromRGBO(254, 95, 85, 1);
-  static Color background = Color.fromRGBO(242, 242, 242, 1);
-  static Color doctorChatBubble = Color.fromRGBO(242, 242, 242, 1);
-  static Color selfChatBubble = Color.fromRGBO(254, 95, 85, 1);
+  static const Color red = Color.fromRGBO(254, 95, 85, 1);
+  static const Color blue = Color.fromRGBO(50, 200, 240, 1);
+  static const Color green = Color.fromRGBO(254, 95, 85, 1);
+  static const Color background = Color.fromRGBO(242, 242, 242, 1);
+  static const Color doctorChatBubble = Color.fromRGBO(242, 242, 242, 1);
+  static Color themeColor = blue;
+  static Color selfChatBubble = themeColor;
   static Color doctorChatText = Colors.black;
   static Color selfChatText = Colors.white;
   static Color grey = Color.fromRGBO(245, 245, 245, 1);
   static Color darkGrey = Color.fromRGBO(144, 144, 144, 1);
+
+  static void changeThemeColor(Theme theme) {
+    switch(theme) {
+      case Theme.PATIENT:
+        themeColor = blue;
+        break;
+      case Theme.CLINIC:
+        themeColor = red;
+        break;
+      case Theme.DOCTOR:
+        themeColor = green;
+    }
+    selfChatBubble = themeColor;
+  }
 }

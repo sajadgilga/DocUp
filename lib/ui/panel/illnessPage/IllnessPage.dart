@@ -1,10 +1,13 @@
+import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/panel/chatPage/DoctorInfo.dart';
 import 'package:docup/ui/widgets/VisitBox.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
-import 'IllnessPicList.dart';
+import 'package:docup/ui/widgets/PicList.dart';
 
 class IllnessPage extends StatelessWidget {
   final Doctor doctor;
@@ -21,7 +24,8 @@ class IllnessPage extends StatelessWidget {
     times.add(VisitTime(Month.TIR, '۱۲', '۱۳۹۸', false));
     times.add(VisitTime(Month.FAR, '۲۱', '۱۳۹۸', false));
 
-    return SingleChildScrollView(child: Container(
+    return SingleChildScrollView(
+        child: Container(
       child: Column(
         children: <Widget>[
           DoctorInfo(
@@ -31,7 +35,16 @@ class IllnessPage extends StatelessWidget {
           VisitBox(
             visitTimes: times,
           ),
-          PicList()
+          PicList(
+            picLabel: Strings.illnessInfoPicListLabel,
+            recentLabel: Strings.illnessInfoLastPicsLabel,
+            asset: SvgPicture.asset(
+              "assets/cloud.svg",
+              height: 35,
+              width: 35,
+              color: IColors.themeColor,
+            ),
+          )
         ],
       ),
     ));

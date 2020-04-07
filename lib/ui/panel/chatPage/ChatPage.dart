@@ -26,11 +26,11 @@ class _ChatPageState extends State<ChatPage> {
         width: 50,
         height: 35,
         decoration: BoxDecoration(
-            color: IColors.red,
+            color: IColors.themeColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.all(Radius.circular(15)),
             boxShadow: [
-              BoxShadow(color: IColors.red, blurRadius: 10, spreadRadius: 1)
+              BoxShadow(color: IColors.themeColor, blurRadius: 10, spreadRadius: 1)
             ]),
         padding: EdgeInsets.all(5),
         child: Icon(

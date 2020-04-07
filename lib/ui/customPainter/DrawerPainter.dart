@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class DrawerPainter extends CustomPainter {
+  double arcStart = 20;
+
+  DrawerPainter({this.arcStart});
+
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
@@ -14,9 +18,9 @@ class DrawerPainter extends CustomPainter {
 
     double iconWidth = 60;
     double iconHeight = 75;
-    double startX = 20;
+    double startX = arcStart;
     double startY = 0;
-    double endX = 35;
+    double endX = startX + 15;
     double endY = 0;
     double controllerWidth = 5;
     double controllerHeight = 5;

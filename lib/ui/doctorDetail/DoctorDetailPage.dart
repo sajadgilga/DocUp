@@ -59,7 +59,7 @@ class DoctorInfoWidget extends StatelessWidget {
       children: <Widget>[
         SvgPicture.asset(
           "assets/down_arrow.svg",
-          color: IColors.red,
+          color: IColors.themeColor,
           width: 24,
           height: 24,
         ),
@@ -119,7 +119,7 @@ class DoctorInfoWidget extends StatelessWidget {
 
         SizedBox(height: 10,),
         ActionButton(
-          color: IColors.red,
+          color: IColors.themeColor,
           title: Strings.requestAction,
           icon: Icon(
             Icons.send,

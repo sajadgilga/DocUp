@@ -20,12 +20,12 @@ class _NotificationPageState extends State<NotificationPage> {
               child: Text('۱۵',
                   style: TextStyle(color: Colors.white, fontSize: 14)),
               decoration: BoxDecoration(
-                  color: IColors.red,
+                  color: IColors.themeColor,
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(8)),
                   boxShadow: [
                     BoxShadow(
-                        color: IColors.red,
+                        color: IColors.themeColor,
                         offset: Offset(1, 3),
                         blurRadius: 10)
                   ])),
@@ -44,7 +44,7 @@ class _NotificationPageState extends State<NotificationPage> {
             fit: BoxFit.fitWidth,
           ),
           CustomPaint(
-              painter: DrawerPainter(),
+              painter: DrawerPainter(arcStart: 20),
 //              painter: MyPainter(),
               child: Stack(
                 children: <Widget>[
@@ -73,7 +73,7 @@ class _NotificationPageState extends State<NotificationPage> {
             child: Icon(
               Icons.notifications,
               size: 35,
-              color: IColors.red,
+              color: IColors.themeColor,
             ),
           ),
         ],
@@ -118,15 +118,15 @@ class NotificationItem extends StatelessWidget {
                         Icon(
                           Icons.brightness_1,
                           size: 16,
-                          color: IColors.red,
+                          color: IColors.themeColor,
                         ),
                         showShadow: true,
-                        shadowColor: IColors.red),
+                        shadowColor: IColors.themeColor),
                     SizedBox(width: 5),
                     Text(
                       "مراجعه به دکتر",
                       textDirection: TextDirection.rtl,
-                      style: TextStyle(color: IColors.red, fontSize: 16),
+                      style: TextStyle(color: IColors.themeColor, fontSize: 16),
                     ),
                     SizedBox(width: 10),
                     Text(

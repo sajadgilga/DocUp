@@ -22,6 +22,7 @@ class Destination {
 
 const List<Destination> navigator_destinations = <Destination>[
   Destination('Home', Icons.home, Colors.grey, AssetImage(''), false),
+  Destination('Panel', Icons.assignment, Colors.grey, AssetImage(''), false),
   Destination('Panel', Icons.view_quilt, Colors.grey, AssetImage(''), false),
   Destination('Settings', Icons.settings, Colors.grey, AssetImage(''), false),
   Destination('Account', Icons.account_box, Colors.grey,

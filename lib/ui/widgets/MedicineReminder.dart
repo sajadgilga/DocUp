@@ -28,7 +28,7 @@ extension ReminderStateExtension on ReminderState {
       case ReminderState.done:
         return Colors.green;
       case ReminderState.near:
-        return IColors.red;
+        return IColors.themeColor;
       case ReminderState.overdue:
         return Colors.grey;
       default:

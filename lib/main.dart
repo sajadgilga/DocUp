@@ -16,10 +16,10 @@ class MyApp extends StatelessWidget {
       title: Strings.appTitle,
       theme: ThemeData(
         fontFamily: 'iransans',
-        primarySwatch: MaterialColor(IColors.red.value, swatch),
+        primarySwatch: MaterialColor(IColors.themeColor.value, swatch),
       ),
+      home: MainPage(),
 //      home: StartPage(),
-      home: StartPage(),
     );
   }
 }

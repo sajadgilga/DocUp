@@ -9,6 +9,8 @@ import 'package:docup/ui/home/iDoctor/IDoctor.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
 
+import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
+
 class Home extends StatelessWidget {
   final ValueChanged<String> onPush;
 
@@ -49,7 +51,7 @@ class Home extends StatelessWidget {
                       onTap: () {
                         onPush(NavigatorRoutes.notificationView);
                       },
-                      child: HomeNotification())),
+                      child: Row(children: <Widget>[HomeNotification(), OnCallMedicalHeaderIcon()]))),
               Container(
                 height: 10,
               ),

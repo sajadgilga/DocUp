@@ -63,8 +63,23 @@ class NavigatorView extends StatelessWidget {
           },),
         };
       case 2:
-        return {};
+        return {
+          NavigatorRoutes.root: (context) => Panel(
+              doctor: _doctor,
+              onPush: (direction) {
+                _push(context, direction);
+              }),
+          NavigatorRoutes.panelMenu: (context) => PanelMenu((){_pop(context);}),
+          NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
+            doctor: _doctor,
+          ),
+          NavigatorRoutes.searchView: (context) => SearchPage(onPush: (direction) {
+            _push(context, direction);
+          },),
+        };
       case 3:
+        return {};
+      case 4:
         return {};
       default:
         return {
