@@ -20,6 +20,7 @@ class NavigatorView extends StatelessWidget {
   final int index;
   final GlobalKey<NavigatorState> navigatorKey;
   final Doctor _doctor = Doctor(
+      3,
       "دکتر زهرا شادلو",
       "متخصص پوست",
       "اقدسیه",
@@ -43,9 +44,11 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
                 doctor: _doctor,
               ),
-          NavigatorRoutes.searchView: (context) => SearchPage(onPush: (direction) {
-            _push(context, direction);
-          },),
+          NavigatorRoutes.searchView: (context) => SearchPage(
+                onPush: (direction) {
+                  _push(context, direction);
+                },
+              ),
         };
       case 1:
         return {
@@ -54,13 +57,17 @@ class NavigatorView extends StatelessWidget {
               onPush: (direction) {
                 _push(context, direction);
               }),
-          NavigatorRoutes.panelMenu: (context) => PanelMenu((){_pop(context);}),
+          NavigatorRoutes.panelMenu: (context) => PanelMenu(() {
+                _pop(context);
+              }),
           NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
                 doctor: _doctor,
               ),
-          NavigatorRoutes.searchView: (context) => SearchPage(onPush: (direction) {
-            _push(context, direction);
-          },),
+          NavigatorRoutes.searchView: (context) => SearchPage(
+                onPush: (direction) {
+                  _push(context, direction);
+                },
+              ),
         };
       case 2:
         return {
@@ -69,13 +76,17 @@ class NavigatorView extends StatelessWidget {
               onPush: (direction) {
                 _push(context, direction);
               }),
-          NavigatorRoutes.panelMenu: (context) => PanelMenu((){_pop(context);}),
+          NavigatorRoutes.panelMenu: (context) => PanelMenu(() {
+                _pop(context);
+              }),
           NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
-            doctor: _doctor,
-          ),
-          NavigatorRoutes.searchView: (context) => SearchPage(onPush: (direction) {
-            _push(context, direction);
-          },),
+                doctor: _doctor,
+              ),
+          NavigatorRoutes.searchView: (context) => SearchPage(
+                onPush: (direction) {
+                  _push(context, direction);
+                },
+              ),
         };
       case 3:
         return {};
@@ -90,9 +101,11 @@ class NavigatorView extends StatelessWidget {
               ),
           NavigatorRoutes.notificationView: (context) => NotificationPage(),
           NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(),
-          NavigatorRoutes.searchView: (context) => SearchPage(onPush: (direction) {
-            _push(context, direction);
-          },),
+          NavigatorRoutes.searchView: (context) => SearchPage(
+                onPush: (direction) {
+                  _push(context, direction);
+                },
+              ),
         };
     }
   }

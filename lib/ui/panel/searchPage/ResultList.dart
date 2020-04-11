@@ -6,7 +6,6 @@ import 'package:polygon_clipper/polygon_clipper.dart';
 class ResultList extends StatefulWidget {
   final ValueChanged<String> onPush;
 
-
   ResultList({this.onPush});
 
   @override
@@ -15,6 +14,7 @@ class ResultList extends StatefulWidget {
 
 class _ResultListState extends State<ResultList> {
   static Doctor _doctor1 = Doctor(
+      3,
       "دکتر زهرا شادلو",
       "متخصص پوست",
       "اقدسیه",
@@ -22,7 +22,8 @@ class _ResultListState extends State<ResultList> {
         image: AssetImage('assets/lion.jpg'),
       ),
       []);
-static Doctor _doctor2 = Doctor(
+  static Doctor _doctor2 = Doctor(
+      4,
       "دکتر عارفه اسدی",
       "متخصص پوست",
       "اقدسیه",
@@ -88,13 +89,11 @@ class _SearchResultItem extends StatelessWidget {
       child: Container(
           child: Container(
               width: 70,
-              child: Hero(
-                  tag: 'doctorImage${doctor.name}',
-                  child: ClipPolygon(
-                    sides: 6,
-                    rotate: 90,
-                    child: doctor.image,
-                  )))));
+              child: ClipPolygon(
+                sides: 6,
+                rotate: 90,
+                child: doctor.image,
+              ))));
 
   Widget _info() => Container(
         margin: EdgeInsets.only(right: 20),

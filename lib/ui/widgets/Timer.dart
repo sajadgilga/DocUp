@@ -17,7 +17,7 @@ class Timer extends StatelessWidget {
         final String secondsStr =
             (state.duration % 60).floor().toString().padLeft(2, '0');
         return Text(
-          '$minutesStr:$secondsStr',
+          '$minutesStr:$secondsStr' ,
           style: TextStyle(
             fontSize: 14,
             color: IColors.themeColor,

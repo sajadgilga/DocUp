@@ -83,7 +83,7 @@ class Home extends StatelessWidget {
               ),
               ReminderList(),
               IDoctor(
-                doctor: Doctor('دکتر زهرا شادلو', 'متخصص پوست', 'اقدسیه',
+                doctor: Doctor(3, 'دکتر زهرا شادلو', 'متخصص پوست', 'اقدسیه',
                     Image(image: AssetImage(' ')), null),
                 onPush: onPush,
               ),

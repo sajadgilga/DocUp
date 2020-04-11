@@ -13,10 +13,7 @@ class DoctorSummary extends StatelessWidget {
       padding: EdgeInsets.all(10),
       child: Container(
         width: 50,
-        child: Hero(
-            tag: 'doctorImage$name',
-            transitionOnUserGestures: true,
-            child: ClipPolygon(
+        child: ClipPolygon(
               sides: 6,
               rotate: 90,
               boxShadows: [
@@ -26,7 +23,7 @@ class DoctorSummary extends StatelessWidget {
               child: Image(
                 image: AssetImage('assets/lion.jpg'),
               ),
-            )),
+            ),
       ));
 
   Widget _description() => Column(

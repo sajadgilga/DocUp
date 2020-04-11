@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'package:docup/blocs/LoginBloc.dart';
+import 'package:docup/blocs/AuthBloc.dart';
 import 'package:docup/blocs/UpdatePatientBloc.dart';
-import 'package:docup/blocs/VerifyBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
@@ -17,11 +16,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../blocs/timer/TimerBloc.dart';
 import '../../blocs/timer/Tricker.dart';
 
-enum StartType { SIGN_UP, LOGIN, REGISTER }
+enum StartType { SIGN_UP, LOGIN, REGISTER, SIGN_IN }
 
 class StartPage extends StatefulWidget {
   StartPage({Key key, this.title}) : super(key: key);
@@ -34,8 +34,7 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   final TimerBloc _timerBloc = TimerBloc(ticker: Ticker());
-  final LoginBloc _loginBloc = LoginBloc();
-  final VerifyBloc _verifyBloc = VerifyBloc();
+  final AuthBloc _authBloc = AuthBloc();
   final UpdatePatientBloc _updatePatientBloc = UpdatePatientBloc();
 
   StreamController<RoleType> _controller = BehaviorSubject();
@@ -64,10 +63,20 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
+  Future<void> checkToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey("token")) {
+      setState(() {
+        this.startType = StartType.SIGN_IN;
+      });
+    }
+  }
+
   @override
   void initState() {
     switchRole(currentRoleType);
-    _loginBloc.dataStream.listen((data) {
+    checkToken();
+    _authBloc.signUpStream.listen((data) {
       if (handle(progressDialog, data)) {
         currentUserName = _usernameController.text;
         _usernameController.clear();
@@ -78,7 +87,7 @@ class _StartPageState extends State<StartPage> {
       }
     });
 
-    _verifyBloc.dataStream.listen((data) {
+    _authBloc.verifyStream.listen((data) {
       if (handle(progressDialog, data)) {
         setState(() {
           startType = StartType.REGISTER;
@@ -86,9 +95,16 @@ class _StartPageState extends State<StartPage> {
       }
     });
 
+    _authBloc.signInStream.listen((data) {
+      if (handle(progressDialog, data)) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MainPage()));
+      }
+    });
+
     _updatePatientBloc.dataStream.listen((data) {
       if (handle(progressDialog, data)) {
-        Navigator.pushReplacement(
+        Navigator.push(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
     });
@@ -108,14 +124,17 @@ class _StartPageState extends State<StartPage> {
     setState(() {
       switch (startType) {
         case StartType.SIGN_UP:
-          _loginBloc.login(_usernameController.text);
+          _authBloc.signUp(_usernameController.text);
           break;
         case StartType.LOGIN:
-          _verifyBloc.verify(currentUserName, _verificationController.text);
+          _authBloc.verify(currentUserName, _verificationController.text);
           break;
         case StartType.REGISTER:
           _updatePatientBloc.update(
               _fullNameController.text, _passwordController.text);
+          break;
+        case StartType.SIGN_IN:
+          _authBloc.signIn(_usernameController.text, _passwordController.text);
           break;
       }
     });
@@ -190,6 +209,9 @@ class _StartPageState extends State<StartPage> {
         return _loginActionWidget();
       case StartType.REGISTER:
         return _registerActionWidget();
+      case StartType.SIGN_IN:
+        return _signInActionWidget();
+        break;
     }
   }
 
@@ -228,6 +250,17 @@ class _StartPageState extends State<StartPage> {
   _registerActionWidget() => ActionButton(
         color: IColors.themeColor,
         title: Strings.registerAction,
+        icon: Icon(
+          Icons.arrow_back_ios,
+          size: 18,
+        ),
+        rtl: false,
+        callBack: submit,
+      );
+
+  _signInActionWidget() => ActionButton(
+        color: IColors.themeColor,
+        title: Strings.enterAction,
         icon: Icon(
           Icons.arrow_back_ios,
           size: 18,
@@ -344,6 +377,21 @@ class _StartPageState extends State<StartPage> {
             )
           ],
         );
+      case StartType.SIGN_IN:
+        return Column(
+          children: <Widget>[
+            InputField(
+              inputHint: Strings.usernameInputHint,
+              /*controller: _inputController*/
+              controller: _usernameController,
+            ),
+            InputField(
+              inputHint: Strings.passInputHint,
+              /*controller: _inputController*/
+              controller: _passwordController, /*controller: _inputController*/
+            )
+          ],
+        );
     }
   }
 
@@ -370,6 +418,8 @@ class _StartPageState extends State<StartPage> {
         return currentRoleType == RoleType.PATIENT
             ? Strings.oneStepToDoctorMessage
             : Strings.oneStepToOfficeMessage;
+      default:
+        return "";
     }
   }
 }

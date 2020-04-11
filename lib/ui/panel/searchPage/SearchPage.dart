@@ -63,11 +63,7 @@ class SearchPage extends StatelessWidget {
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
       child: Column(
         children: <Widget>[
-          Hero(
-            tag: "panelHeader",
-            transitionOnUserGestures: true,
-            child: _header(),
-          ),
+          _header(),
           _searchBox(MediaQuery.of(context).size.width),
           Expanded(
               flex: 2,

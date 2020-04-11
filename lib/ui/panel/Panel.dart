@@ -181,11 +181,7 @@ class PanelState extends State<Panel> {
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
       child: Column(
         children: <Widget>[
-          Hero(
-            tag: "panelHeader",
-            transitionOnUserGestures: true,
-            child: _header(),
-          ),
+          _header(),
           _tabs(MediaQuery.of(context).size.width),
           Expanded(flex: 2, child: children()[_state])
         ],

@@ -61,8 +61,12 @@ class User {
     data['username'] = this.username;
     data['avatar'] = this.avatar;
     data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['email'] = this.email;
+    if(this.lastName != lastName) {
+      data['last_name'] = this.lastName;
+    }
+    if(this.email != null) {
+      data['email'] = this.email;
+    }
     data['national_id'] = this.nationalId;
     data['phone_number'] = this.phoneNumber;
     data['credit'] = this.credit;

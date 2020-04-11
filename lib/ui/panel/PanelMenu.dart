@@ -141,11 +141,7 @@ class PanelMenu extends StatelessWidget {
               child: Container(
                   constraints: BoxConstraints(maxHeight: 100),
                   alignment: Alignment.topCenter,
-                  child: Hero(
-                    tag: "panelHeader",
-                    transitionOnUserGestures: true,
-                    child: _header(),
-                  ))),
+                  child: _header())),
         ],
       ),
     );
