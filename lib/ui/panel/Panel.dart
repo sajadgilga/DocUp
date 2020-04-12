@@ -1,6 +1,7 @@
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +36,7 @@ class PanelState extends State<Panel> {
           doctor: widget.doctor,
           onPush: widget.onPush,
         ),
-        PanelStates.VIDEO_CALL: ChatPage(
+        PanelStates.VIDEO_CALL: VideoCallPage(
           doctor: widget.doctor,
           onPush: widget.onPush,
         ),
