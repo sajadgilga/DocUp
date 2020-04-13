@@ -1,8 +1,13 @@
+import 'package:docup/blocs/VideoCallBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/models/AgoraChannelEntity.dart';
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/repository/VideoCallRepository.dart';
 import 'package:docup/ui/panel/chatPage/DoctorInfo.dart';
+import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class VideoCallPage extends StatefulWidget {
   final Doctor doctor;
@@ -18,6 +23,7 @@ class VideoCallPage extends StatefulWidget {
 }
 
 class _VideoCallPageState extends State<VideoCallPage> {
+
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 20),
@@ -52,8 +58,30 @@ class _VideoCallPageState extends State<VideoCallPage> {
             color: IColors.themeColor,
             icon: Icon(Icons.videocam),
             title: "تماس تصویری",
-            callBack: () {},
+            callBack: onJoin,
           )
         ],
       );
+
+  Future<void> onJoin() async {
+    // await for camera and mic permissions before pushing video page
+    await _handleCameraAndMic();
+    // push video page with given channel name
+
+    AgoraChannel channel = await VideoCallRepository().getChannelName(widget.doctor.id);
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CallPage(
+          channelName: channel.channelName,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
+  }
 }

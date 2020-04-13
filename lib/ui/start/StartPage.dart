@@ -3,6 +3,8 @@ import 'package:docup/blocs/AuthBloc.dart';
 import 'package:docup/blocs/UpdatePatientBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/networking/Response.dart';
+import 'package:docup/repository/NotificationRepository.dart';
+import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/blocs/timer/TimerEvent.dart';
@@ -11,6 +13,7 @@ import 'package:docup/ui/widgets/OptionButton.dart';
 import 'package:docup/ui/widgets/Timer.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,6 +40,7 @@ class _StartPageState extends State<StartPage> {
   final AuthBloc _authBloc = AuthBloc();
   final UpdatePatientBloc _updatePatientBloc = UpdatePatientBloc();
 
+
   StreamController<RoleType> _controller = BehaviorSubject();
   final _usernameController = TextEditingController();
   final _verificationController = TextEditingController();
@@ -55,10 +59,10 @@ class _StartPageState extends State<StartPage> {
         pd.show();
         return false;
       case Status.ERROR:
-        pd.dismiss();
+        pd.hide();
         return false;
       default:
-        pd.dismiss();
+        pd.hide();
         return true;
     }
   }
@@ -321,11 +325,18 @@ class _StartPageState extends State<StartPage> {
         visible: startType == StartType.SIGN_UP,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          Text(Strings.enterAction,
-              style: TextStyle(
-                  fontSize: 13,
-                  color: IColors.themeColor,
-                  decoration: TextDecoration.underline)),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                startType = StartType.SIGN_IN;
+              });
+            },
+            child: Text(Strings.enterAction,
+                style: TextStyle(
+                    fontSize: 13,
+                    color: IColors.themeColor,
+                    decoration: TextDecoration.underline)),
+          ),
           SizedBox(
             width: 10.0,
           ),

@@ -13,12 +13,12 @@ class AuthBloc {
 
   StreamSink<Response<SignUpResponseEntity>> get signUpSink => _signUpController.sink;
   StreamSink<Response<VerifyResponseEntity>> get verifySink => _verifyController.sink;
+  StreamSink<Response<VerifyResponseEntity>> get signInSink => _signInController.sink;
 
   Stream<Response<SignUpResponseEntity>> get signUpStream => _signUpController.stream;
   Stream<Response<VerifyResponseEntity>> get verifyStream => _verifyController.stream;
-
-  StreamSink<Response<VerifyResponseEntity>> get signInSink => _signInController.sink;
   Stream<Response<VerifyResponseEntity>> get signInStream => _signInController.stream;
+
 
   AuthBloc() {
     _signUpController = StreamController<Response<SignUpResponseEntity>>();
