@@ -1,6 +1,8 @@
+import 'package:docup/constants/assets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/constants/colors.dart';
+import 'package:flutter_svg/svg.dart';
 
 class OnCallMedicalHeaderIcon extends StatefulWidget {
   OnCallMedicalHeaderIcon({Key key}) : super(key: key);
@@ -19,10 +21,7 @@ class _OnCallMedicalHeaderIconState extends State<OnCallMedicalHeaderIcon> {
         alignment: Alignment.bottomCenter,
         child: Material(
           child: InkWell(
-            child: Icon(
-              Icons.person,
-              size: 35,
-            ),
+            child: SvgPicture.asset(Assets.onCallMedicalIcon, width: 35,),
             hoverColor: Colors.white,
           ),
           color: Colors.transparent,

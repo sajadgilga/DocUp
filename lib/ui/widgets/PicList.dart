@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:dashed_container/dashed_container.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,8 +11,15 @@ class PicList extends StatefulWidget {
   final String picLabel;
   final String recentLabel;
   final Widget asset;
+  final ValueChanged<String> onPush;
 
-  PicList({Key key, this.picLabel, this.recentLabel, this.asset}) : super(key: key);
+  PicList(
+      {Key key,
+      this.picLabel,
+      this.recentLabel,
+      this.asset,
+      @required this.onPush})
+      : super(key: key);
 
   @override
   _PicListState createState() => _PicListState();
@@ -30,24 +38,29 @@ class _PicListState extends State<PicList> {
         ),
       );
 
-  Widget _uploadBoxLabel() => Container(
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          widget.asset,
-          Text(
-            Strings.illnessInfoPicUploadLabel,
-            style: TextStyle(
-                fontSize: 8,
-                color: IColors.themeColor,
-                fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          )
-        ],
-      ));
+  void _showUploadDialogue() {
+    widget.onPush(NavigatorRoutes.uploadPicDialogue);
+  }
 
-  Widget _uploadBox() => DashedContainer(
+  Widget _uploadBoxLabel() => Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                widget.asset,
+                Text(
+                  Strings.illnessInfoPicUploadLabel,
+                  style: TextStyle(
+                      fontSize: 8,
+                      color: IColors.themeColor,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ));
+
+  Widget _uploadBox() => GestureDetector(
+      child: DashedContainer(
         child: Container(
           width: 130,
           height: 130,
@@ -62,7 +75,9 @@ class _PicListState extends State<PicList> {
         dashedLength: 10,
         blankLength: 10,
         strokeWidth: 2.5,
-      );
+      ),
+    onTap: _showUploadDialogue,
+  );
 
   Widget _picListBox(width) {
     List<Widget> pictures = [];
@@ -174,7 +189,7 @@ class _PicListState extends State<PicList> {
 
   Widget _uploadPic() {
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.only(bottom: 10),
         child: FractionallySizedBox(
             widthFactor: 1,
 //        decoration: BoxDecoration(

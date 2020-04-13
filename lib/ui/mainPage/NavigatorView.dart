@@ -4,6 +4,7 @@ import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/PanelMenu.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
+import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:flutter/material.dart';
 
 import '../home/Home.dart';
@@ -14,6 +15,7 @@ class NavigatorRoutes {
   static const String panelMenu = '/panelMenu';
   static const String searchView = '/searchView';
   static const String doctorDialogue = '/doctorDialogue';
+  static const String uploadPicDialogue = '/uploadPicDialogue';
 }
 
 class NavigatorView extends StatelessWidget {
@@ -63,6 +65,7 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
                 doctor: _doctor,
               ),
+          NavigatorRoutes.uploadPicDialogue: (context) => UploadSlider(),
           NavigatorRoutes.searchView: (context) => SearchPage(
                 onPush: (direction) {
                   _push(context, direction);

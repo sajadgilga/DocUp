@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Header extends StatelessWidget {
   final Widget child;
@@ -7,11 +8,11 @@ class Header extends StatelessWidget {
 
   Widget _docUpIcon() {
     return Container(
-      padding: EdgeInsets.only(top: 10),
-      child: Image(
-        image: AssetImage('assets/DocUpHome.png'),
-        width: 100,
-        height: 100,
+      padding: EdgeInsets.only(top: 20, right: 20),
+      child: SvgPicture.asset(
+        'assets/DocUpHome.svg',
+        width: 35,
+        height: 35,
       ),
       alignment: Alignment.centerRight,
     );

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:docup/networking/CustomException.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,7 +14,25 @@ class ApiProvider {
     try {
       final headers = await getHeaders();
       final response = await http.get(_baseUrl + url, headers: headers);
-      responseJson = _response(response);
+      responseJson = _response(httpResponse: response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getDio(String url, {FormData data}) async {
+    var responseJson;
+    try {
+      final headers = {};
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token');
+      if (token != null && token.isNotEmpty) {
+        headers.addAll({HttpHeaders.authorizationHeader: "JWT " + token});
+      }
+      final response = await Dio()
+          .post(_baseUrl + url, data: data, options: Options(headers: headers));
+      responseJson = _response(dioResponse: response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
@@ -26,7 +45,7 @@ class ApiProvider {
       final headers = await getHeaders(withToken: withToken);
       final response = await http.post(_baseUrl + url,
           body: jsonEncode(body), headers: headers);
-      responseJson = _response(response);
+      responseJson = _response(httpResponse: response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
@@ -54,18 +73,23 @@ class ApiProvider {
       final headers = await getHeaders();
       final response = await http.patch(_baseUrl + url,
           body: jsonEncode(body), headers: headers);
-      responseJson = _response(response);
+      responseJson = _response(httpResponse: response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
   }
 
-  dynamic _response(http.Response response) {
+  dynamic _response({http.Response httpResponse, Response dioResponse}) {
+    var response;
+    if (httpResponse != null)
+      response = httpResponse;
+    else
+      response = dioResponse;
     switch (response.statusCode) {
       case 200:
       case 201:
-      var responseJson = json.decode(response.body.toString());
+        var responseJson = json.decode(response.body.toString());
         print(responseJson);
         return responseJson;
       case 400:

@@ -44,6 +44,7 @@ class IllnessPage extends StatelessWidget {
               width: 35,
               color: IColors.themeColor,
             ),
+            onPush: onPush,
           )
         ],
       ),
