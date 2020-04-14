@@ -28,6 +28,8 @@ class IColors {
   static Color selfChatText = Colors.white;
   static Color grey = Color.fromRGBO(245, 245, 245, 1);
   static Color darkGrey = Color.fromRGBO(144, 144, 144, 1);
+  static const Color deactivePanelMenu = Colors.black38;
+  static const Color activePanelMenu = Colors.black54;
 
   static void changeThemeColor(RoleType roleType) {
     Assets.changeIcons(roleType);

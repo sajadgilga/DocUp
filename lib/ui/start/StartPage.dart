@@ -38,7 +38,7 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   final TimerBloc _timerBloc = TimerBloc(ticker: Ticker());
   final AuthBloc _authBloc = AuthBloc();
-  final UpdatePatientBloc _updatePatientBloc = UpdatePatientBloc();
+  final PatientBloc _updatePatientBloc = PatientBloc();
 
 
   StreamController<RoleType> _controller = BehaviorSubject();
@@ -87,7 +87,7 @@ class _StartPageState extends State<StartPage> {
         setState(() {
           startType = StartType.LOGIN;
         });
-        _timerBloc.dispatch(Start(duration: 60));
+        _timerBloc.add(Start(duration: 60));
       }
     });
 
@@ -197,7 +197,7 @@ class _StartPageState extends State<StartPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              BlocProvider(bloc: _timerBloc, child: Timer()),
+              BlocProvider(create:(context) => _timerBloc, child: Timer()),
               Text(" : ارسال مجدد کد ",
                   style: TextStyle(color: IColors.themeColor)),
             ],

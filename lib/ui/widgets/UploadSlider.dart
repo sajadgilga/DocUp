@@ -13,7 +13,7 @@ class UploadSlider extends StatefulWidget {
 }
 
 class UploadSliderState extends State<UploadSlider> {
-  Picture picture = Picture(null, '', '');
+  Picture picture = Picture(picture: null, title: '', description: '');
   TextEditingController _controller = TextEditingController();
 
   @override
@@ -26,15 +26,16 @@ class UploadSliderState extends State<UploadSlider> {
   Future _getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     var newPicture = Picture(
-        Image.file(
+        picture: Image.file(
           image,
           fit: BoxFit.cover,
         ),
-        image.path,
-        '');
+        description: '',
+        title: '',
+        imagePath: image.path);
     setState(() {
       picture = newPicture;
-      _controller.text = newPicture.name;
+      _controller.text = newPicture.title;
     });
   }
 
@@ -49,8 +50,8 @@ class UploadSliderState extends State<UploadSlider> {
         maxHeight: (height * .4 < 250 ? height * .4 : 250),
       ),
       child: GestureDetector(
-        child: (picture.picture != null
-            ? picture.picture
+        child: (picture.image != null
+            ? picture.image
             : Image(
                 image: AssetImage('assets/uploadPicTestImage.png'),
                 fit: BoxFit.cover,

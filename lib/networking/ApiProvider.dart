@@ -21,7 +21,7 @@ class ApiProvider {
     return responseJson;
   }
 
-  Future<dynamic> getDio(String url, {FormData data}) async {
+  Future<dynamic> postDio(String url, {FormData data}) async {
     var responseJson;
     try {
       final headers = {};

@@ -1,4 +1,7 @@
+import 'package:docup/blocs/UpdatePatientBloc.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
+import 'package:docup/models/Patient.dart';
+import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
@@ -9,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
 import 'package:docup/ui/mainPage/navigator_destination.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import '../../constants/colors.dart';
 import 'NavigatorView.dart';
 
@@ -22,6 +26,9 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  final PatientBloc _patientBloc = PatientBloc();
+  ProgressDialog _progressDialogue;
+  Patient _patient;
 
   int _currentIndex = 0;
   Map<int, GlobalKey<NavigatorState>> _navigatorKeys = {
@@ -32,8 +39,32 @@ class _MainPageState extends State<MainPage> {
     4: GlobalKey<NavigatorState>(),
   };
 
+  bool handle(ProgressDialog pd, Response response) {
+    switch (response.status) {
+      case Status.LOADING:
+        pd.show();
+        return false;
+      case Status.ERROR:
+        pd.hide();
+        return false;
+      default:
+        pd.hide();
+        return true;
+    }
+  }
+
   @override
   void initState() {
+    _patientBloc.dataStream.listen((data) {
+      if(handle(_progressDialogue, data)) {
+        setState(() {
+          _patient = data.data;
+        });
+      }
+    });
+
+    _patientBloc.get();
+
     _firebaseMessaging.getToken().then((String fcmToken) {
       assert(fcmToken != null);
       print("FCM " + fcmToken);
@@ -56,7 +87,7 @@ class _MainPageState extends State<MainPage> {
     );
 
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('mipmap/ic_launcher');
+        new AndroidInitializationSettings('mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
 
     var initializationSettings = new InitializationSettings(
@@ -97,10 +128,9 @@ class _MainPageState extends State<MainPage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            CallPage(
-              channelName: channelName,
-            ),
+        builder: (context) => CallPage(
+          channelName: channelName,
+        ),
       ),
     );
   }
@@ -131,25 +161,25 @@ class _MainPageState extends State<MainPage> {
                   alignment: Alignment.center,
                   child: (destination.hasImage
                       ? Container(
-                    width: 50,
-                    child: ClipPolygon(
-                      sides: 6,
-                      rotate: 90,
-                      boxShadows: [
-                        PolygonBoxShadow(
-                            color: Colors.black, elevation: 1.0),
-                        PolygonBoxShadow(
-                            color: Colors.grey, elevation: 2.0)
-                      ],
-                      child: Image(
-                        image: destination.image,
-                      ),
-                    ),
-                  )
+                          width: 50,
+                          child: ClipPolygon(
+                            sides: 6,
+                            rotate: 90,
+                            boxShadows: [
+                              PolygonBoxShadow(
+                                  color: Colors.black, elevation: 1.0),
+                              PolygonBoxShadow(
+                                  color: Colors.grey, elevation: 2.0)
+                            ],
+                            child: Image(
+                              image: destination.image,
+                            ),
+                          ),
+                        )
                       : Icon(
-                    destination.icon,
-                    size: 30,
-                  ))),
+                          destination.icon,
+                          size: 30,
+                        ))),
 //              Align(alignment: Alignment(0, -1), child: Container(
 //                decoration:
 //                    BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
@@ -188,6 +218,9 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    _progressDialogue = ProgressDialog(context, type: ProgressDialogType.Normal);
+    _progressDialogue.style(message: "لطفا منتظر بمانید");
+
     return WillPopScope(
         child: Scaffold(
             backgroundColor: IColors.background,
@@ -204,7 +237,7 @@ class _MainPageState extends State<MainPage> {
             )),
         onWillPop: () async {
           final isFirstRouteInCurrentRoute =
-          !await _navigatorKeys[_currentIndex].currentState.maybePop();
+              !await _navigatorKeys[_currentIndex].currentState.maybePop();
           if (isFirstRouteInCurrentRoute) {
             if (_currentIndex != 0) {
               _selectPage(0);

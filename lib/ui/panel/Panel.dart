@@ -1,47 +1,46 @@
+import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/models/Patient.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/panel/chatPage/ChatPage.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'PanelMenu.dart';
 import 'illnessPage/IllnessPage.dart';
 
-enum PanelStates { PATIENT_DATA, DOCTOR_CHAT, VIDEO_CALL }
+enum PanelStates { FirstTab, SecondTab, ThirdTab }
 
 class Panel extends StatefulWidget {
   final Doctor doctor;
   final ValueChanged<String> onPush;
+  Patient patient;
+  List<Widget> pages;
 
-  Panel({Key key, this.doctor, @required this.onPush}) : super(key: key);
+  Panel({Key key, this.patient, this.doctor, this.pages, @required this.onPush})
+      : super(key: key);
 
   @override
   PanelState createState() {
-    return PanelState();
+    return PanelState(patient: patient);
   }
 }
 
 class PanelState extends State<Panel> {
-  PanelStates _state = PanelStates.DOCTOR_CHAT;
+  Patient patient;
+
+  PanelState({this.patient}) : super();
 
   Map<PanelStates, Widget> children() => {
-        PanelStates.PATIENT_DATA: IllnessPage(
-          doctor: widget.doctor,
-          onPush: widget.onPush,
-        ),
-        PanelStates.DOCTOR_CHAT: ChatPage(
-          doctor: widget.doctor,
-          onPush: widget.onPush,
-        ),
-        PanelStates.VIDEO_CALL: VideoCallPage(
-          doctor: widget.doctor,
-          onPush: widget.onPush,
-        ),
+        PanelStates.FirstTab: widget.pages[0],
+        PanelStates.SecondTab: widget.pages[1],
+        PanelStates.ThirdTab: widget.pages[2],
       };
 
   void _showPanelMenu() {
@@ -70,14 +69,73 @@ class PanelState extends State<Panel> {
           Container(
             padding: EdgeInsets.only(top: 15, left: 5),
             child: GestureDetector(
-              onTap: () {_showSearchPage();},
-              child: SvgPicture.asset(Assets.searchIcon, width: 30,),
+              onTap: () {
+                _showSearchPage();
+              },
+              child: SvgPicture.asset(
+                Assets.searchIcon,
+                width: 30,
+              ),
             ),
           )
         ],
       ));
 
-  Widget _tabs(width) {
+  Widget _tabs() {
+    return Tabs(
+        firstTab: 'اطلاعات بیماری',
+        secondTab: 'چت با پزشک',
+        thirdTab: 'تماس تصویری');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<TabSwitchBloc>(
+        create: (context) => TabSwitchBloc(),
+        child: Container(
+          constraints:
+              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+          child: Column(
+            children: <Widget>[
+              _header(),
+              _tabs(),
+              BlocBuilder<TabSwitchBloc, PanelStates>(
+                builder: (context, state) =>
+                    Expanded(flex: 2, child: children()[state]),
+              )
+            ],
+          ),
+        ));
+  }
+}
+
+class Tabs extends StatefulWidget {
+  String firstTab;
+  String secondTab;
+  String thirdTab;
+
+  Tabs({Key key, this.firstTab, this.secondTab, this.thirdTab})
+      : super(key: key);
+
+  @override
+  TabsState createState() {
+    return TabsState();
+  }
+}
+
+class TabsState extends State<Tabs> {
+  PanelStates _state = PanelStates.SecondTab;
+
+  void _switchTab(PanelStates state, context) {
+    BlocProvider.of<TabSwitchBloc>(context).add(state);
+    if (_state != state)
+      setState(() {
+        _state = state;
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
         Container(
@@ -96,19 +154,19 @@ class PanelState extends State<Panel> {
               children: <Widget>[
                 RaisedButton(
                   onPressed: () {
-                    _switchTab(PanelStates.VIDEO_CALL);
+                    _switchTab(PanelStates.ThirdTab, context);
                   },
-                  color: (_state == PanelStates.VIDEO_CALL
+                  color: (_state == PanelStates.ThirdTab
                       ? IColors.themeColor
                       : Colors.white),
                   child: Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10),
                       alignment: Alignment.center,
                       child: Text(
-                        "تماس تصویری",
+                        widget.thirdTab,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: (_state == PanelStates.VIDEO_CALL
+                            color: (_state == PanelStates.ThirdTab
                                 ? Colors.white
                                 : Colors.grey),
                             fontSize: 12),
@@ -119,18 +177,18 @@ class PanelState extends State<Panel> {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    _switchTab(PanelStates.DOCTOR_CHAT);
+                    _switchTab(PanelStates.SecondTab, context);
                   },
-                  color: (_state == PanelStates.DOCTOR_CHAT
+                  color: (_state == PanelStates.SecondTab
                       ? IColors.themeColor
                       : Colors.white),
                   child: Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10),
                       child: Text(
-                        "گفتگو با پزشک",
+                        widget.secondTab,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: (_state == PanelStates.DOCTOR_CHAT
+                            color: (_state == PanelStates.SecondTab
                                 ? Colors.white
                                 : Colors.grey),
                             fontSize: 12),
@@ -141,18 +199,18 @@ class PanelState extends State<Panel> {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    _switchTab(PanelStates.PATIENT_DATA);
+                    _switchTab(PanelStates.FirstTab, context);
                   },
-                  color: (_state == PanelStates.PATIENT_DATA
+                  color: (_state == PanelStates.FirstTab
                       ? IColors.themeColor
                       : Colors.white),
                   child: Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10),
                       child: Text(
-                        "اطلاعات بیماری",
+                        widget.firstTab,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: (_state == PanelStates.PATIENT_DATA
+                            color: (_state == PanelStates.FirstTab
                                 ? Colors.white
                                 : Colors.grey),
                             fontSize: 12),
@@ -164,28 +222,6 @@ class PanelState extends State<Panel> {
               ],
             )),
       ],
-    );
-  }
-
-  void _switchTab(PanelStates state) {
-    if (_state != state)
-      setState(() {
-        _state = state;
-      });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-      child: Column(
-        children: <Widget>[
-          _header(),
-          _tabs(MediaQuery.of(context).size.width),
-          Expanded(flex: 2, child: children()[_state])
-        ],
-      ),
     );
   }
 }

@@ -44,7 +44,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   @override
   void dispose() {
     _tickerSubscription?.cancel();
-    super.dispose();
+//    super.dispose();
   }
 
   Stream<TimerState> _mapStartToState(Start start) async* {
@@ -52,13 +52,13 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _tickerSubscription?.cancel();
     _tickerSubscription = _ticker.tick(ticks: start.duration).listen(
           (duration) {
-        dispatch(Tick(duration: duration));
+        add(Tick(duration: duration));
       },
     );
   }
 
   Stream<TimerState> _mapPauseToState(Pause pause) async* {
-    final state = currentState;
+//    final state = currentState;
     if (state is Running) {
       _tickerSubscription?.pause();
       yield Paused(state.duration);
@@ -66,7 +66,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   }
 
   Stream<TimerState> _mapResumeToState(Resume pause) async* {
-    final state = currentState;
+//    final state = currentState;
     if (state is Paused) {
       _tickerSubscription?.resume();
       yield Running(state.duration);

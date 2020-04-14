@@ -163,18 +163,22 @@ class _PanelMenuMainItem extends StatelessWidget {
   final List<PanelSubItem> subItems;
   final String label;
   final IconData icon;
-  Color color = Colors.black54;
+  Color color;
+  bool isActive = false;
 
   _PanelMenuMainItem(
       {Key key,
       this.subItems,
       this.label,
       this.icon,
-      this.color = Colors.black54})
+        this.isActive = false,
+      this.color = IColors.activePanelMenu})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (!isActive)
+      color = IColors.deactivePanelMenu;
     List<Widget> items = [];
     for (var item in subItems) {
       items.add(Container(

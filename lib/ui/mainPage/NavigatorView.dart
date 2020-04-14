@@ -1,9 +1,13 @@
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/models/Patient.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/PanelMenu.dart';
+import 'package:docup/ui/panel/chatPage/ChatPage.dart';
+import 'package:docup/ui/panel/illnessPage/IllnessPage.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
+import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:flutter/material.dart';
 
@@ -30,66 +34,37 @@ class NavigatorView extends StatelessWidget {
         image: AssetImage('assets/lion.jpg'),
       ),
       []);
+  Patient patient;
 
-  NavigatorView({Key key, this.index, this.navigatorKey}) : super(key: key);
+  NavigatorView({Key key, this.index, this.navigatorKey, this.patient})
+      : super(key: key);
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
     switch (index) {
       case 0:
         return {
-          NavigatorRoutes.root: (context) => Home(
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-              ),
-          NavigatorRoutes.notificationView: (context) => NotificationPage(),
-          NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
-                doctor: _doctor,
-              ),
-          NavigatorRoutes.searchView: (context) => SearchPage(
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-              ),
+          NavigatorRoutes.root: (context) => _home(context),
+          NavigatorRoutes.notificationView: (context) => _notifictionPage(),
+          NavigatorRoutes.doctorDialogue: (context) =>
+              _doctorDetailPage(context),
+          NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
       case 1:
         return {
-          NavigatorRoutes.root: (context) => Panel(
-              doctor: _doctor,
-              onPush: (direction) {
-                _push(context, direction);
-              }),
-          NavigatorRoutes.panelMenu: (context) => PanelMenu(() {
-                _pop(context);
-              }),
-          NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
-                doctor: _doctor,
-              ),
+          NavigatorRoutes.root: (context) => _panel(context),
+          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.doctorDialogue: (context) =>
+              _doctorDetailPage(context),
           NavigatorRoutes.uploadPicDialogue: (context) => UploadSlider(),
-          NavigatorRoutes.searchView: (context) => SearchPage(
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-              ),
+          NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
       case 2:
         return {
-          NavigatorRoutes.root: (context) => Panel(
-              doctor: _doctor,
-              onPush: (direction) {
-                _push(context, direction);
-              }),
-          NavigatorRoutes.panelMenu: (context) => PanelMenu(() {
-                _pop(context);
-              }),
-          NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
-                doctor: _doctor,
-              ),
-          NavigatorRoutes.searchView: (context) => SearchPage(
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-              ),
+          NavigatorRoutes.root: (context) => _panel(context),
+          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.doctorDialogue: (context) =>
+              _doctorDetailPage(context),
+          NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
       case 3:
         return {};
@@ -97,18 +72,11 @@ class NavigatorView extends StatelessWidget {
         return {};
       default:
         return {
-          NavigatorRoutes.root: (context) => Home(
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-              ),
-          NavigatorRoutes.notificationView: (context) => NotificationPage(),
-          NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(),
-          NavigatorRoutes.searchView: (context) => SearchPage(
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-              ),
+          NavigatorRoutes.root: (context) => _home(context),
+          NavigatorRoutes.notificationView: (context) => _notifictionPage(),
+          NavigatorRoutes.doctorDialogue: (context) =>
+              _doctorDetailPage(context),
+          NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
     }
   }
@@ -140,4 +108,55 @@ class NavigatorView extends StatelessWidget {
       onGenerateRoute: (settings) => _route(settings, context),
     );
   }
+
+
+  Widget _home(context) => Home(
+    onPush: (direction) {
+      _push(context, direction);
+    },
+  );
+
+  Widget _notifictionPage() => NotificationPage();
+
+  Widget _panel(context) => Panel(
+    doctor: _doctor,
+    onPush: (direction) {
+      _push(context, direction);
+    },
+    pages: <Widget>[
+      IllnessPage(
+        doctor: _doctor,
+        onPush: (direction) {
+          _push(context, direction);
+        },
+      ),
+      ChatPage(
+        doctor: _doctor,
+        onPush: (direction) {
+          _push(context, direction);
+        },
+      ),
+      VideoCallPage(
+        doctor: _doctor,
+        onPush: (direction) {
+          _push(context, direction);
+        },
+      )
+    ],
+  );
+
+  Widget _doctorDetailPage(context) => DoctorDetailPage(
+    doctor: _doctor,
+  );
+
+  Widget _searchPage(context) => SearchPage(
+    onPush: (direction) {
+      _push(context, direction);
+    },
+  );
+
+  Widget _panelMenu(context) => PanelMenu(() {
+    _pop(context);
+  });
+
 }

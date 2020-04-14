@@ -11,14 +11,23 @@ class AuthBloc {
   StreamController _verifyController;
   StreamController _signInController;
 
-  StreamSink<Response<SignUpResponseEntity>> get signUpSink => _signUpController.sink;
-  StreamSink<Response<VerifyResponseEntity>> get verifySink => _verifyController.sink;
-  StreamSink<Response<VerifyResponseEntity>> get signInSink => _signInController.sink;
+  StreamSink<Response<SignUpResponseEntity>> get signUpSink =>
+      _signUpController.sink;
 
-  Stream<Response<SignUpResponseEntity>> get signUpStream => _signUpController.stream;
-  Stream<Response<VerifyResponseEntity>> get verifyStream => _verifyController.stream;
-  Stream<Response<VerifyResponseEntity>> get signInStream => _signInController.stream;
+  StreamSink<Response<VerifyResponseEntity>> get verifySink =>
+      _verifyController.sink;
 
+  StreamSink<Response<VerifyResponseEntity>> get signInSink =>
+      _signInController.sink;
+
+  Stream<Response<SignUpResponseEntity>> get signUpStream =>
+      _signUpController.stream;
+
+  Stream<Response<VerifyResponseEntity>> get verifyStream =>
+      _verifyController.stream;
+
+  Stream<Response<VerifyResponseEntity>> get signInStream =>
+      _signInController.stream;
 
   AuthBloc() {
     _signUpController = StreamController<Response<SignUpResponseEntity>>();
@@ -38,11 +47,11 @@ class AuthBloc {
     }
   }
 
-
   verify(String username, String password) async {
     verifySink.add(Response.loading('loading'));
     try {
-      VerifyResponseEntity response = await _repository.verify(username, password);
+      VerifyResponseEntity response =
+          await _repository.verify(username, password);
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.token);
       verifySink.add(Response.completed(response));
@@ -52,11 +61,11 @@ class AuthBloc {
     }
   }
 
-
   signIn(String username, String password) async {
     signInSink.add(Response.loading('loading'));
     try {
-      VerifyResponseEntity response = await _repository.signIn(username, password);
+      VerifyResponseEntity response =
+          await _repository.signIn(username, password);
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.token);
       signInSink.add(Response.completed(response));
@@ -66,8 +75,7 @@ class AuthBloc {
     }
   }
 
-
-  dispose(){
+  dispose() {
     _signUpController?.close();
     _verifyController?.close();
     _signInController?.close();
