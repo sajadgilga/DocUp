@@ -34,14 +34,6 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
   @override
   void initState() {
     _bloc = DoctorInfoBloc();
-    _bloc.visitRequestStream.listen((data) {
-      if (data.status == Status.COMPLETED) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('درخواست شما با موفقیت ثبت شد'),
-          duration: Duration(seconds: 3),
-        ));
-      }
-    });
     super.initState();
   }
 

@@ -2,6 +2,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorResponseEntity.dart';
+import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/DoctorAvatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class VirtualReservationPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
@@ -24,15 +26,25 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
   TextEditingController timeTextController = TextEditingController();
   TextEditingController dateTextController = TextEditingController();
 
+  @override
+  void initState() {
+    _bloc.visitRequestStream.listen((data) {
+      if (data.status == Status.COMPLETED) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('درخواست شما با موفقیت ثبت شد'),
+          duration: Duration(seconds: 3),
+        ));
+      }
+    });
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
         margin: EdgeInsets.only(top: 50),
         constraints:
-        BoxConstraints(maxWidth: MediaQuery
-            .of(context)
-            .size
-            .width),
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
         child: Column(children: <Widget>[
           _headerWidget(),
           SizedBox(height: 10),
@@ -56,8 +68,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
     );
   }
 
-  _headerWidget() =>
-      Row(
+  _headerWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -67,13 +78,9 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
-  Map<String, int> typeSelected = {
-    "نوع مشاوره": 2,
-    "مدت زمان مشاوره": 2
-  };
+  Map<String, int> typeSelected = {"نوع مشاوره": 2, "مدت زمان مشاوره": 2};
 
-  _reservationTypeWidget(String title, List<String> items) =>
-      Column(
+  _reservationTypeWidget(String title, List<String> items) => Column(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -110,8 +117,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
-  _priceWidget() =>
-      Row(
+  _priceWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text("ریال", style: TextStyle(fontSize: 16)),
@@ -123,8 +129,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
-  _timeSelectionWidget() =>
-      Column(
+  _timeSelectionWidget() => Column(
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -160,10 +165,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.35,
+                width: MediaQuery.of(context).size.width * 0.35,
                 child: DateTimeField(
                   controller: timeTextController,
                   format: DateFormat("HH:mm"),
@@ -179,10 +181,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
               ),
               SizedBox(width: 50),
               Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.35,
+                width: MediaQuery.of(context).size.width * 0.35,
                 child: DateTimeField(
                   controller: dateTextController,
                   format: DateFormat("yyyy-MM-dd"),
@@ -202,8 +201,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
 
   bool policyChecked = false;
 
-  _acceptPolicyWidget() =>
-      Row(
+  _acceptPolicyWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Text(
@@ -223,13 +221,15 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
-  _submitWidget() =>
-      ActionButton(
+  _submitWidget() => ActionButton(
         color: IColors.themeColor,
         title: "شروع ویزیت مجازی",
         callBack: () {
           _bloc.visitRequest(
-              widget.doctorEntity.id, typeSelected["نوع مشاوره"], 2, typeSelected["مدت زمان مشاوره"],
+              widget.doctorEntity.id,
+              typeSelected["نوع مشاوره"],
+              2,
+              typeSelected["مدت زمان مشاوره"],
               dateTextController.text + "T" + timeTextController.text + ":00Z");
         },
       );
