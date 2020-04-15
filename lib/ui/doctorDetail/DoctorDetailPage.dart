@@ -89,11 +89,21 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             color: IColors.themeColor,
             title: Strings.physicalReservationLabel,
             callBack: () => {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          VirtualReservationPage(doctorEntity: doctorEntity)))
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(
+                        "منتظر ما باشید",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(fontSize: 12)),
+                    );
+                  })
             },
           ),
           SizedBox(height: 10),
@@ -102,7 +112,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             color: IColors.darkBlue,
             title: Strings.virtualReservationLabel,
             callBack: () => {
-              Navigator.push(
+              Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
