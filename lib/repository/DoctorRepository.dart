@@ -7,8 +7,8 @@ class DoctorRepository {
   ApiProvider _provider = ApiProvider();
 
   Future<DoctorEntity> getDoctor(int doctorId) async {
-    final response =
-        await _provider.get("api/doctors/" + doctorId.toString() + "/");
+    final response = await _provider
+        .get("api/doctors/" + doctorId.toString() + "/", utf8Support: true);
     return DoctorEntity.fromJson(response);
   }
 

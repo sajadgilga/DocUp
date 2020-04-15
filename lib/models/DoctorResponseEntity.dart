@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class DoctorEntity {
   int id;

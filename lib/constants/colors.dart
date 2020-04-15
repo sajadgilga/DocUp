@@ -18,6 +18,7 @@ class IColors {
   static const Color red = Color.fromRGBO(254, 95, 85, 1);
   static const Color blue = Color.fromRGBO(50, 200, 240, 1);
   static const Color green = Color.fromRGBO(74, 157, 134, 1);
+  static const Color darkBlue = Color.fromRGBO(44, 62, 80, 1);
   static const Color background = Color.fromRGBO(242, 242, 242, 1);
   static const Color doctorChatBubble = Color.fromRGBO(242, 242, 242, 1);
   static Color themeColor = blue;

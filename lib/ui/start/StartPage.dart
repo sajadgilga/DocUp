@@ -101,14 +101,14 @@ class _StartPageState extends State<StartPage> {
 
     _authBloc.signInStream.listen((data) {
       if (handle(progressDialog, data)) {
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
     });
 
     _updatePatientBloc.dataStream.listen((data) {
       if (handle(progressDialog, data)) {
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
     });

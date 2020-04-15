@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 typedef ActionCallBack = void Function();
 
 class ActionButton extends StatefulWidget {
+  final double width;
   final Color color;
   final String title;
   final Icon icon;
@@ -10,7 +11,7 @@ class ActionButton extends StatefulWidget {
   final bool rtl;
 
   ActionButton(
-      {Key key, this.color, this.title, this.icon, this.callBack, this.rtl})
+      {Key key, this.width, this.color, this.title, this.icon, this.callBack, this.rtl})
       : super(key: key);
 
   @override
@@ -20,8 +21,9 @@ class ActionButton extends StatefulWidget {
 class _ActionButtonState extends State<ActionButton> {
   @override
   Widget build(BuildContext context) {
-    return Wrap(children: <Widget>[
-      RaisedButton.icon(
+    return Container(
+      width: widget.width,
+      child: RaisedButton.icon(
         color: widget.color,
         textColor: Colors.white,
         shape: new RoundedRectangleBorder(
@@ -39,7 +41,7 @@ class _ActionButtonState extends State<ActionButton> {
             padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
             child: widget.icon),
         onPressed: widget.callBack,
-      )
-    ]);
+      ),
+    );
   }
 }
