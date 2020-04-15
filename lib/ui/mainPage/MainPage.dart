@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:docup/models/AgoraChannelEntity.dart';
 import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/services/FirebaseService.dart';
@@ -36,17 +38,16 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     _firebaseMessaging.getToken().then((String fcmToken) {
       assert(fcmToken != null);
-      print("FCM " + fcmToken);
       NotificationRepository().registerDevice(fcmToken);
     });
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        await _showNotificationWithDefaultSound(
-            message['notification']['title'], message['notification']['body']);
+        String title = message['notification']['title'];
+          await _showNotificationWithDefaultSound(
+              title, message['notification']['body']);
       },
-      onBackgroundMessage: myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
       },
@@ -70,6 +71,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future _showNotificationWithDefaultSound(String title, String body) async {
+    var jsonBody = json.decode(body);
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'channel_id', 'channel_name', 'channel_description',
         importance: Importance.Max, priority: Priority.High);
@@ -79,17 +81,20 @@ class _MainPageState extends State<MainPage> {
     await flutterLocalNotificationsPlugin.show(
       0,
       title,
-      body,
+      jsonBody['payload'],
       platformChannelSpecifics,
-      payload: body,
+      payload: jsonBody['payload'],
     );
   }
 
   Future onSelectNotification(String payload) async {
     joinVideoCall(payload);
   }
+  bool videoCallStarted = false;
 
   Future<void> joinVideoCall(String channelName) async {
+    if (videoCallStarted) return;
+    videoCallStarted = true;
     // await for camera and mic permissions before pushing video page
     await _handleCameraAndMic();
     // push video page with given channel name
