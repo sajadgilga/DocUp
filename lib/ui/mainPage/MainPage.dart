@@ -57,20 +57,6 @@ class _MainPageState extends State<MainPage> {
     4: GlobalKey<NavigatorState>(),
   };
 
-  bool handle(ProgressDialog pd, Response response) {
-    switch (response.status) {
-      case Status.LOADING:
-        pd.show();
-        return false;
-      case Status.ERROR:
-        pd.hide();
-        return false;
-      default:
-        pd.hide();
-        return true;
-    }
-  }
-
   @override
   void initState() {
 //    _patientBloc.dataStream.listen((data) {
@@ -106,7 +92,7 @@ class _MainPageState extends State<MainPage> {
     );
 
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('mipmap/ic_launcher');
+    new AndroidInitializationSettings('mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
 
     var initializationSettings = new InitializationSettings(
@@ -120,6 +106,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future _showNotificationWithDefaultSound(String title, String body) async {
+    var jsonBody = json.decode(body);
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'channel_id', 'channel_name', 'channel_description',
         importance: Importance.Max, priority: Priority.High);
@@ -129,17 +116,20 @@ class _MainPageState extends State<MainPage> {
     await flutterLocalNotificationsPlugin.show(
       0,
       title,
-      body,
+      jsonBody['payload'],
       platformChannelSpecifics,
-      payload: body,
+      payload: jsonBody['payload'],
     );
   }
 
   Future onSelectNotification(String payload) async {
     joinVideoCall(payload);
   }
+  bool videoCallStarted = false;
 
   Future<void> joinVideoCall(String channelName) async {
+    if (videoCallStarted) return;
+    videoCallStarted = true;
     // await for camera and mic permissions before pushing video page
     await _handleCameraAndMic();
     // push video page with given channel name

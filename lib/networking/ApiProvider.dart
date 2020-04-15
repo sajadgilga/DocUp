@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiProvider {
   final String _baseUrl = "http://185.252.30.163/";
 
-  Future<dynamic> get(String url, {Map body, bool utf8Support}) async {
+  Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {
     var responseJson;
     try {
       final headers = await getHeaders();
