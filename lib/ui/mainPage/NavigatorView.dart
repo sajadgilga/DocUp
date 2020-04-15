@@ -1,6 +1,7 @@
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/Patient.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
+import 'package:docup/ui/doctorDetail/VirtualReservationPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/PanelMenu.dart';

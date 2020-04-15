@@ -44,5 +44,11 @@ class Strings {
   static final String illnessInfoPicShowLabel = 'مشاهده همه';
   static final String illnessInfoLastPicsLabel = 'نتایج تست‌های پیشین';
 
+
+  static final String physicalReservationLabel = 'رزرو ویزیت حضوری';
+  static final String virtualReservationLabel = 'ویزیت مجازی';
+
+
+
   static final String uploadPicTextFieldHint = 'توضیح...';
 }

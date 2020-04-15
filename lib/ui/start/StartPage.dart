@@ -3,8 +3,6 @@ import 'package:docup/blocs/AuthBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/networking/Response.dart';
-import 'package:docup/repository/NotificationRepository.dart';
-import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/blocs/timer/TimerEvent.dart';
@@ -13,7 +11,6 @@ import 'package:docup/ui/widgets/OptionButton.dart';
 import 'package:docup/ui/widgets/Timer.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -103,14 +100,14 @@ class _StartPageState extends State<StartPage> {
 
     _authBloc.signInStream.listen((data) {
       if (handle(progressDialog, data)) {
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
     });
 
     _updatePatientBloc.dataStream.listen((data) {
       if (handle(progressDialog, data)) {
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
     });
