@@ -14,11 +14,17 @@ class DoctorInfoBloc {
   StreamController _getDoctorController;
   StreamController _sendTicketController;
 
-  StreamSink<Response<DoctorEntity>> get doctorInfoSink => _getDoctorController.sink;
-  StreamSink<Response<TicketEntity>> get sendTicketSink => _sendTicketController.sink;
+  StreamSink<Response<DoctorEntity>> get doctorInfoSink =>
+      _getDoctorController.sink;
 
-  Stream<Response<DoctorEntity>> get doctorInfoStream => _getDoctorController.stream;
-  Stream<Response<TicketEntity>> get sendTicketStream => _sendTicketController.stream;
+  StreamSink<Response<TicketEntity>> get sendTicketSink =>
+      _sendTicketController.sink;
+
+  Stream<Response<DoctorEntity>> get doctorInfoStream =>
+      _getDoctorController.stream;
+
+  Stream<Response<TicketEntity>> get sendTicketStream =>
+      _sendTicketController.stream;
 
   DoctorInfoBloc() {
     _getDoctorController = StreamController<Response<DoctorEntity>>();

@@ -1,3 +1,5 @@
+import 'package:docup/constants/assets.dart';
+
 enum RoleType {
   PATIENT, DOCTOR, CLINIC
 }
@@ -19,11 +21,11 @@ extension RoleTypeExtension on RoleType {
     String get asset {
       switch(this){
         case RoleType.PATIENT:
-          return "assets/team.svg";
+          return Assets.patientLoginIcon;
         case RoleType.DOCTOR:
-          return "assets/doctor.svg";
+          return Assets.doctorLoginIcon;
         case RoleType.CLINIC:
-          return "assets/doctor.svg";
+          return Assets.clinicLoginIcon;
         default:
           return null;
       }

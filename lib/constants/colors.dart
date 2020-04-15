@@ -1,6 +1,8 @@
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 
+import 'assets.dart';
+
 const Map<int, Color> swatch = {
   50: Color.fromRGBO(254, 95, 85, .1),
   100: Color.fromRGBO(254, 95, 85, .2),
@@ -29,6 +31,7 @@ class IColors {
   static Color darkGrey = Color.fromRGBO(144, 144, 144, 1);
 
   static void changeThemeColor(RoleType roleType) {
+    Assets.changeIcons(roleType);
     switch(roleType) {
       case RoleType.PATIENT:
         themeColor = blue;

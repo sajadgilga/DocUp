@@ -49,4 +49,6 @@ class Strings {
   static final String virtualReservationLabel = 'ویزیت مجازی';
 
 
+
+  static final String uploadPicTextFieldHint = 'توضیح...';
 }

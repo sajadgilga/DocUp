@@ -1,3 +1,4 @@
+import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
@@ -6,6 +7,7 @@ import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/panel/chatPage/ChatPage.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'PanelMenu.dart';
 import 'illnessPage/IllnessPage.dart';
@@ -60,7 +62,7 @@ class PanelState extends State<Panel> {
               child: Container(
                 padding: EdgeInsets.only(top: 15, left: 10, right: 10),
                 child: Image(
-                  image: AssetImage('assets/panelList.png'),
+                  image: AssetImage(Assets.panelListIcon),
                   height: 40,
                   width: 40,
                 ),
@@ -69,10 +71,7 @@ class PanelState extends State<Panel> {
             padding: EdgeInsets.only(top: 15, left: 5),
             child: GestureDetector(
               onTap: () {_showSearchPage();},
-              child: Icon(
-                Icons.search,
-                size: 30,
-              ),
+              child: SvgPicture.asset(Assets.searchIcon, width: 30,),
             ),
           )
         ],
