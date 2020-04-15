@@ -9,12 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiProvider {
   final String _baseUrl = "http://185.252.30.163/";
 
-  Future<dynamic> get(String url, {Map body}) async {
+  Future<dynamic> get(String url, {Map body, bool utf8Support}) async {
     var responseJson;
     try {
       final headers = await getHeaders();
       final response = await http.get(_baseUrl + url, headers: headers);
-      responseJson = _response(httpResponse: response);
+      responseJson =
+          _response(httpResponse: response, utf8Support: utf8Support);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
@@ -80,7 +81,10 @@ class ApiProvider {
     return responseJson;
   }
 
-  dynamic _response({http.Response httpResponse, Response dioResponse}) {
+  dynamic _response(
+      {http.Response httpResponse,
+      Response dioResponse,
+      bool utf8Support = false}) {
     var response;
     if (httpResponse != null)
       response = httpResponse;
@@ -89,7 +93,12 @@ class ApiProvider {
     switch (response.statusCode) {
       case 200:
       case 201:
-        var responseJson = json.decode(response.body.toString());
+        var responseJson;
+        if (utf8Support) {
+          responseJson = json.decode(utf8.decode(response.bodyBytes));
+        } else {
+          responseJson = json.decode(response.body.toString());
+        }
         print(responseJson);
         return responseJson;
       case 400:

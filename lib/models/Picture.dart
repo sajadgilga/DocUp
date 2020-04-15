@@ -10,6 +10,6 @@ class Picture {
 
   Map<String, dynamic> toJson() {
     var data = Map<String, dynamic>();
-    data['']
+    data[''];
   }
 }
