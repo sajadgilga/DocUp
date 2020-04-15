@@ -4,9 +4,9 @@ import 'package:docup/networking/ApiProvider.dart';
 class AuthRepository {
   ApiProvider _provider = ApiProvider();
 
-  Future<SignUpResponseEntity> signUp(String username) async {
+  Future<SignUpResponseEntity> signUp(String username, int userType) async {
     final response = await _provider.post("api/auth/sign-up/",
-        body: {"user_type": 0, "username": username});
+        body: {"user_type": userType, "username": username});
     if (response is List) return SignUpResponseEntity(success: response[0]);
     return SignUpResponseEntity.fromJson(response);
   }

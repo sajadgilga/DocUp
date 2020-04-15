@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/main.dart';
@@ -82,7 +84,7 @@ class _MainPageState extends State<MainPage> {
         await _showNotificationWithDefaultSound(
             message['notification']['title'], message['notification']['body']);
       },
-      onBackgroundMessage: myBackgroundMessageHandler,
+//      onBackgroundMessage: myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
       },

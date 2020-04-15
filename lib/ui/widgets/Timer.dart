@@ -1,5 +1,6 @@
 import 'package:docup/blocs/timer/TimerBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +18,7 @@ class Timer extends StatelessWidget {
         final String secondsStr =
             (state.duration % 60).floor().toString().padLeft(2, '0');
         return Text(
-          '$minutesStr:$secondsStr' ,
+          replaceFarsiNumber('$minutesStr:$secondsStr'),
           style: TextStyle(
             fontSize: 14,
             color: IColors.themeColor,
@@ -27,4 +28,5 @@ class Timer extends StatelessWidget {
       },
     );
   }
+
 }

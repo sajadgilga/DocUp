@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:docup/models/AuthResponseEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/AuthRepository.dart';
+import 'package:docup/ui/start/RoleType.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthBloc {
@@ -36,10 +37,11 @@ class AuthBloc {
     _repository = AuthRepository();
   }
 
-  signUp(String username) async {
+  signUp(String username, RoleType roleType) async {
     signUpSink.add(Response.loading('loading'));
     try {
-      SignUpResponseEntity response = await _repository.signUp(username);
+      SignUpResponseEntity response =
+          await _repository.signUp(username, roleType.index);
       signUpSink.add(Response.completed(response));
     } catch (e) {
       signUpSink.add(Response.error(e.toString()));

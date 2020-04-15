@@ -11,6 +11,7 @@ import 'package:docup/ui/widgets/OptionButton.dart';
 import 'package:docup/ui/widgets/Timer.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,7 @@ class _StartPageState extends State<StartPage> {
 
   StreamController<RoleType> _controller = BehaviorSubject();
   final _usernameController = TextEditingController();
+  final _doctorIdController = TextEditingController();
   final _verificationController = TextEditingController();
   final _fullNameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -49,6 +51,9 @@ class _StartPageState extends State<StartPage> {
 
   String currentUserName;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
+
   handle(ProgressDialog pd, Response response) {
     switch (response.status) {
       case Status.LOADING:
@@ -56,6 +61,7 @@ class _StartPageState extends State<StartPage> {
         return false;
       case Status.ERROR:
         pd.hide();
+        showErrorSnackBar(response.message);
         return false;
       default:
         pd.hide();
@@ -63,15 +69,18 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
+  showErrorSnackBar(String message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 3),
+    ));
+  }
+
   Future<void> checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("token")) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => MainPage()));
-//      setState(() {
-//        this.startType = StartType.SIGN_IN;
-//
-//      });
     }
   }
 
@@ -124,26 +133,30 @@ class _StartPageState extends State<StartPage> {
   }
 
   void submit() {
-    setState(() {
-      switch (startType) {
-        case StartType.SIGN_UP:
-          _authBloc.signUp(_usernameController.text);
-          break;
-        case StartType.LOGIN:
-          _authBloc.verify(currentUserName, _verificationController.text);
-          break;
-        case StartType.REGISTER:
-          _updatePatientBloc.update(
-              _fullNameController.text, _passwordController.text);
-          break;
-        case StartType.SIGN_IN:
-          _authBloc.signIn(_usernameController.text, _passwordController.text);
-          break;
-      }
-    });
+    if (_formKey.currentState.validate()) {
+      setState(() {
+        switch (startType) {
+          case StartType.SIGN_UP:
+            _authBloc.signUp(_usernameController.text, currentRoleType);
+            break;
+          case StartType.LOGIN:
+            _authBloc.verify(currentUserName, _verificationController.text);
+            break;
+          case StartType.REGISTER:
+            _updatePatientBloc.update(
+                _fullNameController.text, _passwordController.text);
+            break;
+          case StartType.SIGN_IN:
+            _authBloc.signIn(
+                _usernameController.text, _passwordController.text);
+            break;
+        }
+      });
+    }
   }
 
   void back() {
+    _verificationController.text = "";
     setState(() {
       startType = StartType.SIGN_UP;
     });
@@ -155,27 +168,32 @@ class _StartPageState extends State<StartPage> {
     progressDialog.style(message: "لطفا منتظر بمانید");
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 80),
-            _headerWidget(),
-            SizedBox(height: 20),
-            _optionsWidget(),
-            SizedBox(height: 40),
-            _titleWidget(),
-            SizedBox(height: 5),
-            _messageWidget(),
-            SizedBox(height: 50),
-            _inputFieldsWidget(),
-            SizedBox(height: 10),
-            _timerWidget(),
-            SizedBox(height: 80),
-            _actionWidget(),
-            SizedBox(height: 20),
-            _enterWidget()
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 80),
+              _headerWidget(),
+              SizedBox(height: 20),
+              _optionsWidget(),
+              SizedBox(height: 40),
+              _titleWidget(),
+              SizedBox(height: 5),
+              _messageWidget(),
+              SizedBox(height: 50),
+              _inputFieldsWidget(),
+              SizedBox(height: 10),
+              _timerWidget(),
+              SizedBox(height: 50),
+              _actionWidget(),
+              SizedBox(height: 20),
+              _enterWidget(),
+              SizedBox(height: 20)
+            ],
+          ),
         ),
       ),
     );
@@ -184,9 +202,12 @@ class _StartPageState extends State<StartPage> {
   @override
   void dispose() {
     _usernameController.dispose();
+    _doctorIdController.dispose();
     _verificationController.dispose();
     _fullNameController.dispose();
     _passwordController.dispose();
+    _authBloc.dispose();
+    _updatePatientBloc.dispose();
     super.dispose();
   }
 
@@ -198,7 +219,8 @@ class _StartPageState extends State<StartPage> {
             children: <Widget>[
               BlocProvider(create: (context) => _timerBloc, child: Timer()),
               Text(" : ارسال مجدد کد ",
-                  style: TextStyle(color: IColors.themeColor)),
+                  style: TextStyle(
+                      color: IColors.themeColor, fontWeight: FontWeight.bold)),
             ],
           ),
         )
@@ -228,13 +250,17 @@ class _StartPageState extends State<StartPage> {
             title: Strings.continueAction,
             callBack: submit,
           ),
-          ActionButton(
-            color: IColors.themeColor,
-            icon: Icon(
-              Icons.arrow_forward_ios,
-              size: 18,
-            ),
-            callBack: back,
+          GestureDetector(
+            onTap: back,
+            child: Container(
+                decoration: BoxDecoration(
+                    color: IColors.themeColor,
+                    borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Icon(Icons.arrow_forward_ios,
+                      size: 18, color: Colors.white),
+                )),
           ),
         ],
       ));
@@ -273,7 +299,9 @@ class _StartPageState extends State<StartPage> {
       );
 
   _headerWidget() => Text(
-        Strings.registerHeaderMessage,
+        startType == StartType.SIGN_IN
+            ? Strings.signInHeaderMessage
+            : Strings.registerHeaderMessage,
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       );
 
@@ -354,36 +382,53 @@ class _StartPageState extends State<StartPage> {
             ? InputField(
                 inputHint: Strings.usernameInputHint,
                 controller: _usernameController,
+                textInputType: TextInputType.phone,
+                validationCallback: (text) => validatePhoneNumber(text),
+                errorMessage: "شماره همراه معتبر نیست",
               )
             : Column(
                 children: <Widget>[
                   InputField(
                     inputHint: Strings.doctorIdInputHint,
-                    /*controller: _inputController*/
+                    textInputType: TextInputType.number,
+                    needToHideKeyboard: false,
+                    validationCallback: (text) => text.length >= 4,
+                    errorMessage: "شماره نظام پزشکی معتبر نیست",
+                    controller: _doctorIdController,
                   ),
                   InputField(
-                    inputHint: Strings
-                        .usernameInputHint, /*controller: _inputController*/
+                    inputHint: Strings.usernameInputHint,
+                    textInputType: TextInputType.phone,
+                    validationCallback: (text) => validatePhoneNumber(text),
+                    controller: _usernameController,
+                    errorMessage: "شماره همراه معتبر نیست",
                   )
                 ],
               );
       case StartType.LOGIN:
         return InputField(
           inputHint: Strings.verificationHint,
-          controller: _verificationController, /*controller: _inputController*/
+          controller: _verificationController,
+          textInputType: TextInputType.number,
+          validationCallback: (text) => text.length == 6,
+          errorMessage: "کدفعالسازی ۶رقمی است",
         );
       case StartType.REGISTER:
         return Column(
           children: <Widget>[
             InputField(
               inputHint: Strings.nameInputHint,
-              /*controller: _inputController*/
               controller: _fullNameController,
+              validationCallback: (text) => true,
+              needToHideKeyboard: false,
             ),
             InputField(
               inputHint: Strings.passInputHint,
-              /*controller: _inputController*/
-              controller: _passwordController, /*controller: _inputController*/
+              validationCallback: (text) => text.length >= 4,
+              errorMessage: "رمز عبور بایستی حداقل ۴ کاراکتری باشد",
+              obscureText: true,
+              needToHideKeyboard: false,
+              controller: _passwordController,
             )
           ],
         );
@@ -392,13 +437,18 @@ class _StartPageState extends State<StartPage> {
           children: <Widget>[
             InputField(
               inputHint: Strings.usernameInputHint,
-              /*controller: _inputController*/
+              textInputType: TextInputType.phone,
+              validationCallback: (text) => validatePhoneNumber(text),
               controller: _usernameController,
+              errorMessage: "شماره همراه معتبر نیست",
             ),
             InputField(
               inputHint: Strings.passInputHint,
-              /*controller: _inputController*/
-              controller: _passwordController, /*controller: _inputController*/
+              validationCallback: (text) => text.length >= 4,
+              errorMessage: "رمز عبور بایستی حداقل ۴ کاراکتری باشد",
+              obscureText: true,
+              needToHideKeyboard: false,
+              controller: _passwordController,
             )
           ],
         );
