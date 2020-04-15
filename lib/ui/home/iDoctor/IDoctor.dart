@@ -8,8 +8,9 @@ import 'package:docup/ui/widgets/DoctorSummary.dart';
 class IDoctor extends StatelessWidget {
   final Doctor doctor;
   final ValueChanged<String> onPush;
+  final ValueChanged<String> globalOnPush;
 
-  IDoctor({Key key, this.doctor, @required this.onPush}) : super(key: key);
+  IDoctor({Key key, this.doctor, @required this.onPush, this.globalOnPush}) : super(key: key);
 
   Widget _IDoctorLabel() => Container(
         constraints: BoxConstraints(maxHeight: 35),
@@ -53,6 +54,7 @@ class IDoctor extends StatelessWidget {
             child: IDoctorBody(
               doctor: doctor,
               onPush: onPush,
+              globalOnPush: globalOnPush,
             ),
           ),
         ],

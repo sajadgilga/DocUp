@@ -10,6 +10,9 @@ import 'ui/mainPage/MainPage.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  static GlobalKey<NavigatorState> globalNavigator =
+      GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

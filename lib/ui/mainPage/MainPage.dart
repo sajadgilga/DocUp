@@ -1,11 +1,14 @@
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
+import 'package:docup/main.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
+import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/Panel.dart';
 import 'package:docup/models/Patient.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/services/FirebaseService.dart';
+import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +35,15 @@ class _MainPageState extends State<MainPage> {
   final PatientBloc _patientBloc = PatientBloc();
   final PanelBloc _panelBloc = PanelBloc();
   ProgressDialog _progressDialogue;
+  final Doctor _doctor = Doctor(
+      3,
+      "دکتر زهرا شادلو",
+      "متخصص پوست",
+      "اقدسیه",
+      Image(
+        image: AssetImage('assets/lion.jpg'),
+      ),
+      []);
 
 //  Patient _patient;
 //  List<Panel> panels;
@@ -219,8 +231,52 @@ class _MainPageState extends State<MainPage> {
   Widget _buildOffstageNavigator(int index) {
     return Offstage(
       offstage: _currentIndex != index,
-      child: NavigatorView(navigatorKey: _navigatorKeys[index], index: index),
+      child: NavigatorView(
+        navigatorKey: _navigatorKeys[index],
+        index: index,
+        globalOnPush: (direction) => _push(context, direction),
+      ),
     );
+  }
+
+  Widget _mainPage() {
+    return Scaffold(
+        backgroundColor: IColors.background,
+        bottomNavigationBar: SizedBox(
+          child: _bottomNavigationBar(),
+        ),
+        body: IndexedStack(
+          index: _currentIndex,
+          children: <Widget>[
+            _buildOffstageNavigator(0),
+            _buildOffstageNavigator(1),
+            _buildOffstageNavigator(2),
+          ],
+        ));
+  }
+
+  Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
+    return {
+      NavigatorRoutes.mainPage: (context) => _mainPage(),
+      NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
+            doctor: _doctor,
+          )
+    };
+  }
+
+  void _push(BuildContext context, String direction) {
+    _route(RouteSettings(name: direction), context);
+    MyApp.globalNavigator.currentState
+        .push(_route(RouteSettings(name: direction), context));
+  }
+
+  Route<dynamic> _route(RouteSettings settings, BuildContext context) {
+    var routeBuilders = _routeBuilders(context);
+    return MaterialPageRoute(
+        settings: settings,
+        builder: (BuildContext context) {
+          return routeBuilders[settings.name](context);
+        });
   }
 
   @override
@@ -235,20 +291,16 @@ class _MainPageState extends State<MainPage> {
           BlocProvider<PanelBloc>.value(value: _panelBloc)
         ],
         child: WillPopScope(
-            child: Scaffold(
-                backgroundColor: IColors.background,
-                bottomNavigationBar: SizedBox(
-                  child: _bottomNavigationBar(),
-                ),
-                body: IndexedStack(
-                  index: _currentIndex,
-                  children: <Widget>[
-                    _buildOffstageNavigator(0),
-                    _buildOffstageNavigator(1),
-                    _buildOffstageNavigator(2),
-                  ],
-                )),
+            child: Navigator(
+              key: MyApp.globalNavigator,
+              initialRoute: NavigatorRoutes.mainPage,
+              onGenerateRoute: (settings) => _route(settings, context),
+            ),
             onWillPop: () async {
+              final isMainPage =
+              await MyApp.globalNavigator.currentState.maybePop();
+              if (isMainPage)
+                return false;
               final isFirstRouteInCurrentRoute =
                   !await _navigatorKeys[_currentIndex].currentState.maybePop();
               if (isFirstRouteInCurrentRoute) {

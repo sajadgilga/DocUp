@@ -1,3 +1,4 @@
+import 'package:docup/main.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 
@@ -8,11 +9,12 @@ import 'package:docup/ui/widgets/DoctorSummary.dart';
 class IDoctorBody extends StatelessWidget {
   final Doctor doctor;
   final ValueChanged<String> onPush;
+  final ValueChanged<String> globalOnPush;
 
-  IDoctorBody({Key key, this.doctor, @required this.onPush}) : super(key: key);
+  IDoctorBody({Key key, this.doctor, @required this.onPush, this.globalOnPush}) : super(key: key);
 
   void _showDoctorDialogue() {
-    onPush(NavigatorRoutes.doctorDialogue);
+    globalOnPush(NavigatorRoutes.doctorDialogue);
   }
 
   @override

@@ -17,10 +17,11 @@ import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
 
 class Home extends StatefulWidget {
   final ValueChanged<String> onPush;
+  final ValueChanged<String> globalOnPush;
 
 //  Patient patient;
 
-  Home({Key key, @required this.onPush}) : super(key: key);
+  Home({Key key, @required this.onPush, this.globalOnPush}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -134,6 +135,7 @@ class _HomeState extends State<Home> {
                 doctor: Doctor(3, 'دکتر زهرا شادلو', 'متخصص پوست', 'اقدسیه',
                     Image(image: AssetImage(' ')), null),
                 onPush: widget.onPush,
+                globalOnPush: widget.globalOnPush,
               ),
             ],
           ))
