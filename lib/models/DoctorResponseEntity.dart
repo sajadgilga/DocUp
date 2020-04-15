@@ -6,15 +6,17 @@ class DoctorEntity {
   String councilCode;
   String expert;
   Clinic clinic;
+  String clinicNumber;
+  String clinicAddress;
   int fee;
 
   DoctorEntity(
       {this.id,
-        this.user,
-        this.councilCode,
-        this.expert,
-        this.clinic,
-        this.fee});
+      this.user,
+      this.councilCode,
+      this.expert,
+      this.clinic,
+      this.fee});
 
   DoctorEntity.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -22,8 +24,11 @@ class DoctorEntity {
     councilCode = json['council_code'];
     expert = json['expert'];
     clinic =
-    json['clinic'] != null ? new Clinic.fromJson(json['clinic']) : null;
+        json['clinic'] != null ? new Clinic.fromJson(json['clinic']) : null;
     fee = json['fee'];
+    if (json.containsKey('clinic_address'))
+      clinicAddress = json['clinic_address'];
+    if (json.containsKey('clinic_number')) clinicNumber = json['clinic_number'];
   }
 
   Map<String, dynamic> toJson() {
@@ -53,12 +58,12 @@ class User {
 
   User(
       {this.avatar,
-        this.firstName,
-        this.lastName,
-        this.email,
-        this.credit,
-        this.type,
-        this.online});
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.credit,
+      this.type,
+      this.online});
 
   User.fromJson(Map<String, dynamic> json) {
     avatar = json['avatar'];
@@ -95,13 +100,13 @@ class Clinic {
 
   Clinic(
       {this.id,
-        this.user,
-        this.subType,
-        this.clinicName,
-        this.clinicAddress,
-        this.description,
-        this.longitude,
-        this.latitude});
+      this.user,
+      this.subType,
+      this.clinicName,
+      this.clinicAddress,
+      this.description,
+      this.longitude,
+      this.latitude});
 
   Clinic.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:docup/blocs/AuthBloc.dart';
-import 'package:docup/blocs/UpdatePatientBloc.dart';
+import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/NotificationRepository.dart';
@@ -40,7 +40,6 @@ class _StartPageState extends State<StartPage> {
   final AuthBloc _authBloc = AuthBloc();
   final PatientBloc _updatePatientBloc = PatientBloc();
 
-
   StreamController<RoleType> _controller = BehaviorSubject();
   final _usernameController = TextEditingController();
   final _verificationController = TextEditingController();
@@ -70,9 +69,12 @@ class _StartPageState extends State<StartPage> {
   Future<void> checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("token")) {
-      setState(() {
-        this.startType = StartType.SIGN_IN;
-      });
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MainPage()));
+//      setState(() {
+//        this.startType = StartType.SIGN_IN;
+//
+//      });
     }
   }
 
@@ -197,7 +199,7 @@ class _StartPageState extends State<StartPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              BlocProvider(create:(context) => _timerBloc, child: Timer()),
+              BlocProvider(create: (context) => _timerBloc, child: Timer()),
               Text(" : ارسال مجدد کد ",
                   style: TextStyle(color: IColors.themeColor)),
             ],

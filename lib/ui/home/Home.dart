@@ -1,3 +1,6 @@
+import 'package:docup/blocs/NotificationBloc.dart';
+import 'package:docup/constants/assets.dart';
+import 'package:docup/models/Patient.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:docup/ui/widgets/Header.dart';
@@ -8,15 +11,35 @@ import 'package:docup/ui/home/notification/Notification.dart';
 import 'package:docup/ui/home/iDoctor/IDoctor.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final ValueChanged<String> onPush;
+
+//  Patient patient;
 
   Home({Key key, @required this.onPush}) : super(key: key);
 
-  Widget _intro(double width) => ListView(
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeState();
+  }
+}
+
+class _HomeState extends State<Home> {
+//  List<Doctor> iDoctors;
+  NotificationBloc _notificationBloc = NotificationBloc();
+
+  @override
+  void initState() {
+    _notificationBloc.add(GetNewestNotifications());
+    super.initState();
+  }
+
+  Widget _intro(double width) => IgnorePointer(
+          child: ListView(
         padding: EdgeInsets.only(right: width * .075),
         shrinkWrap: true,
         children: <Widget>[
@@ -31,7 +54,20 @@ class Home extends StatelessWidget {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
           ),
         ],
-      );
+      ));
+
+  Widget _reminderList() {
+    return BlocBuilder<NotificationBloc, NotificationState>(
+        bloc: _notificationBloc,
+        builder: (context, state) {
+          if (state is NotificationsLoaded)
+            return ReminderList(
+              medicines: state.notifications.newestDrugs,
+            );
+          else
+            return ReminderList();
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +75,7 @@ class Home extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Image(
-            image: AssetImage('assets/backgroundHome.png'),
+            image: AssetImage(Assets.homeBackground),
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.fitWidth,
           ),
@@ -49,9 +85,23 @@ class Home extends StatelessWidget {
               Header(
                   child: GestureDetector(
                       onTap: () {
-                        onPush(NavigatorRoutes.notificationView);
+                        widget.onPush(NavigatorRoutes.notificationView);
                       },
-                      child: Row(children: <Widget>[HomeNotification(), OnCallMedicalHeaderIcon()]))),
+                      child: Row(children: <Widget>[
+                        BlocBuilder<NotificationBloc, NotificationState>(
+                            bloc: _notificationBloc,
+                            builder: (context, state) {
+                              if (state is NotificationsLoaded)
+                                return HomeNotification(
+                                    newNotificationCount:
+                                        state.notifications.newestEventsCounts);
+                              else
+                                return HomeNotification(
+                                  newNotificationCount: 0,
+                                );
+                            }),
+                        OnCallMedicalHeaderIcon()
+                      ]))),
               Container(
                 height: 10,
               ),
@@ -59,9 +109,7 @@ class Home extends StatelessWidget {
               Container(
                 height: 20,
               ),
-              SearchBox(
-                onPush: onPush
-              ),
+              SearchBox(onPush: widget.onPush),
               SizedBox(
                 height: 30,
               ),
@@ -81,11 +129,11 @@ class Home extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              ReminderList(),
+              _reminderList(),
               IDoctor(
                 doctor: Doctor(3, 'دکتر زهرا شادلو', 'متخصص پوست', 'اقدسیه',
                     Image(image: AssetImage(' ')), null),
-                onPush: onPush,
+                onPush: widget.onPush,
               ),
             ],
           ))

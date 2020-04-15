@@ -10,6 +10,7 @@ class Assets {
   static final String patientLoginIcon = "assets/team.svg";
   static final String doctorLoginIcon = "assets/doctor.svg";
   static final String clinicLoginIcon = "assets/doctor.svg";
+  static final String homeBackground = 'assets/backgroundHome.png';
   static String docUpIcon = docUpPatientIcon;
 
   static void changeIcons(RoleType roleType) {

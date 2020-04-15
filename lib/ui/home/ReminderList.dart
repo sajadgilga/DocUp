@@ -1,26 +1,34 @@
+import 'package:docup/models/Medicine.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/MedicineReminder.dart';
-class ReminderList extends StatefulWidget {
-  @override
-  ReminderListState createState() => ReminderListState();
-}
 
-class ReminderListState extends State<ReminderList> {
+class ReminderList extends StatelessWidget {
+  final List<Medicine> medicines;
+
+  ReminderList({Key key, this.medicines}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Container(height: 160, child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
-          MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
-          MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
-          MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
-          MedicineReminder('۱۸:۰۰', 'کپسول فلان', Medicine.capsule, 'دوعدد'),
-        ],
-      ),
-    ));
+        scrollDirection: Axis.horizontal,
+        child: Container(
+          height: 160,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              MedicineReminder(
+                  '۱۸:۰۰', 'کپسول فلان', MedicineType.capsule, 'دوعدد'),
+              MedicineReminder(
+                  '۱۸:۰۰', 'کپسول فلان', MedicineType.capsule, 'دوعدد'),
+              MedicineReminder(
+                  '۱۸:۰۰', 'کپسول فلان', MedicineType.capsule, 'دوعدد'),
+              MedicineReminder(
+                  '۱۸:۰۰', 'کپسول فلان', MedicineType.capsule, 'دوعدد'),
+              MedicineReminder(
+                  '۱۸:۰۰', 'کپسول فلان', MedicineType.capsule, 'دوعدد'),
+            ],
+          ),
+        ));
   }
 }

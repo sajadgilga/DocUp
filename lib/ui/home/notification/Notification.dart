@@ -2,17 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:docup/constants/colors.dart';
 
-class HomeNotification extends StatefulWidget {
-  HomeNotification({Key key}) : super(key: key);
+class HomeNotification extends StatelessWidget {
+  int newNotificationCount;
 
-  @override
-  _HomeNotificationState createState() {
-    return _HomeNotificationState();
-  }
-}
-
-class _HomeNotificationState extends State<HomeNotification> {
-  int newNotificationCount = 15;
+  HomeNotification({Key key, this.newNotificationCount}) : super(key: key);
 
   Widget _notificationIcon() {
     return Container(
@@ -56,10 +49,7 @@ class _HomeNotificationState extends State<HomeNotification> {
         width: 50,
         height: 50,
         child: Stack(
-          children: <Widget>[
-            _notificationIcon(),
-            _notificationCountCircle()
-          ],
+          children: <Widget>[_notificationIcon(), _notificationCountCircle()],
         ));
   }
 }

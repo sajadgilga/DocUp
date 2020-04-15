@@ -1,5 +1,7 @@
-import 'package:docup/blocs/UpdatePatientBloc.dart';
+import 'package:docup/blocs/PanelBloc.dart';
+import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
+import 'package:docup/models/Panel.dart';
 import 'package:docup/models/Patient.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/NotificationRepository.dart';
@@ -7,6 +9,7 @@ import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
@@ -27,8 +30,11 @@ class _MainPageState extends State<MainPage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   final PatientBloc _patientBloc = PatientBloc();
+  final PanelBloc _panelBloc = PanelBloc();
   ProgressDialog _progressDialogue;
-  Patient _patient;
+
+//  Patient _patient;
+//  List<Panel> panels;
 
   int _currentIndex = 0;
   Map<int, GlobalKey<NavigatorState>> _navigatorKeys = {
@@ -55,15 +61,16 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    _patientBloc.dataStream.listen((data) {
-      if(handle(_progressDialogue, data)) {
-        setState(() {
-          _patient = data.data;
-        });
-      }
-    });
+//    _patientBloc.dataStream.listen((data) {
+//      if (handle(_progressDialogue, data)) {
+//        setState(() {
+//          _patient = data.data;
+//        });
+//      }
+//    });
 
-    _patientBloc.get();
+    _patientBloc.add(PatientGet());
+    _panelBloc.add(GetMyPanels());
 
     _firebaseMessaging.getToken().then((String fcmToken) {
       assert(fcmToken != null);
@@ -218,33 +225,39 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    _progressDialogue = ProgressDialog(context, type: ProgressDialogType.Normal);
+    _progressDialogue =
+        ProgressDialog(context, type: ProgressDialogType.Normal);
     _progressDialogue.style(message: "لطفا منتظر بمانید");
 
-    return WillPopScope(
-        child: Scaffold(
-            backgroundColor: IColors.background,
-            bottomNavigationBar: SizedBox(
-              child: _bottomNavigationBar(),
-            ),
-            body: IndexedStack(
-              index: _currentIndex,
-              children: <Widget>[
-                _buildOffstageNavigator(0),
-                _buildOffstageNavigator(1),
-                _buildOffstageNavigator(2),
-              ],
-            )),
-        onWillPop: () async {
-          final isFirstRouteInCurrentRoute =
-              !await _navigatorKeys[_currentIndex].currentState.maybePop();
-          if (isFirstRouteInCurrentRoute) {
-            if (_currentIndex != 0) {
-              _selectPage(0);
-              return false;
-            }
-          }
-          return isFirstRouteInCurrentRoute;
-        });
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<PatientBloc>.value(value: _patientBloc),
+          BlocProvider<PanelBloc>.value(value: _panelBloc)
+        ],
+        child: WillPopScope(
+            child: Scaffold(
+                backgroundColor: IColors.background,
+                bottomNavigationBar: SizedBox(
+                  child: _bottomNavigationBar(),
+                ),
+                body: IndexedStack(
+                  index: _currentIndex,
+                  children: <Widget>[
+                    _buildOffstageNavigator(0),
+                    _buildOffstageNavigator(1),
+                    _buildOffstageNavigator(2),
+                  ],
+                )),
+            onWillPop: () async {
+              final isFirstRouteInCurrentRoute =
+                  !await _navigatorKeys[_currentIndex].currentState.maybePop();
+              if (isFirstRouteInCurrentRoute) {
+                if (_currentIndex != 0) {
+                  _selectPage(0);
+                  return false;
+                }
+              }
+              return isFirstRouteInCurrentRoute;
+            }));
   }
 }

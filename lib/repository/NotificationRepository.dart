@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:docup/models/FCMEntity.dart';
+import 'package:docup/models/NewestNotificationResponse.dart';
 import 'package:docup/networking/ApiProvider.dart';
 import 'package:docup/utils/Device.dart';
 
@@ -16,6 +17,11 @@ class NotificationRepository {
       "type" : Platform.isAndroid ? "android" : "ios",
       "device_id" : deviceId});
     return RegisterDeviceResponse.fromJson(response);
+  }
+  
+  Future<NewestNotificationResponse> getNewestNotifications() async {
+    final response = await _provider.get('api/newest-notifications');
+    return NewestNotificationResponse.fromJson(response);
   }
 
 

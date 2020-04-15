@@ -3,16 +3,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../constants/colors.dart';
 
-enum Medicine { capsule, syrup, ointment }
+enum MedicineType { capsule, syrup, ointment }
 
-extension MedicineExtension on Medicine {
+extension MedicineExtension on MedicineType {
   String get asset {
     switch (this) {
-      case Medicine.capsule:
+      case MedicineType.capsule:
         return 'assets/capsule.svg';
-      case Medicine.syrup:
+      case MedicineType.syrup:
         return 'assets/syrup.svg';
-      case Medicine.ointment:
+      case MedicineType.ointment:
         return 'assets/ointment.svg';
       default:
         return '';
@@ -66,7 +66,7 @@ extension ReminderStateExtension on ReminderState {
 // ignore: must_be_immutable
 class MedicineReminder extends StatefulWidget {
   String time;
-  Medicine type;
+  MedicineType type;
   String title;
   String count;
 
