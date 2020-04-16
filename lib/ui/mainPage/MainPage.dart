@@ -250,7 +250,7 @@ class _MainPageState extends State<MainPage> {
     return {
       NavigatorRoutes.mainPage: (context) => _mainPage(),
       NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
-            doctor: _doctor,
+            doctor: BlocProvider.of<EntityBloc>(context).state.entity.partnerEntity,
           )
     };
   }

@@ -61,8 +61,8 @@ class NavigatorView extends StatelessWidget {
         return {
           NavigatorRoutes.root: (context) => _home(context),
           NavigatorRoutes.notificationView: (context) => _notifictionPage(),
-//          NavigatorRoutes.doctorDialogue: (context) =>
-//              _doctorDetailPage(context),
+          NavigatorRoutes.doctorDialogue: (context) =>
+              _doctorDetailPage(context),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
       case 1:
@@ -235,7 +235,7 @@ class NavigatorView extends StatelessWidget {
   }
 
   Widget _doctorDetailPage(context) => DoctorDetailPage(
-        doctor: _doctor,
+        doctor: BlocProvider.of<EntityBloc>(context).state.entity.partnerEntity,
       );
 
   Widget _searchPage(context) => SearchPage(

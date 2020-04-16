@@ -20,7 +20,7 @@ import '../../main.dart';
 import 'VirtualReservationPage.dart';
 
 class DoctorDetailPage extends StatefulWidget {
-  final Doctor doctor;
+  final DoctorEntity doctor;
 
   DoctorDetailPage({Key key, this.doctor}) : super(key: key);
 
