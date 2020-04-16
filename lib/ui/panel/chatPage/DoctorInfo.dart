@@ -19,12 +19,27 @@ class DoctorInfo extends StatelessWidget {
             border: Border.all(color: Colors.white, width: 2.5)),
       );
 
-  void _showDoctorDialogue() {
+  void _showDoctorDialogue(context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "منتظر ما باشید",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+                textAlign: TextAlign.right,
+                style: TextStyle(fontSize: 12)),
+          );
+        });
 //    onPush(NavigatorRoutes.doctorDialogue);
   }
 
-  Widget _image() => GestureDetector(
-      onTap: _showDoctorDialogue,
+  Widget _image(context) => GestureDetector(
+      onTap: ()=>_showDoctorDialogue(context),
       child: Container(
           width: 80,
           height: 70,
@@ -95,7 +110,7 @@ class DoctorInfo extends StatelessWidget {
         children: <Widget>[
           _location(),
           _info(),
-          _image(),
+          _image(context),
         ],
       ),
     );
