@@ -2,6 +2,7 @@ import 'package:docup/blocs/VideoCallBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/repository/VideoCallRepository.dart';
 import 'package:docup/ui/panel/chatPage/DoctorInfo.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
@@ -10,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class VideoCallPage extends StatefulWidget {
-  final Doctor doctor;
+  final DoctorEntity doctor;
   final ValueChanged<String> onPush;
 
   VideoCallPage({Key key, this.doctor, @required this.onPush})
@@ -23,7 +24,6 @@ class VideoCallPage extends StatefulWidget {
 }
 
 class _VideoCallPageState extends State<VideoCallPage> {
-
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 20),
@@ -68,7 +68,8 @@ class _VideoCallPageState extends State<VideoCallPage> {
     await _handleCameraAndMic();
     // push video page with given channel name
 
-    AgoraChannel channel = await VideoCallRepository().getChannelName(widget.doctor.id);
+    AgoraChannel channel =
+        await VideoCallRepository().getChannelName(widget.doctor.id);
     await Navigator.push(
       context,
       MaterialPageRoute(

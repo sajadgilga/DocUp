@@ -1,15 +1,22 @@
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/PanelBloc.dart';
+import 'package:docup/blocs/PanelSectionBloc.dart';
+import 'package:docup/blocs/TabSwitchBloc.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
-import 'package:docup/models/Patient.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/PanelMenu.dart';
 import 'package:docup/ui/panel/chatPage/ChatPage.dart';
+import 'package:docup/ui/panel/healthFile/InfoPage.dart';
 import 'package:docup/ui/panel/illnessPage/IllnessPage.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
 import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../home/Home.dart';
 
@@ -27,6 +34,8 @@ class NavigatorView extends StatelessWidget {
   final int index;
   final GlobalKey<NavigatorState> navigatorKey;
   final ValueChanged<String> globalOnPush;
+  final TabSwitchBloc _tabSwitchBloc = TabSwitchBloc();
+  final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
   final Doctor _doctor = Doctor(
       3,
       "دکتر زهرا شادلو",
@@ -36,9 +45,10 @@ class NavigatorView extends StatelessWidget {
         image: AssetImage('assets/lion.jpg'),
       ),
       []);
-  Patient patient;
 
-  NavigatorView({Key key, this.index, this.navigatorKey, this.patient, this.globalOnPush})
+//  Patient patient;
+
+  NavigatorView({Key key, this.index, this.navigatorKey, this.globalOnPush})
       : super(key: key);
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
@@ -93,7 +103,7 @@ class NavigatorView extends StatelessWidget {
   }
 
   void _pop(BuildContext context) {
-    Navigator.maybePop(context);
+    Navigator.pop(context);
   }
 
   Route<dynamic> _route(RouteSettings settings, BuildContext context) {
@@ -115,55 +125,125 @@ class NavigatorView extends StatelessWidget {
     );
   }
 
-
   Widget _home(context) => Home(
-    onPush: (direction) {
-      _push(context, direction);
-    },
-    globalOnPush: globalOnPush,
-  );
+        onPush: (direction) {
+          _push(context, direction);
+        },
+        globalOnPush: globalOnPush,
+      );
 
   Widget _notifictionPage() => NotificationPage();
 
-  Widget _panel(context) => Panel(
-    doctor: _doctor,
-    onPush: (direction) {
-      _push(context, direction);
-    },
-    pages: <Widget>[
-      IllnessPage(
-        doctor: _doctor,
-        onPush: (direction) {
-          _push(context, direction);
-        },
-      ),
-      ChatPage(
-        doctor: _doctor,
-        onPush: (direction) {
-          _push(context, direction);
-        },
-      ),
-      VideoCallPage(
-        doctor: _doctor,
-        onPush: (direction) {
-          _push(context, direction);
-        },
-      )
-    ],
-  );
+  Widget _panelPages(context) {
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
+      builder: (context, state) {
+        if (state.section == PanelSection.DOCTOR_INTERFACE) {
+          return Panel(
+            doctor: _doctor,
+            onPush: (direction) {
+              _push(context, direction);
+            },
+            pages: <Widget>[
+              IllnessPage(
+                doctor: entity.partnerEntity,
+                onPush: (direction) {
+                  _push(context, direction);
+                },
+              ),
+              ChatPage(
+                doctor: entity.partnerEntity,
+                onPush: (direction) {
+                  _push(context, direction);
+                },
+              ),
+              VideoCallPage(
+                doctor: entity.partnerEntity,
+                onPush: (direction) {
+                  _push(context, direction);
+                },
+              )
+            ],
+          );
+        } else if (state.section == PanelSection.HEALTH_FILE) {
+          return Panel(
+            doctor: _doctor,
+            onPush: (direction) {
+              _push(context, direction);
+            },
+            pages: <Widget>[
+              InfoPage(
+                doctor: entity.partnerEntity,
+                onPush: (direction) {
+                  _push(context, direction);
+                },
+                picListLabel: Strings.panelDocumentsPicLabel,
+                lastPicsLabel: Strings.panelDocumentsPicListLabel,
+              ),
+              InfoPage(
+                doctor: entity.partnerEntity,
+                onPush: (direction) {
+                  _push(context, direction);
+                },
+                picListLabel: Strings.panelPrescriptionsPicLabel,
+                lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
+              ),
+              InfoPage(
+                doctor: entity.partnerEntity,
+                onPush: (direction) {
+                  _push(context, direction);
+                },
+                picListLabel: Strings.panelTestResultsPicLabel,
+                lastPicsLabel: Strings.panelTestResultsPicListLabel,
+              ),
+            ],
+          );
+        }
+        return Panel(); //TODO
+      },
+    );
+  }
+
+  Widget _panel(context) {
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<TabSwitchBloc>.value(
+            value: _tabSwitchBloc,
+          ),
+          BlocProvider<PanelSectionBloc>.value(
+            value: _panelSectionBloc,
+          )
+        ],
+        child: BlocBuilder<PanelBloc, PanelState>(builder: (context, state) {
+          if (state is PanelsLoaded) {
+            if (state.panels.length > 0) return _panelPages(context);
+          }
+          return PanelMenu(() {
+            _pop(context);
+          });
+        }));
+  }
 
   Widget _doctorDetailPage(context) => DoctorDetailPage(
-    doctor: _doctor,
-  );
+        doctor: _doctor,
+      );
 
   Widget _searchPage(context) => SearchPage(
-    onPush: (direction) {
-      _push(context, direction);
-    },
-  );
+        onPush: (direction) {
+          _push(context, direction);
+        },
+      );
 
-  Widget _panelMenu(context) => PanelMenu(() {
-    _pop(context);
-  });
-
+  Widget _panelMenu(context) => MultiBlocProvider(
+          providers: [
+            BlocProvider<TabSwitchBloc>.value(
+              value: _tabSwitchBloc,
+            ),
+            BlocProvider<PanelSectionBloc>.value(
+              value: _panelSectionBloc,
+            )
+          ],
+          child: PanelMenu(() {
+            _pop(context);
+          }));
 }

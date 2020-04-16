@@ -6,6 +6,10 @@ import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/constants/colors.dart';
 
 class ChatBox extends StatefulWidget {
+  Color color;
+
+  ChatBox({Key key, this.color}) : super(key: key);
+
   @override
   _ChatBoxState createState() {
     return _ChatBoxState();
@@ -32,7 +36,7 @@ class _ChatBoxState extends State<ChatBox> {
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         SvgPicture.asset(
           'assets/chatBox.svg',
-          color: Colors.red,
+          color: widget.color,
           width: 17,
           height: 17,
           alignment: Alignment.center,

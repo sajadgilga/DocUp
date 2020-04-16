@@ -1,7 +1,7 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/models/DoctorResponseEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/DoctorAvatar.dart';

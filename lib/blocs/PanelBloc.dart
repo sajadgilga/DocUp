@@ -7,7 +7,7 @@ class PanelBloc extends Bloc<PanelEvent, PanelState> {
   PanelRepository _repository = PanelRepository();
 
   @override
-  get initialState => null;
+  get initialState => PanelUnloaded();
 
   Stream<PanelState> _get() async* {
     yield PanelLoading();

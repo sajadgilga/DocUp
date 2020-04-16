@@ -1,5 +1,5 @@
-import 'DoctorResponseEntity.dart';
-import 'Patient.dart';
+import 'DoctorEntity.dart';
+import 'PatientEntity.dart';
 import 'Picture.dart';
 
 class PanelResponseEntity {
@@ -12,10 +12,9 @@ class PanelResponseEntity {
     count = json['count'];
     next = json['next'];
     previous = json['previous'];
-    if (json['results'].length == 0)
-      panels = [];
-    else
-      panels = json['results'].map((Map panel) => Panel.fromJson(panel));
+    panels = [];
+    if (json['results'].length != 0)
+      json['results'].forEach((panel) => panels.add(Panel.fromJson(panel)));
   }
 }
 
@@ -25,9 +24,10 @@ class Panel {
   int doctorId;
   int patientId;
   List<PanelSection> section;
+  List<String> sectionNames;
   String modified_date;
   String created_date;
-  Patient patient;
+  PatientEntity patient;
   DoctorEntity doctor;
 
 // TODO: add  List<Visit> visits;
@@ -41,17 +41,33 @@ class Panel {
     created_date =
         json.containsKey('created_date') ? json['created_date'] : null;
     section = [];
-    if (json['disease_images'] != null)
-      section.add(PanelSection.fromJson(json['disease_images']));
-    if (json['test_results'] != null)
-      section.add(PanelSection.fromJson(json['test_results']));
-    if (json['prescriptions'] != null)
-      section.add(PanelSection.fromJson(json['prescriptions']));
+    var sets = json['panel_image_sets'];
+    List<Picture> pictures;
+    sets.forEach((key, value) {
+      pictures = [];
+      if (value.length != 0)
+        value.forEach((image) => pictures.add(Picture.fromJson(image)));
+      section.add(PanelSection(
+          id: json['panel_image_list_name_id'][key],
+          title: key,
+          pictures: pictures));
+    });
+//    if (sets['disease_images'].length != 0) {
+//      pictures = sets['disease_images'].forEach((Map image) => Picture.fromJson(image));
+//      PanelSection(id: json['panel_image_list_name_id']['id'])
+//      section.add(Picture.fromJson(json['disease_images']));
+//    }
+//    if (sets['test_results'].length != 0)
+//      section.add(Picture.fromJson(json['test_results']));
+//    if (sets['prescriptions'].length != 0)
+//      section.add(Picture.fromJson(json['prescriptions']));
+//    if (sets['cognitive_tests'].length != 0)
+//      section.add(Picture.fromJson(json['cognitive_tests']));
 
-    if (json['patient_info'] != null)
-      patient = Patient.fromJson(json['patient_info']);
+    if (json.containsKey('patient_info'))
+      patient = PatientEntity.fromJson(json['patient_info']);
 
-    if (json['doctor_info'] != null)
+    if (json.containsKey('doctor_info'))
       doctor = DoctorEntity.fromJson(json['doctor_info']);
   }
 }
@@ -62,6 +78,8 @@ class PanelSection {
   String description;
   List<Picture> pictures;
 
+  PanelSection({this.id, this.title, this.description, this.pictures});
+
   PanelSection.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
@@ -69,7 +87,7 @@ class PanelSection {
     if (json['images'].length == 0)
       pictures = [];
     else {
-      pictures = json['images'].map((Map image) => Picture.fromJson(image));
+      pictures = json['images'].forEach((Map image) => Picture.fromJson(image));
     }
   }
 }

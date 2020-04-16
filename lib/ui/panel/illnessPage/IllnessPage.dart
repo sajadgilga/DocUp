@@ -1,6 +1,7 @@
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/panel/chatPage/DoctorInfo.dart';
 import 'package:docup/ui/widgets/VisitBox.dart';
@@ -10,7 +11,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:docup/ui/widgets/PicList.dart';
 
 class IllnessPage extends StatelessWidget {
-  final Doctor doctor;
+  final DoctorEntity doctor;
   final ValueChanged<String> onPush;
 
   IllnessPage({Key key, this.doctor, @required this.onPush}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:docup/models/DoctorResponseEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/DoctorRepository.dart';

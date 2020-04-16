@@ -1,8 +1,10 @@
+import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
-import 'package:docup/models/Patient.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/widgets/Header.dart';
@@ -15,32 +17,32 @@ import 'package:flutter_svg/svg.dart';
 import 'PanelMenu.dart';
 import 'illnessPage/IllnessPage.dart';
 
-enum PanelStates { FirstTab, SecondTab, ThirdTab }
+enum PanelTabState { FirstTab, SecondTab, ThirdTab }
 
 class Panel extends StatefulWidget {
   final Doctor doctor;
   final ValueChanged<String> onPush;
-  Patient patient;
+  PatientEntity patient;
   List<Widget> pages;
 
   Panel({Key key, this.patient, this.doctor, this.pages, @required this.onPush})
       : super(key: key);
 
   @override
-  PanelState createState() {
-    return PanelState(patient: patient);
+  _PanelState createState() {
+    return _PanelState(patient: patient);
   }
 }
 
-class PanelState extends State<Panel> {
-  Patient patient;
+class _PanelState extends State<Panel> {
+  PatientEntity patient;
 
-  PanelState({this.patient}) : super();
+  _PanelState({this.patient}) : super();
 
-  Map<PanelStates, Widget> children() => {
-        PanelStates.FirstTab: widget.pages[0],
-        PanelStates.SecondTab: widget.pages[1],
-        PanelStates.ThirdTab: widget.pages[2],
+  Map<PanelTabState, Widget> children() => {
+        PanelTabState.FirstTab: widget.pages[0],
+        PanelTabState.SecondTab: widget.pages[1],
+        PanelTabState.ThirdTab: widget.pages[2],
       };
 
   void _showPanelMenu() {
@@ -82,30 +84,40 @@ class PanelState extends State<Panel> {
       ));
 
   Widget _tabs() {
-    return Tabs(
-        firstTab: 'اطلاعات بیماری',
-        secondTab: 'چت با پزشک',
-        thirdTab: 'تماس تصویری');
+    return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
+      builder: (context, state) {
+        if (state.section == PanelSection.DOCTOR_INTERFACE)
+          return Tabs(
+              firstTab: Strings.panelIllnessInfoLabel,
+              secondTab: Strings.panelChatLabel,
+              thirdTab: Strings.panelVideoCallLabel);
+        else if (state.section == PanelSection.HEALTH_FILE)
+          return Tabs(
+            firstTab: Strings.panelDocumentsPicLabel,
+            secondTab: Strings.panelPrescriptionsPicLabel,
+            thirdTab: Strings.panelTestResultsPicLabel,
+          );
+        return Tabs(firstTab: '', secondTab: '', thirdTab: '');
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TabSwitchBloc>(
-        create: (context) => TabSwitchBloc(),
-        child: Container(
-          constraints:
-              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-          child: Column(
-            children: <Widget>[
-              _header(),
-              _tabs(),
-              BlocBuilder<TabSwitchBloc, PanelStates>(
-                builder: (context, state) =>
-                    Expanded(flex: 2, child: children()[state]),
-              )
-            ],
-          ),
-        ));
+    return Container(
+      constraints:
+          BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+      child: Column(
+        children: <Widget>[
+          _header(),
+          _tabs(),
+          BlocBuilder<TabSwitchBloc, PanelTabState>(
+            builder: (context, state) =>
+                Expanded(flex: 2, child: children()[state]),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -124,104 +136,79 @@ class Tabs extends StatefulWidget {
 }
 
 class TabsState extends State<Tabs> {
-  PanelStates _state = PanelStates.SecondTab;
-
-  void _switchTab(PanelStates state, context) {
+  void _switchTab(PanelTabState state, context) {
     BlocProvider.of<TabSwitchBloc>(context).add(state);
-    if (_state != state)
-      setState(() {
-        _state = state;
-      });
+  }
+
+  Color _buttonBackground(bool isActive) {
+    return isActive ? IColors.themeColor : Colors.white;
+  }
+
+  Color _buttonTextColor(bool isActive) {
+    return isActive ? Colors.white : Colors.grey;
+  }
+
+  Widget _button({PanelTabState tabState, state, text, context}) {
+    return RaisedButton(
+      onPressed: () {
+        _switchTab(tabState, context);
+      },
+      color: _buttonBackground(state == tabState),
+      child: Container(
+          constraints:
+              BoxConstraints(minWidth: MediaQuery.of(context).size.width * .2),
+          padding: EdgeInsets.only(top: 10, bottom: 10),
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: _buttonTextColor(state == tabState), fontSize: 12),
+          )),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      elevation: 5,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(top: 15),
-          alignment: Alignment.bottomCenter,
-          child: Divider(
-            thickness: 1,
-            color: Colors.grey,
+    return BlocBuilder<TabSwitchBloc, PanelTabState>(builder: (context, state) {
+      return Stack(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(top: 15),
+            alignment: Alignment.bottomCenter,
+            child: Divider(
+              thickness: 1,
+              color: Colors.grey,
+            ),
           ),
-        ),
-        Container(
-            padding: EdgeInsets.only(right: 20, left: 20),
-            alignment: Alignment.topCenter,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                RaisedButton(
-                  onPressed: () {
-                    _switchTab(PanelStates.ThirdTab, context);
-                  },
-                  color: (_state == PanelStates.ThirdTab
-                      ? IColors.themeColor
-                      : Colors.white),
-                  child: Container(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                      alignment: Alignment.center,
-                      child: Text(
-                        widget.thirdTab,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: (_state == PanelStates.ThirdTab
-                                ? Colors.white
-                                : Colors.grey),
-                            fontSize: 12),
-                      )),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  elevation: 5,
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    _switchTab(PanelStates.SecondTab, context);
-                  },
-                  color: (_state == PanelStates.SecondTab
-                      ? IColors.themeColor
-                      : Colors.white),
-                  child: Container(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text(
-                        widget.secondTab,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: (_state == PanelStates.SecondTab
-                                ? Colors.white
-                                : Colors.grey),
-                            fontSize: 12),
-                      )),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  elevation: 5,
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    _switchTab(PanelStates.FirstTab, context);
-                  },
-                  color: (_state == PanelStates.FirstTab
-                      ? IColors.themeColor
-                      : Colors.white),
-                  child: Container(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text(
-                        widget.firstTab,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: (_state == PanelStates.FirstTab
-                                ? Colors.white
-                                : Colors.grey),
-                            fontSize: 12),
-                      )),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  elevation: 5,
-                ),
-              ],
-            )),
-      ],
-    );
+          Container(
+              padding: EdgeInsets.only(right: 20, left: 20),
+              alignment: Alignment.topCenter,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  _button(
+                      tabState: PanelTabState.ThirdTab,
+                      state: state,
+                      text: widget.thirdTab,
+                      context: context),
+                  _button(
+                      tabState: PanelTabState.SecondTab,
+                      state: state,
+                      text: widget.secondTab,
+                      context: context),
+                  _button(
+                      tabState: PanelTabState.FirstTab,
+                      state: state,
+                      text: widget.firstTab,
+                      context: context),
+                ],
+              )),
+        ],
+      );
+    });
   }
 }

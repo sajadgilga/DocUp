@@ -10,6 +10,12 @@ class ReminderList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> items = [];
+    if (medicines != null)
+      for (var medicine in medicines) {
+        items.add(MedicineReminder(medicine.consumingTime, medicine.drugName,
+            MedicineType.capsule, 'دو عدد'));
+      }
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Container(

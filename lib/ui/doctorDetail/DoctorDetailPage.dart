@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
-import 'package:docup/models/DoctorResponseEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';

@@ -1,14 +1,17 @@
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/constants/assets.dart';
-import 'package:docup/models/Patient.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:docup/ui/home/ReminderList.dart';
 import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/home/notification/Notification.dart';
 
-import 'package:docup/ui/home/iDoctor/IDoctor.dart';
+import 'package:docup/ui/home/iPartner/IPartner.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,6 +71,27 @@ class _HomeState extends State<Home> {
           else
             return ReminderList();
         });
+  }
+
+  Widget _iPartner() {
+    return BlocBuilder<EntityBloc, EntityState>(
+      builder: (context, state) {
+        if (state is EntityLoaded) {
+          if (state.entity.partnerEntity != null) {
+            return IPartner(
+              partner: state.entity.partnerEntity,
+              onPush: widget.onPush,
+              globalOnPush: widget.globalOnPush,
+              color: IColors.themeColor,
+              label: (state.entity.type == RoleType.PATIENT
+                  ? Strings.iDoctorLabel
+                  : Strings.iPatientLabel),
+            );
+          }
+        }
+        return SizedBox(width: 5,);
+      },
+    );
   }
 
   @override
@@ -131,12 +155,14 @@ class _HomeState extends State<Home> {
                 height: 10,
               ),
               _reminderList(),
-              IDoctor(
-                doctor: Doctor(3, 'دکتر زهرا شادلو', 'متخصص پوست', 'اقدسیه',
-                    Image(image: AssetImage(' ')), null),
-                onPush: widget.onPush,
-                globalOnPush: widget.globalOnPush,
-              ),
+              _iPartner()
+//                  IPartner(
+//                    partner: Doctor(
+//                        3, 'دکتر زهرا شادلو', 'متخصص پوست', 'اقدسیه',
+//                        Image(image: AssetImage(' ')), null),
+//                    onPush: widget.onPush,
+//                    globalOnPush: widget.globalOnPush,
+//                  ),
             ],
           ))
         ],

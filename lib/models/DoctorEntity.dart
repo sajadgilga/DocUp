@@ -1,5 +1,9 @@
+import 'package:docup/models/Panel.dart';
 
-class DoctorEntity {
+import 'PatientEntity.dart';
+import 'UserEntity.dart';
+
+class DoctorEntity extends UserEntity {
   int id;
   User user;
   String councilCode;
@@ -9,13 +13,16 @@ class DoctorEntity {
   String clinicAddress;
   int fee;
 
+  List<Panel> panels;
+
   DoctorEntity(
       {this.id,
       this.user,
       this.councilCode,
       this.expert,
       this.clinic,
-      this.fee});
+      this.fee,
+      this.panels});
 
   DoctorEntity.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -28,6 +35,12 @@ class DoctorEntity {
     if (json.containsKey('clinic_address'))
       clinicAddress = json['clinic_address'];
     if (json.containsKey('clinic_number')) clinicNumber = json['clinic_number'];
+    if (!json.containsKey('panels')) return;
+    panels = [];
+    if (json['panels'].length != 0)
+      json['panels'].forEach((panel) {
+        panels.add(Panel.fromJson(panel));
+      });
   }
 
   Map<String, dynamic> toJson() {
@@ -45,47 +58,53 @@ class DoctorEntity {
     return data;
   }
 }
-
-class User {
-  String avatar;
-  String firstName;
-  String lastName;
-  String email;
-  int credit;
-  int type;
-  int online;
-
-  User(
-      {this.avatar,
-      this.firstName,
-      this.lastName,
-      this.email,
-      this.credit,
-      this.type,
-      this.online});
-
-  User.fromJson(Map<String, dynamic> json) {
-    avatar = json['avatar'];
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-    email = json['email'];
-    credit = json['credit'];
-    type = json['type'];
-    online = json['online'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['avatar'] = this.avatar;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['email'] = this.email;
-    data['credit'] = this.credit;
-    data['type'] = this.type;
-    data['online'] = this.online;
-    return data;
-  }
-}
+//
+//class User {
+//  String avatar;
+//  String firstName;
+//  String lastName;
+//  String name;
+//  String email;
+//  int credit;
+//  int type;
+//  int online;
+//  String nationalId;
+//  String phoneNumber;
+//
+//  User(
+//      {this.avatar,
+//      this.firstName,
+//      this.lastName,
+//      this.email,
+//      this.credit,
+//      this.type,
+//      this.online});
+//
+//  User.fromJson(Map<String, dynamic> json) {
+//    avatar = json['avatar'];
+//    firstName = json['first_name'];
+//    lastName = json['last_name'];
+//    name = '$firstName $lastName';
+//    email = json['email'];
+//    if (json.containsKey('credit')) credit = json['credit'];
+//    type = json['type'];
+//    online = json['online'];
+//    if (json.containsKey('national_id')) nationalId = json['national_id'];
+//    if (json.containsKey('phone_number')) phoneNumber = json['phone_number'];
+//  }
+//
+//  Map<String, dynamic> toJson() {
+//    final Map<String, dynamic> data = new Map<String, dynamic>();
+//    data['avatar'] = this.avatar;
+//    data['first_name'] = this.firstName;
+//    data['last_name'] = this.lastName;
+//    data['email'] = this.email;
+//    data['credit'] = this.credit;
+//    data['type'] = this.type;
+//    data['online'] = this.online;
+//    return data;
+//  }
+//}
 
 class Clinic {
   int id;

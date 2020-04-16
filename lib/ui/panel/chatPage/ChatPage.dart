@@ -1,6 +1,7 @@
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/ChatMessage.dart';
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -8,7 +9,7 @@ import 'dart:math';
 import 'DoctorInfo.dart';
 
 class ChatPage extends StatefulWidget {
-  final Doctor doctor;
+  final DoctorEntity doctor;
   final ValueChanged<String> onPush;
 
   ChatPage({Key key, this.doctor , @required this.onPush}) : super(key: key);
@@ -84,7 +85,7 @@ class _ChatPageState extends State<ChatPage> {
 }
 
 class _ChatBox extends StatefulWidget {
-  final Doctor doctor;
+  final DoctorEntity doctor;
 
   _ChatBox({Key key, this.doctor}) : super(key: key);
 

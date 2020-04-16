@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:docup/blocs/AuthBloc.dart';
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/networking/Response.dart';
@@ -126,6 +127,7 @@ class _StartPageState extends State<StartPage> {
 
   void switchRole(RoleType roleType) {
     _controller.add(roleType);
+    BlocProvider.of<EntityBloc>(context).add(EntityChangeType(type: roleType));
     setState(() {
       IColors.changeThemeColor(roleType);
       currentRoleType = roleType;

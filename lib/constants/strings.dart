@@ -31,6 +31,8 @@ class Strings {
   static final String panelIDoctorLabel = 'پزشکان من';
   static final String panelHealthFileLabel = 'پرونده سلامت';
   static final String panelHealthScheduleLabel = 'تقویم سلامت';
+  static final String panelIDoctorEmptyLabel =
+      'در حال حاضر با پزشکی ارتباط ندارید';
 
   static final String panelDocumentSubLabel = 'مدارک';
   static final String panelResultsSubLabel = 'نتایج آزمایش';
@@ -38,12 +40,26 @@ class Strings {
   static final String panelPicturesSubLabel = 'تصاویر عارضه';
 
   static final String panelReminderSubLabel = 'یادآوری داروها';
+  static final String panelEventsSubLabel = 'رویدادها';
+  static final String panelCalendarSubLabel = 'تقویم';
   static final String panelVisitsSubLabel = 'زمان‌های ویزیت';
 
   static final String illnessInfoPicListLabel = 'تست‌های شناختی';
   static final String illnessInfoPicUploadLabel = 'شروع تست';
   static final String illnessInfoPicShowLabel = 'مشاهده همه';
   static final String illnessInfoLastPicsLabel = 'نتایج تست‌های پیشین';
+
+  static final String panelDocumentsPicLabel = 'مدارک';
+  static final String panelDocumentsPicListLabel = 'مدارک سابق';
+  static final String panelPrescriptionsPicLabel = 'نسخه‌ها';
+  static final String panelPrescriptionsPicListLabel = 'نسخه‌های پیشین';
+  static final String panelTestResultsPicLabel = 'آزمایش‌ها';
+  static final String panelTestResultsPicListLabel = 'نتایج آزمایش‌های پیشین';
+
+  static final String panelIllnessInfoLabel = 'اطلاعات بیماری';
+  static final String panelChatLabel = 'چت با پزشک';
+  static final String panelVideoCallLabel = 'تماس تصویری';
+
 
 
   static final String physicalReservationLabel = 'رزرو ویزیت حضوری';
@@ -52,4 +68,7 @@ class Strings {
 
 
   static final String uploadPicTextFieldHint = 'توضیح...';
+
+  static final String iDoctorLabel = 'پزشک من';
+  static final String iPatientLabel = 'بیمار من';
 }

@@ -1,17 +1,20 @@
 import 'dart:convert';
 
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/main.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/Panel.dart';
-import 'package:docup/models/Patient.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
+import 'package:docup/ui/start/RoleType.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +37,8 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
-  final PatientBloc _patientBloc = PatientBloc();
+
+//  final PatientBloc _patientBloc = PatientBloc();
   final PanelBloc _panelBloc = PanelBloc();
   ProgressDialog _progressDialogue;
   final Doctor _doctor = Doctor(
@@ -61,15 +65,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-//    _patientBloc.dataStream.listen((data) {
-//      if (handle(_progressDialogue, data)) {
-//        setState(() {
-//          _patient = data.data;
-//        });
-//      }
-//    });
-
-    _patientBloc.add(PatientGet());
+    final _entityBloc = BlocProvider.of<EntityBloc>(context);
+    _entityBloc.add(EntityGet());
     _panelBloc.add(GetMyPanels());
 
     _firebaseMessaging.getToken().then((String fcmToken) {
@@ -94,7 +91,7 @@ class _MainPageState extends State<MainPage> {
     );
 
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('mipmap/ic_launcher');
+        new AndroidInitializationSettings('mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
 
     var initializationSettings = new InitializationSettings(
@@ -279,7 +276,6 @@ class _MainPageState extends State<MainPage> {
 
     return MultiBlocProvider(
         providers: [
-          BlocProvider<PatientBloc>.value(value: _patientBloc),
           BlocProvider<PanelBloc>.value(value: _panelBloc)
         ],
         child: WillPopScope(
@@ -289,10 +285,12 @@ class _MainPageState extends State<MainPage> {
               onGenerateRoute: (settings) => _route(settings, context),
             ),
             onWillPop: () async {
-              final isMainPage =
-              await MyApp.globalNavigator.currentState.maybePop();
-              if (isMainPage)
-                return false;
+//              final isMainPage =
+//              !await MyApp.globalNavigator.currentState.maybePop();
+//              if (isMainPage) {
+//                MyApp.globalNavigator.currentState.pop();
+//                return false;
+//              }
               final isFirstRouteInCurrentRoute =
                   !await _navigatorKeys[_currentIndex].currentState.maybePop();
               if (isFirstRouteInCurrentRoute) {

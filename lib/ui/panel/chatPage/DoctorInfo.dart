@@ -1,10 +1,11 @@
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
 class DoctorInfo extends StatelessWidget {
-  final Doctor doctor;
+  final DoctorEntity doctor;
   final ValueChanged<String> onPush;
 
   DoctorInfo({Key key, this.doctor, @required this.onPush}) : super(key: key);
@@ -33,18 +34,20 @@ class DoctorInfo extends StatelessWidget {
               Container(
                   width: 70,
                   child: ClipPolygon(
-                        sides: 6,
-                        rotate: 90,
-                        child: doctor.image,
-                      )),
-              Align(alignment: Alignment(-.75, 1), child: _isOnline())
+                    sides: 6,
+                    rotate: 90,
+                    child: Image.network(doctor.user.avatar),
+                  )),
+              Align(
+                  alignment: Alignment(-.75, 1),
+                  child: (doctor.user.online > 0 ? _isOnline() : Container()))
             ],
           )));
 
   Widget _info() => Column(
         children: <Widget>[
           Text(
-            doctor.name,
+            doctor.user.name,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w900,
@@ -53,7 +56,7 @@ class DoctorInfo extends StatelessWidget {
             textDirection: TextDirection.rtl,
           ),
           Text(
-            doctor.speciality,
+            doctor.expert,
             style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
@@ -67,7 +70,7 @@ class DoctorInfo extends StatelessWidget {
   Widget _location() => Row(
         children: <Widget>[
           Text(
-            doctor.location,
+            doctor.clinic.clinicName,
             style: TextStyle(
                 color: Colors.grey,
                 fontSize: 12,

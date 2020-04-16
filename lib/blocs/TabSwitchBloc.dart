@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:docup/ui/panel/Panel.dart';
 
-class TabSwitchBloc extends Bloc<PanelStates, PanelStates> {
+class TabSwitchBloc extends Bloc<PanelTabState, PanelTabState> {
   @override
-  PanelStates get initialState => PanelStates.SecondTab;
+  PanelTabState get initialState => PanelTabState.SecondTab;
 
   @override
-  Stream<PanelStates> mapEventToState(PanelStates event) async* {
+  Stream<PanelTabState> mapEventToState(PanelTabState event) async* {
     yield event;
   }
 }

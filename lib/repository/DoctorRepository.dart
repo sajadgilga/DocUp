@@ -1,10 +1,22 @@
 import 'package:docup/models/AuthResponseEntity.dart';
-import 'package:docup/models/DoctorResponseEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/networking/ApiProvider.dart';
 
 class DoctorRepository {
   ApiProvider _provider = ApiProvider();
+
+
+  Future<DoctorEntity> get() async {
+    final response = await _provider.get('api/auth/doctor/');
+    return DoctorEntity.fromJson(response);
+  }
+
+  Future<DoctorEntity> update(DoctorEntity patient) async {
+    final response = await _provider.patch("api/auth/doctor/",
+        body: patient.toJson());
+    return DoctorEntity.fromJson(response);
+  }
 
   Future<DoctorEntity> getDoctor(int doctorId) async {
     final response = await _provider

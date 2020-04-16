@@ -1,16 +1,26 @@
 import 'package:docup/constants/colors.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:flutter/material.dart';
 
-import 'package:docup/ui/home/iDoctor/IDoctorBody.dart';
+import 'package:docup/ui/home/iPartner/IPartnerBody.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/ui/widgets/DoctorSummary.dart';
 
-class IDoctor extends StatelessWidget {
-  final Doctor doctor;
+class IPartner extends StatelessWidget {
+  final UserEntity partner;
   final ValueChanged<String> onPush;
   final ValueChanged<String> globalOnPush;
+  final Color color;
+  final String label;
 
-  IDoctor({Key key, this.doctor, @required this.onPush, this.globalOnPush}) : super(key: key);
+  IPartner(
+      {Key key,
+      this.partner,
+      @required this.onPush,
+      this.globalOnPush,
+      this.color,
+      this.label})
+      : super(key: key);
 
   Widget _IDoctorLabel() => Container(
         constraints: BoxConstraints(maxHeight: 35),
@@ -22,11 +32,11 @@ class IDoctor extends StatelessWidget {
                 bottomRight: Radius.circular(15)),
             child: Container(
               alignment: Alignment.center,
-              color: IColors.themeColor,
+              color: color,
               width: 60,
               height: 30,
               child: Text(
-                'پزشک من',
+                label,
                 style: TextStyle(color: Colors.white, fontSize: 10),
                 textAlign: TextAlign.center,
               ),
@@ -51,11 +61,11 @@ class IDoctor extends StatelessWidget {
         children: <Widget>[
           _IDoctorLabel(),
           Expanded(
-            child: IDoctorBody(
-              doctor: doctor,
-              onPush: onPush,
-              globalOnPush: globalOnPush,
-            ),
+            child: IPartnerBody(
+                partner: partner,
+                onPush: onPush,
+                globalOnPush: globalOnPush,
+                color: color),
           ),
         ],
       ),

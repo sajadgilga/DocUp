@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
-class DoctorSummary extends StatelessWidget {
+class PartnerSummary extends StatelessWidget {
   final String name;
   final String speciality;
   final String location;
+  final String url;
 
-  DoctorSummary(this.name, this.speciality, this.location);
+  PartnerSummary({this.name, this.speciality, this.location, this.url});
 
   Widget _doctorImage() => Container(
       alignment: Alignment.center,
@@ -14,16 +15,18 @@ class DoctorSummary extends StatelessWidget {
       child: Container(
         width: 50,
         child: ClipPolygon(
-              sides: 6,
-              rotate: 90,
-              boxShadows: [
-                PolygonBoxShadow(color: Colors.black, elevation: 1.0),
-                PolygonBoxShadow(color: Colors.grey, elevation: 2.0)
-              ],
-              child: Image(
-                image: AssetImage('assets/lion.jpg'),
-              ),
-            ),
+          sides: 6,
+          rotate: 90,
+          boxShadows: [
+            PolygonBoxShadow(color: Colors.black, elevation: 1.0),
+            PolygonBoxShadow(color: Colors.grey, elevation: 2.0)
+          ],
+          child: Image(
+            image: (url != null
+                ? NetworkImage(url)
+                : AssetImage('assets/lion.jpg')),
+          ),
+        ),
       ));
 
   Widget _description() => Column(

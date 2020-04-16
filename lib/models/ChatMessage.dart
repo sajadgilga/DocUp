@@ -1,5 +1,6 @@
-import 'Doctor.dart';
-import 'Patient.dart';
+import 'package:docup/models/DoctorEntity.dart';
+
+import 'PatientEntity.dart';
 
 enum MessageState { unsent, sent, delivered, failed }
 
@@ -7,8 +8,8 @@ class ChatMessage {
   final String text;
   MessageState state;
   DateTime sentDate;
-  Doctor doctor;
-  Patient patient;
+  DoctorEntity doctor;
+  PatientEntity patient;
   bool fromPatient = true;
 
   ChatMessage.fromDoctor(
