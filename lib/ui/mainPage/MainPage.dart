@@ -239,7 +239,7 @@ class _MainPageState extends State<MainPage> {
           children: <Widget>[
             _buildOffstageNavigator(0),
 //            _buildOffstageNavigator(1),
-            _buildOffstageNavigator(2),
+            _buildOffstageNavigator(1),
           ],
         ));
   }
