@@ -81,7 +81,7 @@ class _SearchResultItem extends StatelessWidget {
   _SearchResultItem({Key key, this.doctor, this.onPush}) : super(key: key);
 
   void _showDoctorDialogue() {
-    onPush(NavigatorRoutes.doctorDialogue);
+//    onPush(NavigatorRoutes.doctorDialogue);
   }
 
   Widget _image() => GestureDetector(

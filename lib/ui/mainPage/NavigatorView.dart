@@ -76,16 +76,24 @@ class NavigatorView extends StatelessWidget {
         };
       case 2:
         return {
-//          NavigatorRoutes.root: (context) => _panel(context),
+          NavigatorRoutes.root: (context) => _empty(context),
 //          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
 ////          NavigatorRoutes.doctorDialogue: (context) =>
 ////              _doctorDetailPage(context),
 //          NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
       case 3:
-        return {};
+        return {
+          NavigatorRoutes.root: (context) => _empty(context),
+          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+
+        };
       case 4:
-        return {};
+        return {
+          NavigatorRoutes.root: (context) => _empty(context),
+          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+
+        };
       default:
         return {
           NavigatorRoutes.root: (context) => _home(context),
@@ -204,7 +212,7 @@ class NavigatorView extends StatelessWidget {
     );
   }
 
-  Widget _panel(context) {
+  Widget _panel(context, {incomplete}) {
     return MultiBlocProvider(
         providers: [
           BlocProvider<TabSwitchBloc>.value(
@@ -246,4 +254,8 @@ class NavigatorView extends StatelessWidget {
           child: PanelMenu(() {
             _pop(context);
           }));
+
+  Widget _empty(context) {
+    return Container();
+  }
 }

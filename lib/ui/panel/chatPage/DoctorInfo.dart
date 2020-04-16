@@ -20,7 +20,7 @@ class DoctorInfo extends StatelessWidget {
       );
 
   void _showDoctorDialogue() {
-    onPush(NavigatorRoutes.doctorDialogue);
+//    onPush(NavigatorRoutes.doctorDialogue);
   }
 
   Widget _image() => GestureDetector(
