@@ -46,6 +46,7 @@ dependencies:
   datetime_picker_formfield: ^1.0.0
   intl: ^0.16.1
   dio: ">=3.0.0"
+  percent_indicator: ^2.1.3
 
 
 

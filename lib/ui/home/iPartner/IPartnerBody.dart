@@ -69,15 +69,15 @@ class IPartnerBody extends StatelessWidget {
           width: 3,
         ),
         GestureDetector(
-          onTap: () {
-            _showDoctorDialogue();
-          },
-          child: PartnerSummary(
-              name: (partner != null ? partner.user.name : ''),
-              speciality: _getSubHeader(context),
-              location: _getLocation(context),
-              url: (partner != null ? partner.user.avatar : null)),
-        )
+            onTap: () {
+              _showDoctorDialogue();
+            },
+            child: PartnerSummary(
+                  name: (partner != null ? partner.user.name : ''),
+                  speciality: _getSubHeader(context),
+                  location: _getLocation(context),
+                  url: (partner != null ? partner.user.avatar : null)),
+            )
       ],
     );
   }

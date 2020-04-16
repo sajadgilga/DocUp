@@ -32,6 +32,10 @@ class IColors {
   static const Color deactivePanelMenu = Colors.black38;
   static const Color activePanelMenu = Colors.black54;
 
+  static const Color trackingVisitPending = Color.fromRGBO(242, 51, 51, 1);
+  static const Color trackingCuring = Colors.black;
+  static const Color trackingCured = Color.fromRGBO(38, 163, 10, 1);
+
   static void changeThemeColor(RoleType roleType) {
     Assets.changeIcons(roleType);
     switch(roleType) {

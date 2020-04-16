@@ -12,7 +12,6 @@ class DoctorEntity extends UserEntity {
   String clinicNumber;
   String clinicAddress;
   int fee;
-
   List<Panel> panels;
 
   DoctorEntity(
