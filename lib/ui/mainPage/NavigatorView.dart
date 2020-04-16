@@ -69,18 +69,18 @@ class NavigatorView extends StatelessWidget {
         return {
           NavigatorRoutes.root: (context) => _panel(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-//          NavigatorRoutes.doctorDialogue: (context) =>
-//              _doctorDetailPage(context),
+          NavigatorRoutes.doctorDialogue: (context) =>
+              _doctorDetailPage(context),
           NavigatorRoutes.uploadPicDialogue: (context) => UploadSlider(),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
       case 2:
         return {
           NavigatorRoutes.root: (context) => _empty(context),
-//          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-////          NavigatorRoutes.doctorDialogue: (context) =>
-////              _doctorDetailPage(context),
-//          NavigatorRoutes.searchView: (context) => _searchPage(context),
+          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.doctorDialogue: (context) =>
+              _doctorDetailPage(context),
+          NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
       case 3:
         return {
