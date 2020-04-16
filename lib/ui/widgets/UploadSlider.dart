@@ -89,7 +89,27 @@ class UploadSliderState extends State<UploadSlider> {
         ),
       );
 
-  Widget _submit() => Container(
+  void _show() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "منتظر ما باشید",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+          );
+        });
+  }
+
+  Widget _submit() => GestureDetector(
+      onTap: () {
+        _show();
+      },
+      child: Container(
         margin: EdgeInsets.only(top: 30, bottom: 50),
         child: Align(
             alignment: Alignment.centerLeft,
@@ -105,7 +125,7 @@ class UploadSliderState extends State<UploadSlider> {
                 textAlign: TextAlign.center,
               ),
             )),
-      );
+      ));
 
   Widget _listDescriptionSubmit(height) => Container(
       constraints: BoxConstraints(maxHeight: height * .35),

@@ -80,12 +80,27 @@ class _SearchResultItem extends StatelessWidget {
 
   _SearchResultItem({Key key, this.doctor, this.onPush}) : super(key: key);
 
-  void _showDoctorDialogue() {
-    onPush(NavigatorRoutes.doctorDialogue);
+  void _showDoctorDialogue(context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "منتظر ما باشید",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+                textAlign: TextAlign.right,
+                style: TextStyle(fontSize: 12)),
+          );
+        });
+//    onPush(NavigatorRoutes.doctorDialogue);
   }
 
-  Widget _image() => GestureDetector(
-      onTap: _showDoctorDialogue,
+  Widget _image(context) => GestureDetector(
+      onTap: ()=>_showDoctorDialogue(context),
       child: Container(
           child: Container(
               width: 70,
@@ -119,7 +134,7 @@ class _SearchResultItem extends StatelessWidget {
       margin: EdgeInsets.only(top: 10, bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[_info(), _image()],
+        children: <Widget>[_info(), _image(context)],
       ),
     );
   }

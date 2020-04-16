@@ -238,8 +238,10 @@ class _MainPageState extends State<MainPage> {
           index: _currentIndex,
           children: <Widget>[
             _buildOffstageNavigator(0),
-//            _buildOffstageNavigator(1),
             _buildOffstageNavigator(1),
+            _buildOffstageNavigator(2),
+            _buildOffstageNavigator(3),
+            _buildOffstageNavigator(4),
           ],
         ));
   }

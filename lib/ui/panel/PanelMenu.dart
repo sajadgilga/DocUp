@@ -204,6 +204,7 @@ class _PanelMenuState extends State<PanelMenu> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
@@ -263,6 +264,24 @@ class _PanelMenuMainItem extends StatelessWidget {
       : super(key: key);
 
   void _selectItem({item, context}) {
+    if (section == PanelSection.HEALTH_CALENDAR) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                "منتظر ما باشید",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+                  textAlign: TextAlign.right,
+                  style: TextStyle(fontSize: 12)),
+            );
+          });
+      return;
+    }
     if (item.panelTabState != null)
       BlocProvider.of<TabSwitchBloc>(context).add(item.panelTabState);
     else
