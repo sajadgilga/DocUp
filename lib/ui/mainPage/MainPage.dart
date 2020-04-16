@@ -281,11 +281,12 @@ class _MainPageState extends State<MainPage> {
           BlocProvider<PanelBloc>.value(value: _panelBloc)
         ],
         child: WillPopScope(
-            child: Navigator(
-              key: MyApp.globalNavigator,
-              initialRoute: NavigatorRoutes.mainPage,
-              onGenerateRoute: (settings) => _route(settings, context),
-            ),
+            child: _mainPage(),
+//            Navigator(
+//              key: MyApp.globalNavigator,
+//              initialRoute: NavigatorRoutes.mainPage,
+//              onGenerateRoute: (settings) => _route(settings, context),
+//            ),
             onWillPop: () async {
 //              final isMainPage =
 //              !await MyApp.globalNavigator.currentState.maybePop();

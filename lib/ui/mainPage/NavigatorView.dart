@@ -33,7 +33,7 @@ class NavigatorRoutes {
 class NavigatorView extends StatelessWidget {
   final int index;
   final GlobalKey<NavigatorState> navigatorKey;
-  final ValueChanged<String> globalOnPush;
+  ValueChanged<String> globalOnPush;
   final TabSwitchBloc _tabSwitchBloc = TabSwitchBloc();
   final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
   final Doctor _doctor = Doctor(
@@ -137,7 +137,9 @@ class NavigatorView extends StatelessWidget {
         onPush: (direction) {
           _push(context, direction);
         },
-        globalOnPush: globalOnPush,
+        globalOnPush: (direction) {
+          _push(context, direction);
+        },
       );
 
   Widget _notifictionPage() => NotificationPage();
