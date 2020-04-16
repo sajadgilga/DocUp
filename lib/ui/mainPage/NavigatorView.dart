@@ -42,7 +42,7 @@ class NavigatorView extends StatelessWidget {
       "متخصص پوست",
       "اقدسیه",
       Image(
-        image: AssetImage('assets/lion.jpg'),
+        image: AssetImage('assets/avatar.png'),
       ),
       []);
 

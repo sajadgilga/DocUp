@@ -53,8 +53,8 @@ class UploadSliderState extends State<UploadSlider> {
         child: (picture.image != null
             ? picture.image
             : Image(
-                image: AssetImage('assets/uploadPicTestImage.png'),
-                fit: BoxFit.cover,
+                image: AssetImage('assets/uploadpic.png'),
+                fit: BoxFit.fitHeight,
               )),
         onTap: () {
           _getImage();

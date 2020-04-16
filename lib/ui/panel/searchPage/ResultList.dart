@@ -19,7 +19,7 @@ class _ResultListState extends State<ResultList> {
       "متخصص پوست",
       "اقدسیه",
       Image(
-        image: AssetImage('assets/lion.jpg'),
+        image: AssetImage('assets/avatar.png'),
       ),
       []);
   static Doctor _doctor2 = Doctor(

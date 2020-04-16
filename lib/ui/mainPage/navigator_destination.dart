@@ -26,5 +26,5 @@ const List<Destination> navigator_destinations = <Destination>[
   Destination('Panel', Icons.view_quilt, Colors.grey, AssetImage(''), false),
   Destination('Settings', Icons.settings, Colors.grey, AssetImage(''), false),
   Destination('Account', Icons.account_box, Colors.grey,
-      AssetImage('assets/lion.jpg'), true),
+      AssetImage('assets/avatar.png'), true),
 ];

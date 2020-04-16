@@ -47,7 +47,7 @@ class _MainPageState extends State<MainPage> {
       "متخصص پوست",
       "اقدسیه",
       Image(
-        image: AssetImage('assets/lion.jpg'),
+        image: AssetImage('assets/avatar.png'),
       ),
       []);
 

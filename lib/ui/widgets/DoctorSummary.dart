@@ -24,7 +24,7 @@ class PartnerSummary extends StatelessWidget {
           child: Image(
             image: (url != null
                 ? NetworkImage(url)
-                : AssetImage('assets/lion.jpg')),
+                : AssetImage('assets/avatar.png')),
           ),
         ),
       ));
