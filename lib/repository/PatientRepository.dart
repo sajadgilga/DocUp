@@ -12,7 +12,7 @@ class PatientRepository {
   }
 
   Future<PatientEntity> get() async {
-    final response = await _provider.get('api/auth/patient');
+    final response = await _provider.get('api/auth/patient', utf8Support: true);
     return PatientEntity.fromJson(response);
   }
 
