@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
@@ -204,7 +206,6 @@ class _PanelMenuState extends State<PanelMenu> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
@@ -272,12 +273,10 @@ class _PanelMenuMainItem extends StatelessWidget {
               title: Text(
                 "منتظر ما باشید",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
-                  textAlign: TextAlign.right,
-                  style: TextStyle(fontSize: 12)),
+                  textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
             );
           });
       return;
@@ -293,6 +292,12 @@ class _PanelMenuMainItem extends StatelessWidget {
   }
 
   Widget _subItem(context, {text, PanelSubItem item}) {
+    String utfText;
+    try {
+      utfText = utf8.decode(item.text.toString().codeUnits);
+    } catch (_) {
+      utfText = item.text;
+    }
     return GestureDetector(
         onTap: () {
           _selectItem(item: item, context: context);
@@ -303,7 +308,7 @@ class _PanelMenuMainItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Text(
-                  (item == null ? text : item.text),
+                  (item == null ? text : utfText),
                   style: TextStyle(
                       fontSize: 12, color: (item == null ? color : item.color)),
                   textAlign: TextAlign.right,

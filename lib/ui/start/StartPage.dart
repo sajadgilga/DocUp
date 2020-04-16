@@ -80,8 +80,8 @@ class _StartPageState extends State<StartPage> {
   Future<void> checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("token")) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MainPage()));
+//      Navigator.push(
+//          context, MaterialPageRoute(builder: (context) => MainPage()));
     }
   }
 

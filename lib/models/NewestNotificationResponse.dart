@@ -10,8 +10,9 @@ class NewestNotificationResponse {
   NewestNotificationResponse.fromJson(Map<String, dynamic> json) {
     newestEventsCounts = json['newest_events_counts'];
     newestDrugsCounts = json['newest_drugs_counts'];
-    newestDrugs = json['newest_drugs'].map((Map drug) => Medicine.fromJson(drug));
-    newestEvents =
-        json['newest_events'].map((Map event) => Notification.fromJson(event));
+    newestDrugs = [];
+    json['newest_drugs'].forEach((drug) => newestDrugs.add(Medicine.fromJson(drug)));
+    newestEvents = [];
+        json['newest_events'].forEach((event) => newestEvents.add(Notification.fromJson(event)));
   }
 }

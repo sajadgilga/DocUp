@@ -13,10 +13,10 @@ class Notification {
     description = json['description'];
     time = json['time'];
     owner = User.fromJson(json['owner']);
-    invited_doctors =
-        json['invited_doctors'].map((Map doctor) => Guest.fromJson(doctor));
-    invited_patients =
-        json['invited_patients'].map((Map patient) => Guest.fromJson(patient));
+    invited_doctors = [];
+        json['invited_doctors'].forEach((doctor) => invited_doctors.add(Guest.fromJson(doctor)));
+    invited_patients = [];
+        json['invited_patients'].forEach((patient) => invited_patients.add(Guest.fromJson(patient)));
   }
 }
 
