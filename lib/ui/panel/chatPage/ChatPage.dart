@@ -12,17 +12,15 @@ class ChatPage extends StatefulWidget {
   final DoctorEntity doctor;
   final ValueChanged<String> onPush;
 
-  ChatPage({Key key, this.doctor , @required this.onPush}) : super(key: key);
+  ChatPage({Key key, this.doctor, @required this.onPush}) : super(key: key);
 
   @override
   _ChatPageState createState() {
     return _ChatPageState();
   }
-
 }
 
 class _ChatPageState extends State<ChatPage> {
-
   Widget _submitButton() => Container(
         width: 50,
         height: 35,
@@ -31,7 +29,8 @@ class _ChatPageState extends State<ChatPage> {
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.all(Radius.circular(15)),
             boxShadow: [
-              BoxShadow(color: IColors.themeColor, blurRadius: 10, spreadRadius: 1)
+              BoxShadow(
+                  color: IColors.themeColor, blurRadius: 10, spreadRadius: 1)
             ]),
         padding: EdgeInsets.all(5),
         child: Icon(
@@ -100,21 +99,27 @@ class _ChatBoxState extends State<_ChatBox> {
 
   @override
   Widget build(BuildContext context) {
-    var rng = Random();
-    for (int i = 0; i < 10; i++) {
-      var doctorMsg = ChatMessage.fromDoctor(
-          text: 'من من من' * (rng.nextInt(10) + 1),
-          sentDate: DateTime.now(),
-          doctor: widget.doctor,
-          patient: null);
-      var patientMsg = ChatMessage.fromPatient(
-          text: 'من من من' * (rng.nextInt(10) + 1),
-          sentDate: DateTime.now(),
-          doctor: widget.doctor,
-          patient: null);
-      _messages.add(doctorMsg);
-      _messages.add(patientMsg);
-    }
+    _messages.add(ChatMessage.fromPatient(
+        text: "آخ آخ. یادم رفت. همین الان میفرستم",
+        sentDate: DateTime.now(),
+        doctor: widget.doctor,
+        patient: null));
+    _messages.add(ChatMessage.fromDoctor(
+        text: "جواب آزمایش‌هاتون رو فرستادین برام؟",
+        sentDate: DateTime.now(),
+        doctor: widget.doctor,
+        patient: null));
+    _messages.add(ChatMessage.fromPatient(
+        text: "سلام. ممنون دکتر. امیدوارم شماهم خوب باشید",
+        sentDate: DateTime.now(),
+        doctor: widget.doctor,
+        patient: null));
+    _messages.add(ChatMessage.fromDoctor(
+        text: "سلام دوست عزیز. خوب هستی شما؟",
+        sentDate: DateTime.now(),
+        doctor: widget.doctor,
+        patient: null));
+
     var messages = <Widget>[];
     for (var message in _messages) {
       messages.add(ChatBubble(

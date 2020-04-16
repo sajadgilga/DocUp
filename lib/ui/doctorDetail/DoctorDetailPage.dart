@@ -5,6 +5,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/networking/Response.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../constants/colors.dart';
+import '../../main.dart';
 import 'VirtualReservationPage.dart';
 
 class DoctorDetailPage extends StatefulWidget {
@@ -112,11 +114,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             color: IColors.darkBlue,
             title: Strings.virtualReservationLabel,
             callBack: () => {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          VirtualReservationPage(doctorEntity: doctorEntity)))
+              MyApp.globalNavigator.currentState.push(MaterialPageRoute(
+                  builder: (context) =>
+                      VirtualReservationPage(doctorEntity: doctorEntity)))
             },
           ),
         ],
