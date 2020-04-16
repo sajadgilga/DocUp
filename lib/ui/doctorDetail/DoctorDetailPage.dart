@@ -114,9 +114,11 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             color: IColors.darkBlue,
             title: Strings.virtualReservationLabel,
             callBack: () => {
-              MyApp.globalNavigator.currentState.push(MaterialPageRoute(
-                  builder: (context) =>
-                      VirtualReservationPage(doctorEntity: doctorEntity)))
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          VirtualReservationPage(doctorEntity: doctorEntity)))
             },
           ),
         ],

@@ -45,7 +45,7 @@ class _ChatBoxState extends State<ChatBox> {
 
   Widget _chatList() {
     var message = ChatMessage.fromDoctor(
-        text: 'من من من',
+        text: 'سلام دکتر',
         sentDate: DateTime.now(),
         doctor: null,
         patient: null);
