@@ -83,23 +83,23 @@ class _HomeState extends State<Home> {
 
   Widget _homeList() {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    if (entity.type == RoleType.PATIENT) {
+    if (entity.isPatient) {
       return _reminderList();
-    } else if (entity.type == RoleType.DOCTOR) {
+    } else if (entity.isDoctor) {
       return _trackingList();
     }
   }
 
   Widget _homeListLabel() {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    if (entity.type == RoleType.PATIENT) {
+    if (entity.isPatient) {
       return Text(
         Strings.medicineReminder,
         textAlign: TextAlign.center,
         style:
         TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
       );
-    } else if (entity.type == RoleType.DOCTOR) {
+    } else if (entity.isDoctor) {
       return Text(
         Strings.doctorTrackingLabel,
         textAlign: TextAlign.center,
@@ -119,7 +119,7 @@ class _HomeState extends State<Home> {
               onPush: widget.onPush,
               globalOnPush: widget.globalOnPush,
               color: IColors.themeColor,
-              label: (state.entity.type == RoleType.PATIENT
+              label: (state.entity.isPatient
                   ? Strings.iDoctorLabel
                   : Strings.iPatientLabel),
             );

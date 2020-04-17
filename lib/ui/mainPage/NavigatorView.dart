@@ -8,7 +8,7 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
-import 'package:docup/ui/panel/PanelMenu.dart';
+import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:docup/ui/panel/chatPage/ChatPage.dart';
 import 'package:docup/ui/panel/healthFile/InfoPage.dart';
 import 'package:docup/ui/panel/illnessPage/IllnessPage.dart';
@@ -67,6 +67,14 @@ class NavigatorView extends StatelessWidget {
         };
       case 1:
         return {
+          NavigatorRoutes.root: (context) => _empty(context),
+          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.doctorDialogue: (context) =>
+              _doctorDetailPage(context),
+          NavigatorRoutes.searchView: (context) => _searchPage(context),
+        };
+      case 2:
+        return {
           NavigatorRoutes.root: (context) => _panel(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.doctorDialogue: (context) =>
@@ -74,25 +82,15 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.uploadPicDialogue: (context) => UploadSlider(),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
-      case 2:
-        return {
-          NavigatorRoutes.root: (context) => _empty(context),
-          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-          NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context),
-          NavigatorRoutes.searchView: (context) => _searchPage(context),
-        };
       case 3:
         return {
           NavigatorRoutes.root: (context) => _empty(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-
         };
       case 4:
         return {
           NavigatorRoutes.root: (context) => _empty(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-
         };
       default:
         return {
@@ -146,72 +144,72 @@ class NavigatorView extends StatelessWidget {
 
   Widget _panelPages(context) {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
-      builder: (context, state) {
-        if (state.section == PanelSection.DOCTOR_INTERFACE) {
-          return Panel(
-            doctor: _doctor,
-            onPush: (direction) {
-              _push(context, direction);
-            },
-            pages: <Widget>[
-              IllnessPage(
-                doctor: entity.partnerEntity,
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-              ),
-              ChatPage(
-                doctor: entity.partnerEntity,
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-              ),
-              VideoCallPage(
-                doctor: entity.partnerEntity,
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-              )
-            ],
-          );
-        } else if (state.section == PanelSection.HEALTH_FILE) {
-          return Panel(
-            doctor: _doctor,
-            onPush: (direction) {
-              _push(context, direction);
-            },
-            pages: <Widget>[
-              InfoPage(
-                doctor: entity.partnerEntity,
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-                picListLabel: Strings.panelDocumentsPicLabel,
-                lastPicsLabel: Strings.panelDocumentsPicListLabel,
-              ),
-              InfoPage(
-                doctor: entity.partnerEntity,
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-                picListLabel: Strings.panelPrescriptionsPicLabel,
-                lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
-              ),
-              InfoPage(
-                doctor: entity.partnerEntity,
-                onPush: (direction) {
-                  _push(context, direction);
-                },
-                picListLabel: Strings.panelTestResultsPicLabel,
-                lastPicsLabel: Strings.panelTestResultsPicListLabel,
-              ),
-            ],
-          );
-        }
-        return Panel(); //TODO
-      },
-    );
+    return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+      return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
+        builder: (context, state) {
+          if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE) {
+            return Panel(
+              onPush: (direction) {
+                _push(context, direction);
+              },
+              pages: <Widget>[
+                IllnessPage(
+                  entity: entity,
+                  onPush: (direction) {
+                    _push(context, direction);
+                  },
+                ),
+                ChatPage(
+                  entity: entity,
+                  onPush: (direction) {
+                    _push(context, direction);
+                  },
+                ),
+                VideoCallPage(
+                  entity: entity,
+                  onPush: (direction) {
+                    _push(context, direction);
+                  },
+                )
+              ],
+            );
+          } else if (state.patientSection == PatientPanelSection.HEALTH_FILE) {
+            return Panel(
+              onPush: (direction) {
+                _push(context, direction);
+              },
+              pages: <Widget>[
+                InfoPage(
+                  entity: entity,
+                  onPush: (direction) {
+                    _push(context, direction);
+                  },
+                  picListLabel: Strings.panelDocumentsPicLabel,
+                  lastPicsLabel: Strings.panelDocumentsPicListLabel,
+                ),
+                InfoPage(
+                  entity: entity,
+                  onPush: (direction) {
+                    _push(context, direction);
+                  },
+                  picListLabel: Strings.panelPrescriptionsPicLabel,
+                  lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
+                ),
+                InfoPage(
+                  entity: entity,
+                  onPush: (direction) {
+                    _push(context, direction);
+                  },
+                  picListLabel: Strings.panelTestResultsPicLabel,
+                  lastPicsLabel: Strings.panelTestResultsPicListLabel,
+                ),
+              ],
+            );
+          }
+          return Panel(); //TODO
+        },
+      );
+    });
   }
 
   Widget _panel(context, {incomplete}) {

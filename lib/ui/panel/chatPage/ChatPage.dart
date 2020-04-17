@@ -2,17 +2,18 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/models/ChatMessage.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import 'DoctorInfo.dart';
+import 'PartnerInfo.dart';
 
 class ChatPage extends StatefulWidget {
-  final DoctorEntity doctor;
+  final Entity entity;
   final ValueChanged<String> onPush;
 
-  ChatPage({Key key, this.doctor, @required this.onPush}) : super(key: key);
+  ChatPage({Key key, this.entity, @required this.onPush}) : super(key: key);
 
   @override
   _ChatPageState createState() {
@@ -69,12 +70,12 @@ class _ChatPageState extends State<ChatPage> {
           boxShadow: <BoxShadow>[BoxShadow(color: Colors.grey, blurRadius: 1)]),
       child: Column(
         children: <Widget>[
-          DoctorInfo(
-            doctor: widget.doctor,
+          PartnerInfo(
+            entity: widget.entity,
             onPush: widget.onPush,
           ),
           _ChatBox(
-            doctor: widget.doctor,
+            entity: widget.entity,
           ),
           _sendBox(),
         ],
@@ -84,9 +85,9 @@ class _ChatPageState extends State<ChatPage> {
 }
 
 class _ChatBox extends StatefulWidget {
-  final DoctorEntity doctor;
+  final Entity entity;
 
-  _ChatBox({Key key, this.doctor}) : super(key: key);
+  _ChatBox({Key key, this.entity}) : super(key: key);
 
   @override
   _ChatBoxState createState() {
@@ -100,25 +101,29 @@ class _ChatBoxState extends State<_ChatBox> {
   @override
   Widget build(BuildContext context) {
     _messages.add(ChatMessage.fromPatient(
-        text: "آخ آخ. یادم رفت. همین الان میفرستم",
-        sentDate: DateTime.now(),
-        doctor: widget.doctor,
-        patient: null));
+      text: "آخ آخ. یادم رفت. همین الان میفرستم",
+      sentDate: DateTime.now(),
+      doctor: widget.entity.doctor,
+      patient: widget.entity.patient,
+    ));
     _messages.add(ChatMessage.fromDoctor(
-        text: "جواب آزمایش‌هاتون رو فرستادین برام؟",
-        sentDate: DateTime.now(),
-        doctor: widget.doctor,
-        patient: null));
+      text: "جواب آزمایش‌هاتون رو فرستادین برام؟",
+      sentDate: DateTime.now(),
+      doctor: widget.entity.doctor,
+      patient: widget.entity.patient,
+    ));
     _messages.add(ChatMessage.fromPatient(
-        text: "سلام. ممنون دکتر. امیدوارم شماهم خوب باشید",
-        sentDate: DateTime.now(),
-        doctor: widget.doctor,
-        patient: null));
+      text: "سلام. ممنون دکتر. امیدوارم شماهم خوب باشید",
+      sentDate: DateTime.now(),
+      doctor: widget.entity.doctor,
+      patient: widget.entity.patient,
+    ));
     _messages.add(ChatMessage.fromDoctor(
-        text: "سلام دوست عزیز. خوب هستی شما؟",
-        sentDate: DateTime.now(),
-        doctor: widget.doctor,
-        patient: null));
+      text: "سلام دوست عزیز. خوب هستی شما؟",
+      sentDate: DateTime.now(),
+      doctor: widget.entity.doctor,
+      patient: widget.entity.patient,
+    ));
 
     var messages = <Widget>[];
     for (var message in _messages) {

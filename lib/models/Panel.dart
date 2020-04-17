@@ -33,26 +33,30 @@ class Panel {
 // TODO: add  List<Visit> visits;
 
   Panel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    status = json['status'];
-    if (json.containsKey('doctor')) doctorId = json['doctor'];
-    if (json.containsKey('patient')) patientId = json['patient'];
-    modified_date =
-        json.containsKey('modified_date') ? json['modified_date'] : null;
-    created_date =
-        json.containsKey('created_date') ? json['created_date'] : null;
-    section = [];
-    var sets = json['panel_image_sets'];
-    List<Picture> pictures;
-    sets.forEach((key, value) {
-      pictures = [];
-      if (value.length != 0)
-        value.forEach((image) => pictures.add(Picture.fromJson(image)));
-      section.add(PanelSection(
-          id: json['panel_image_list_name_id'][key],
-          title: key,
-          pictures: pictures));
-    });
+    try {
+      id = json['id'];
+      status = json['status'];
+      if (json.containsKey('doctor')) doctorId = json['doctor'];
+      if (json.containsKey('patient')) patientId = json['patient'];
+      modified_date =
+      json.containsKey('modified_date') ? json['modified_date'] : null;
+      created_date =
+      json.containsKey('created_date') ? json['created_date'] : null;
+      section = [];
+      if (json.containsKey('panel_image_sets')) {
+        var sets = json['panel_image_sets'];
+        List<Picture> pictures;
+        sets.forEach((key, value) {
+          pictures = [];
+          if (value.length != 0)
+            value.forEach((image) => pictures.add(Picture.fromJson(image)));
+          section.add(PanelSection(
+              id: json['panel_image_list_name_id'][key],
+              title: key,
+              pictures: pictures));
+        });
+      }
+
 //    if (sets['disease_images'].length != 0) {
 //      pictures = sets['disease_images'].forEach((Map image) => Picture.fromJson(image));
 //      PanelSection(id: json['panel_image_list_name_id']['id'])
@@ -65,11 +69,14 @@ class Panel {
 //    if (sets['cognitive_tests'].length != 0)
 //      section.add(Picture.fromJson(json['cognitive_tests']));
 
-    if (json.containsKey('patient_info'))
-      patient = PatientEntity.fromJson(json['patient_info']);
+      if (json.containsKey('patient_info'))
+        patient = PatientEntity.fromJson(json['patient_info']);
 
-    if (json.containsKey('doctor_info'))
-      doctor = DoctorEntity.fromJson(json['doctor_info']);
+      if (json.containsKey('doctor_info'))
+        doctor = DoctorEntity.fromJson(json['doctor_info']);
+    } catch(_) {
+      // TODO
+    }
   }
 }
 
@@ -82,13 +89,21 @@ class PanelSection {
   PanelSection({this.id, this.title, this.description, this.pictures});
 
   PanelSection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    description = json['description'];
-    if (json['images'].length == 0)
-      pictures = [];
-    else {
-      pictures = json['images'].forEach((Map image) => Picture.fromJson(image));
+    try {
+      if (json.containsKey('id'))
+        id = json['id'];
+      if (json.containsKey('title'))
+        title = json['title'];
+      if (json.containsKey('description'))
+        description = json['description'];
+      if (json['images'].length == 0)
+        pictures = [];
+      else {
+        pictures =
+            json['images'].forEach((Map image) => Picture.fromJson(image));
+      }
+    } catch (_) {
+      // TODO
     }
   }
 }

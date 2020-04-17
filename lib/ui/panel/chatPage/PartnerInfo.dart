@@ -1,14 +1,15 @@
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
-class DoctorInfo extends StatelessWidget {
-  final DoctorEntity doctor;
+class PartnerInfo extends StatelessWidget {
+  final Entity entity;
   final ValueChanged<String> onPush;
 
-  DoctorInfo({Key key, this.doctor, @required this.onPush}) : super(key: key);
+  PartnerInfo({Key key, this.entity, @required this.onPush}) : super(key: key);
 
   Widget _isOnline() => Container(
         width: 15,
@@ -39,7 +40,7 @@ class DoctorInfo extends StatelessWidget {
   }
 
   Widget _image(context) => GestureDetector(
-      onTap: ()=>_showDoctorDialogue(context),
+      onTap: () => _showDoctorDialogue(context),
       child: Container(
           width: 80,
           height: 70,
@@ -51,18 +52,20 @@ class DoctorInfo extends StatelessWidget {
                   child: ClipPolygon(
                     sides: 6,
                     rotate: 90,
-                    child: Image.network(doctor.user.avatar),
+                    child: Image.network(entity.partnerEntity.user.avatar),
                   )),
               Align(
                   alignment: Alignment(-.75, 1),
-                  child: (doctor.user.online > 0 ? _isOnline() : Container()))
+                  child: (entity.partnerEntity.user.online > 0
+                      ? _isOnline()
+                      : Container()))
             ],
           )));
 
   Widget _info() => Column(
         children: <Widget>[
           Text(
-            doctor.user.name,
+            entity.partnerEntity.user.name,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w900,
@@ -71,7 +74,7 @@ class DoctorInfo extends StatelessWidget {
             textDirection: TextDirection.rtl,
           ),
           Text(
-            doctor.expert,
+            entity.pExpert,
             style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
@@ -85,7 +88,7 @@ class DoctorInfo extends StatelessWidget {
   Widget _location() => Row(
         children: <Widget>[
           Text(
-            doctor.clinic.clinicName,
+            entity.pClinicName,
             style: TextStyle(
                 color: Colors.grey,
                 fontSize: 12,

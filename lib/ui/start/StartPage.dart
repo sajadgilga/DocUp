@@ -82,8 +82,8 @@ class _StartPageState extends State<StartPage> {
   Future<void> checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("token")) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MainPage()));
+//      Navigator.push(
+//          context, MaterialPageRoute(builder: (context) => MainPage()));
     }
   }
 
@@ -137,7 +137,6 @@ class _StartPageState extends State<StartPage> {
     _controller.add(roleType);
     BlocProvider.of<EntityBloc>(context).add(EntityChangeType(type: roleType));
     setState(() {
-      IColors.changeThemeColor(roleType);
       currentRoleType = roleType;
     });
   }
