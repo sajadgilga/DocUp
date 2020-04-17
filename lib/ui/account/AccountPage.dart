@@ -65,7 +65,7 @@ class _AccountPageState extends State<AccountPage> {
                       ActionButton(
                         color: Colors.grey,
                         title: "تغییر رمز عبور",
-                        callBack: () {},
+                        callBack: () => showNextVersionDialog(context),
                       ),
                     ],
                   ),
@@ -92,7 +92,7 @@ class _AccountPageState extends State<AccountPage> {
                     title: "افزایش اعتبار",
                     icon: Icon(Icons.add),
                     color: IColors.themeColor,
-                    callBack: () {},
+                    callBack: () => showNextVersionDialog(context),
                   ),
                 )
               ],
@@ -117,17 +117,5 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  Widget _profileWidget() {
-    return BlocBuilder<EntityBloc, EntityState>(
-      builder: (context, state) {
-        if (state is EntityLoaded) {
-          if (state.entity.partnerEntity != null) {
-            return Header(child: Text(state.entity.partnerEntity.user.firstName));
-          }
-        }
-        return Container();
-      },
-    );
-  }
 
 }

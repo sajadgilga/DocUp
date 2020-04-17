@@ -11,6 +11,7 @@ import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
+import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -117,23 +118,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             width: 200,
             color: IColors.themeColor,
             title: Strings.physicalReservationLabel,
-            callBack: () => {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(
-                        "منتظر ما باشید",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
-                          textAlign: TextAlign.right,
-                          style: TextStyle(fontSize: 12)),
-                    );
-                  })
-            },
+            callBack: () => showNextVersionDialog(context),
           ),
           SizedBox(height: 10),
           ActionButton(

@@ -20,3 +20,22 @@ bool validatePhoneNumber(String value) {
 void hideKeyboard(context) =>
   FocusScope.of(context).unfocus();
 
+void showNextVersionDialog(context){
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "منتظر ما باشید",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+              textAlign: TextAlign.right,
+              style: TextStyle(fontSize: 12)),
+        );
+      });
+
+}
+
