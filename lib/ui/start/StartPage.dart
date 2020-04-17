@@ -153,10 +153,10 @@ class _StartPageState extends State<StartPage> {
             _authBloc.verify(currentUserName, _verificationController.text);
             break;
           case StartType.REGISTER:
-            if(currentRoleType == RoleType.PATIENT) {
+            if (currentRoleType == RoleType.PATIENT) {
               _patientBloc.update(
                   _fullNameController.text, _passwordController.text);
-            } else if (currentRoleType == RoleType.DOCTOR){
+            } else if (currentRoleType == RoleType.DOCTOR) {
               _doctorBloc.update(
                   _fullNameController.text, _passwordController.text);
             }
@@ -182,32 +182,44 @@ class _StartPageState extends State<StartPage> {
     progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
     progressDialog.style(message: "لطفا منتظر بمانید");
 
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 80),
-              _headerWidget(),
-              SizedBox(height: 20),
-              _optionsWidget(),
-              SizedBox(height: 40),
-              _titleWidget(),
-              SizedBox(height: 5),
-              _messageWidget(),
-              SizedBox(height: 50),
-              _inputFieldsWidget(),
-              SizedBox(height: 10),
-              _timerWidget(),
-              SizedBox(height: 50),
-              _actionWidget(),
-              SizedBox(height: 20),
-              _enterWidget(),
-              SizedBox(height: 20)
-            ],
+    return WillPopScope(
+      onWillPop: () async {
+        if (startType == StartType.LOGIN || startType == StartType.SIGN_IN) {
+          setState(() {
+            startType = StartType.SIGN_UP;
+          });
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 80),
+                _headerWidget(),
+                SizedBox(height: 20),
+                _optionsWidget(),
+                SizedBox(height: 40),
+                _titleWidget(),
+                SizedBox(height: 5),
+                _messageWidget(),
+                SizedBox(height: 50),
+                _inputFieldsWidget(),
+                SizedBox(height: 10),
+                _timerWidget(),
+                SizedBox(height: 50),
+                _actionWidget(),
+                SizedBox(height: 20),
+                _enterWidget(),
+                SizedBox(height: 20)
+              ],
+            ),
           ),
         ),
       ),

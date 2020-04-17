@@ -20,7 +20,7 @@ class DoctorBloc {
 
 
   DoctorBloc() {
-    _doctorController = StreamController<Response<DoctorEntity  >>();
+    _doctorController = StreamController<Response<DoctorEntity>>();
     _repository = DoctorRepository();
   }
 
