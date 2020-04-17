@@ -27,7 +27,7 @@ class NavigatorRoutes {
   static const String root = '/';
   static const String notificationView = '/notification';
   static const String panelMenu = '/panelMenu';
-  static const String account = '/account';
+//  static const String account = '/account';
   static const String searchView = '/searchView';
   static const String uploadPicDialogue = '/uploadPicDialogue';
 }
@@ -66,13 +66,11 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
-          NavigatorRoutes.account: (context) => _account(context),
         };
       case 1:
         return {
           NavigatorRoutes.root: (context) => _empty(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-          NavigatorRoutes.account: (context) => _account(context),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
@@ -81,7 +79,6 @@ class NavigatorView extends StatelessWidget {
         return {
           NavigatorRoutes.root: (context) => _panel(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-          NavigatorRoutes.account: (context) => _account(context),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context),
           NavigatorRoutes.uploadPicDialogue: (context) => UploadSlider(),
@@ -91,14 +88,12 @@ class NavigatorView extends StatelessWidget {
         return {
           NavigatorRoutes.root: (context) => _empty(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-          NavigatorRoutes.account: (context) => _account(context),
 
         };
       case 4:
         return {
-          NavigatorRoutes.root: (context) => _empty(context),
+          NavigatorRoutes.root: (context) => _account(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-          NavigatorRoutes.account: (context) => _account(context),
 
         };
       default:
@@ -108,7 +103,6 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
-          NavigatorRoutes.account: (context) => _account(context),
         };
     }
   }
@@ -135,7 +129,7 @@ class NavigatorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
-      initialRoute: NavigatorRoutes.account,
+      initialRoute: NavigatorRoutes.root,
       observers: <NavigatorObserver>[HeroController()],
       onGenerateRoute: (settings) => _route(settings, context),
     );
