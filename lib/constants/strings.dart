@@ -26,6 +26,7 @@ class Strings {
   static final String docUpIntroHomePart1 = 'داک‌ آپ،' ;
   static final String docUpIntroHomePart2 = 'پل ارتباطی بین پزشک و بیمار';
   static final String medicineReminder = 'یادآوری داروها';
+  static final String doctorTrackingLabel = 'مراجعین من';
   static final String panelMenuLabel = 'پنل کاربری';
 
   static final String panelIDoctorLabel = 'پزشکان من';
@@ -60,12 +61,12 @@ class Strings {
   static final String panelChatLabel = 'چت با پزشک';
   static final String panelVideoCallLabel = 'تماس تصویری';
 
-
-
   static final String physicalReservationLabel = 'رزرو ویزیت حضوری';
   static final String virtualReservationLabel = 'ویزیت مجازی';
 
-
+  static final String patientTrackingVisitPendingLabel = 'درخواست ویزیت';
+  static final String patientTrackingCuringLabel = 'درحال درمان';
+  static final String patientTrackingCuredLabel = 'درمان موفق';
 
   static final String uploadPicTextFieldHint = 'توضیح...';
 

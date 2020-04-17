@@ -35,7 +35,8 @@ class Panel {
   Panel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     status = json['status'];
-    doctorId = json['doctor'];
+    if (json.containsKey('doctor')) doctorId = json['doctor'];
+    if (json.containsKey('patient')) patientId = json['patient'];
     modified_date =
         json.containsKey('modified_date') ? json['modified_date'] : null;
     created_date =

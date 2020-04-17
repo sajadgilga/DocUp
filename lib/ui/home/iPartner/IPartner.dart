@@ -53,10 +53,10 @@ class IPartner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
-      padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+      padding: EdgeInsets.only(left: 5, right: 5, bottom: 10),
       decoration: _IDoctorDecoration(),
       constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width, maxHeight: 140),
+          maxWidth: MediaQuery.of(context).size.width, maxHeight: 150),
       child: Column(
         children: <Widget>[
           _IDoctorLabel(),

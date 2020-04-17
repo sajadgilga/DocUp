@@ -25,18 +25,32 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
       else if (state.entity.type == RoleType.DOCTOR)
         uEntity = await _doctorRepository.get();
       entity.mEntity = uEntity;
-
-      if (entity.type == RoleType.PATIENT) {
-        var panels = (entity.mEntity as PatientEntity).panels;
-        if (panels.length > 0) add(PartnerEntitySet(id: panels[0].doctorId));
-      } else if (state.entity.type == RoleType.DOCTOR) {
-        var panels = (state.entity.mEntity as DoctorEntity).panels;
-        if (panels.length > 0) add(PartnerEntitySet(id: panels[0].patientId));
-      }
-
+      _raiseGetPartnerEntity(entity);
       yield EntityLoaded(entity: entity);
     } catch (e) {
       yield EntityError(entity: entity);
+    }
+  }
+
+  void _raiseGetPartnerEntity(entity) {
+    if (entity.type == RoleType.PATIENT) {
+      var panels = (entity.mEntity as PatientEntity).panels;
+      if (panels.length > 0) {
+        for (var panel in panels) {
+          if (panel.doctorId == null)
+            continue;
+          add(PartnerEntitySet(id: panel.doctorId));
+          break;
+        }
+      }
+    } else if (state.entity.type == RoleType.DOCTOR) {
+      var panels = (state.entity.mEntity as DoctorEntity).panels;
+      if (panels.length > 0) {for (var panel in panels) {
+        if (panel.patientId == null)
+          continue;
+        add(PartnerEntitySet(id: panel.patientId));
+        break;
+      }}
     }
   }
 

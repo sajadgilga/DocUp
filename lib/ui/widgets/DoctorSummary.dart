@@ -29,15 +29,19 @@ class PartnerSummary extends StatelessWidget {
         ),
       ));
 
-  Widget _description() => Column(
+  Widget _description(context) => Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          Text(
-            name,
-            textDirection: TextDirection.rtl,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 5),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * .3),
+              child: Text(
+                name,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              )),
           Text(
             speciality,
             textDirection: TextDirection.rtl,
@@ -69,7 +73,7 @@ class PartnerSummary extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        _description(),
+        _description(context),
         _doctorImage(),
       ],
     );

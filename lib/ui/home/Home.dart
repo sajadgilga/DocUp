@@ -16,13 +16,12 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'TrackingList.dart';
 import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
 
 class Home extends StatefulWidget {
   final ValueChanged<String> onPush;
   final ValueChanged<String> globalOnPush;
-
-//  Patient patient;
 
   Home({Key key, @required this.onPush, this.globalOnPush}) : super(key: key);
 
@@ -73,6 +72,43 @@ class _HomeState extends State<Home> {
         });
   }
 
+  Widget _trackingList() {
+    return TrackingList(
+      all: 104,
+      cured: 23,
+      curing: 35,
+      visitPending: 45,
+    ); //TODO
+  }
+
+  Widget _homeList() {
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    if (entity.type == RoleType.PATIENT) {
+      return _reminderList();
+    } else if (entity.type == RoleType.DOCTOR) {
+      return _trackingList();
+    }
+  }
+
+  Widget _homeListLabel() {
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    if (entity.type == RoleType.PATIENT) {
+      return Text(
+        Strings.medicineReminder,
+        textAlign: TextAlign.center,
+        style:
+        TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+      );
+    } else if (entity.type == RoleType.DOCTOR) {
+      return Text(
+        Strings.doctorTrackingLabel,
+        textAlign: TextAlign.center,
+        style:
+        TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+      );
+    }
+  }
+
   Widget _iPartner() {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
@@ -89,7 +125,9 @@ class _HomeState extends State<Home> {
             );
           }
         }
-        return SizedBox(width: 5,);
+        return SizedBox(
+          width: 5,
+        );
       },
     );
   }
@@ -138,31 +176,17 @@ class _HomeState extends State<Home> {
               SizedBox(
                 height: 30,
               ),
-              Text(
-                Strings.medicineReminder,
-                textAlign: TextAlign.center,
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
+              _homeListLabel(),
+              SizedBox(height: 5),
               SizedBox(
                   width: 20,
-                  height: 20,
+                  height: 3,
                   child: Divider(
                     thickness: 2,
                     color: Colors.white,
                   )),
-              SizedBox(
-                height: 10,
-              ),
-              _reminderList(),
+              _homeList(),
               _iPartner()
-//                  IPartner(
-//                    partner: Doctor(
-//                        3, 'دکتر زهرا شادلو', 'متخصص پوست', 'اقدسیه',
-//                        Image(image: AssetImage(' ')), null),
-//                    onPush: widget.onPush,
-//                    globalOnPush: widget.globalOnPush,
-//                  ),
             ],
           ))
         ],

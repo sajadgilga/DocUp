@@ -8,6 +8,8 @@ abstract class UserEntity {
   User user;
   int id;
   List<Panel> panels;
+
+  UserEntity({this.user, this.id, this.panels});
 }
 
 class Entity {
