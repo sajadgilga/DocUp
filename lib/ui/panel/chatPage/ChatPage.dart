@@ -156,9 +156,14 @@ class _ChatBoxState extends State<_ChatBox> {
 
   @override
   Widget build(BuildContext context) {
-    if (BlocProvider.of<ChatMessageBloc>(context).state is ChatMessageLoaded)
+    var _state = BlocProvider.of<ChatMessageBloc>(context).state;
+    if (_state is ChatMessageLoaded)
       _messages =
           (BlocProvider.of<ChatMessageBloc>(context).state as ChatMessageLoaded)
+              .chatMessages;
+    if (_state is ChatMessageLoading)
+      _messages =
+          (BlocProvider.of<ChatMessageBloc>(context).state as ChatMessageLoading)
               .chatMessages;
 //    _messages.add(ChatMessage.fromPatient(
 //      text: "آخ آخ. یادم رفت. همین الان میفرستم",
