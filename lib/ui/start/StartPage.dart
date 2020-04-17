@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:docup/blocs/AuthBloc.dart';
+import 'package:docup/blocs/DoctorBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
@@ -37,7 +38,8 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   final TimerBloc _timerBloc = TimerBloc(ticker: Ticker());
   final AuthBloc _authBloc = AuthBloc();
-  final PatientBloc _updatePatientBloc = PatientBloc();
+  final PatientBloc _patientBloc = PatientBloc();
+  final DoctorBloc _doctorBloc = DoctorBloc();
 
   StreamController<RoleType> _controller = BehaviorSubject();
   final _usernameController = TextEditingController();
@@ -80,8 +82,8 @@ class _StartPageState extends State<StartPage> {
   Future<void> checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("token")) {
-//      Navigator.push(
-//          context, MaterialPageRoute(builder: (context) => MainPage()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MainPage()));
     }
   }
 
@@ -115,13 +117,19 @@ class _StartPageState extends State<StartPage> {
       }
     });
 
-    _updatePatientBloc.dataStream.listen((data) {
+    _patientBloc.dataStream.listen((data) {
       if (handle(progressDialog, data)) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
     });
 
+    _doctorBloc.doctorStream.listen((data) {
+      if (handle(progressDialog, data)) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MainPage()));
+      }
+    });
     super.initState();
   }
 
@@ -145,8 +153,13 @@ class _StartPageState extends State<StartPage> {
             _authBloc.verify(currentUserName, _verificationController.text);
             break;
           case StartType.REGISTER:
-            _updatePatientBloc.update(
-                _fullNameController.text, _passwordController.text);
+            if(currentRoleType == RoleType.PATIENT) {
+              _patientBloc.update(
+                  _fullNameController.text, _passwordController.text);
+            } else if (currentRoleType == RoleType.DOCTOR){
+              _doctorBloc.update(
+                  _fullNameController.text, _passwordController.text);
+            }
             break;
           case StartType.SIGN_IN:
             _authBloc.signIn(
@@ -209,7 +222,8 @@ class _StartPageState extends State<StartPage> {
     _fullNameController.dispose();
     _passwordController.dispose();
     _authBloc.dispose();
-    _updatePatientBloc.dispose();
+    _patientBloc.dispose();
+    _doctorBloc.dispose();
     super.dispose();
   }
 

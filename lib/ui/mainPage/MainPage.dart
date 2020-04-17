@@ -15,7 +15,6 @@ import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:docup/ui/start/RoleType.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -36,7 +35,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+//  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
 //  final PatientBloc _patientBloc = PatientBloc();
   final PanelBloc _panelBloc = PanelBloc();
@@ -69,26 +68,26 @@ class _MainPageState extends State<MainPage> {
     _entityBloc.add(EntityGet());
     _panelBloc.add(GetMyPanels());
 
-    _firebaseMessaging.getToken().then((String fcmToken) {
-      assert(fcmToken != null);
-      print("FCM " + fcmToken);
-      NotificationRepository().registerDevice(fcmToken);
-    });
+//    _firebaseMessaging.getToken().then((String fcmToken) {
+//      assert(fcmToken != null);
+//      print("FCM " + fcmToken);
+//      NotificationRepository().registerDevice(fcmToken);
+//    });
 
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        await _showNotificationWithDefaultSound(
-            message['notification']['title'], message['notification']['body']);
-      },
+//    _firebaseMessaging.configure(
+//      onMessage: (Map<String, dynamic> message) async {
+//        print("onMessage: $message");
+//        await _showNotificationWithDefaultSound(
+//            message['notification']['title'], message['notification']['body']);
+//      },
 //      onBackgroundMessage: myBackgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
-    );
+//      onLaunch: (Map<String, dynamic> message) async {
+//        print("onLaunch: $message");
+//      },
+//      onResume: (Map<String, dynamic> message) async {
+//        print("onResume: $message");
+//      },
+//    );
 
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('mipmap/ic_launcher');

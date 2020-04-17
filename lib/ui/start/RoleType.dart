@@ -19,16 +19,17 @@ extension RoleTypeExtension on RoleType {
     }
 
     String get asset {
-      switch(this){
-        case RoleType.PATIENT:
-          return Assets.patientLoginIcon;
-        case RoleType.DOCTOR:
-          return Assets.doctorLoginIcon;
-        case RoleType.CLINIC:
-          return Assets.clinicLoginIcon;
-        default:
-          return null;
-      }
+      return Assets.patientLoginIcon;
+//      switch(this){
+//        case RoleType.PATIENT:
+//          return Assets.patientLoginIcon;
+//        case RoleType.DOCTOR:
+//          return Assets.doctorLoginIcon;
+//        case RoleType.CLINIC:
+//          return Assets.clinicLoginIcon;
+//        default:
+//          return null;
+//      }
     }
 
 }
