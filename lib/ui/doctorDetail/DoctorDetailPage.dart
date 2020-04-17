@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/strings.dart';
@@ -11,6 +13,7 @@ import 'package:docup/ui/widgets/DoctorAvatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../constants/colors.dart';
@@ -27,13 +30,30 @@ class DoctorDetailPage extends StatefulWidget {
 
 class _DoctorDetailPageState extends State<DoctorDetailPage> {
   DoctorInfoBloc _bloc;
+
+  BitmapDescriptor pinLocationIcon;
+  Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();
   LatLng defaultPinLocation = LatLng(35.715298, 51.404343);
 
   @override
   void initState() {
     _bloc = DoctorInfoBloc();
+    setCustomMapPin();
     super.initState();
+  }
+
+
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+  }
+
+  void setCustomMapPin() async {
+    final Uint8List markerIcon = await getBytesFromAsset('assets/location.png', 60);
+    pinLocationIcon = BitmapDescriptor.fromBytes(markerIcon);
   }
 
   @override
@@ -68,18 +88,28 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     );
   }
 
-  _doctorInfoWidget(DoctorEntity doctorEntity) => Column(
-        children: <Widget>[
-          SizedBox(height: 50),
-          DoctorAvatar(doctorEntity: doctorEntity),
-          SizedBox(height: 10),
-          DoctorData(doctorEntity: doctorEntity),
-          SizedBox(height: 20),
-          _doctorMapWidget(doctorEntity),
-          SizedBox(height: 20),
-          _doctorActionsWidget(doctorEntity)
-        ],
-      );
+  _doctorInfoWidget(DoctorEntity doctorEntity) {
+    _markers.add(Marker(
+      markerId: MarkerId("defaultMarker"),
+      position: doctorEntity.clinic.latitude != null &&
+              doctorEntity.clinic.longitude != null
+          ? LatLng(doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
+          : defaultPinLocation,
+      icon: pinLocationIcon
+    ));
+    return Column(
+      children: <Widget>[
+        SizedBox(height: 50),
+        DoctorAvatar(doctorEntity: doctorEntity),
+        SizedBox(height: 10),
+        DoctorData(doctorEntity: doctorEntity),
+        SizedBox(height: 20),
+        _doctorMapWidget(doctorEntity),
+        SizedBox(height: 20),
+        _doctorActionsWidget(doctorEntity)
+      ],
+    );
+  }
 
   _doctorActionsWidget(DoctorEntity doctorEntity) => Column(
         children: <Widget>[
@@ -128,8 +158,10 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
         width: MediaQuery.of(context).size.width * 0.8,
         height: 100,
         child: GoogleMap(
+          myLocationEnabled: true,
+          markers: _markers,
           onMapCreated: (controller) {
-//            _controller.complete(controller);
+            _controller.complete(controller);
           },
           initialCameraPosition: CameraPosition(
             target: doctorEntity.clinic.latitude != null &&
