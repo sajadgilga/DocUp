@@ -18,11 +18,13 @@ import 'package:docup/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
 import 'package:docup/ui/mainPage/navigator_destination.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/colors.dart';
 import 'NavigatorView.dart';
 
@@ -35,6 +37,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
 //  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
 //  final PatientBloc _patientBloc = PatientBloc();
@@ -123,6 +126,7 @@ class _MainPageState extends State<MainPage> {
   Future onSelectNotification(String payload) async {
     joinVideoCall(payload);
   }
+
   bool videoCallStarted = false;
 
   Future<void> joinVideoCall(String channelName) async {
@@ -249,7 +253,8 @@ class _MainPageState extends State<MainPage> {
     return {
       NavigatorRoutes.mainPage: (context) => _mainPage(),
       NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
-            doctor: BlocProvider.of<EntityBloc>(context).state.entity.partnerEntity,
+            doctor:
+                BlocProvider.of<EntityBloc>(context).state.entity.partnerEntity,
           )
     };
   }
@@ -276,11 +281,11 @@ class _MainPageState extends State<MainPage> {
     _progressDialogue.style(message: "لطفا منتظر بمانید");
 
     return MultiBlocProvider(
-        providers: [
-          BlocProvider<PanelBloc>.value(value: _panelBloc)
-        ],
-        child: WillPopScope(
-            child: _mainPage(),
+        providers: [BlocProvider<PanelBloc>.value(value: _panelBloc)],
+        child: WillPopScope(child:
+                BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+          return _mainPage();
+        }),
 //            Navigator(
 //              key: MyApp.globalNavigator,
 //              initialRoute: NavigatorRoutes.mainPage,
@@ -293,15 +298,15 @@ class _MainPageState extends State<MainPage> {
 //                MyApp.globalNavigator.currentState.pop();
 //                return false;
 //              }
-              final isFirstRouteInCurrentRoute =
-                  !await _navigatorKeys[_currentIndex].currentState.maybePop();
-              if (isFirstRouteInCurrentRoute) {
-                if (_currentIndex != 0) {
-                  _selectPage(0);
-                  return false;
-                }
-              }
-              return isFirstRouteInCurrentRoute;
-            }));
+          final isFirstRouteInCurrentRoute =
+              !await _navigatorKeys[_currentIndex].currentState.maybePop();
+          if (isFirstRouteInCurrentRoute) {
+            if (_currentIndex != 0) {
+              _selectPage(0);
+              return false;
+            }
+          }
+          return isFirstRouteInCurrentRoute;
+        }));
   }
 }

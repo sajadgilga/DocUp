@@ -23,8 +23,9 @@ class PanelSubItem {
   final String ID;
   final Color color;
   PanelTabState panelTabState;
+  int panelId;
 
-  PanelSubItem(this.text, this.ID, this.color, {this.panelTabState});
+  PanelSubItem(this.text, this.ID, this.color, {this.panelTabState, this.panelId});
 }
 
 class PanelMenuMainItem extends StatelessWidget {
@@ -78,7 +79,7 @@ class PanelMenuMainItem extends StatelessWidget {
       BlocProvider.of<TabSwitchBloc>(context).add(item.panelTabState);
     else
       BlocProvider.of<EntityBloc>(context)
-          .add(PartnerEntitySet(id: int.parse(item.ID)));
+          .add(PartnerEntitySet(id: int.parse(item.ID), panelId: item.panelId));
     if (!isPatient) {
       if (isMyPartners) {
         BlocProvider.of<PanelSectionBloc>(context).add(PanelSectionSelect(

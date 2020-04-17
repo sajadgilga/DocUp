@@ -15,6 +15,7 @@ abstract class UserEntity {
 class Entity {
   UserEntity mEntity;
   UserEntity partnerEntity;
+  int iPanelId;
   RoleType type;
 
   Entity({this.type, this.mEntity, this.partnerEntity});

@@ -8,6 +8,10 @@ class ChatBubble extends StatefulWidget {
   final ChatMessage message;
 
   final bool isHomePageChat;
+  
+  bool get isMe{
+    return message.fromMe;
+  }
 
   ChatBubble({Key key, this.message, this.isHomePageChat = true})
       : super(key: key);
@@ -26,7 +30,7 @@ class _ChatBubbleState extends State<ChatBubble> {
         ]
       : []);
 
-  BorderRadius _borderRadius() => (widget.message.fromPatient
+  BorderRadius _borderRadius() => (widget.isMe
       ? BorderRadius.only(
           bottomLeft: Radius.circular(5), topLeft: Radius.circular(5))
       : BorderRadius.only(
@@ -34,14 +38,14 @@ class _ChatBubbleState extends State<ChatBubble> {
 
   Widget _triangle() => Align(
         alignment:
-            (widget.message.fromPatient ? Alignment(1, 0) : Alignment(-1, 0)),
+            (widget.isMe ? Alignment(1, 0) : Alignment(-1, 0)),
         child: CustomPaint(
           painter:
-              ChatTriangle(widget.message.fromPatient, widget.isHomePageChat),
+              ChatTriangle(widget.isMe, widget.isHomePageChat),
         ),
       );
 
-  EdgeInsets _margin() => (widget.message.fromPatient
+  EdgeInsets _margin() => (widget.isMe
       ? EdgeInsets.only(top: 5, bottom: 5, right: 25, left: 5)
       : EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 25));
 
@@ -49,19 +53,19 @@ class _ChatBubbleState extends State<ChatBubble> {
         constraints: BoxConstraints(maxWidth: width * .7),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            color: (widget.message.fromPatient
+            color: (widget.isMe
                 ? IColors.selfChatBubble
                 : IColors.doctorChatBubble),
             borderRadius: _borderRadius(),
             shape: BoxShape.rectangle,
             boxShadow: _shadow()),
         child: Text(
-          widget.message.text,
+          widget.message.message,
           textAlign: TextAlign.right,
           textDirection: TextDirection.rtl,
           style: TextStyle(
               fontSize: 12,
-              color: (widget.message.fromPatient
+              color: (widget.isMe
                   ? IColors.selfChatText
                   : IColors.doctorChatText)),
         ),
@@ -75,13 +79,13 @@ class _ChatBubbleState extends State<ChatBubble> {
         children: <Widget>[
           _triangle(),
           Container(
-              alignment: (widget.message.fromPatient
+              alignment: (widget.isMe
                   ? Alignment.centerRight
                   : Alignment.centerLeft),
               child: Container(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: (widget.message.fromPatient
+                  crossAxisAlignment: (widget.isMe
                       ? CrossAxisAlignment.start
                       : CrossAxisAlignment.end),
                   children: <Widget>[
@@ -100,11 +104,11 @@ class _ChatBubbleState extends State<ChatBubble> {
       Container(
           padding: EdgeInsets.only(top: 5),
           child: Text(
-            '${widget.message.sentDate.hour}:${widget.message.sentDate.minute}',
+            '${widget.message.createdDate.hour}:${widget.message.createdDate.minute}', //TODO
             style: TextStyle(fontSize: 8),
           )),
     ];
-    if (widget.message.fromPatient) {
+    if (widget.isMe) {
       dateAndStatus.add(Container(
           padding: EdgeInsets.only(left: 5, top: 5),
           child: SvgPicture.asset(
@@ -112,7 +116,7 @@ class _ChatBubbleState extends State<ChatBubble> {
             color: Colors.green,
             width: 10,
             height: 10,
-          )));
+          ))); //TODO
     }
 
     return Container(

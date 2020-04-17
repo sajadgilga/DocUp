@@ -5,20 +5,55 @@ import 'PatientEntity.dart';
 enum MessageState { unsent, sent, delivered, failed }
 
 class ChatMessage {
-  final String text;
+  int id;
+  DateTime createdDate;
+  String modifiedDate;
+  bool enabled;
+  String message;
+  int direction;
+  int type;
+  String file; // TODO
+  bool isRead;
+  int panelId;
+
+  String text;
   MessageState state;
   DateTime sentDate;
-  DoctorEntity doctor;
-  PatientEntity patient;
-  bool fromPatient = true;
+  bool fromMe = true;
+
+  ChatMessage({this.message, this.direction, this.type, this.file, this.fromMe, this.createdDate});
 
   ChatMessage.fromDoctor(
       {this.text,
       this.sentDate,
-      this.doctor,
-      this.patient,
-      this.fromPatient = false});
+//      this.doctor,
+//      this.patient,
+      this.fromMe = false});
 
-  ChatMessage.fromPatient(
-      {this.text, this.sentDate, this.doctor, this.patient});
+  ChatMessage.fromMe({this.text, this.sentDate});
+
+  ChatMessage.fromJson(Map<String, dynamic> json, bool isPatient) {
+    id = json['id'];
+    createdDate = DateTime.parse(json['created_date']);
+    if (json.containsKey('modified_date')) modifiedDate = json['modified_date'];
+    if (json.containsKey('enabled')) enabled = json['enabled'];
+    direction = json['direction'];
+    fromMe =
+        (isPatient && (direction == 0)) || (!isPatient && (direction == 1));
+    message = json['message'];
+    type = json['type'];
+    file = json['file'];
+    isRead = json['is_read'];
+    panelId = json['panel'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['message'] = message;
+    data['direction'] = direction;
+    data['type'] = type;
+    data['file'] = file;
+    return data;
+  }
 }

@@ -56,7 +56,7 @@ class IPartner extends StatelessWidget {
       padding: EdgeInsets.only(left: 5, right: 5, bottom: 10),
       decoration: _IDoctorDecoration(),
       constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width, maxHeight: 150),
+          maxWidth: MediaQuery.of(context).size.width, maxHeight: 160),
       child: Column(
         children: <Widget>[
           _IDoctorLabel(),

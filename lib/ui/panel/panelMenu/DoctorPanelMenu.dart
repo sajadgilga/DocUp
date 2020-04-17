@@ -114,7 +114,7 @@ class DoctorPanelMenu extends StatelessWidget {
             panel.patient.user.name,
             panel.patient.id.toString(),
             getColor(DoctorPanelSection.DOCTOR_INTERFACE,
-                id: panel.patient.id, context: context)));
+                id: panel.patient.id, context: context), panelId: panel.id));
       }
     return partners;
   }

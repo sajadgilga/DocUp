@@ -44,11 +44,11 @@ class _ChatBoxState extends State<ChatBox> {
       ]);
 
   Widget _chatList() {
-    var message = ChatMessage.fromDoctor(
-        text: 'سلام دکتر',
-        sentDate: DateTime.now(),
-        doctor: null,
-        patient: null);
+    var message = ChatMessage(
+      message: 'سلام دکتر',
+      fromMe: false,
+      createdDate:DateTime.now(),
+    );
     return Container(
       child: ListView(
         reverse: true,

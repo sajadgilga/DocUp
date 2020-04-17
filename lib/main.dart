@@ -4,6 +4,7 @@ import 'package:docup/ui/start/StartPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'constants/colors.dart';
 import 'constants/strings.dart';
@@ -18,13 +19,6 @@ class MyApp extends StatelessWidget {
   Widget _startPage = MainPage();
 //  Widget _startPage = StartPage();
 
-  @override
-  void initState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey("token")) {
-//      _startPage = MainPage();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

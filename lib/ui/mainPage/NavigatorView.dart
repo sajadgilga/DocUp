@@ -1,3 +1,4 @@
+import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
@@ -27,6 +28,7 @@ class NavigatorRoutes {
   static const String root = '/';
   static const String notificationView = '/notification';
   static const String panelMenu = '/panelMenu';
+
 //  static const String account = '/account';
   static const String searchView = '/searchView';
   static const String uploadPicDialogue = '/uploadPicDialogue';
@@ -38,6 +40,7 @@ class NavigatorView extends StatelessWidget {
   ValueChanged<String> globalOnPush;
   final TabSwitchBloc _tabSwitchBloc = TabSwitchBloc();
   final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
+  final ChatMessageBloc _chatMessageBloc = ChatMessageBloc();
   final Doctor _doctor = Doctor(
       3,
       "دکتر زهرا شادلو",
@@ -88,13 +91,11 @@ class NavigatorView extends StatelessWidget {
         return {
           NavigatorRoutes.root: (context) => _empty(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-
         };
       case 4:
         return {
           NavigatorRoutes.root: (context) => _account(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-
         };
       default:
         return {
@@ -144,15 +145,14 @@ class NavigatorView extends StatelessWidget {
         },
       );
 
-
   Widget _account(context) => AccountPage(
-    onPush: (direction) {
-      _push(context, direction);
-    },
-    globalOnPush: (direction) {
-      _push(context, direction);
-    },
-  );
+        onPush: (direction) {
+          _push(context, direction);
+        },
+        globalOnPush: (direction) {
+          _push(context, direction);
+        },
+      );
 
   Widget _notifictionPage() => NotificationPage();
 
@@ -234,6 +234,9 @@ class NavigatorView extends StatelessWidget {
           ),
           BlocProvider<PanelSectionBloc>.value(
             value: _panelSectionBloc,
+          ),
+          BlocProvider<ChatMessageBloc>.value(
+            value: _chatMessageBloc,
           )
         ],
         child: BlocBuilder<PanelBloc, PanelState>(builder: (context, state) {
@@ -263,7 +266,7 @@ class NavigatorView extends StatelessWidget {
             ),
             BlocProvider<PanelSectionBloc>.value(
               value: _panelSectionBloc,
-            )
+            ),
           ],
           child: PanelMenu(() {
             _pop(context);
