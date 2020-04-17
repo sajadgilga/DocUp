@@ -1,4 +1,3 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
@@ -10,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 
 class VirtualReservationPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
@@ -67,6 +67,35 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
     );
   }
 
+  void _showDatePicker() {
+    showDialog(
+      context: context,
+      builder: (BuildContext _) {
+        return PersianDateTimePicker(
+          initial: '1399/02/01',
+          type: "date",
+          onSelect: (date) {
+            dateController.text = date;
+          },
+        );
+      },
+    );
+  }
+
+  void _showTimePicker() {
+    showDialog(
+      context: context,
+      builder: (BuildContext _) {
+        return PersianDateTimePicker(
+          initial: '19:50',
+          type: "time",
+          onSelect: (time) {
+            timeController.text = time;
+          },
+        );
+      },
+    );
+  }
   _headerWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,6 +157,9 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
+  TextEditingController timeController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+
   _timeSelectionWidget() => Column(
         children: <Widget>[
           Row(
@@ -165,32 +197,17 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.width * 0.35,
-                child: DateTimeField(
-                  controller: timeTextController,
-                  format: DateFormat("HH:mm"),
-                  onShowPicker: (context, currentValue) async {
-                    final time = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(
-                          currentValue ?? DateTime.now()),
-                    );
-                    return DateTimeField.convert(time);
-                  },
+                child: TextField(
+                  controller: timeController,
+                  onTap: _showTimePicker,
                 ),
               ),
               SizedBox(width: 50),
               Container(
                 width: MediaQuery.of(context).size.width * 0.35,
-                child: DateTimeField(
-                  controller: dateTextController,
-                  format: DateFormat("yyyy-MM-dd"),
-                  onShowPicker: (context, currentValue) {
-                    return showDatePicker(
-                        context: context,
-                        firstDate: DateTime(1900),
-                        initialDate: currentValue ?? DateTime.now(),
-                        lastDate: DateTime(2100));
-                  },
+                child: TextField(
+                  controller: dateController,
+                    onTap: _showDatePicker
                 ),
               ),
             ],
