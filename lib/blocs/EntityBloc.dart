@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
@@ -13,7 +14,7 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
   DoctorRepository _doctorRepository = DoctorRepository();
 
   @override
-  get initialState => EntityLoaded(entity: Entity(type: RoleType.PATIENT));
+  get initialState => EntityLoaded(entity: Entity(type: RoleType.DOCTOR));
 
   Stream<EntityState> _get() async* {
     Entity entity = state.entity;
@@ -26,6 +27,7 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
         uEntity = await _doctorRepository.get();
       entity.mEntity = uEntity;
       _raiseGetPartnerEntity(entity);
+      add(EntityChangeType(type: entity.type));
       yield EntityLoaded(entity: entity);
     } catch (e) {
       yield EntityError(entity: entity);
@@ -73,6 +75,7 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
   Stream<EntityState> _changeType(RoleType type) async* {
     Entity entity = state.entity;
     entity.type = type;
+    IColors.changeThemeColor(type);
     yield EntityLoaded(entity: entity);
   }
 

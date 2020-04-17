@@ -4,42 +4,46 @@ import 'PatientEntity.dart';
 import 'UserEntity.dart';
 
 class DoctorEntity extends UserEntity {
-  int id;
-  User user;
   String councilCode;
   String expert;
   Clinic clinic;
   String clinicNumber;
   String clinicAddress;
   int fee;
-  List<Panel> panels;
 
   DoctorEntity(
-      {this.id,
-      this.user,
+      {
       this.councilCode,
       this.expert,
       this.clinic,
-      this.fee,
-      this.panels});
+      this.fee, user, id, panels}): super(user:user, id: id, panels: panels);
 
   DoctorEntity.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
-    councilCode = json['council_code'];
-    expert = json['expert'];
-    clinic =
+    try {
+      id = json['id'];
+      if (json.containsKey('user'))
+        user = json['user'] != null ? new User.fromJson(json['user']) : null;
+      if (json.containsKey('council_code'))
+        councilCode = json['council_code'];
+      if (json.containsKey('expert'))
+        expert = json['expert'];
+      if (json.containsKey('clinic'))
+        clinic =
         json['clinic'] != null ? new Clinic.fromJson(json['clinic']) : null;
-    fee = json['fee'];
-    if (json.containsKey('clinic_address'))
-      clinicAddress = json['clinic_address'];
-    if (json.containsKey('clinic_number')) clinicNumber = json['clinic_number'];
-    if (!json.containsKey('panels')) return;
-    panels = [];
-    if (json['panels'].length != 0)
-      json['panels'].forEach((panel) {
-        panels.add(Panel.fromJson(panel));
-      });
+      fee = json['fee'];
+      if (json.containsKey('clinic_address'))
+        clinicAddress = json['clinic_address'];
+      if (json.containsKey('clinic_number'))
+        clinicNumber = json['clinic_number'];
+      if (!json.containsKey('panels')) return;
+      panels = [];
+      if (json['panels'].length != 0)
+        json['panels'].forEach((panel) {
+          panels.add(Panel.fromJson(panel));
+        });
+    } catch (_) {
+      // TODO
+    }
   }
 
   Map<String, dynamic> toJson() {

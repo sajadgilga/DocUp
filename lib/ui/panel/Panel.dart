@@ -4,6 +4,7 @@ import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
@@ -14,13 +15,13 @@ import 'package:docup/ui/panel/chatPage/ChatPage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'PanelMenu.dart';
+import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'illnessPage/IllnessPage.dart';
 
 enum PanelTabState { FirstTab, SecondTab, ThirdTab }
 
 class Panel extends StatefulWidget {
-  final Doctor doctor;
+  DoctorEntity doctor;
   final ValueChanged<String> onPush;
   PatientEntity patient;
   List<Widget> pages;
@@ -86,12 +87,12 @@ class _PanelState extends State<Panel> {
   Widget _tabs() {
     return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
       builder: (context, state) {
-        if (state.section == PanelSection.DOCTOR_INTERFACE)
+        if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE)
           return Tabs(
               firstTab: Strings.panelIllnessInfoLabel,
               secondTab: Strings.panelChatLabel,
               thirdTab: Strings.panelVideoCallLabel);
-        else if (state.section == PanelSection.HEALTH_FILE)
+        else if (state.patientSection == PatientPanelSection.HEALTH_FILE)
           return Tabs(
             firstTab: Strings.panelDocumentsPicLabel,
             secondTab: Strings.panelPrescriptionsPicLabel,

@@ -27,13 +27,19 @@ class Strings {
   static final String docUpIntroHomePart2 = 'پل ارتباطی بین پزشک و بیمار';
   static final String medicineReminder = 'یادآوری داروها';
   static final String doctorTrackingLabel = 'مراجعین من';
-  static final String panelMenuLabel = 'پنل کاربری';
+  static final String patientPanelMenuLabel = 'پنل کاربری';
+  static final String doctorPanelMenuLabel = 'مطب مجازی';
 
   static final String panelIDoctorLabel = 'پزشکان من';
+  static final String panelIPatientLabel = 'بیماران در حال درمان';
   static final String panelHealthFileLabel = 'پرونده سلامت';
   static final String panelHealthScheduleLabel = 'تقویم سلامت';
   static final String panelIDoctorEmptyLabel =
       'در حال حاضر با پزشکی ارتباط ندارید';
+
+  static final String doctorPanelRequestsLabel = 'درخواست‌ها';
+  static final String doctorPanelHistoryLabel = 'تاریخچه';
+  static final String doctorPanelHealthEventsLabel = 'رویدادهای سلامت';
 
   static final String panelDocumentSubLabel = 'مدارک';
   static final String panelResultsSubLabel = 'نتایج آزمایش';

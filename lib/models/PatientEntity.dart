@@ -2,26 +2,28 @@ import 'Panel.dart';
 import 'UserEntity.dart';
 
 class PatientEntity extends UserEntity {
-  int id;
-  User user;
   PanelSection documents;
-  List<Panel> panels;
 
-  PatientEntity({this.id, this.user, this.documents, this.panels});
+  PatientEntity({this.documents, user, id, panels}): super(user:user, id: id, panels: panels);
 
   PatientEntity.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
-    if (json.containsKey('documents'))
-      documents = json['documents'] != null
-          ? PanelSection.fromJson(json['documents'])
-          : null;
-    if (!json.containsKey('panels')) return;
-    panels = [];
-    if (json['panels'].length != 0)
-      json['panels'].forEach((panel) {
-        panels.add(Panel.fromJson(panel));
-      });
+    try {
+      id = json['id'];
+      if (json.containsKey('user'))
+        user = json['user'] != null ? User.fromJson(json['user']) : null;
+      if (json.containsKey('documents'))
+        documents = json['documents'] != null
+            ? PanelSection.fromJson(json['documents'])
+            : null;
+      if (!json.containsKey('panels')) return;
+      panels = [];
+      if (json['panels'].length != 0)
+        json['panels'].forEach((panel) {
+          panels.add(Panel.fromJson(panel));
+        });
+    } catch (_) {
+      // TODO
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -61,16 +63,22 @@ class User {
       this.password});
 
   User.fromJson(Map<String, dynamic> json) {
-    username = json['username'];
-    avatar = json['avatar'];
-    firstName = json['first_name'];
-    lastName = json['last_name'];
+    if (json.containsKey('username')) username = json['username'];
+    if (json.containsKey('avatar')) avatar = json['avatar'];
+    if (json.containsKey('first_name'))
+      firstName = json['first_name'];
+    else
+      firstName = '';
+    if (json.containsKey('last_name'))
+      lastName = json['last_name'];
+    else
+      lastName = '';
     name = '$firstName $lastName';
-    email = json['email'];
+    if (json.containsKey('email')) email = json['email'];
     if (json.containsKey('national_id')) nationalId = json['national_id'];
     if (json.containsKey('phone_number')) phoneNumber = json['phone_number'];
     if (json.containsKey('credit')) credit = json['credit'];
-    type = json['type'];
+    if (json.containsKey('type')) type = json['type'];
     if (json.containsKey('password')) password = json['password'];
     if (json.containsKey('online')) online = json['online'];
   }

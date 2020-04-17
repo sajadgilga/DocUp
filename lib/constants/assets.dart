@@ -11,6 +11,8 @@ class Assets {
   static final String doctorLoginIcon = "assets/doctor.svg";
   static final String clinicLoginIcon = "assets/doctor.svg";
   static final String homeBackground = 'assets/backgroundHome.png';
+  static final String doctorAvatar = 'assets/doctorAvatar.svg';
+  static final String calendarCheck = 'assets/calendarCheck.svg';
   static String docUpIcon = docUpPatientIcon;
 
   static void changeIcons(RoleType roleType) {
