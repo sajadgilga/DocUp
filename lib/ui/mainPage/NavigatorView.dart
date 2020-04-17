@@ -5,6 +5,7 @@ import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/ui/account/AccountPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
@@ -26,6 +27,7 @@ class NavigatorRoutes {
   static const String root = '/';
   static const String notificationView = '/notification';
   static const String panelMenu = '/panelMenu';
+  static const String account = '/account';
   static const String searchView = '/searchView';
   static const String uploadPicDialogue = '/uploadPicDialogue';
 }
@@ -64,11 +66,13 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
+          NavigatorRoutes.account: (context) => _account(context),
         };
       case 1:
         return {
           NavigatorRoutes.root: (context) => _panel(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.account: (context) => _account(context),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context),
           NavigatorRoutes.uploadPicDialogue: (context) => UploadSlider(),
@@ -78,6 +82,7 @@ class NavigatorView extends StatelessWidget {
         return {
           NavigatorRoutes.root: (context) => _empty(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.account: (context) => _account(context),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
@@ -86,12 +91,14 @@ class NavigatorView extends StatelessWidget {
         return {
           NavigatorRoutes.root: (context) => _empty(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.account: (context) => _account(context),
 
         };
       case 4:
         return {
           NavigatorRoutes.root: (context) => _empty(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.account: (context) => _account(context),
 
         };
       default:
@@ -101,6 +108,7 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
+          NavigatorRoutes.account: (context) => _account(context),
         };
     }
   }
@@ -127,7 +135,7 @@ class NavigatorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
-      initialRoute: NavigatorRoutes.root,
+      initialRoute: NavigatorRoutes.account,
       observers: <NavigatorObserver>[HeroController()],
       onGenerateRoute: (settings) => _route(settings, context),
     );
@@ -141,6 +149,16 @@ class NavigatorView extends StatelessWidget {
           _push(context, direction);
         },
       );
+
+
+  Widget _account(context) => AccountPage(
+    onPush: (direction) {
+      _push(context, direction);
+    },
+    globalOnPush: (direction) {
+      _push(context, direction);
+    },
+  );
 
   Widget _notifictionPage() => NotificationPage();
 

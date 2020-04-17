@@ -9,7 +9,7 @@ import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
-import 'package:docup/ui/widgets/DoctorAvatar.dart';
+import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +100,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     return Column(
       children: <Widget>[
         SizedBox(height: 50),
-        DoctorAvatar(doctorEntity: doctorEntity),
+        Avatar(avatar: doctorEntity.user.avatar),
         SizedBox(height: 10),
         DoctorData(doctorEntity: doctorEntity),
         SizedBox(height: 20),

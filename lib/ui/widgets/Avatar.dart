@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
-class DoctorAvatar extends StatelessWidget {
-  final DoctorEntity doctorEntity;
+class Avatar extends StatelessWidget {
+  final String avatar;
 
-  const DoctorAvatar({
-    Key key, this.doctorEntity
+  const Avatar({
+    Key key, this.avatar
   }) : super(key: key);
 
   @override
@@ -21,8 +21,8 @@ class DoctorAvatar extends StatelessWidget {
           PolygonBoxShadow(color: Colors.black, elevation: 1.0),
           PolygonBoxShadow(color: Colors.grey, elevation: 5.0)
         ],
-        child: doctorEntity.user.avatar != null
-            ? Image.network(doctorEntity.user.avatar)
+        child: avatar != null
+            ? Image.network(avatar)
             : Image.asset("assets/avatar.png"),
       ),
     );

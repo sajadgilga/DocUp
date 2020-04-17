@@ -3,7 +3,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/DoctorAvatar.dart';
+import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/cupertino.dart';
@@ -120,7 +120,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         children: <Widget>[
           DoctorData(doctorEntity: widget.doctorEntity),
           SizedBox(width: 10),
-          DoctorAvatar(doctorEntity: widget.doctorEntity),
+          Avatar(avatar: widget.doctorEntity.user.avatar),
         ],
       );
 
