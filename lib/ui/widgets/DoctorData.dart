@@ -27,7 +27,7 @@ class DoctorData extends StatelessWidget {
                   style: TextStyle(fontSize: 14, color: Colors.grey)),
               Image.asset("assets/location.png"),
               SizedBox(width: 5),
-              Text("متخصص ${doctorEntity.expert}",
+              Text("${doctorEntity.expert}",
                   style: TextStyle(
                     fontSize: 14,
                   )),

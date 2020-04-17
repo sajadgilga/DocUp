@@ -5,11 +5,12 @@ import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/DoctorAvatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
+import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:intl/intl.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 class VirtualReservationPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
@@ -33,6 +34,11 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
           content: Text('درخواست شما با موفقیت ثبت شد'),
           duration: Duration(seconds: 3),
         ));
+      } else {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text(data.message),
+          duration: Duration(seconds: 3),
+        ));
       }
     });
     super.initState();
@@ -43,16 +49,22 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
       child: Container(
         margin: EdgeInsets.only(top: 50),
         constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+        BoxConstraints(maxWidth: MediaQuery
+            .of(context)
+            .size
+            .width),
         child: Column(children: <Widget>[
           _headerWidget(),
           SizedBox(height: 10),
-          _reservationTypeWidget("نوع مشاوره", ["تصویری", "متنی", "صوتی"]),
+          _reservationTypeWidget("نوع مشاوره", ["متنی", "تصویری"]),
           SizedBox(height: 10),
           _reservationTypeWidget(
               "مدت زمان مشاوره", ["پایه", "تکمیلی", "طولانی"]),
           SizedBox(height: 10),
-          Text("ویزیت مجازی حداکثر ۳۰ دقیقه می‌باشد",
+          Text(
+              "ویزیت مجازی حداکثر ${replaceFarsiNumber(
+                  (typeSelected["مدت زمان مشاوره"] * 30 + 10)
+                      .toString())} دقیقه می‌باشد",
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
           SizedBox(height: 10),
           _priceWidget(),
@@ -62,6 +74,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
           _acceptPolicyWidget(),
           SizedBox(height: 10),
           _submitWidget(),
+          SizedBox(height: 10),
         ]),
       ),
     );
@@ -72,10 +85,11 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
       context: context,
       builder: (BuildContext _) {
         return PersianDateTimePicker(
+          color: IColors.themeColor,
           initial: '1399/02/01',
           type: "date",
           onSelect: (date) {
-            dateController.text = date;
+            dateTextController.text = date;
           },
         );
       },
@@ -87,16 +101,20 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
       context: context,
       builder: (BuildContext _) {
         return PersianDateTimePicker(
+          color: IColors.themeColor,
           initial: '19:50',
           type: "time",
           onSelect: (time) {
-            timeController.text = time;
+            timeTextController.text = time;
+            ;
           },
         );
       },
     );
   }
-  _headerWidget() => Row(
+
+  _headerWidget() =>
+      Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -108,7 +126,8 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
 
   Map<String, int> typeSelected = {"نوع مشاوره": 2, "مدت زمان مشاوره": 2};
 
-  _reservationTypeWidget(String title, List<String> items) => Column(
+  _reservationTypeWidget(String title, List<String> items) =>
+      Column(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -145,22 +164,25 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
-  _priceWidget() => Row(
+  _priceWidget() =>
+      Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text("ریال", style: TextStyle(fontSize: 16)),
           SizedBox(width: 5),
-          Text("۲۰,۰۰۰",
+          Text(
+              replaceFarsiNumber((widget.doctorEntity.fee *
+                  (typeSelected["نوع مشاوره"] + 1) *
+                  (typeSelected["مدت زمان مشاوره"] + 1))
+                  .toString()),
               style: TextStyle(color: IColors.themeColor, fontSize: 18)),
           SizedBox(width: 5),
           Text("قیمت نهایی", style: TextStyle(fontSize: 16))
         ],
       );
 
-  TextEditingController timeController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-
-  _timeSelectionWidget() => Column(
+  _timeSelectionWidget() =>
+      Column(
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -196,19 +218,23 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width * 0.35,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.35,
                 child: TextField(
-                  controller: timeController,
+                  controller: timeTextController,
                   onTap: _showTimePicker,
                 ),
               ),
               SizedBox(width: 50),
               Container(
-                width: MediaQuery.of(context).size.width * 0.35,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.35,
                 child: TextField(
-                  controller: dateController,
-                    onTap: _showDatePicker
-                ),
+                    controller: dateTextController, onTap: _showDatePicker),
               ),
             ],
           )
@@ -217,7 +243,8 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
 
   bool policyChecked = false;
 
-  _acceptPolicyWidget() => Row(
+  _acceptPolicyWidget() =>
+      Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Text(
@@ -237,16 +264,29 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
-  _submitWidget() => ActionButton(
-        color: IColors.themeColor,
+  _submitWidget() =>
+      ActionButton(
+        color: policyChecked ? IColors.themeColor : Colors.grey,
         title: "شروع ویزیت مجازی",
         callBack: () {
-          _bloc.visitRequest(
-              widget.doctorEntity.id,
-              typeSelected["نوع مشاوره"],
-              2,
-              typeSelected["مدت زمان مشاوره"],
-              dateTextController.text + "T" + timeTextController.text + ":00Z");
+          if (policyChecked) {
+            _bloc.visitRequest(
+                widget.doctorEntity.id,
+                typeSelected["نوع مشاوره"],
+                2,
+                typeSelected["مدت زمان مشاوره"],
+                convertToGeorgianDate(dateTextController.text) +
+                    "T" +
+                    timeTextController.text +
+                    ":00Z");
+          }
         },
       );
+
+  String convertToGeorgianDate(String jalaliDate) {
+    var array = jalaliDate.split("/");
+    var georgianDate = Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
+        .toGregorian();
+    return "${georgianDate.year}-${georgianDate.month}-${georgianDate.day}";
+  }
 }
