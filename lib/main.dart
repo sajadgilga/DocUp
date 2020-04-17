@@ -16,8 +16,8 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> globalNavigator =
       GlobalKey<NavigatorState>();
-  Widget _startPage = MainPage();
-//  Widget _startPage = StartPage();
+//  Widget _startPage = MainPage();
+  Widget _startPage = StartPage();
 
 
   @override

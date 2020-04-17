@@ -1,4 +1,3 @@
-
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
@@ -14,14 +13,14 @@ class AccountPage extends StatefulWidget {
   final ValueChanged<String> onPush;
   final ValueChanged<String> globalOnPush;
 
-  AccountPage({Key key, @required this.onPush, this.globalOnPush}) : super(key: key);
+  AccountPage({Key key, @required this.onPush, this.globalOnPush})
+      : super(key: key);
 
   @override
   _AccountPageState createState() => _AccountPageState();
 }
 
 class _AccountPageState extends State<AccountPage> {
-
   @override
   void initState() {
     super.initState();
@@ -29,81 +28,98 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EntityBloc, EntityState>(
-      builder: (context, state) {
-        if (state is EntityLoaded) {
-          if (state.entity.mEntity != null) {
-            var user = state.entity.mEntity.user;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                _docUpIcon(),
-                Center(child: Text("پروفایل من", style: TextStyle(color: IColors.themeColor, fontSize: 30))),
-                SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text("اطلاعات کاربری", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.right),
-                ),
-                Row(
+    return SingleChildScrollView(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        _docUpIcon(),
+        Center(
+            child: Text("پروفایل من",
+                style: TextStyle(color: IColors.themeColor, fontSize: 30))),
+        SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text("اطلاعات کاربری",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.right),
+        ),
+        BlocBuilder<EntityBloc, EntityState>(
+          builder: (context, state) {
+            if (state is EntityLoaded) {
+              if (state.entity.mEntity != null) {
+                var user = state.entity.mEntity.user;
+                return Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        Text("${user.firstName} ${user.lastName}", style: TextStyle(fontSize: 16)),
+                        Text(
+                            "${user.firstName == null ? "" : user.firstName} ${user.lastName == null ? "" : user.lastName}",
+                            style: TextStyle(fontSize: 16)),
                         SizedBox(height: 10),
-                        Text("${replaceFarsiNumber(user.phoneNumber)}", style: TextStyle(fontSize: 16)),
+                        Text("${replaceFarsiNumber(user.phoneNumber)}",
+                            style: TextStyle(fontSize: 16)),
                       ],
                     ),
                     SizedBox(width: 20),
-                    Avatar(avatar:user.avatar),
+                    Avatar(avatar: user.avatar),
                   ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: Row(
-                    children: <Widget>[
-                      ActionButton(
-                        color: Colors.grey,
-                        title: "تغییر رمز عبور",
-                        callBack: () => showNextVersionDialog(context),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text("اعتبار من", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.right),
-                ),
-                Center(
-                  child: Container(
-                    width: 200,
-                    height: 80,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,borderRadius: BorderRadius.all(Radius.circular(20)), color: IColors.darkBlue),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(" ۲۰,۰۰۰ ریال ", textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20), textDirection: TextDirection.rtl,),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Center(
-                  child: ActionButton(
-                    title: "افزایش اعتبار",
-                    icon: Icon(Icons.add),
-                    color: IColors.themeColor,
-                    callBack: () => showNextVersionDialog(context),
-                  ),
-                )
-              ],
-            );
-          }
-        }
-        return Container();
-      },
-    );
+                );
+              } else
+                return Container();
+            } else
+              return Container();
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: Row(
+            children: <Widget>[
+              ActionButton(
+                color: Colors.grey,
+                title: "تغییر رمز عبور",
+                callBack: () => showNextVersionDialog(context),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text("اعتبار من",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.right),
+        ),
+        Center(
+          child: Container(
+            width: 200,
+            height: 80,
+            decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                color: IColors.darkBlue),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                " ۲۰,۰۰۰ ریال ",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 20),
+                textDirection: TextDirection.rtl,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+        Center(
+          child: ActionButton(
+            title: "افزایش اعتبار",
+            icon: Icon(Icons.add),
+            color: IColors.themeColor,
+            callBack: () => showNextVersionDialog(context),
+          ),
+        )
+      ],
+    ));
   }
-
 
   Widget _docUpIcon() {
     return Container(
@@ -116,6 +132,4 @@ class _AccountPageState extends State<AccountPage> {
       alignment: Alignment.centerRight,
     );
   }
-
-
 }

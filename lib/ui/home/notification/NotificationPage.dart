@@ -1,8 +1,12 @@
+import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/models/NewestNotificationResponse.dart';
 import 'package:docup/ui/customPainter/DrawerPainter.dart';
+import 'package:docup/utils/UiUtils.dart';
 
 //import 'package:docup/ui/home/notification/DrawerPainter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -11,25 +15,37 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  Widget _notificationCountCircle() {
-    return Container(
-        alignment: Alignment.centerRight,
-        child: Wrap(children: <Widget>[
-          Container(
-              padding: EdgeInsets.only(left: 5, right: 5),
-              child: Text('۱۵',
-                  style: TextStyle(color: Colors.white, fontSize: 14)),
-              decoration: BoxDecoration(
-                  color: IColors.themeColor,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: IColors.themeColor,
-                        offset: Offset(1, 3),
-                        blurRadius: 10)
-                  ])),
-        ]));
+  NotificationBloc _notificationBloc = NotificationBloc();
+
+  @override
+  void initState() {
+    _notificationBloc.add(GetNewestNotifications());
+    super.initState();
+  }
+
+  Widget _notificationCountCircle(int count) {
+    return Positioned(
+      left: MediaQuery.of(context).size.width * 0.55,
+      top: MediaQuery.of(context).size.height * 0.29,
+      child: Container(
+          alignment: Alignment.centerRight,
+          child: Wrap(children: <Widget>[
+            Container(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: Text(replaceFarsiNumber("$count"),
+                    style: TextStyle(color: Colors.white, fontSize: 14)),
+                decoration: BoxDecoration(
+                    color: IColors.themeColor,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: IColors.themeColor,
+                          offset: Offset(1, 3),
+                          blurRadius: 10)
+                    ])),
+          ])),
+    );
   }
 
   @override
@@ -45,7 +61,6 @@ class _NotificationPageState extends State<NotificationPage> {
           ),
           CustomPaint(
               painter: DrawerPainter(arcStart: 20),
-//              painter: MyPainter(),
               child: Stack(
                 children: <Widget>[
                   Positioned(
@@ -56,15 +71,24 @@ class _NotificationPageState extends State<NotificationPage> {
                       style: TextStyle(fontSize: 24),
                     ),
                   ),
-                  Positioned(
-                      left: MediaQuery.of(context).size.width * 0.55,
-                      top: MediaQuery.of(context).size.height * 0.29,
-                      child: _notificationCountCircle()),
-                  Positioned(
-                    right: MediaQuery.of(context).size.width * 0.15,
-                    top: MediaQuery.of(context).size.height * 0.4,
-                    child: NotificationItem(),
-                  )
+                  BlocBuilder<NotificationBloc, NotificationState>(
+                      builder: (context, state) {
+                    if (state is NotificationsLoaded) {
+                      return _notificationCountCircle(
+                          state.notifications.newestDrugsCounts +
+                              state.notifications.newestEventsCounts);
+                    } else
+                      return _notificationCountCircle(0);
+                  }),
+                  BlocBuilder<NotificationBloc, NotificationState>(
+                      bloc: _notificationBloc,
+                      builder: (context, state) {
+                        if (state is NotificationsLoaded) {
+                          return _notificationsWidget(
+                              context, state.notifications);
+                        } else
+                          return Container();
+                      }),
                 ],
               )),
           Container(
@@ -82,10 +106,37 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 }
 
+_notificationsWidget(context, NewestNotificationResponse notifications) {
+  Column column = Column();
+  for (var event in notifications.newestEvents) {
+    column.children.add(NotificationItem(
+      time: event.time,
+      title: event.title,
+      description: event.description,
+    ));
+    for (var drug in notifications.newestDrugs) {
+      column.children.add(NotificationItem(
+        time: drug.consumingTime,
+        title: drug.drugName,
+      ));
+    }
+    return Positioned(
+      right: MediaQuery.of(context).size.width * 0.15,
+      top: MediaQuery.of(context).size.height * 0.4,
+      child: column,
+    );
+  }
+}
+
 class NotificationItem extends StatelessWidget {
-  const NotificationItem({
-    Key key,
-  }) : super(key: key);
+  final String time;
+  final String title;
+  final String description;
+  final String location;
+
+  const NotificationItem(
+      {Key key, this.time, this.title, this.description, this.location})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +154,7 @@ class NotificationItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: Text(
-                    " ۱۸ آذر | ساعت ۱۸:۰۰",
+                    time == null ? "هم اکنون" : time,
                     textDirection: TextDirection.rtl,
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                   ),
@@ -124,13 +175,13 @@ class NotificationItem extends StatelessWidget {
                         shadowColor: IColors.themeColor),
                     SizedBox(width: 5),
                     Text(
-                      "مراجعه به دکتر",
+                      title == null ? "اعلان جدید" : title,
                       textDirection: TextDirection.rtl,
                       style: TextStyle(color: IColors.themeColor, fontSize: 16),
                     ),
                     SizedBox(width: 10),
                     Text(
-                      "غزل کاظمی، متخصص پوست",
+                      description == null ? "" : description,
                       textDirection: TextDirection.rtl,
                       style: TextStyle(color: IColors.darkGrey),
                     ),
