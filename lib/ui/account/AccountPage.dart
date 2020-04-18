@@ -125,7 +125,7 @@ class _AccountPageState extends State<AccountPage> {
     return Container(
       padding: EdgeInsets.only(top: 20, right: 20),
       child: SvgPicture.asset(
-        'assets/DocUpHome.svg',
+        'assets/docUpHomePatient.svg',
         width: 35,
         height: 35,
       ),

@@ -1,8 +1,8 @@
 import 'package:docup/ui/start/RoleType.dart';
 
 class Assets {
-  static final String docUpPatientIcon = '';
-  static final String docUpDoctorIcon = '';
+  static final String docUpPatientIcon = 'assets/docUpHomePatient.svg';
+  static final String docUpDoctorIcon = 'assets/docUpHomeDoctor.svg';
   static final String docUpClinicIcon = '';
   static final String panelListIcon = 'assets/panelMenu.png';
   static final String searchIcon = 'assets/search.svg';

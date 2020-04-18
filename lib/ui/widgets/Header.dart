@@ -1,3 +1,4 @@
+import 'package:docup/constants/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -10,7 +11,7 @@ class Header extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(top: 20, right: 20),
       child: SvgPicture.asset(
-        'assets/DocUpHome.svg',
+        Assets.docUpIcon,
         width: 35,
         height: 35,
       ),

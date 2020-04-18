@@ -40,7 +40,7 @@ class _ResultListState extends State<ResultList> {
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 60),
-      margin: EdgeInsets.only(top: 50, right: 40),
+      margin: EdgeInsets.only(top: 20, right: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
