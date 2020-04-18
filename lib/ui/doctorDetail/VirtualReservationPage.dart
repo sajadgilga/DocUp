@@ -1,3 +1,4 @@
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
@@ -11,8 +12,10 @@ import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
+import 'package:flutter/material.dart';
 
 class VirtualReservationPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
@@ -36,7 +39,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
           content: Text('درخواست شما با موفقیت ثبت شد'),
           duration: Duration(seconds: 3),
         ));
-      } else {
+      } else  if(data.status == Status.ERROR){
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text(data.message),
           duration: Duration(seconds: 3),
@@ -92,23 +95,6 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
           type: "date",
           onSelect: (date) {
             dateTextController.text = date;
-          },
-        );
-      },
-    );
-  }
-
-  void _showTimePicker() {
-    showDialog(
-      context: context,
-      builder: (BuildContext _) {
-        return PersianDateTimePicker(
-          color: IColors.themeColor,
-          initial: '19:50',
-          type: "time",
-          onSelect: (time) {
-            timeTextController.text = time;
-            ;
           },
         );
       },
@@ -224,9 +210,16 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
                     .of(context)
                     .size
                     .width * 0.35,
-                child: TextField(
+                child: DateTimeField(
                   controller: timeTextController,
-                  onTap: _showTimePicker,
+                  format: DateFormat("HH:mm"),
+                  onShowPicker: (context, currentValue) async {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                    );
+                    return DateTimeField.convert(time);
+                  },
                 ),
               ),
               SizedBox(width: 50),

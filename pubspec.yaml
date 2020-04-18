@@ -48,6 +48,7 @@ dependencies:
   shamsi_date: ^0.7.0
   jaguar_jwt: ^2.1.6
   firebase_messaging: ^6.0.13
+  datetime_picker_formfield: ^1.0.0
 
 
 dev_dependencies:
