@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
@@ -32,19 +34,19 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
 
   @override
   void initState() {
-//    _bloc.visitRequestStream.listen((data) {
-//      if (data.status == Status.COMPLETED) {
-//        Scaffold.of(context).showSnackBar(SnackBar(
-//          content: Text('درخواست شما با موفقیت ثبت شد'),
-//          duration: Duration(seconds: 3),
-//        ));
-//      } else {
-//        Scaffold.of(context).showSnackBar(SnackBar(
-//          content: Text(data.message),
-//          duration: Duration(seconds: 3),
-//        ));
-//      }
-//    });
+    _bloc.responseVisitStream.listen((data) {
+      if (data.status == Status.COMPLETED) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('درخواست شما با موفقیت ثبت شد'),
+          duration: Duration(seconds: 3),
+        ));
+      } else if(data.status == Status.ERROR) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text(data.message),
+          duration: Duration(seconds: 3),
+        ));
+      }
+    });
     super.initState();
   }
 
@@ -81,74 +83,162 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
     );
   }
 
-  _headerWidget(VisitEntity entity) => Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 50),
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: Column(
+  _headerWidget(VisitEntity entity) => Container(
+        margin: EdgeInsets.all(20),
+        child: Column(
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _patientDataWidget(entity),
+                SizedBox(width: 10),
+                Avatar(avatar: widget.patientEntity.user.avatar),
+              ],
+            ),
+            SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                    "درخواست ویزیت مجازی، ${entity.visitType == 0 ? "متنی" : "تصویری"}",
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: IColors.red),
-                    textAlign: TextAlign.center),
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(width: 5),
-                    Text(
-                        "${widget.patientEntity.user.firstName} ${widget.patientEntity.user.lastName}",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                  ],
+                  "توضیحات بیمار : ${entity.patientMessage}",
+                  style: TextStyle(fontSize: 18),
+                  textDirection: TextDirection.rtl,
+                  textAlign: TextAlign.right,
                 ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "زمان :‌ ${normalizeTime(entity.visitTime)}",
-                      style: TextStyle(fontSize: 12, color: IColors.green),
-                      textAlign: TextAlign.end,
-                    ),
-                    SizedBox(width: 10),
-                    Icon(
-                      Icons.check,
-                      color: IColors.green,
-                    )
-                  ],
+                SizedBox(
+                  width: 10,
                 ),
-                SizedBox(height: 50),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      "توضیحات بیمار : ${entity.patientMessage}",
-                      style: TextStyle(fontSize: 18),
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.right,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Icon(Icons.info_outline),
-                  ],
+                Icon(Icons.info_outline),
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  "پرونده سلامت (در صورت ویزیت قبلی)",
+                  textAlign: TextAlign.right,
                 ),
               ],
             ),
-          ),
-          SizedBox(width: 10),
-          Container(
-              margin: EdgeInsets.only(top: 50),
-              child: Avatar(avatar: widget.patientEntity.user.avatar)),
-        ],
+            _picListBox(MediaQuery.of(context).size.width),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                ActionButton(
+                  width: 150,
+                  title: "رد",
+                  icon: Icon(Icons.close),
+                  color: IColors.red,
+                  callBack: () {
+                    _bloc.responseVisit(entity, false);
+                  },
+                ),
+                ActionButton(
+                  width: 150,
+                  title: "تایید",
+                  icon: Icon(Icons.check),
+                  color: IColors.green,
+                  callBack: () {
+                    _bloc.responseVisit(entity, true);
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
       );
+
+  int _calculatePossiblePicCount(width) {
+    return ((width - 50) / 160).toInt();
+  }
+
+  Widget _picListBox(width) {
+    List<Widget> pictures = [];
+    for (int i = 0; i < _calculatePossiblePicCount(width); i++) {
+      pictures.add(Container(
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: 150.0,
+              height: 100.0,
+//        margin: EdgeInsets.only(left: 10, right: 10),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.cover, image: AssetImage('assets/hand1.jpg')),
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                child: Container(
+                  color: Colors.white.withOpacity(.1),
+                ),
+              ),
+            ),
+            Text(
+              'تصویر',
+              style: TextStyle(
+                fontSize: 8,
+                fontWeight: FontWeight.bold,
+                color: IColors.darkGrey,
+              ),
+            )
+          ],
+        ),
+      ));
+    }
+    return Container(
+      margin: EdgeInsets.only(right: 15, top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: pictures,
+      ),
+    );
+  }
+
+  _patientDataWidget(VisitEntity entity) {
+    return Column(
+      children: <Widget>[
+        Text(
+            "درخواست ویزیت مجازی، ${entity.visitType == 0 ? "متنی" : "تصویری"}",
+            style: TextStyle(
+                fontSize: 12, fontWeight: FontWeight.bold, color: IColors.red),
+            textAlign: TextAlign.center),
+        SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(width: 5),
+            Text(
+                "${widget.patientEntity.user.firstName} ${widget.patientEntity.user.lastName}",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "زمان :‌ ${normalizeTime(entity.visitTime)}",
+              style: TextStyle(fontSize: 12, color: IColors.green),
+              textAlign: TextAlign.end,
+            ),
+            SizedBox(width: 10),
+            Icon(
+              Icons.check,
+              color: IColors.green,
+            )
+          ],
+        ),
+      ],
+    );
+  }
 
   normalizeTime(String visitTime) {
     var date = visitTime.split("T")[0].split("-");

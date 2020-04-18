@@ -110,6 +110,7 @@ class ApiProvider {
       case 500:
 
       default:
+        print("${response.statusCode} Error ->>> ${response.body.toString()}");
         throw FetchDataException(
             'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
     }

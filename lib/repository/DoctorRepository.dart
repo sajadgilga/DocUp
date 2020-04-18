@@ -29,6 +29,14 @@ class DoctorRepository {
     return VisitEntity.fromJson(response);
   }
 
+
+  Future<VisitEntity> responseVisit(int patientId, VisitEntity visitEntity) async {
+    final response = await _provider
+        .patch("api/response-visit/" + patientId.toString() + "/",
+    body: visitEntity.toJson());
+    return VisitEntity.fromJson(response);
+  }
+
   Future<VisitEntity> visitRequest(int doctorId, int visitType, int visitMethod,
       int durationPlan, String visitTime) async {
     final response = await _provider.post("api/visits/", body: {
