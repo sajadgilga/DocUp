@@ -113,6 +113,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.6"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.13"
   flushbar:
     dependency: transitive
     description:
@@ -176,7 +183,7 @@ packages:
       name: google_maps_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.25+3"
+    version: "0.5.26"
   http:
     dependency: "direct main"
     description:
@@ -274,7 +281,7 @@ packages:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0+1"
+    version: "1.9.0"
   percent_indicator:
     dependency: "direct main"
     description:
