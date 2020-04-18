@@ -1,4 +1,5 @@
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/start/StartPage.dart';
@@ -18,7 +19,6 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-
   @override
   void initState() {
     checkToken();
@@ -28,11 +28,14 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("token")) {
+      if (!prefs.containsKey('isPatient'))
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => StartPage()));
       bool isPatient = prefs.getBool("isPatient");
       switchRole(isPatient ? RoleType.PATIENT : RoleType.DOCTOR);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => MainPage()));
-    }  else {
+    } else {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => StartPage()));
     }
@@ -49,7 +52,7 @@ class _SplashPageState extends State<SplashPage> {
       body: Container(
         child: Center(
           child: SvgPicture.asset(
-            'assets/DocUpHome.svg',
+            Assets.docUpIcon,
             width: MediaQuery.of(context).size.width * 0.4,
             height: MediaQuery.of(context).size.width * 0.4,
           ),

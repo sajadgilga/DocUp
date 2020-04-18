@@ -7,6 +7,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'ResultList.dart';
 
@@ -35,12 +36,8 @@ class SearchPage extends StatelessWidget {
   }
 
   Widget _docUpIcon() => Container(
-        padding: EdgeInsets.only(top: 10, right: 10),
-        child: Image(
-          image: AssetImage(Assets.docUpIcon),
-          width: 100,
-          height: 100,
-        ),
+        padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
+        child: SvgPicture.asset(Assets.docUpIcon, width: 50),
         alignment: Alignment.centerRight,
       );
 

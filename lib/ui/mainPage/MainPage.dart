@@ -165,7 +165,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   List<BottomNavigationBarItem> _bottomNavigationItems(Entity entity) {
-    if (entity != null)
+    if (entity != null && entity.mEntity != null && entity.avatar != null)
     navigator_destinations[4].img = Image.network(entity.avatar);
     return navigator_destinations
         .map<BottomNavigationBarItem>((Destination destination) {
