@@ -1,5 +1,6 @@
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
+import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
@@ -36,7 +37,7 @@ class SearchPage extends StatelessWidget {
   Widget _docUpIcon() => Container(
         padding: EdgeInsets.only(top: 10, right: 10),
         child: Image(
-          image: AssetImage('assets/DocUpHome.png'),
+          image: AssetImage(Assets.docUpIcon),
           width: 100,
           height: 100,
         ),

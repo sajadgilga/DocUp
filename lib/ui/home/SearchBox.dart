@@ -23,7 +23,8 @@ class SearchBox extends StatelessWidget {
     return (width > 550 ? width * .6 : (width > 400 ? width * .5 : width * .4));
   }
 
-  void _search() {
+  void _search(context) {
+    FocusScope.of(context).unfocus();
     onPush(NavigatorRoutes.searchView, null);
   }
 
@@ -37,6 +38,7 @@ class SearchBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FocusScope.of(context).unfocus();
     return Container(
       width: MediaQuery.of(context).size.width * .85,
       padding: EdgeInsets.only(
@@ -49,11 +51,7 @@ class SearchBox extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(80))),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
           Widget>[
-        GestureDetector(
-            onTap: () {
-              _search();
-            },
-            child: Container(
+            Container(
               constraints: BoxConstraints(),
               child: SizedBox(
                   width: _getSearchBoxWidth(MediaQuery.of(context).size.width),
@@ -64,7 +62,7 @@ class SearchBox extends StatelessWidget {
 //                      _search();
 //                    },
                     onTap: () {
-                      _search();
+                      _search(context);
                     },
                     textAlign: TextAlign.end,
                     textDirection: TextDirection.ltr,
@@ -77,7 +75,7 @@ class SearchBox extends StatelessWidget {
                         focusColor: IColors.themeColor,
                         fillColor: IColors.themeColor),
                   )),
-            )),
+            ),
         Row(
           children: <Widget>[
             _filterText(),

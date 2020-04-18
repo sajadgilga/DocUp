@@ -34,14 +34,16 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
 
   Stream<ChatMessageState> _send(ChatMessageSend event) async* {
     if (state is ChatMessageLoading) {
-      (state as ChatMessageLoading).chatMessages.add(event.msg);
+      var msgs = (state as ChatMessageLoading).chatMessages;
+      msgs.add(event.msg);
       yield ChatMessageLoading(
-          chatMessages: (state as ChatMessageLoading).chatMessages);
+          chatMessages: msgs);
     }
     if (state is ChatMessageLoaded) {
-      (state as ChatMessageLoaded).chatMessages.add(event.msg);
+      var msgs = (state as ChatMessageLoaded).chatMessages;
+      msgs.add(event.msg);
       yield ChatMessageLoaded(
-          chatMessages: (state as ChatMessageLoaded).chatMessages);
+          chatMessages: msgs);
     }
     try {
       await _chatMessageRepository.send(
