@@ -9,6 +9,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/DoctorPanelMenu.dart';
 import 'package:docup/ui/panel/panelMenu/PatientPanelMenu.dart';
@@ -20,8 +21,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PanelMenu extends StatefulWidget {
   final VoidCallback onPop;
+  final ValueChanged<String> onPush;
 
-  PanelMenu(this.onPop);
+  PanelMenu(this.onPop, {@required this.onPush});
 
   @override
   _PanelMenuState createState() {
@@ -67,7 +69,7 @@ class _PanelMenuState extends State<PanelMenu> {
   Widget _panelMenu() {
     return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
       if (state.entity.isPatient) {
-        return PatientPanelMenu();
+        return PatientPanelMenu(widget.onPush);
       } else if (state.entity.isDoctor)
         return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
           builder: (context, panelState) {
@@ -76,12 +78,12 @@ class _PanelMenuState extends State<PanelMenu> {
               _bloc.add(PanelSectionSelect(section: PanelSection.DOCTOR));
 
             if (panelState.section == PanelSection.DOCTOR)
-              return DoctorPanelMenu();
+              return DoctorPanelMenu(widget.onPush);
             else
-              return PatientPanelMenu(isPatient: false,);
+              return PatientPanelMenu(widget.onPush, isPatient: false,);
           },
         );
-      return PatientPanelMenu(); //TODO
+      return PatientPanelMenu(widget.onPush); //TODO
     });
   }
 
@@ -111,7 +113,8 @@ class _PanelMenuState extends State<PanelMenu> {
     );
   }
 
-  void _popMenu() {
-    widget.onPop();
+  void _popMenu() async{
+    widget.onPush(NavigatorRoutes.panel);
+//    widget.onPop();
   }
 }

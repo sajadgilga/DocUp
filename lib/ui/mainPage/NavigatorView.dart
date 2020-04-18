@@ -28,6 +28,7 @@ class NavigatorRoutes {
   static const String root = '/';
   static const String notificationView = '/notification';
   static const String panelMenu = '/panelMenu';
+  static const String panel = '/panel';
 
 //  static const String account = '/account';
   static const String searchView = '/searchView';
@@ -73,15 +74,16 @@ class NavigatorView extends StatelessWidget {
       case 1:
         return {
           NavigatorRoutes.root: (context) => _empty(context),
-          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+//          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
       case 2:
         return {
-          NavigatorRoutes.root: (context) => _panel(context),
+          NavigatorRoutes.root: (context) => _panelMenu(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.panel: (context) => _panel(context),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context),
           NavigatorRoutes.uploadPicDialogue: (context) => UploadSlider(),
@@ -248,7 +250,9 @@ class NavigatorView extends StatelessWidget {
           }
           return PanelMenu(() {
             _pop(context);
-          });
+          }, onPush: (direction) {
+            _push(context, direction);
+          },);
         }));
   }
 
@@ -273,7 +277,9 @@ class NavigatorView extends StatelessWidget {
           ],
           child: PanelMenu(() {
             _pop(context);
-          }));
+          }, onPush: (direction) {
+            _push(context, direction);
+          },));
 
   Widget _empty(context) {
     return Container();

@@ -20,6 +20,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class DoctorPanelMenu extends StatelessWidget {
+  ValueChanged<String> onPush;
+
+  DoctorPanelMenu(this.onPush);
+
   Widget _menu(height, context) => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[_menuLabel(), _menuList(height, context)],
@@ -59,6 +63,7 @@ class DoctorPanelMenu extends StatelessWidget {
   }
 
   Widget _requests(isActive, mPatient, context) => PanelMenuMainItem(
+    onPush,
       subItems: [],
       doctorSection: DoctorPanelSection.REQUESTS,
       label: Strings.doctorPanelRequestsLabel,
@@ -69,6 +74,7 @@ class DoctorPanelMenu extends StatelessWidget {
       asset: Assets.doctorAvatar);
 
   Widget _history(isActive, mPatient, context) => PanelMenuMainItem(
+    onPush,
       subItems: [],
       label: Strings.doctorPanelHistoryLabel,
       isActive: isActive,
@@ -79,6 +85,7 @@ class DoctorPanelMenu extends StatelessWidget {
       icon: Icons.history);
 
   Widget _healthEvents(isActive, mPatient, context) => PanelMenuMainItem(
+    onPush,
       subItems: [PanelSubItem('تقویم', 'schedule', IColors.activePanelMenu)],
       label: Strings.doctorPanelHealthEventsLabel,
       isActive: isActive,
@@ -88,6 +95,7 @@ class DoctorPanelMenu extends StatelessWidget {
       asset: Assets.calendarCheck);
 
   Widget _myPatinets(isActive, partners, context) => PanelMenuMainItem(
+    onPush,
       subItems: partners,
       label: Strings.panelIPatientLabel,
       icon: Icons.person,

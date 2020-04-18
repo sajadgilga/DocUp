@@ -19,9 +19,12 @@ import 'package:docup/ui/customPainter/DrawerPainter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PatientPanelMenu extends StatelessWidget {
+  ValueChanged<String> onPush;
+
   bool isPatient;
 
-  PatientPanelMenu({Key key, this.isPatient = true}) : super(key: key);
+  PatientPanelMenu(this.onPush, {Key key, this.isPatient = true})
+      : super(key: key);
 
   Widget _menu(height, context) => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -62,63 +65,63 @@ class PatientPanelMenu extends StatelessWidget {
   }
 
   Widget _healthCalendar(isActive, mDoctor, context) => PanelMenuMainItem(
-          subItems: [
-            PanelSubItem(
-                Strings.panelReminderSubLabel,
-                'reminders',
-                getColor(PatientPanelSection.HEALTH_CALENDAR,
-                    panelTabState: PanelTabState.FirstTab, context: context),
-                panelTabState: PanelTabState.FirstTab),
-            PanelSubItem(
-                Strings.panelCalendarSubLabel,
-                'calendar',
-                getColor(PatientPanelSection.HEALTH_CALENDAR,
-                    panelTabState: PanelTabState.SecondTab, context: context),
-                panelTabState: PanelTabState.SecondTab),
-            PanelSubItem(
-                Strings.panelEventsSubLabel,
-                'events',
-                getColor(PatientPanelSection.HEALTH_CALENDAR,
-                    panelTabState: PanelTabState.ThirdTab, context: context),
-                panelTabState: PanelTabState.ThirdTab),
-          ],
-          patientSection: PatientPanelSection.HEALTH_CALENDAR,
-          label: Strings.panelHealthScheduleLabel,
-          isActive: isActive,
-          color:
-              getColor(PatientPanelSection.HEALTH_CALENDAR, context: context),
-          subLabel: (mDoctor == null ? null : mDoctor.user.name),
-          icon: Icons.calendar_today);
+      onPush,
+      subItems: [
+        PanelSubItem(
+            Strings.panelReminderSubLabel,
+            'reminders',
+            getColor(PatientPanelSection.HEALTH_CALENDAR,
+                panelTabState: PanelTabState.FirstTab, context: context),
+            panelTabState: PanelTabState.FirstTab),
+        PanelSubItem(
+            Strings.panelCalendarSubLabel,
+            'calendar',
+            getColor(PatientPanelSection.HEALTH_CALENDAR,
+                panelTabState: PanelTabState.SecondTab, context: context),
+            panelTabState: PanelTabState.SecondTab),
+        PanelSubItem(
+            Strings.panelEventsSubLabel,
+            'events',
+            getColor(PatientPanelSection.HEALTH_CALENDAR,
+                panelTabState: PanelTabState.ThirdTab, context: context),
+            panelTabState: PanelTabState.ThirdTab),
+      ],
+      patientSection: PatientPanelSection.HEALTH_CALENDAR,
+      label: Strings.panelHealthScheduleLabel,
+      isActive: isActive,
+      color: getColor(PatientPanelSection.HEALTH_CALENDAR, context: context),
+      subLabel: (mDoctor == null ? null : mDoctor.user.name),
+      icon: Icons.calendar_today);
 
-  Widget _healthFile(isActive, mDoctor, context) => PanelMenuMainItem(
-          subItems: [
-            PanelSubItem(
-                Strings.panelDocumentSubLabel,
-                'documents',
-                getColor(PatientPanelSection.HEALTH_FILE,
-                    panelTabState: PanelTabState.FirstTab, context: context),
-                panelTabState: PanelTabState.FirstTab),
-            PanelSubItem(
-                Strings.panelResultsSubLabel,
-                'results',
-                getColor(PatientPanelSection.HEALTH_FILE,
-                    panelTabState: PanelTabState.SecondTab, context: context),
-                panelTabState: PanelTabState.SecondTab),
-            PanelSubItem(
-                Strings.panelMedicinesSubLabel,
-                'medicines',
-                getColor(PatientPanelSection.HEALTH_FILE,
-                    panelTabState: PanelTabState.ThirdTab, context: context),
-                panelTabState: PanelTabState.ThirdTab),
-          ],
-          label: Strings.panelHealthFileLabel,
-          isActive: isActive,
-          color: getColor(PatientPanelSection.HEALTH_FILE, context: context),
-          subLabel: (mDoctor == null ? null : mDoctor.user.name),
-          patientSection: PatientPanelSection.HEALTH_FILE,
-          icon: Icons.insert_drive_file);
+  Widget _healthFile(isActive, mDoctor, context) => PanelMenuMainItem(onPush,
+      subItems: [
+        PanelSubItem(
+            Strings.panelDocumentSubLabel,
+            'documents',
+            getColor(PatientPanelSection.HEALTH_FILE,
+                panelTabState: PanelTabState.FirstTab, context: context),
+            panelTabState: PanelTabState.FirstTab),
+        PanelSubItem(
+            Strings.panelResultsSubLabel,
+            'results',
+            getColor(PatientPanelSection.HEALTH_FILE,
+                panelTabState: PanelTabState.SecondTab, context: context),
+            panelTabState: PanelTabState.SecondTab),
+        PanelSubItem(
+            Strings.panelMedicinesSubLabel,
+            'medicines',
+            getColor(PatientPanelSection.HEALTH_FILE,
+                panelTabState: PanelTabState.ThirdTab, context: context),
+            panelTabState: PanelTabState.ThirdTab),
+      ],
+      label: Strings.panelHealthFileLabel,
+      isActive: isActive,
+      color: getColor(PatientPanelSection.HEALTH_FILE, context: context),
+      subLabel: (mDoctor == null ? null : mDoctor.user.name),
+      patientSection: PatientPanelSection.HEALTH_FILE,
+      icon: Icons.insert_drive_file);
 
-  Widget _myDoctors(isActive, partners, context) => PanelMenuMainItem(
+  Widget _myDoctors(isActive, partners, context) => PanelMenuMainItem(onPush,
       subItems: partners,
 //              [PanelSubItem('دکتر زهرا شادلو', 'doctor_1'),],
       label: Strings.panelIDoctorLabel,

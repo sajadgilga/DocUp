@@ -9,6 +9,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/PatientPanelMenu.dart';
 import 'package:docup/ui/widgets/Header.dart';
@@ -29,6 +30,7 @@ class PanelSubItem {
 }
 
 class PanelMenuMainItem extends StatelessWidget {
+  ValueChanged<String> onPush;
   final List<PanelSubItem> subItems;
   String label;
   final PatientPanelSection patientSection;
@@ -43,6 +45,7 @@ class PanelMenuMainItem extends StatelessWidget {
   bool isEmpty = false;
 
   PanelMenuMainItem(
+      this.onPush,
       {Key key,
       this.patientSection,
       this.doctorSection,
@@ -91,12 +94,14 @@ class PanelMenuMainItem extends StatelessWidget {
             patientSection: patientSection,
             doctorSection: doctorSection,
             section: PanelSection.DOCTOR));
-        Navigator.of(context).pop();
+//        Navigator.of(context).pop();
+      onPush(NavigatorRoutes.panel);
       }
     } else {
       BlocProvider.of<PanelSectionBloc>(context).add(PanelSectionSelect(
           patientSection: patientSection, doctorSection: doctorSection));
-      Navigator.of(context).pop();
+//      Navigator.of(context).pop();
+      onPush(NavigatorRoutes.panel);
     }
   }
 

@@ -59,7 +59,8 @@ class _PanelState extends State<Panel> {
         children: <Widget>[
           GestureDetector(
               onTap: () {
-                _showPanelMenu();
+                Navigator.of(context).maybePop();
+//                _showPanelMenu();
               },
               child: Container(
                 padding: EdgeInsets.only(top: 15, left: 10, right: 10),
