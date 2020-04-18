@@ -9,8 +9,12 @@ class Medicine {
     id = json['id'];
     drugName = json['drug_name'];
     consumingTime = json['consuming_time'];
-    patient = UserEntity.fromJson(json['patient']);
-    doctor = UserEntity.fromJson(json['doctor']);
+    if (patient != null) {
+      patient = UserEntity.fromJson(json['patient']);
+    }
+    if(doctor != null) {
+      doctor = UserEntity.fromJson(json['doctor']);
+    }
   }
 }
 

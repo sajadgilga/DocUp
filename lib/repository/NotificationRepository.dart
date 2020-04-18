@@ -20,7 +20,7 @@ class NotificationRepository {
   }
   
   Future<NewestNotificationResponse> getNewestNotifications() async {
-    final response = await _provider.get('api/newest-notifications');
+    final response = await _provider.get('api/newest-notifications', utf8Support: true);
     return NewestNotificationResponse.fromJson(response);
   }
 
