@@ -2,6 +2,7 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
+import 'package:docup/ui/start/OnBoardingPage.dart';
 import 'package:docup/ui/start/StartPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _SplashPageState extends State<SplashPage> {
           context, MaterialPageRoute(builder: (context) => MainPage()));
     } else {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => StartPage()));
+          context, MaterialPageRoute(builder: (context) => OnBoardingPage()));
     }
   }
 

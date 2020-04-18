@@ -1,4 +1,5 @@
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/ui/start/OnBoardingPage.dart';
 import 'package:docup/ui/start/SplashPage.dart';
 import 'package:docup/ui/start/StartPage.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
 //  Widget _startPage = MainPage();
 //  Widget _startPage = StartPage();
   Widget _startPage = SplashPage();
+//  Widget _startPage = OnBoardingPage();
 
 
   @override

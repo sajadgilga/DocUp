@@ -49,6 +49,7 @@ dependencies:
   jaguar_jwt: ^2.1.6
   firebase_messaging: ^6.0.13
   datetime_picker_formfield: ^1.0.0
+  introduction_screen: ^1.0.7
 
 
 dev_dependencies:
