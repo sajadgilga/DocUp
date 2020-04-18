@@ -51,7 +51,7 @@ class _StartPageState extends State<StartPage> {
   RoleType currentRoleType = RoleType.PATIENT;
   StartType startType = StartType.SIGN_UP;
   AlertDialog _loadingDialog = getLoadingDialog();
-  BuildContext _loadingContext;
+  bool _loadingEnable;
 
   String currentUserName;
 
@@ -61,17 +61,23 @@ class _StartPageState extends State<StartPage> {
   handle(Response response) {
     switch (response.status) {
       case Status.LOADING:
-        showDialog(context: context, builder: (BuildContext context) {
-          _loadingContext = context;
-          return _loadingDialog;
-        });
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => _loadingDialog);
+        _loadingEnable = true;
         return false;
       case Status.ERROR:
-        Navigator.of(_loadingContext, rootNavigator: true).pop(null);
+        if (_loadingEnable) {
+          Navigator.of(context).pop();
+          _loadingEnable = false;
+        }
         showErrorSnackBar(response.message);
         return false;
       default:
-        Navigator.of(_loadingContext, rootNavigator: true).pop(null);
+        if (_loadingEnable) {
+          Navigator.of(context).pop();
+          _loadingEnable = false;
+        }
         return true;
     }
   }
