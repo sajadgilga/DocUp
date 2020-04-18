@@ -50,24 +50,28 @@ class _StartPageState extends State<StartPage> {
 
   RoleType currentRoleType = RoleType.PATIENT;
   StartType startType = StartType.SIGN_UP;
-  ProgressDialog progressDialog;
+  AlertDialog _loadingDialog = getLoadingDialog();
+  BuildContext _loadingContext;
 
   String currentUserName;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
 
-  handle(ProgressDialog pd, Response response) {
+  handle(Response response) {
     switch (response.status) {
       case Status.LOADING:
-        pd.show();
+        showDialog(context: context, builder: (BuildContext context) {
+          _loadingContext = context;
+          return _loadingDialog;
+        });
         return false;
       case Status.ERROR:
-        pd.hide();
+        Navigator.of(_loadingContext, rootNavigator: true).pop(null);
         showErrorSnackBar(response.message);
         return false;
       default:
-        pd.hide();
+        Navigator.of(_loadingContext, rootNavigator: true).pop(null);
         return true;
     }
   }
@@ -94,7 +98,7 @@ class _StartPageState extends State<StartPage> {
     switchRole(currentRoleType);
     checkToken();
     _authBloc.signUpStream.listen((data) {
-      if (handle(progressDialog, data)) {
+      if (handle(data)) {
         currentUserName = _usernameController.text;
         _usernameController.clear();
         setState(() {
@@ -105,7 +109,7 @@ class _StartPageState extends State<StartPage> {
     });
 
     _authBloc.verifyStream.listen((data) {
-      if (handle(progressDialog, data)) {
+      if (handle(data)) {
         setState(() {
           startType = StartType.REGISTER;
         });
@@ -113,21 +117,21 @@ class _StartPageState extends State<StartPage> {
     });
 
     _authBloc.signInStream.listen((data) {
-      if (handle(progressDialog, data)) {
+      if (handle(data)) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
     });
 
     _patientBloc.dataStream.listen((data) {
-      if (handle(progressDialog, data)) {
+      if (handle(data)) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
     });
 
     _doctorBloc.doctorStream.listen((data) {
-      if (handle(progressDialog, data)) {
+      if (handle(data)) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
@@ -181,9 +185,6 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
-    progressDialog.style(message: "لطفا منتظر بمانید");
-
     return WillPopScope(
       onWillPop: () async {
         if (startType == StartType.LOGIN || startType == StartType.SIGN_IN) {

@@ -17,10 +17,26 @@ bool validatePhoneNumber(String value) {
   return regex.hasMatch(value);
 }
 
-void hideKeyboard(context) =>
-  FocusScope.of(context).unfocus();
+void hideKeyboard(context) => FocusScope.of(context).unfocus();
 
-void showNextVersionDialog(context){
+getLoadingDialog() => AlertDialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Image.asset(
+            "assets/loading.gif",
+            width: 70,
+            height: 70,
+          ),
+          SizedBox(width: 10,),
+          Text("منتظر باشید", style: TextStyle(fontWeight: FontWeight.bold),)
+        ],
+      ),
+    );
+
+void showNextVersionDialog(context) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -28,14 +44,10 @@ void showNextVersionDialog(context){
           title: Text(
             "منتظر ما باشید",
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
-              textAlign: TextAlign.right,
-              style: TextStyle(fontSize: 12)),
+              textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
         );
       });
-
 }
-
