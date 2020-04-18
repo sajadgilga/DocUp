@@ -194,6 +194,7 @@ class NavigatorView extends StatelessWidget {
               },
               pages: <Widget>[
                 InfoPage(
+                  uploadAvailable: entity.isPatient,
                   entity: entity,
                   onPush: (direction) {
                     _push(context, direction);
@@ -202,6 +203,7 @@ class NavigatorView extends StatelessWidget {
                   lastPicsLabel: Strings.panelDocumentsPicListLabel,
                 ),
                 InfoPage(
+                  uploadAvailable: entity.isDoctor,
                   entity: entity,
                   onPush: (direction) {
                     _push(context, direction);
@@ -210,6 +212,7 @@ class NavigatorView extends StatelessWidget {
                   lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
                 ),
                 InfoPage(
+                  uploadAvailable: entity.isPatient,
                   entity: entity,
                   onPush: (direction) {
                     _push(context, direction);

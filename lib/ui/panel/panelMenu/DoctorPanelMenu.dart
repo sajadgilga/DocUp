@@ -79,7 +79,7 @@ class DoctorPanelMenu extends StatelessWidget {
       icon: Icons.history);
 
   Widget _healthEvents(isActive, mPatient, context) => PanelMenuMainItem(
-      subItems: [],
+      subItems: [PanelSubItem('تقویم', 'schedule', IColors.activePanelMenu)],
       label: Strings.doctorPanelHealthEventsLabel,
       isActive: isActive,
       color: getColor(DoctorPanelSection.HEALTH_EVENTS, context: context),

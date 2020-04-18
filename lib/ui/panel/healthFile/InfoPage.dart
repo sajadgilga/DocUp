@@ -16,12 +16,14 @@ class InfoPage extends StatelessWidget {
   final ValueChanged<String> onPush;
   final String picListLabel;
   final String lastPicsLabel;
+  bool uploadAvailable;
 
   InfoPage(
       {Key key,
       this.entity,
       this.picListLabel,
       this.lastPicsLabel,
+        this.uploadAvailable = true,
       @required this.onPush})
       : super(key: key);
 
@@ -36,6 +38,7 @@ class InfoPage extends StatelessWidget {
             onPush: onPush,
           ),
           PicList(
+            uploadAvailable: uploadAvailable,
             picLabel: picListLabel,
             recentLabel: lastPicsLabel,
             asset: SvgPicture.asset(

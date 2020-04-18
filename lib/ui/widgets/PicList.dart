@@ -11,6 +11,7 @@ class PicList extends StatefulWidget {
   final String picLabel;
   final String recentLabel;
   final Widget asset;
+  final bool uploadAvailable;
   final ValueChanged<String> onPush;
 
   PicList(
@@ -18,6 +19,7 @@ class PicList extends StatefulWidget {
       this.picLabel,
       this.recentLabel,
       this.asset,
+      this.uploadAvailable = true,
       @required this.onPush})
       : super(key: key);
 
@@ -43,41 +45,46 @@ class _PicListState extends State<PicList> {
   }
 
   Widget _uploadBoxLabel() => Container(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                widget.asset,
-                Text(
-                  Strings.illnessInfoPicUploadLabel,
-                  style: TextStyle(
-                      fontSize: 8,
-                      color: IColors.themeColor,
-                      fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                )
-              ],
-            ));
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          widget.asset,
+          Text(
+            Strings.illnessInfoPicUploadLabel,
+            style: TextStyle(
+                fontSize: 8,
+                color: IColors.themeColor,
+                fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          )
+        ],
+      ));
 
-  Widget _uploadBox() => GestureDetector(
-      child: DashedContainer(
-        child: Container(
-          width: 130,
-          height: 130,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          )),
-          child: _uploadBoxLabel(),
+  Widget _uploadBox() {
+    if (widget.uploadAvailable)
+      return GestureDetector(
+        child: DashedContainer(
+          child: Container(
+            width: 130,
+            height: 130,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            )),
+            child: _uploadBoxLabel(),
+          ),
+          dashColor: IColors.themeColor,
+          borderRadius: 10.0,
+          dashedLength: 10,
+          blankLength: 10,
+          strokeWidth: 2.5,
         ),
-        dashColor: IColors.themeColor,
-        borderRadius: 10.0,
-        dashedLength: 10,
-        blankLength: 10,
-        strokeWidth: 2.5,
-      ),
-    onTap: _showUploadDialogue,
-  );
+        onTap: _showUploadDialogue,
+      );
+    else
+      return Container();
+  }
 
   Widget _picListBox(width) {
     List<Widget> pictures = [];

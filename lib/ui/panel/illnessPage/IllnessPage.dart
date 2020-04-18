@@ -38,6 +38,7 @@ class IllnessPage extends StatelessWidget {
             visitTimes: times,
           ),
           PicList(
+            uploadAvailable: entity.isPatient,
             picLabel: Strings.illnessInfoPicListLabel,
             recentLabel: Strings.illnessInfoLastPicsLabel,
             asset: SvgPicture.asset(
