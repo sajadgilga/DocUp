@@ -14,7 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IPartnerBody extends StatelessWidget {
   final UserEntity partner;
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
   final ValueChanged<String> globalOnPush;
   final Color color;
 
@@ -27,7 +27,8 @@ class IPartnerBody extends StatelessWidget {
       : super(key: key);
 
   void _showDoctorDialogue() {
-    globalOnPush(NavigatorRoutes.doctorDialogue);
+//    globalOnPush(NavigatorRoutes.doctorDialogue);
+    onPush(NavigatorRoutes.doctorDialogue, null);
   }
 
   String _getSubHeader(context) {

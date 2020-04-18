@@ -1,17 +1,31 @@
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'ResultList.dart';
 
 class SearchPage extends StatelessWidget {
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
   TextEditingController _controller = TextEditingController();
+//  SearchBloc searchBloc = SearchBloc();
 
   SearchPage({@required this.onPush});
 
-  void _search() {}
+  void _search(context) {
+    var _state = BlocProvider.of<EntityBloc>(context).state;
+    var searchBloc = BlocProvider.of<SearchBloc>(context);
+    if (_state.entity.isDoctor)
+      searchBloc.add(SearchPatient(text: _controller.text));
+    else if (_state.entity.isPatient)
+      searchBloc.add(SearchDoctor(text: _controller.text));
+
+    FocusScope.of(context).unfocus();
+  }
 
   @override
   void dispose() {
@@ -31,7 +45,7 @@ class SearchPage extends StatelessWidget {
 
   Widget _header() => _docUpIcon();
 
-  Widget _searchBox(width) => Container(
+  Widget _searchBox(width, context) => Container(
         margin: EdgeInsets.only(right: 40, left: 40),
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
         decoration: BoxDecoration(
@@ -40,7 +54,7 @@ class SearchPage extends StatelessWidget {
         child: TextField(
           controller: _controller,
           onSubmitted: (text) {
-            _search();
+            _search(context);
           },
           textAlign: TextAlign.end,
           textDirection: TextDirection.ltr,
@@ -55,6 +69,27 @@ class SearchPage extends StatelessWidget {
         ),
       );
 
+  Widget _resultList() {
+    return BlocBuilder<SearchBloc, SearchState>(
+          builder: (context, state) {
+            if (state is SearchLoaded) {
+              return ResultList(
+                onPush: onPush,
+                isDoctor: state.result.isDoctor,
+                results: (state.result.isDoctor
+                    ? state.result.doctor_results
+                    : state.result.patient_results),
+              );
+            } else if (state is SearchError)
+              return Container(
+                child: Text('error!'),
+              );
+            return
+              Container();
+          },
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
 //    _controller.addListener((){print(_controller.text); });
@@ -64,12 +99,8 @@ class SearchPage extends StatelessWidget {
       child: Column(
         children: <Widget>[
           _header(),
-          _searchBox(MediaQuery.of(context).size.width),
-          Expanded(
-              flex: 2,
-              child: ResultList(
-                onPush: onPush,
-              ))
+          _searchBox(MediaQuery.of(context).size.width, context),
+          Expanded(flex: 2, child: _resultList())
         ],
       ),
     );

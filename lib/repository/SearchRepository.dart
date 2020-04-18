@@ -1,0 +1,18 @@
+import 'package:docup/models/SearchResult.dart';
+import 'package:docup/networking/ApiProvider.dart';
+
+class SearchRepository {
+  final ApiProvider _provider = ApiProvider();
+
+  Future<SearchResult> searchDoctor(searchParam) async {
+    final response =
+        await _provider.get('api/search/doctors?query=$searchParam');
+    return SearchResult.fromJson(response, true);
+  }
+
+  Future<SearchResult> searchPatient(searchParam) async {
+    final response =
+        await _provider.get('api/search/patients-list?query=$searchParam');
+    return SearchResult.fromJson(response, false);
+  }
+}

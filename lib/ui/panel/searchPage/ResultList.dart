@@ -1,48 +1,41 @@
+import 'dart:convert';
+
 import 'package:docup/models/Doctor.dart';
+import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
 class ResultList extends StatefulWidget {
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
+  List<UserEntity> results;
+  bool isDoctor;
 
-  ResultList({this.onPush});
+  ResultList({this.onPush, @required this.results, this.isDoctor});
 
   @override
   _ResultListState createState() => _ResultListState();
 }
 
 class _ResultListState extends State<ResultList> {
-  static Doctor _doctor1 = Doctor(
-      3,
-      "دکتر زهرا شادلو",
-      "متخصص پوست",
-      "اقدسیه",
-      Image(
-        image: AssetImage('assets/avatar.png'),
-      ),
-      []);
-  static Doctor _doctor2 = Doctor(
-      4,
-      "دکتر عارفه اسدی",
-      "متخصص پوست",
-      "اقدسیه",
-      Image(
-        image: AssetImage('assets/doctor1.jpg'),
-      ),
-      []);
-
-  List<Doctor> _results = [_doctor1, _doctor2];
 
   @override
   Widget build(BuildContext context) {
-    List<_SearchResultItem> results = [];
+    List<Widget> results = [];
 
-    for (var result in _results) {
-      results.add(_SearchResultItem(
-        onPush: widget.onPush,
-        doctor: result,
-      ));
+    for (var result in widget.results) {
+      if (widget.isDoctor)
+        results.add(_SearchResultDoctorItem(
+          onPush: widget.onPush,
+          entity: result,
+        ));
+      else if (!widget.isDoctor)
+        results.add(_SearchResultPatientItem(
+          onPush: widget.onPush,
+          entity: result,
+        ));
     }
     return Container(
       constraints:
@@ -74,60 +67,146 @@ class _ResultListState extends State<ResultList> {
   }
 }
 
-class _SearchResultItem extends StatelessWidget {
-  final Doctor doctor;
-  final ValueChanged<String> onPush;
+class _SearchResultDoctorItem extends StatelessWidget {
+  final DoctorEntity entity;
+  final Function(String, UserEntity) onPush;
 
-  _SearchResultItem({Key key, this.doctor, this.onPush}) : super(key: key);
+  _SearchResultDoctorItem({Key key, this.entity, this.onPush})
+      : super(key: key);
 
   void _showDoctorDialogue(context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              "منتظر ما باشید",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
-                textAlign: TextAlign.right,
-                style: TextStyle(fontSize: 12)),
-          );
-        });
-//    onPush(NavigatorRoutes.doctorDialogue);
+//    showDialog(
+//        context: context,
+//        builder: (BuildContext context) {
+//          return AlertDialog(
+//            title: Text(
+//              "منتظر ما باشید",
+//              textAlign: TextAlign.center,
+//              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+//            ),
+//            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+//                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+//          );
+//        });
+    onPush(NavigatorRoutes.doctorDialogue, entity);
   }
 
   Widget _image(context) => GestureDetector(
-      onTap: ()=>_showDoctorDialogue(context),
+      onTap: () => _showDoctorDialogue(context),
       child: Container(
           child: Container(
               width: 70,
               child: ClipPolygon(
                 sides: 6,
                 rotate: 90,
-                child: doctor.image,
+                child: Image.network(entity.user.avatar),
               ))));
 
-  Widget _info() => Container(
-        margin: EdgeInsets.only(right: 20),
-        child: Column(
-          children: <Widget>[
-            Text(
-              doctor.name,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
-              textAlign: TextAlign.right,
-            ),
-            Text(
-              doctor.speciality,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
-              textAlign: TextAlign.right,
-            ),
-          ],
+  Widget _info() {
+    String utfName;
+    String utfExpert;
+    try {
+      utfName = utf8.decode(entity.user.name
+          .toString()
+          .codeUnits);
+      utfExpert = utf8.decode(entity.expert
+          .toString()
+          .codeUnits);
+    } catch (_) {
+      utfName = entity.user.name;
+      utfExpert = entity.expert;
+    }
+    return Container(
+      margin: EdgeInsets.only(right: 20),
+      child: Column(
+        children: <Widget>[
+          Text(
+            utfName,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
+            textAlign: TextAlign.right,
+          ),
+          Text(
+            utfExpert,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+            textAlign: TextAlign.right,
+          ),
+        ],
+      ),
+    );
+  }
+    @override
+    Widget build(BuildContext context) {
+      return Container(
+        margin: EdgeInsets.only(top: 10, bottom: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[_info(), _image(context)],
         ),
       );
+    }
+  }
 
+
+class _SearchResultPatientItem extends StatelessWidget {
+  final PatientEntity entity;
+  final Function(String, UserEntity) onPush;
+
+  _SearchResultPatientItem({Key key, this.entity, this.onPush})
+      : super(key: key);
+
+  void _showDoctorDialogue(context) {
+//    showDialog(
+//        context: context,
+//        builder: (BuildContext context) {
+//          return AlertDialog(
+//            title: Text(
+//              "منتظر ما باشید",
+//              textAlign: TextAlign.center,
+//              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+//            ),
+//            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+//                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+//          );
+//        });
+    onPush(NavigatorRoutes.doctorDialogue, entity);
+  }
+
+  Widget _image(context) => GestureDetector(
+      onTap: () => _showDoctorDialogue(context),
+      child: Container(
+          child: Container(
+              width: 70,
+              child: ClipPolygon(
+                sides: 6,
+                rotate: 90,
+                child: Image.network(entity.user.avatar),
+              ))));
+
+  Widget _info() {
+    String utfName;
+    try {
+      utfName= utf8.decode(entity.user.name.toString().codeUnits);
+    } catch (_) {
+      utfName = entity.user.name;
+    }
+    return Container(
+      margin: EdgeInsets.only(right: 20),
+      child: Column(
+        children: <Widget>[
+          Text(
+            utfName,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
+            textAlign: TextAlign.right,
+          ),
+          Text(
+            'درخواست ویزیت', //TODO
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+            textAlign: TextAlign.right,
+          ),
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Container(

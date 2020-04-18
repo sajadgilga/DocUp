@@ -6,6 +6,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/widgets/Header.dart';
@@ -22,7 +23,7 @@ enum PanelTabState { FirstTab, SecondTab, ThirdTab }
 
 class Panel extends StatefulWidget {
   DoctorEntity doctor;
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
   PatientEntity patient;
   List<Widget> pages;
 
@@ -47,11 +48,11 @@ class _PanelState extends State<Panel> {
       };
 
   void _showPanelMenu() {
-    widget.onPush(NavigatorRoutes.panelMenu);
+    widget.onPush(NavigatorRoutes.panelMenu, null);
   }
 
   void _showSearchPage() {
-    widget.onPush(NavigatorRoutes.searchView);
+    widget.onPush(NavigatorRoutes.searchView, null);
   }
 
   Widget _header() => Header(

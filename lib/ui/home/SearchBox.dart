@@ -1,13 +1,17 @@
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../constants/strings.dart';
 import '../../constants/colors.dart';
 
 class SearchBox extends StatelessWidget {
-  ValueChanged<String> onPush;
+  Function(String, UserEntity) onPush;
   TextEditingController _controller;
+  bool isPatient;
 
-  SearchBox({this.onPush});
+  SearchBox({this.onPush, @required this.isPatient = true});
 
   @override
   void dispose() {
@@ -20,7 +24,15 @@ class SearchBox extends StatelessWidget {
   }
 
   void _search() {
-    onPush(NavigatorRoutes.searchView);
+    onPush(NavigatorRoutes.searchView, null);
+  }
+
+  Widget _filterText() {
+    return Text((isPatient ? 'تخصص' : 'درحال درمان'),
+        style: TextStyle(
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+            color: IColors.themeColor));
   }
 
   @override
@@ -35,10 +47,13 @@ class SearchBox extends StatelessWidget {
       decoration: BoxDecoration(
           color: Color.fromRGBO(247, 247, 247, .9),
           borderRadius: BorderRadius.all(Radius.circular(80))),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
+          Widget>[
+        GestureDetector(
+            onTap: () {
+              _search();
+            },
+            child: Container(
               constraints: BoxConstraints(),
               child: SizedBox(
                   width: _getSearchBoxWidth(MediaQuery.of(context).size.width),
@@ -59,21 +74,20 @@ class SearchBox extends StatelessWidget {
                         focusColor: IColors.themeColor,
                         fillColor: IColors.themeColor),
                   )),
+            )),
+        Row(
+          children: <Widget>[
+            _filterText(),
+            Container(
+              child: Icon(
+                Icons.filter_list,
+                size: 20,
+              ),
+              margin: EdgeInsets.only(left: 5),
             ),
-            Row(
-              children: <Widget>[
-                Text('تخصص',
-                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold)),
-                Container(
-                  child: Icon(
-                    Icons.filter_list,
-                    size: 20,
-                  ),
-                  margin: EdgeInsets.only(left: 5),
-                ),
-              ],
-            )
-          ]),
+          ],
+        )
+      ]),
 //      ),child: Row(
 //        mainAxisAlignment: MainAxisAlignment.center,
 //        children: <Widget>[

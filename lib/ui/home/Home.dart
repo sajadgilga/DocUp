@@ -3,6 +3,7 @@ import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ import 'TrackingList.dart';
 import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
 
 class Home extends StatefulWidget {
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
   final ValueChanged<String> globalOnPush;
 
   Home({Key key, @required this.onPush, this.globalOnPush}) : super(key: key);
@@ -41,23 +42,24 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  Widget _intro(double width) => IgnorePointer(
+  Widget _intro(double width) =>
+      IgnorePointer(
           child: ListView(
-        padding: EdgeInsets.only(right: width * .075),
-        shrinkWrap: true,
-        children: <Widget>[
-          Text(
-            Strings.docUpIntroHomePart1,
-            textDirection: TextDirection.rtl,
-            style: TextStyle(fontSize: 22),
-          ),
-          Text(
-            Strings.docUpIntroHomePart2,
-            textDirection: TextDirection.rtl,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
-          ),
-        ],
-      ));
+            padding: EdgeInsets.only(right: width * .075),
+            shrinkWrap: true,
+            children: <Widget>[
+              Text(
+                Strings.docUpIntroHomePart1,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(fontSize: 22),
+              ),
+              Text(
+                Strings.docUpIntroHomePart2,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+              ),
+            ],
+          ));
 
   Widget _reminderList() {
     return BlocBuilder<NotificationBloc, NotificationState>(
@@ -82,7 +84,10 @@ class _HomeState extends State<Home> {
   }
 
   Widget _homeList() {
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    var entity = BlocProvider
+        .of<EntityBloc>(context)
+        .state
+        .entity;
     if (entity.isPatient) {
       return _reminderList();
     } else if (entity.isDoctor) {
@@ -91,7 +96,10 @@ class _HomeState extends State<Home> {
   }
 
   Widget _homeListLabel() {
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    var entity = BlocProvider
+        .of<EntityBloc>(context)
+        .state
+        .entity;
     if (entity.isPatient) {
       return Text(
         Strings.medicineReminder,
@@ -139,56 +147,67 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           Image(
             image: AssetImage(Assets.homeBackground),
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             fit: BoxFit.fitWidth,
           ),
           Container(
               child: Column(
-            children: <Widget>[
-              Header(
-                  child: GestureDetector(
-                      onTap: () {
-                        widget.onPush(NavigatorRoutes.notificationView);
-                      },
-                      child: Row(children: <Widget>[
-                        BlocBuilder<NotificationBloc, NotificationState>(
-                            bloc: _notificationBloc,
-                            builder: (context, state) {
-                              if (state is NotificationsLoaded)
-                                return HomeNotification(
-                                    newNotificationCount:
+                children: <Widget>[
+                  Header(
+                      child: GestureDetector(
+                          onTap: () {
+                            widget.onPush(NavigatorRoutes.notificationView, null);
+                          },
+                          child: Row(children: <Widget>[
+                            BlocBuilder<NotificationBloc, NotificationState>(
+                                bloc: _notificationBloc,
+                                builder: (context, state) {
+                                  if (state is NotificationsLoaded)
+                                    return HomeNotification(
+                                        newNotificationCount:
                                         state.notifications.newestEventsCounts);
-                              else
-                                return HomeNotification(
-                                  newNotificationCount: 0,
-                                );
-                            }),
-                        OnCallMedicalHeaderIcon()
-                      ]))),
-              Container(
-                height: 10,
-              ),
-              _intro(MediaQuery.of(context).size.width),
-              Container(
-                height: 20,
-              ),
-              SearchBox(onPush: widget.onPush),
-              SizedBox(
-                height: 30,
-              ),
-              _homeListLabel(),
-              SizedBox(height: 5),
-              SizedBox(
-                  width: 20,
-                  height: 3,
-                  child: Divider(
-                    thickness: 2,
-                    color: Colors.white,
-                  )),
-              _homeList(),
-              _iPartner()
-            ],
-          ))
+                                  else
+                                    return HomeNotification(
+                                      newNotificationCount: 0,
+                                    );
+                                }),
+                            OnCallMedicalHeaderIcon()
+                          ]))),
+                  Container(
+                    height: 10,
+                  ),
+                  _intro(MediaQuery
+                      .of(context)
+                      .size
+                      .width),
+                  Container(
+                    height: 20,
+                  ),
+                  SearchBox(onPush: widget.onPush, isPatient: BlocProvider
+                      .of<EntityBloc>(context)
+                      .state
+                      .entity
+                      .isPatient
+                    ,),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  _homeListLabel(),
+                  SizedBox(height: 5),
+                  SizedBox(
+                      width: 20,
+                      height: 3,
+                      child: Divider(
+                        thickness: 2,
+                        color: Colors.white,
+                      )),
+                  _homeList(),
+                  _iPartner()
+                ],
+              ))
         ],
       ),
     );

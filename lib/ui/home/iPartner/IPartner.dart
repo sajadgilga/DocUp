@@ -8,7 +8,7 @@ import 'package:docup/ui/widgets/DoctorSummary.dart';
 
 class IPartner extends StatelessWidget {
   final UserEntity partner;
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
   final ValueChanged<String> globalOnPush;
   final Color color;
   final String label;
