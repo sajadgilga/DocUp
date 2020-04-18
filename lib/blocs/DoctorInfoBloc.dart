@@ -9,6 +9,7 @@ class DoctorInfoBloc {
   DoctorRepository _repository;
   StreamController _getDoctorController;
   StreamController _visitRequestController;
+  StreamController _getVisitController;
 
   StreamSink<Response<DoctorEntity>> get doctorInfoSink =>
       _getDoctorController.sink;
@@ -16,15 +17,23 @@ class DoctorInfoBloc {
   StreamSink<Response<VisitEntity>> get visitRequestSink =>
       _visitRequestController.sink;
 
+  StreamSink<Response<VisitEntity>> get getVisitSink =>
+      _getVisitController.sink;
+
   Stream<Response<DoctorEntity>> get doctorInfoStream =>
       _getDoctorController.stream;
 
   Stream<Response<VisitEntity>> get visitRequestStream =>
       _visitRequestController.stream;
 
+
+  Stream<Response<VisitEntity>> get getVisitStream =>
+      _visitRequestController.stream;
+
   DoctorInfoBloc() {
     _getDoctorController = StreamController<Response<DoctorEntity>>();
     _visitRequestController = StreamController<Response<VisitEntity>>();
+    _getVisitController = StreamController<Response<VisitEntity>>();
     _repository = DoctorRepository();
   }
 
@@ -52,8 +61,21 @@ class DoctorInfoBloc {
     }
   }
 
+  getVisit(int patientId) async {
+    getVisitSink.add(Response.loading(''));
+    try {
+      VisitEntity response = await _repository.getVisit(patientId);
+      getVisitSink.add(Response.completed(response));
+    } catch (e) {
+      getVisitSink.add(Response.error(e.toString()));
+      print(e);
+    }
+  }
+
+
   dispose() {
     _getDoctorController?.close();
     _visitRequestController?.close();
+    _getVisitController?.close();
   }
 }

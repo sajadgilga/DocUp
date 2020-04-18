@@ -6,7 +6,6 @@ import 'package:docup/networking/ApiProvider.dart';
 class DoctorRepository {
   ApiProvider _provider = ApiProvider();
 
-
   Future<DoctorEntity> get() async {
     final response = await _provider.get('api/auth/doctor/', utf8Support: true);
     return DoctorEntity.fromJson(response);
@@ -22,6 +21,12 @@ class DoctorRepository {
     final response = await _provider
         .get("api/doctors/" + doctorId.toString() + "/", utf8Support: true);
     return DoctorEntity.fromJson(response);
+  }
+
+  Future<VisitEntity> getVisit(int patientId) async {
+    final response = await _provider
+        .get("api/visits/" + patientId.toString() + "/", utf8Support: true);
+    return VisitEntity.fromJson(response);
   }
 
   Future<VisitEntity> visitRequest(int doctorId, int visitType, int visitMethod,

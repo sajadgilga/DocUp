@@ -16,8 +16,8 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 class PatientRequestPage extends StatefulWidget {
-  final PatientEntity entity;
-  PatientRequestPage({Key key, this.entity}) : super(key: key);
+  final int patientId;
+  PatientRequestPage({Key key, this.patientId}) : super(key: key);
 
   @override
   _PatientRequestPageState createState() => _PatientRequestPageState();
@@ -69,9 +69,9 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          PatientData(patientEntity: widget.entity),
+//          PatientData(patientEntity: widget.entity),
           SizedBox(width: 10),
-          Avatar(avatar: widget.entity.user.avatar),
+//          Avatar(avatar: widget.entity.user.avatar),
         ],
       );
 
