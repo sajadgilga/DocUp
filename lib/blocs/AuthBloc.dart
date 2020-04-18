@@ -49,13 +49,14 @@ class AuthBloc {
     }
   }
 
-  verify(String username, String password) async {
+  verify(String username, String password, bool isPatient) async {
     verifySink.add(Response.loading('loading'));
     try {
       VerifyResponseEntity response =
           await _repository.verify(username, password);
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.token);
+      prefs.setBool('isPatient', isPatient);
       verifySink.add(Response.completed(response));
     } catch (e) {
       verifySink.add(Response.error(e.toString()));
@@ -63,13 +64,14 @@ class AuthBloc {
     }
   }
 
-  signIn(String username, String password) async {
+  signIn(String username, String password, bool isPatient) async {
     signInSink.add(Response.loading('loading'));
     try {
       VerifyResponseEntity response =
           await _repository.signIn(username, password);
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.token);
+      prefs.setBool('isPatient', isPatient);
       signInSink.add(Response.completed(response));
     } catch (e) {
       signInSink.add(Response.error(e.toString()));

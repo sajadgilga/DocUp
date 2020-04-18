@@ -82,8 +82,10 @@ class _StartPageState extends State<StartPage> {
   Future<void> checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("token")) {
-//      Navigator.push(
-//          context, MaterialPageRoute(builder: (context) => MainPage()));
+      bool isPatient = prefs.getBool("isPatient");
+      switchRole(isPatient ? RoleType.PATIENT : RoleType.DOCTOR);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MainPage()));
     }
   }
 
@@ -149,7 +151,8 @@ class _StartPageState extends State<StartPage> {
             _authBloc.signUp(_usernameController.text, currentRoleType);
             break;
           case StartType.LOGIN:
-            _authBloc.verify(currentUserName, _verificationController.text);
+            _authBloc.verify(currentUserName, _verificationController.text,
+                currentRoleType == RoleType.PATIENT);
             break;
           case StartType.REGISTER:
             if (currentRoleType == RoleType.PATIENT) {
@@ -161,8 +164,8 @@ class _StartPageState extends State<StartPage> {
             }
             break;
           case StartType.SIGN_IN:
-            _authBloc.signIn(
-                _usernameController.text, _passwordController.text);
+            _authBloc.signIn(_usernameController.text, _passwordController.text,
+                currentRoleType == RoleType.PATIENT);
             break;
         }
       });
