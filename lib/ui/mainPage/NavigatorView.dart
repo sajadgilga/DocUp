@@ -47,6 +47,7 @@ class NavigatorView extends StatelessWidget {
   final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
   final ChatMessageBloc _chatMessageBloc = ChatMessageBloc();
   final SearchBloc _searchBloc = SearchBloc();
+  Function selectPage;
   final Doctor _doctor = Doctor(
       3,
       "دکتر زهرا شادلو",
@@ -59,7 +60,12 @@ class NavigatorView extends StatelessWidget {
 
 //  Patient patient;
 
-  NavigatorView({Key key, this.index, this.navigatorKey, this.globalOnPush})
+  NavigatorView(
+      {Key key,
+      this.index,
+      this.navigatorKey,
+      this.globalOnPush,
+      this.selectPage})
       : super(key: key);
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context,
@@ -155,6 +161,7 @@ class NavigatorView extends StatelessWidget {
   }
 
   Widget _home(context) => Home(
+        selectPage: selectPage,
         onPush: (direction, entity) {
           _push(context, direction, entity: entity);
         },
@@ -314,6 +321,46 @@ class NavigatorView extends StatelessWidget {
           ));
 
   Widget _empty(context) {
-    return Container();
+    return InStructure();
+  }
+}
+
+class InStructure extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return InStructureState();
+  }
+}
+
+class InStructureState extends State<InStructure> {
+  void _showDialog(context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "منتظر ما باشید",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+          );
+        });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _showDialog(context);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text(''),
+    );
   }
 }

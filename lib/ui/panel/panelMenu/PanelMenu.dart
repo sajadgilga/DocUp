@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 
 import 'package:docup/ui/customPainter/DrawerPainter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PanelMenu extends StatefulWidget {
   final VoidCallback onPop;
@@ -42,13 +43,18 @@ class _PanelMenuState extends State<PanelMenu> {
                   _popMenu();
               },
               child: Container(
-                padding: EdgeInsets.only(top: 15, left: 10, right: 10),
-                child: Image(
-                  image: AssetImage(Assets.panelListIcon),
-                  height: 40,
-                  width: 40,
-                ),
-              )),
+                  padding: EdgeInsets.only(top: 15, left: 10, right: 10),
+                  child: SvgPicture.asset(
+                    Assets.panelListIcon,
+                    width: 35,
+                    color: IColors.themeColor,
+                  )
+//                Image(
+//                  image: AssetImage(Assets.panelListIcon),
+//                  height: 40,
+//                  width: 40,
+//                ),
+                  )),
           Container(
             padding: EdgeInsets.only(top: 15, left: 10),
             child: GestureDetector(
@@ -80,7 +86,10 @@ class _PanelMenuState extends State<PanelMenu> {
             if (panelState.section == PanelSection.DOCTOR)
               return DoctorPanelMenu(widget.onPush);
             else
-              return PatientPanelMenu(widget.onPush, isPatient: false,);
+              return PatientPanelMenu(
+                widget.onPush,
+                isPatient: false,
+              );
           },
         );
       return PatientPanelMenu(widget.onPush); //TODO
@@ -113,7 +122,7 @@ class _PanelMenuState extends State<PanelMenu> {
     );
   }
 
-  void _popMenu() async{
+  void _popMenu() async {
     widget.onPush(NavigatorRoutes.panel);
 //    widget.onPop();
   }

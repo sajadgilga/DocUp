@@ -6,9 +6,10 @@ import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/constants/colors.dart';
 
 class ChatBox extends StatefulWidget {
+  final Function selectPage;
   Color color;
 
-  ChatBox({Key key, this.color}) : super(key: key);
+  ChatBox({Key key, this.color, this.selectPage}) : super(key: key);
 
   @override
   _ChatBoxState createState() {
@@ -17,8 +18,12 @@ class ChatBox extends StatefulWidget {
 }
 
 class _ChatBoxState extends State<ChatBox> {
+  void _chatPage() {
+    widget.selectPage();
+  }
+
   Widget _myMessages() =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      GestureDetector(onTap: (){_chatPage();}, child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         _myMessagesIcon(),
         SizedBox(
           height: 5,
@@ -30,7 +35,7 @@ class _ChatBoxState extends State<ChatBox> {
             fontWeight: FontWeight.w900,
           ),
         )
-      ]);
+      ]));
 
   Widget _myMessagesIcon() =>
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[

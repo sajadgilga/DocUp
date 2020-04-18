@@ -9,6 +9,7 @@ import 'package:docup/ui/widgets/DoctorSummary.dart';
 class IPartner extends StatelessWidget {
   final UserEntity partner;
   final Function(String, UserEntity) onPush;
+  final Function selectPage;
   final ValueChanged<String> globalOnPush;
   final Color color;
   final String label;
@@ -19,6 +20,7 @@ class IPartner extends StatelessWidget {
       @required this.onPush,
       this.globalOnPush,
       this.color,
+      this.selectPage,
       this.label})
       : super(key: key);
 
@@ -62,6 +64,7 @@ class IPartner extends StatelessWidget {
           _IDoctorLabel(),
           Expanded(
             child: IPartnerBody(
+              selectPage: selectPage,
                 partner: partner,
                 onPush: onPush,
                 globalOnPush: globalOnPush,

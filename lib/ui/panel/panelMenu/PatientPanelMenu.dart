@@ -35,7 +35,9 @@ class PatientPanelMenu extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Text(
-            Strings.patientPanelMenuLabel,
+            (isPatient
+                ? Strings.patientPanelMenuLabel
+                : Strings.doctorPanelMenuLabel),
             style: TextStyle(fontWeight: FontWeight.w100, fontSize: 14),
           ),
           Container(
@@ -124,7 +126,7 @@ class PatientPanelMenu extends StatelessWidget {
   Widget _myDoctors(isActive, partners, context) => PanelMenuMainItem(onPush,
       subItems: partners,
 //              [PanelSubItem('دکتر زهرا شادلو', 'doctor_1'),],
-      label: Strings.panelIDoctorLabel,
+      label: (isPatient?Strings.panelIDoctorLabel:Strings.panelIPatientLabel),
       icon: Icons.person,
       color: getColor(PatientPanelSection.DOCTOR_INTERFACE, context: context),
       isActive: isActive,

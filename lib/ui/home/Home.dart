@@ -22,9 +22,10 @@ import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
 
 class Home extends StatefulWidget {
   final Function(String, UserEntity) onPush;
+  final Function selectPage;
   final ValueChanged<String> globalOnPush;
 
-  Home({Key key, @required this.onPush, this.globalOnPush}) : super(key: key);
+  Home({Key key, @required this.onPush, this.globalOnPush, this.selectPage}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -123,6 +124,7 @@ class _HomeState extends State<Home> {
         if (state is EntityLoaded) {
           if (state.entity.partnerEntity != null) {
             return IPartner(
+              selectPage: widget.selectPage,
               partner: state.entity.partnerEntity,
               onPush: widget.onPush,
               globalOnPush: widget.globalOnPush,

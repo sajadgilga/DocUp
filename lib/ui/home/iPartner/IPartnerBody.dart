@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class IPartnerBody extends StatelessWidget {
   final UserEntity partner;
   final Function(String, UserEntity) onPush;
+  final Function selectPage;
   final ValueChanged<String> globalOnPush;
   final Color color;
 
@@ -23,6 +24,7 @@ class IPartnerBody extends StatelessWidget {
       this.color,
       this.partner,
       @required this.onPush,
+        this.selectPage,
       this.globalOnPush})
       : super(key: key);
 
@@ -58,7 +60,7 @@ class IPartnerBody extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        Expanded(child: ChatBox(color: color)),
+        Expanded(child: ChatBox(selectPage: selectPage,color: color)),
         SizedBox(
           width: 5,
         ),

@@ -65,11 +65,17 @@ class _PanelState extends State<Panel> {
               },
               child: Container(
                 padding: EdgeInsets.only(top: 15, left: 10, right: 10),
-                child: Image(
-                  image: AssetImage(Assets.panelListIcon),
-                  height: 40,
-                  width: 40,
-                ),
+                child:
+                SvgPicture.asset(
+                  Assets.panelListIcon,
+                  width: 35,
+                  color: IColors.themeColor,
+                )
+//                Image(
+//                  image: AssetImage(Assets.panelListIcon),
+//                  height: 40,
+//                  width: 40,
+//                ),
               )),
           Container(
             padding: EdgeInsets.only(top: 15, left: 5),

@@ -8,8 +8,8 @@ class ChatBubble extends StatefulWidget {
   final ChatMessage message;
 
   final bool isHomePageChat;
-  
-  bool get isMe{
+
+  bool get isMe {
     return message.fromMe;
   }
 
@@ -37,11 +37,9 @@ class _ChatBubbleState extends State<ChatBubble> {
           bottomRight: Radius.circular(5), topRight: Radius.circular(5)));
 
   Widget _triangle() => Align(
-        alignment:
-            (widget.isMe ? Alignment(1, 0) : Alignment(-1, 0)),
+        alignment: (widget.isMe ? Alignment(1, 0) : Alignment(-1, 0)),
         child: CustomPaint(
-          painter:
-              ChatTriangle(widget.isMe, widget.isHomePageChat),
+          painter: ChatTriangle(widget.isMe, widget.isHomePageChat),
         ),
       );
 
@@ -50,7 +48,7 @@ class _ChatBubbleState extends State<ChatBubble> {
       : EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 25));
 
   Widget _chatBubble(width) => Container(
-        constraints: BoxConstraints(maxWidth: width * .7),
+        constraints: BoxConstraints(maxWidth: width * .7, minWidth: 30),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
             color: (widget.isMe
@@ -79,9 +77,8 @@ class _ChatBubbleState extends State<ChatBubble> {
         children: <Widget>[
           _triangle(),
           Container(
-              alignment: (widget.isMe
-                  ? Alignment.centerRight
-                  : Alignment.centerLeft),
+              alignment:
+                  (widget.isMe ? Alignment.centerRight : Alignment.centerLeft),
               child: Container(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

@@ -21,6 +21,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
@@ -166,7 +167,7 @@ class _MainPageState extends State<MainPage> {
 
   List<BottomNavigationBarItem> _bottomNavigationItems(Entity entity) {
     if (entity != null && entity.mEntity != null && entity.avatar != null)
-    navigator_destinations[4].img = Image.network(entity.avatar);
+      navigator_destinations[4].img = Image.network(entity.avatar);
     return navigator_destinations
         .map<BottomNavigationBarItem>((Destination destination) {
       return BottomNavigationBarItem(
@@ -174,25 +175,34 @@ class _MainPageState extends State<MainPage> {
             children: <Widget>[
               Align(
                   alignment: Alignment.center,
-                  child: (destination.hasImage
+                  child: (destination.isProfile
                       ? Container(
                           width: 50,
                           child: ClipPolygon(
-                            sides: 6,
-                            rotate: 90,
-                            boxShadows: [
-                              PolygonBoxShadow(
-                                  color: Colors.black, elevation: 1.0),
-                              PolygonBoxShadow(
-                                  color: Colors.grey, elevation: 2.0)
-                            ],
-                            child: (destination.img != null? destination.img: Image.asset(Assets.doctorAvatar))
-                          ),
+                              sides: 6,
+                              rotate: 90,
+                              boxShadows: [
+                                PolygonBoxShadow(
+                                    color: Colors.black, elevation: 1.0),
+                                PolygonBoxShadow(
+                                    color: Colors.grey, elevation: 2.0)
+                              ],
+                              child: (destination.img != null
+                                  ? destination.img
+                                  : Image.asset(Assets.doctorAvatar))),
                         )
-                      : Icon(
-                          destination.icon,
-                          size: 30,
-                        ))),
+                      : (destination.hasImage
+                          ? SvgPicture.asset(
+                              destination.image,
+                              color: (_currentIndex == 1
+                                  ? IColors.themeColor
+                                  : Colors.grey),
+                              width: 25,
+                            )
+                          : Icon(
+                              destination.icon,
+                              size: 30,
+                            )))),
 //              Align(alignment: Alignment(0, -1), child: Container(
 //                decoration:
 //                    BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
@@ -202,37 +212,55 @@ class _MainPageState extends State<MainPage> {
             ],
           ),
           title: Text(
-            destination.title,
+            '',
           ),
           backgroundColor: Colors.white);
     }).toList();
   }
 
   Widget _bottomNavigationBar() {
-    return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
-      return BottomNavigationBar(
-        items: _bottomNavigationItems(state.entity),
+    return BlocBuilder<EntityBloc, EntityState>(
+      builder: (context, state) {
+        return BottomNavigationBar(
+          items: _bottomNavigationItems(state.entity),
 //      tabs: [OverflowBox(maxWidth: 50, maxHeight: 50, child: ,),],
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          _selectPage(index);
-        },
-        backgroundColor: Colors.white,
-        unselectedItemColor: navigator_destinations[0].color,
-        selectedItemColor: IColors.themeColor,
-      );
-    },);
+          currentIndex: _currentIndex,
+          onTap: (int index) {
+            _selectPage(index);
+          },
+          backgroundColor: Colors.white,
+          unselectedItemColor: navigator_destinations[0].color,
+          selectedItemColor: IColors.themeColor,
+        );
+      },
+    );
+  }
+
+  void _chatPage() {
+    _selectPage(2);
+//    _navigatorKeys[2].currentState.push()
   }
 
   Widget _buildOffstageNavigator(int index) {
     return Offstage(
       offstage: _currentIndex != index,
       child: NavigatorView(
+        selectPage: () {_chatPage();},
         navigatorKey: _navigatorKeys[index],
         index: index,
         globalOnPush: (direction) => _push(context, direction),
       ),
     );
+  }
+
+  List<Widget> _children() {
+    return <Widget>[
+      _buildOffstageNavigator(0),
+      _buildOffstageNavigator(1),
+      _buildOffstageNavigator(2),
+      _buildOffstageNavigator(3),
+      _buildOffstageNavigator(4),
+    ];
   }
 
   Widget _mainPage() {
@@ -241,16 +269,18 @@ class _MainPageState extends State<MainPage> {
         bottomNavigationBar: SizedBox(
           child: _bottomNavigationBar(),
         ),
-        body: IndexedStack(
-          index: _currentIndex,
-          children: <Widget>[
-            _buildOffstageNavigator(0),
-            _buildOffstageNavigator(1),
-            _buildOffstageNavigator(2),
-            _buildOffstageNavigator(3),
-            _buildOffstageNavigator(4),
-          ],
-        ));
+        body: _children()[_currentIndex]
+//        IndexedStack(
+//          index: _currentIndex,
+//          children: <Widget>[
+//            _buildOffstageNavigator(0),
+//            _buildOffstageNavigator(1),
+//            _buildOffstageNavigator(2),
+//            _buildOffstageNavigator(3),
+//            _buildOffstageNavigator(4),
+//          ],
+//        )
+    );
   }
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {

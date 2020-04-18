@@ -4,7 +4,7 @@ class Assets {
   static final String docUpPatientIcon = 'assets/docUpHomePatient.svg';
   static final String docUpDoctorIcon = 'assets/docUpHomeDoctor.svg';
   static final String docUpClinicIcon = '';
-  static final String panelListIcon = 'assets/panelMenu.png';
+  static final String panelListIcon = 'assets/panelMenu.svg';
   static final String searchIcon = 'assets/search.svg';
   static final String onCallMedicalIcon = "assets/onCallIcon.svg";
   static final String patientLoginIcon = "assets/team.svg";
@@ -13,6 +13,7 @@ class Assets {
   static final String homeBackground = 'assets/backgroundHome.png';
   static final String doctorAvatar = 'assets/doctorAvatar.svg';
   static final String calendarCheck = 'assets/calendarCheck.svg';
+  static final String clinicPanel = 'assets/clinicPanel.svg';
   static String docUpIcon = docUpPatientIcon;
 
   static void changeIcons(RoleType roleType) {

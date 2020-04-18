@@ -1,3 +1,4 @@
+import 'package:docup/constants/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:docup/constants/colors.dart';
 
@@ -10,22 +11,24 @@ import 'package:docup/constants/colors.dart';
 /// - image: the image which may be in navigation (for example in account)
 /// - hasImage: whether it is icon based, or image based
 class Destination {
-  Destination(this.title, this.icon, this.color, this.image, this.hasImage,
-      {this.img});
+  Destination(this.title, this.icon, this.color, this.image, this.isProfile,
+      {this.img, this.hasImage = false});
 
   final String title;
   final IconData icon;
   final MaterialColor color;
-  AssetImage image;
+  String image;
   Image img;
+  bool isProfile;
   bool hasImage;
 }
 
 List<Destination> navigator_destinations = <Destination>[
-  Destination('Home', Icons.home, Colors.grey, AssetImage(''), false),
-  Destination('Panel', Icons.assignment, Colors.grey, AssetImage(''), false),
-  Destination('Panel', Icons.view_quilt, Colors.grey, AssetImage(''), false),
-  Destination('Settings', Icons.settings, Colors.grey, AssetImage(''), false),
-  Destination('Account', Icons.account_box, Colors.grey,
-      AssetImage('assets/avatar.png'), true),
+  Destination('Home', Icons.home, Colors.grey, '', false),
+  Destination('Panel', Icons.assignment, Colors.grey, Assets.clinicPanel, false,
+      hasImage: true),
+  Destination('Panel', Icons.view_quilt, Colors.grey, '', false),
+  Destination('Settings', Icons.settings, Colors.grey, '', false),
+  Destination(
+      'Account', Icons.account_box, Colors.grey, 'assets/avatar.png', true),
 ];
