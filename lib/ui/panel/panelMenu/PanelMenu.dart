@@ -14,6 +14,7 @@ import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/DoctorPanelMenu.dart';
 import 'package:docup/ui/panel/panelMenu/PatientPanelMenu.dart';
 import 'package:docup/ui/widgets/Header.dart';
+import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/customPainter/DrawerPainter.dart';
@@ -56,16 +57,16 @@ class _PanelMenuState extends State<PanelMenu> {
 //                ),
                   )),
           Container(
-            padding: EdgeInsets.only(top: 15, left: 10),
+            padding: EdgeInsets.only(top: 10, left: 20),
             child: GestureDetector(
               onTap: () {
                 var state = BlocProvider.of<PanelBloc>(context).state;
                 if (state is PanelsLoaded) if (state.panels.length > 0)
                   _popMenu();
               },
-              child: Icon(
-                Icons.search,
-                size: 30,
+              child: SvgPicture.asset(
+                Assets.searchIcon,
+                width: 30,
               ),
             ),
           )
@@ -74,6 +75,8 @@ class _PanelMenuState extends State<PanelMenu> {
 
   Widget _panelMenu() {
     return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+      if (state is EntityError)
+        return Waiting();
       if (state.entity.isPatient) {
         return PatientPanelMenu(widget.onPush);
       } else if (state.entity.isDoctor)

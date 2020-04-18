@@ -49,11 +49,11 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromRGBO(251, 252, 253, 1),
       body: Container(
         child: Center(
-          child: SvgPicture.asset(
-            Assets.docUpIcon,
+          child: Image.asset(
+            Assets.logoRectangle,
             width: MediaQuery.of(context).size.width * 0.4,
             height: MediaQuery.of(context).size.width * 0.4,
           ),

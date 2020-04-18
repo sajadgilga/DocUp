@@ -8,6 +8,7 @@ import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
+import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math';
@@ -92,19 +93,15 @@ class _ChatPageState extends State<ChatPage> {
   Widget _chatBox() {
     return BlocBuilder<ChatMessageBloc, ChatMessageState>(
         builder: (context, state) {
-      if (state is ChatMessageLoaded || state is ChatMessageLoading)
+      if (state is ChatMessageLoaded || state is ChatMessageLoading) {
+//      Navigator.of(context).pop();
         return _ChatBox(
           entity: widget.entity,
         );
-      else if (state is ChatMessageEmpty)
-        return Expanded(
-          flex: 2,
-          child: Container(),
-        );
-      return Expanded(
-        flex: 2,
-        child: Container(),
-      );
+      } else if (state is ChatMessageEmpty) {
+        return Expanded(flex: 2, child: Waiting());
+      }
+      return Expanded(flex: 2, child: Waiting());
     });
   }
 
@@ -163,9 +160,9 @@ class _ChatBoxState extends State<_ChatBox> {
           (BlocProvider.of<ChatMessageBloc>(context).state as ChatMessageLoaded)
               .chatMessages;
     if (_state is ChatMessageLoading)
-      _messages =
-          (BlocProvider.of<ChatMessageBloc>(context).state as ChatMessageLoading)
-              .chatMessages;
+      _messages = (BlocProvider.of<ChatMessageBloc>(context).state
+              as ChatMessageLoading)
+          .chatMessages;
 //    _messages.add(ChatMessage.fromPatient(
 //      text: "آخ آخ. یادم رفت. همین الان میفرستم",
 //      sentDate: DateTime.now(),

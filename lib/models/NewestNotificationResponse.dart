@@ -8,11 +8,17 @@ class NewestNotificationResponse {
   List<Notification> newestEvents;
 
   NewestNotificationResponse.fromJson(Map<String, dynamic> json) {
-    newestEventsCounts = json['newest_events_counts'];
-    newestDrugsCounts = json['newest_drugs_counts'];
+    if (json.containsKey('newest_events_counts'))
+      newestEventsCounts = json['newest_events_counts'];
+    if (json.containsKey('newest_drugs_counts'))
+      newestDrugsCounts = json['newest_drugs_counts'];
     newestDrugs = [];
-    json['newest_drugs'].forEach((drug) => newestDrugs.add(Medicine.fromJson(drug)));
+    if (json.containsKey('newest_drugs')) if (json['newest_drugs'] != null)
+      json['newest_drugs']
+          .forEach((drug) => newestDrugs.add(Medicine.fromJson(drug)));
     newestEvents = [];
-        json['newest_events'].forEach((event) => newestEvents.add(Notification.fromJson(event)));
+    if (json['newest_events'] != null)
+      json['newest_events']
+          .forEach((event) => newestEvents.add(Notification.fromJson(event)));
   }
 }

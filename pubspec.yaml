@@ -50,7 +50,12 @@ dependencies:
   firebase_messaging: ^6.0.13
   datetime_picker_formfield: ^1.0.0
   introduction_screen: ^1.0.7
+  flutter_launcher_icons: ">=0.6.1"
 
+flutter_icons:
+  image_path: "assets/logoCircle.png"
+  android: true
+  ios: true
 
 dev_dependencies:
   flutter_test:

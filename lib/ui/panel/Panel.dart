@@ -78,7 +78,7 @@ class _PanelState extends State<Panel> {
 //                ),
               )),
           Container(
-            padding: EdgeInsets.only(top: 15, left: 5),
+            padding: EdgeInsets.only(top: 15, left: 15),
             child: GestureDetector(
               onTap: () {
                 _showSearchPage();

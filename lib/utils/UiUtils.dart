@@ -22,18 +22,7 @@ void hideKeyboard(context) => FocusScope.of(context).unfocus();
 getLoadingDialog() => AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Image.asset(
-            "assets/loading.gif",
-            width: 70,
-            height: 70,
-          ),
-          SizedBox(width: 10,),
-          Text("منتظر باشید", style: TextStyle(fontWeight: FontWeight.bold),)
-        ],
-      ),
+      content: Waiting()
     );
 
 void showNextVersionDialog(context) {
@@ -50,4 +39,30 @@ void showNextVersionDialog(context) {
               textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
         );
       });
+}
+
+class Waiting extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Image.asset(
+            "assets/loading.gif",
+            width: 70,
+            height: 70,
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "منتظر باشید",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )
+        ],
+      ),
+    );
+  }
 }

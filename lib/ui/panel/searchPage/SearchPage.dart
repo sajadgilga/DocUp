@@ -5,6 +5,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,6 +15,7 @@ import 'ResultList.dart';
 class SearchPage extends StatelessWidget {
   final Function(String, UserEntity) onPush;
   TextEditingController _controller = TextEditingController();
+
 //  SearchBloc searchBloc = SearchBloc();
 
   SearchPage({@required this.onPush});
@@ -69,23 +71,27 @@ class SearchPage extends StatelessWidget {
 
   Widget _resultList() {
     return BlocBuilder<SearchBloc, SearchState>(
-          builder: (context, state) {
-            if (state is SearchLoaded) {
-              return ResultList(
-                onPush: onPush,
-                isDoctor: state.result.isDoctor,
-                results: (state.result.isDoctor
-                    ? state.result.doctor_results
-                    : state.result.patient_results),
-              );
-            } else if (state is SearchError)
-              return Container(
-                child: Text('error!'),
-              );
-            return
-              Container();
-          },
-        );
+      builder: (context, state) {
+        if (state is SearchLoaded) {
+          return ResultList(
+            onPush: onPush,
+            isDoctor: state.result.isDoctor,
+            results: (state.result.isDoctor
+                ? state.result.doctor_results
+                : state.result.patient_results),
+          );
+        }
+        if (state is SearchError)
+          return Container(
+            child: Text('error!'),
+          );
+        if (state is SearchLoading)
+          return Container(
+            child: Waiting(),
+          );
+        return Container();
+      },
+    );
   }
 
   @override
