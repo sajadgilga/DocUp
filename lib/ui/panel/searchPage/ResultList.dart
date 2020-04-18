@@ -168,7 +168,7 @@ class _SearchResultPatientItem extends StatelessWidget {
 //                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
 //          );
 //        });
-    onPush(NavigatorRoutes.doctorDialogue, entity);
+    onPush(NavigatorRoutes.patientDialogue, entity);
   }
 
   Widget _image(context) => GestureDetector(

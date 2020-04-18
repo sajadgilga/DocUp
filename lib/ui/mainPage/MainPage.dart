@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
+import 'package:docup/constants/assets.dart';
 import 'package:docup/main.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
 import 'package:docup/models/Doctor.dart';
@@ -164,6 +165,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   List<BottomNavigationBarItem> _bottomNavigationItems(Entity entity) {
+    if (entity != null)
     navigator_destinations[4].img = Image.network(entity.avatar);
     return navigator_destinations
         .map<BottomNavigationBarItem>((Destination destination) {
@@ -184,7 +186,7 @@ class _MainPageState extends State<MainPage> {
                               PolygonBoxShadow(
                                   color: Colors.grey, elevation: 2.0)
                             ],
-                            child: destination.img
+                            child: (destination.img != null? destination.img: Image.asset(Assets.doctorAvatar))
                           ),
                         )
                       : Icon(

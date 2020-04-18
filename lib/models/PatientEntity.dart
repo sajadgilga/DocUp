@@ -3,14 +3,22 @@ import 'UserEntity.dart';
 
 class PatientEntity extends UserEntity {
   PanelSection documents;
+  int status;
 
   PatientEntity({this.documents, user, id, panels}): super(user:user, id: id, panels: panels);
 
   PatientEntity.fromJson(Map<String, dynamic> json) {
     try {
       id = json['id'];
-      if (json.containsKey('user'))
+      if (json.containsKey('user')) {
+        if (json['user'].containsKey('user'))
+        user = json['user'] != null ? User.fromJson(json['user']['user']) : null;
+        else
         user = json['user'] != null ? User.fromJson(json['user']) : null;
+
+      }
+      if (json.containsKey('status'))
+        status = json['status'];
       if (json.containsKey('documents'))
         documents = json['documents'] != null
             ? PanelSection.fromJson(json['documents'])
