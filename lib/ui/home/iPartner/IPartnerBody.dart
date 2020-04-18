@@ -26,15 +26,19 @@ class IPartnerBody extends StatelessWidget {
       this.globalOnPush})
       : super(key: key);
 
-  void _showDoctorDialogue() {
+  void _showDoctorDialogue(context) {
 //    globalOnPush(NavigatorRoutes.doctorDialogue);
-    onPush(NavigatorRoutes.doctorDialogue, null);
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    if (entity.isPatient)
+      onPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
+    else if (entity.isDoctor)
+      onPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
   }
 
   String _getSubHeader(context) {
     if (partner == null) return '';
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    if (entity.type == RoleType.PATIENT)
+    if (entity.isPatient)
       return (entity.partnerEntity as DoctorEntity).expert;
     else
       return (entity.partnerEntity as PatientEntity).user.firstName; //TODO
@@ -43,7 +47,7 @@ class IPartnerBody extends StatelessWidget {
   String _getLocation(context) {
     if (partner == null) return '';
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    if (entity.type == RoleType.PATIENT)
+    if (entity.isPatient)
       return (entity.partnerEntity as DoctorEntity).clinic.clinicName;
     else
       return (entity.partnerEntity as PatientEntity).user.firstName; //TODO
@@ -71,7 +75,7 @@ class IPartnerBody extends StatelessWidget {
         ),
         GestureDetector(
             onTap: () {
-              _showDoctorDialogue();
+              _showDoctorDialogue(context);
             },
             child: PartnerSummary(
                   name: (partner != null ? partner.user.name : ''),

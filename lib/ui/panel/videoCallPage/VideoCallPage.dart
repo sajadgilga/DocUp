@@ -13,7 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 class VideoCallPage extends StatefulWidget {
   final Entity entity;
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
 
   VideoCallPage({Key key, this.entity, @required this.onPush})
       : super(key: key);

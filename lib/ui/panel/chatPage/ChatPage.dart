@@ -16,7 +16,7 @@ import 'PartnerInfo.dart';
 
 class ChatPage extends StatefulWidget {
   final Entity entity;
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
 
   ChatPage({Key key, this.entity, @required this.onPush}) : super(key: key);
 

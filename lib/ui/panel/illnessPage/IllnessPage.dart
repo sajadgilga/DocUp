@@ -13,7 +13,7 @@ import 'package:docup/ui/widgets/PicList.dart';
 
 class IllnessPage extends StatelessWidget {
   final Entity entity;
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
 
   IllnessPage({Key key, this.entity, @required this.onPush}) : super(key: key);
 

@@ -13,7 +13,7 @@ import 'package:docup/ui/widgets/PicList.dart';
 
 class InfoPage extends StatelessWidget {
   final Entity entity;
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
   final String picListLabel;
   final String lastPicsLabel;
   bool uploadAvailable;

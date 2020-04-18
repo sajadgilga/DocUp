@@ -60,7 +60,10 @@ class SearchBox extends StatelessWidget {
                   height: 50,
                   child: TextField(
                     controller: _controller,
-                    onSubmitted: (text) {
+//                    onSubmitted: (text) {
+//                      _search();
+//                    },
+                    onTap: () {
                       _search();
                     },
                     textAlign: TextAlign.end,

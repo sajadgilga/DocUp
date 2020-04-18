@@ -1,13 +1,15 @@
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
 class PartnerInfo extends StatelessWidget {
   final Entity entity;
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
 
   PartnerInfo({Key key, this.entity, @required this.onPush}) : super(key: key);
 
@@ -36,7 +38,12 @@ class PartnerInfo extends StatelessWidget {
 //                style: TextStyle(fontSize: 12)),
 //          );
 //        });
-    onPush(NavigatorRoutes.doctorDialogue);
+
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    if (entity.isPatient)
+      onPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
+    else if (entity.isDoctor)
+      onPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
   }
 
   Widget _image(context) => GestureDetector(

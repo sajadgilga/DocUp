@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:dashed_container/dashed_container.dart';
@@ -12,7 +13,7 @@ class PicList extends StatefulWidget {
   final String recentLabel;
   final Widget asset;
   final bool uploadAvailable;
-  final ValueChanged<String> onPush;
+  final Function(String, UserEntity) onPush;
 
   PicList(
       {Key key,
@@ -41,7 +42,7 @@ class _PicListState extends State<PicList> {
       );
 
   void _showUploadDialogue() {
-    widget.onPush(NavigatorRoutes.uploadPicDialogue);
+    widget.onPush(NavigatorRoutes.uploadPicDialogue, null);
   }
 
   Widget _uploadBoxLabel() => Container(
