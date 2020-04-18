@@ -1,4 +1,5 @@
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/ui/start/SplashPage.dart';
 import 'package:docup/ui/start/StartPage.dart';
 
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> globalNavigator =
       GlobalKey<NavigatorState>();
 //  Widget _startPage = MainPage();
-  Widget _startPage = StartPage();
+//  Widget _startPage = StartPage();
+  Widget _startPage = SplashPage();
 
 
   @override
