@@ -33,8 +33,19 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
   }
 
   Stream<ChatMessageState> _send(ChatMessageSend event) async* {
+    if (state is ChatMessageLoading) {
+      (state as ChatMessageLoading).chatMessages.add(event.msg);
+      yield ChatMessageLoading(
+          chatMessages: (state as ChatMessageLoading).chatMessages);
+    }
+    if (state is ChatMessageLoaded) {
+      (state as ChatMessageLoaded).chatMessages.add(event.msg);
+      yield ChatMessageLoaded(
+          chatMessages: (state as ChatMessageLoaded).chatMessages);
+    }
     try {
-      await _chatMessageRepository.send(panel: event.panelId, message: event.msg);
+      await _chatMessageRepository.send(
+          panel: event.panelId, message: event.msg);
     } catch (e) {
       print(e);
     }

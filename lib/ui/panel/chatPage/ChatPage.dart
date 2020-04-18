@@ -77,12 +77,13 @@ class _ChatPageState extends State<ChatPage> {
             flex: 2,
             child: TextField(
               controller: _controller,
+
               onSubmitted: (text) {
                 _submitMsg();
               },
               textAlign: TextAlign.end,
-              textDirection: TextDirection.rtl,
-              decoration: InputDecoration(hintText: "اینجا بنویسید ..."),
+//              textDirection: TextDirection.rtl,
+              decoration: InputDecoration(hintText: "...اینجا بنویسید"),
             ),
           )
         ],

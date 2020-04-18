@@ -52,6 +52,13 @@ class Entity {
     return (type == RoleType.DOCTOR);
   }
 
+  String get avatar {
+    if (isPatient) {
+      return (mEntity as PatientEntity).user.avatar;
+    } else if (isDoctor)
+      return (mEntity as DoctorEntity).user.avatar;
+  }
+
   String get pClinicName {
     if (isPatient)
       return (partnerEntity as DoctorEntity).clinic.clinicName;

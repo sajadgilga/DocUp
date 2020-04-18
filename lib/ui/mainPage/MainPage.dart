@@ -9,6 +9,7 @@ import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/Panel.dart';
 import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/services/FirebaseService.dart';
@@ -162,7 +163,8 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  List<BottomNavigationBarItem> _bottomNavigationItems() {
+  List<BottomNavigationBarItem> _bottomNavigationItems(Entity entity) {
+    navigator_destinations[4].img = Image.network(entity.avatar);
     return navigator_destinations
         .map<BottomNavigationBarItem>((Destination destination) {
       return BottomNavigationBarItem(
@@ -182,9 +184,7 @@ class _MainPageState extends State<MainPage> {
                               PolygonBoxShadow(
                                   color: Colors.grey, elevation: 2.0)
                             ],
-                            child: Image(
-                              image: destination.image,
-                            ),
+                            child: destination.img
                           ),
                         )
                       : Icon(
@@ -207,17 +207,19 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _bottomNavigationBar() {
-    return BottomNavigationBar(
-      items: _bottomNavigationItems(),
+    return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+      return BottomNavigationBar(
+        items: _bottomNavigationItems(state.entity),
 //      tabs: [OverflowBox(maxWidth: 50, maxHeight: 50, child: ,),],
-      currentIndex: _currentIndex,
-      onTap: (int index) {
-        _selectPage(index);
-      },
-      backgroundColor: Colors.white,
-      unselectedItemColor: navigator_destinations[0].color,
-      selectedItemColor: IColors.themeColor,
-    );
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          _selectPage(index);
+        },
+        backgroundColor: Colors.white,
+        unselectedItemColor: navigator_destinations[0].color,
+        selectedItemColor: IColors.themeColor,
+      );
+    },);
   }
 
   Widget _buildOffstageNavigator(int index) {

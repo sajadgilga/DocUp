@@ -10,17 +10,18 @@ import 'package:docup/constants/colors.dart';
 /// - image: the image which may be in navigation (for example in account)
 /// - hasImage: whether it is icon based, or image based
 class Destination {
-  const Destination(
-      this.title, this.icon, this.color, this.image, this.hasImage);
+  Destination(this.title, this.icon, this.color, this.image, this.hasImage,
+      {this.img});
 
   final String title;
   final IconData icon;
   final MaterialColor color;
-  final AssetImage image;
-  final bool hasImage;
+  AssetImage image;
+  Image img;
+  bool hasImage;
 }
 
-const List<Destination> navigator_destinations = <Destination>[
+List<Destination> navigator_destinations = <Destination>[
   Destination('Home', Icons.home, Colors.grey, AssetImage(''), false),
   Destination('Panel', Icons.assignment, Colors.grey, AssetImage(''), false),
   Destination('Panel', Icons.view_quilt, Colors.grey, AssetImage(''), false),

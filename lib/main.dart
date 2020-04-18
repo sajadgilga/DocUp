@@ -2,6 +2,7 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/ui/start/StartPage.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
     return BlocProvider<EntityBloc>(
         create: (context) => EntityBloc(),
         child: MaterialApp(
