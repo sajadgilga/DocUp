@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/DoctorRepository.dart';
+import 'package:docup/repository/PatientRepository.dart';
 
 class DoctorInfoBloc {
   DoctorRepository _repository;
@@ -28,7 +30,7 @@ class DoctorInfoBloc {
 
 
   Stream<Response<VisitEntity>> get getVisitStream =>
-      _visitRequestController.stream;
+      _getVisitController.stream;
 
   DoctorInfoBloc() {
     _getDoctorController = StreamController<Response<DoctorEntity>>();
