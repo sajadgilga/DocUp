@@ -53,7 +53,7 @@ dependencies:
   flutter_launcher_icons: ">=0.6.1"
 
 flutter_icons:
-  image_path: "assets/logoCircle.png"
+  image_path: "assets/logoRec.png"
   android: true
   ios: true
 
