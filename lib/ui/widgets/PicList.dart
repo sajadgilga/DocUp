@@ -1,25 +1,30 @@
 import 'dart:ui';
 
+import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:docup/models/Picture.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:dashed_container/dashed_container.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PicList extends StatefulWidget {
   final String picLabel;
   final String recentLabel;
   final Widget asset;
   final bool uploadAvailable;
-  final Function(String, UserEntity) onPush;
+  final int listId;
+  final Function(String, dynamic) onPush;
 
   PicList(
       {Key key,
       this.picLabel,
       this.recentLabel,
       this.asset,
+      @required this.listId,
       this.uploadAvailable = true,
       @required this.onPush})
       : super(key: key);
@@ -42,7 +47,7 @@ class _PicListState extends State<PicList> {
       );
 
   void _showUploadDialogue() {
-    widget.onPush(NavigatorRoutes.uploadPicDialogue, null);
+    widget.onPush(NavigatorRoutes.uploadPicDialogue, widget.listId);
   }
 
   Widget _uploadBoxLabel() => Container(
@@ -87,19 +92,21 @@ class _PicListState extends State<PicList> {
       return Container();
   }
 
-  Widget _picListBox(width) {
+  Widget _picListBox(width, List<PictureEntity> pics) {
+//    return Container();
     List<Widget> pictures = [];
-    for (int i = 0; i < _calculatePossiblePicCount(width); i++) {
+    for (PictureEntity pic in pics) {
+//    for (int i = 0; i < _calculatePossiblePicCount(width); i++) {
       pictures.add(Container(
         child: Column(
           children: <Widget>[
             Container(
               width: 150.0,
               height: 100.0,
-//        margin: EdgeInsets.only(left: 10, right: 10),
+              margin: EdgeInsets.only(left: 10, right: 10),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    fit: BoxFit.cover, image: AssetImage('assets/hand1.jpg')),
+                    fit: BoxFit.cover, image: NetworkImage(pic.imageURL)),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
               child: BackdropFilter(
@@ -110,7 +117,7 @@ class _PicListState extends State<PicList> {
               ),
             ),
             Text(
-              'تصویر',
+              pic.title,
               style: TextStyle(
                 fontSize: 8,
                 fontWeight: FontWeight.bold,
@@ -123,8 +130,8 @@ class _PicListState extends State<PicList> {
     }
     return Container(
       margin: EdgeInsets.only(right: 15, top: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Wrap(
+//        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: pictures,
       ),
     );
@@ -141,7 +148,8 @@ class _PicListState extends State<PicList> {
           children: <Widget>[
             Container(
               child: Text(
-                Strings.illnessInfoPicShowLabel,
+//                Strings.illnessInfoPicShowLabel,
+                '',
                 style: TextStyle(
                     color: IColors.themeColor,
                     fontSize: 8,
@@ -177,22 +185,46 @@ class _PicListState extends State<PicList> {
         ),
       );
 
-  Widget _picList(width) => Expanded(
+  Widget _picList(width, pics) => Expanded(
         flex: 2,
         child: Container(
           child: Column(
-            children: <Widget>[_picListHeader(), _picListBox(width)],
+            children: <Widget>[_picListHeader(), _picListBox(width, pics)],
           ),
         ),
       );
 
-  Widget _recentPics() => Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            _picList(MediaQuery.of(context).size.width),
-          ],
-        ),
+  Widget _recentPics() => BlocBuilder<PictureBloc, PictureState>(
+        builder: (context, state) {
+          if (state is PicturesLoaded) {
+            if (state.section.id == widget.listId)
+              return Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    _picList(MediaQuery.of(context).size.width,
+                        (state as PicturesLoaded).section.pictures),
+                  ],
+                ),
+              );
+          }
+          if (state is PictureLoading) {
+            if (state.section == null) return Waiting();
+            if (state.section.id == widget.listId)
+              return Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    _picList(MediaQuery.of(context).size.width,
+                        (state as PictureLoading).section.pictures),
+                  ],
+                ),
+              );
+          }
+          return Container(
+            child: Text(''),
+          );
+        },
       );
 
   Widget _uploadPic() {

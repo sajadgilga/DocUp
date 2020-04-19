@@ -8,6 +8,7 @@ abstract class UserEntity {
   User user;
   int id;
   List<Panel> panels;
+  Map<int, Panel> panelMap = {};
 
   UserEntity({this.user, this.id, this.panels});
 }
@@ -69,5 +70,10 @@ class Entity {
     if (isPatient)
       return (partnerEntity as DoctorEntity).expert;
     if (isDoctor) return "";
+  }
+
+  int sectionId (String name){
+    return mEntity.panelMap[iPanelId]
+        .sections[name].id;
   }
 }

@@ -2,6 +2,7 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../constants/strings.dart';
 import '../../constants/colors.dart';
@@ -25,6 +26,7 @@ class SearchBox extends StatelessWidget {
 
   void _search(context) {
     FocusScope.of(context).unfocus();
+    SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
     onPush(NavigatorRoutes.searchView, null);
   }
 

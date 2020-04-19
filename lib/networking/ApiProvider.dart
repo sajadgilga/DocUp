@@ -25,7 +25,7 @@ class ApiProvider {
   Future<dynamic> postDio(String url, {FormData data}) async {
     var responseJson;
     try {
-      final headers = {};
+      final Map<String, dynamic> headers = {};
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString('token');
       if (token != null && token.isNotEmpty) {

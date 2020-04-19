@@ -24,6 +24,7 @@ class Panel {
   int doctorId;
   int patientId;
   List<PanelSection> section;
+  Map<String, PanelSection> sections = {};
   List<String> sectionNames;
   String modified_date;
   String created_date;
@@ -39,21 +40,23 @@ class Panel {
       if (json.containsKey('doctor')) doctorId = json['doctor'];
       if (json.containsKey('patient')) patientId = json['patient'];
       modified_date =
-      json.containsKey('modified_date') ? json['modified_date'] : null;
+          json.containsKey('modified_date') ? json['modified_date'] : null;
       created_date =
-      json.containsKey('created_date') ? json['created_date'] : null;
+          json.containsKey('created_date') ? json['created_date'] : null;
       section = [];
       if (json.containsKey('panel_image_sets')) {
         var sets = json['panel_image_sets'];
-        List<Picture> pictures;
-        sets.forEach((key, value) {
+        List<PictureEntity> pictures;
+        sets.forEach((String key, value) {
           pictures = [];
           if (value.length != 0)
-            value.forEach((image) => pictures.add(Picture.fromJson(image)));
+            value.forEach(
+                (image) => pictures.add(PictureEntity.fromJson(image)));
           section.add(PanelSection(
               id: json['panel_image_list_name_id'][key],
               title: key,
               pictures: pictures));
+          sections[key] = section.last;
         });
       }
 
@@ -74,7 +77,8 @@ class Panel {
 
       if (json.containsKey('doctor_info'))
         doctor = DoctorEntity.fromJson(json['doctor_info']);
-    } catch(_) {
+    } catch (e) {
+      print(e);
       // TODO
     }
   }
@@ -84,26 +88,22 @@ class PanelSection {
   int id;
   String title;
   String description;
-  List<Picture> pictures;
+  List<PictureEntity> pictures;
 
   PanelSection({this.id, this.title, this.description, this.pictures});
 
   PanelSection.fromJson(Map<String, dynamic> json) {
     try {
-      if (json.containsKey('id'))
-        id = json['id'];
-      if (json.containsKey('title'))
-        title = json['title'];
-      if (json.containsKey('description'))
-        description = json['description'];
-      if (json['images'].length == 0)
-        pictures = [];
-      else {
-        pictures =
-            json['images'].forEach((Map image) => Picture.fromJson(image));
-      }
-    } catch (_) {
-      // TODO
+      if (json.containsKey('id')) id = json['id'];
+      if (json.containsKey('title')) title = json['title'];
+      if (json.containsKey('description')) description = json['description'];
+      pictures = [];
+//      if (json['images'].value.length != 0) {
+      json['images']
+          .forEach((image) => pictures.add(PictureEntity.fromJson(image)));
+//      }
+    } catch (e) {
+      print(e);
     }
   }
 }

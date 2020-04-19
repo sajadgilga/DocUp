@@ -13,6 +13,7 @@ import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/panel/chatPage/ChatPage.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -182,6 +183,7 @@ class TabsState extends State<Tabs> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
     return BlocBuilder<TabSwitchBloc, PanelTabState>(builder: (context, state) {
       return Stack(
         children: <Widget>[

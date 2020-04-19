@@ -40,6 +40,7 @@ class DoctorEntity extends UserEntity {
       if (json['panels'].length != 0)
         json['panels'].forEach((panel) {
           panels.add(Panel.fromJson(panel));
+          panelMap[panels.last.id] = panels.last;
         });
     } catch (_) {
       // TODO

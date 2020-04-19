@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class Picture {
+class PictureEntity {
   int id;
   int parent;
   String title;
   String description;
-  String created_date;
+  DateTime created_date;
   String imageURL;
   Image picture;
   String imagePath;
 
-  Picture(
+  PictureEntity(
       {this.picture,
       this.title,
       this.description,
@@ -24,15 +24,16 @@ class Picture {
       "description": description,
       "image": MultipartFile.fromFile(imagePath)
     });
+    return data;
   }
 
-  Picture.fromJson(Map<String, dynamic> json) {
+  PictureEntity.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
-    title = json['title'];
-    description = json['description'];
-    imageURL = json['image'];
-    created_date = json['created_at'];
-    parent = json['parent'];
+    if (json.containsKey('title')) title = json['title'];
+    if (json.containsKey('title')) description = json['description'];
+    if (json.containsKey('title')) imageURL = json['image'];
+    if (json.containsKey('title')) created_date = (json['created_at'] != null?DateTime.parse(json['created_at']): null);
+    if (json.containsKey('title')) parent = json['parent'];
   }
 
   Image get image {

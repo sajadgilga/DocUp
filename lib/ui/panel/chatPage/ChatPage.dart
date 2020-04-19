@@ -10,6 +10,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math';
 
@@ -41,6 +42,7 @@ class _ChatPageState extends State<ChatPage> {
         panelId: _entity.iPanelId));
     _controller.text = '';
     FocusScope.of(context).unfocus();
+    SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
   }
 
   Widget _submitButton() => GestureDetector(

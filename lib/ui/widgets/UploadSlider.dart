@@ -1,11 +1,18 @@
+import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Picture.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class UploadSlider extends StatefulWidget {
+  int listId;
+
+  UploadSlider({Key key, @required this.listId}) : super(key: key);
+
   @override
   UploadSliderState createState() {
     return UploadSliderState();
@@ -13,7 +20,8 @@ class UploadSlider extends StatefulWidget {
 }
 
 class UploadSliderState extends State<UploadSlider> {
-  Picture picture = Picture(picture: null, title: '', description: '');
+  PictureEntity picture =
+      PictureEntity(picture: null, title: '', description: '');
   TextEditingController _controller = TextEditingController();
 
   @override
@@ -25,21 +33,24 @@ class UploadSliderState extends State<UploadSlider> {
 
   Future _getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    var newPicture = Picture(
+    var newPicture = PictureEntity(
         picture: Image.file(
           image,
           fit: BoxFit.cover,
         ),
         description: '',
-        title: '',
+        title: 'دست',
         imagePath: image.path);
     setState(() {
       picture = newPicture;
-      _controller.text = newPicture.title;
+//      _controller.text = newPicture.title;
     });
   }
 
-  void _onDescriptionSubmit() {}
+  void _onDescriptionSubmit() {
+    FocusScope.of(context).unfocus();
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  }
 
   Widget _pictureHolder(width, height) {
     return Container(
@@ -89,25 +100,28 @@ class UploadSliderState extends State<UploadSlider> {
         ),
       );
 
-  void _show() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              "منتظر ما باشید",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
-                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-          );
-        });
+  void _uploadPic() {
+//    showDialog(
+//        context: context,
+//        builder: (BuildContext context) {
+//          return AlertDialog(
+//            title: Text(
+//              "منتظر ما باشید",
+//              textAlign: TextAlign.center,
+//              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+//            ),
+//            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+//                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+//          );
+//        });
+    picture.description = _controller.text;
+    BlocProvider.of<PictureBloc>(context)
+        .add(PictureUpload(listId: widget.listId, picture: picture));
   }
 
   Widget _submit() => GestureDetector(
       onTap: () {
-        _show();
+        _uploadPic();
       },
       child: Container(
         margin: EdgeInsets.only(top: 30, bottom: 50),

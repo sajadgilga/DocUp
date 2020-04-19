@@ -2,6 +2,7 @@ import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
+import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/strings.dart';
@@ -47,6 +48,7 @@ class NavigatorView extends StatelessWidget {
   final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
   final ChatMessageBloc _chatMessageBloc = ChatMessageBloc();
   final SearchBloc _searchBloc = SearchBloc();
+  final PictureBloc _pictureBloc = PictureBloc();
   Function selectPage;
   final Doctor _doctor = Doctor(
       3,
@@ -68,8 +70,7 @@ class NavigatorView extends StatelessWidget {
       this.selectPage})
       : super(key: key);
 
-  Map<String, WidgetBuilder> _routeBuilders(BuildContext context,
-      {UserEntity entity}) {
+  Map<String, WidgetBuilder> _routeBuilders(BuildContext context, {entity}) {
     switch (index) {
 //      case -1: return {
 //        NavigatorRoutes.mainPage: (context) => _mainPage(),
@@ -104,7 +105,11 @@ class NavigatorView extends StatelessWidget {
               _doctorDetailPage(context, entity),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
-          NavigatorRoutes.uploadPicDialogue: (context) => UploadSlider(),
+          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
+              value: _pictureBloc,
+              child: UploadSlider(
+                listId: entity,
+              )),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
       case 3:
@@ -130,7 +135,7 @@ class NavigatorView extends StatelessWidget {
     }
   }
 
-  void _push(BuildContext context, String direction, {UserEntity entity}) {
+  void _push(BuildContext context, String direction, {entity}) {
     _route(RouteSettings(name: direction), context, entity: entity);
     Navigator.push(context,
         _route(RouteSettings(name: direction), context, entity: entity));
@@ -141,7 +146,7 @@ class NavigatorView extends StatelessWidget {
   }
 
   Route<dynamic> _route(RouteSettings settings, BuildContext context,
-      {UserEntity entity}) {
+      {entity}) {
     var routeBuilders = _routeBuilders(context, entity: entity);
     return MaterialPageRoute(
         settings: settings,
@@ -213,40 +218,45 @@ class NavigatorView extends StatelessWidget {
               ],
             );
           } else if (state.patientSection == PatientPanelSection.HEALTH_FILE) {
-            return Panel(
-              onPush: (direction, entity) {
-                _push(context, direction, entity: entity);
-              },
-              pages: <Widget>[
-                InfoPage(
-                  uploadAvailable: entity.isPatient,
-                  entity: entity,
+            return BlocProvider.value(
+                value: _pictureBloc,
+                child: Panel(
                   onPush: (direction, entity) {
                     _push(context, direction, entity: entity);
                   },
-                  picListLabel: Strings.panelDocumentsPicLabel,
-                  lastPicsLabel: Strings.panelDocumentsPicListLabel,
-                ),
-                InfoPage(
-                  uploadAvailable: entity.isDoctor,
-                  entity: entity,
-                  onPush: (direction, entity) {
-                    _push(context, direction, entity: entity);
-                  },
-                  picListLabel: Strings.panelPrescriptionsPicLabel,
-                  lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
-                ),
-                InfoPage(
-                  uploadAvailable: entity.isPatient,
-                  entity: entity,
-                  onPush: (direction, entity) {
-                    _push(context, direction, entity: entity);
-                  },
-                  picListLabel: Strings.panelTestResultsPicLabel,
-                  lastPicsLabel: Strings.panelTestResultsPicListLabel,
-                ),
-              ],
-            );
+                  pages: <Widget>[
+                    InfoPage(
+                      uploadAvailable: entity.isPatient,
+                      entity: entity,
+                      onPush: (direction, entity) {
+                        _push(context, direction, entity: entity);
+                      },
+                      pageName: Strings.documents,
+                      picListLabel: Strings.panelDocumentsPicLabel,
+                      lastPicsLabel: Strings.panelDocumentsPicListLabel,
+                    ),
+                    InfoPage(
+                      uploadAvailable: entity.isDoctor,
+                      entity: entity,
+                      onPush: (direction, entity) {
+                        _push(context, direction, entity: entity);
+                      },
+                      pageName: Strings.prescriptions,
+                      picListLabel: Strings.panelPrescriptionsPicLabel,
+                      lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
+                    ),
+                    InfoPage(
+                      uploadAvailable: entity.isPatient,
+                      entity: entity,
+                      onPush: (direction, entity) {
+                        _push(context, direction, entity: entity);
+                      },
+                      pageName: Strings.testResults,
+                      picListLabel: Strings.panelTestResultsPicLabel,
+                      lastPicsLabel: Strings.panelTestResultsPicListLabel,
+                    ),
+                  ],
+                ));
           }
           return Panel(); //TODO
         },

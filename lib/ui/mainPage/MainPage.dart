@@ -19,6 +19,7 @@ import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -313,6 +314,8 @@ class _MainPageState extends State<MainPage> {
     _progressDialogue =
         ProgressDialog(context, type: ProgressDialogType.Normal);
     _progressDialogue.style(message: "لطفا منتظر بمانید");
+
+    SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
 
     return MultiBlocProvider(
         providers: [BlocProvider<PanelBloc>.value(value: _panelBloc)],

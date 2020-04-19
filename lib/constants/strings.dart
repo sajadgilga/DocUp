@@ -78,4 +78,12 @@ class Strings {
 
   static final String iDoctorLabel = 'پزشک من';
   static final String iPatientLabel = 'بیمار من';
+
+
+  static final String diseaseImages = "disease_images";
+  static final String testResults = "test_results";
+  static final String prescriptions = "prescription";
+  static final String cognitiveTests = "cognitive_tests";
+  static final String documents = "documents";
+
 }

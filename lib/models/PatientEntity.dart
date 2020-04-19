@@ -12,7 +12,7 @@ class PatientEntity extends UserEntity {
       id = json['id'];
       if (json.containsKey('user')) {
         if (json['user'].containsKey('user'))
-        user = json['user'] != null ? User.fromJson(json['user']['user']) : null;
+        user = json['user']['user'] != null ? User.fromJson(json['user']['user']) : null;
         else
         user = json['user'] != null ? User.fromJson(json['user']) : null;
 
@@ -28,6 +28,7 @@ class PatientEntity extends UserEntity {
       if (json['panels'].length != 0)
         json['panels'].forEach((panel) {
           panels.add(Panel.fromJson(panel));
+          panelMap[panels.last.id] = panels.last;
         });
     } catch (_) {
       // TODO
