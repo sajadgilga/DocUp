@@ -100,7 +100,6 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
 //    _controller.addListener((){print(_controller.text); });
-    FocusScope.of(context).unfocus();
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
