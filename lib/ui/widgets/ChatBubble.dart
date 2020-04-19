@@ -48,7 +48,7 @@ class _ChatBubbleState extends State<ChatBubble> {
       : EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 25));
 
   Widget _chatBubble(width) => Container(
-        constraints: BoxConstraints(maxWidth: width * .7, minWidth: 30),
+        constraints: BoxConstraints(maxWidth: width * .7, minWidth: 40),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
             color: (widget.isMe

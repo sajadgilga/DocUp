@@ -21,6 +21,7 @@ import 'package:docup/ui/panel/searchPage/SearchPage.dart';
 import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/patientDetail/PatientRequestPage.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
+import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -343,34 +344,30 @@ class InStructure extends StatefulWidget {
 }
 
 class InStructureState extends State<InStructure> {
-  void _showDialog(context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
               "منتظر ما باشید",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+            Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
                 textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-          );
-        });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _showDialog(context);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text(''),
+            SizedBox(height: 20,),
+            Image.asset(
+              "assets/loading.gif",
+              width: 70,
+              height: 70,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

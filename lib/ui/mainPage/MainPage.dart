@@ -270,17 +270,18 @@ class _MainPageState extends State<MainPage> {
         bottomNavigationBar: SizedBox(
           child: _bottomNavigationBar(),
         ),
-        body: _children()[_currentIndex]
-//        IndexedStack(
-//          index: _currentIndex,
-//          children: <Widget>[
-//            _buildOffstageNavigator(0),
-//            _buildOffstageNavigator(1),
-//            _buildOffstageNavigator(2),
-//            _buildOffstageNavigator(3),
-//            _buildOffstageNavigator(4),
-//          ],
-//        )
+        body:
+//        _children()[_currentIndex]
+        IndexedStack(
+          index: _currentIndex,
+          children: <Widget>[
+            _buildOffstageNavigator(0),
+            _buildOffstageNavigator(1),
+            _buildOffstageNavigator(2),
+            _buildOffstageNavigator(3),
+            _buildOffstageNavigator(4),
+          ],
+        )
     );
   }
 
