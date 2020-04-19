@@ -209,7 +209,10 @@ class _PicListState extends State<PicList> {
               );
           }
           if (state is PictureLoading) {
-            if (state.section == null) return Waiting();
+            if (state.section == null)
+              return Container(
+                  margin: EdgeInsets.only(top: 40), child: Waiting());
+
             if (state.section.id == widget.listId)
               return Container(
                 child: Row(
@@ -220,6 +223,9 @@ class _PicListState extends State<PicList> {
                   ],
                 ),
               );
+            else
+              return Container(
+                  margin: EdgeInsets.only(top: 40), child: Waiting());
           }
           return Container(
             child: Text(''),
