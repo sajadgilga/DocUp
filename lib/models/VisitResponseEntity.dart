@@ -50,8 +50,13 @@ class VisitEntity {
   }
 
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool isAcceptance = false}) {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (isAcceptance) {
+      data['doctor_message'] = this.doctorMessage;
+      data['status'] = this.status;
+      return data;
+    }
     data['id'] = this.id;
     data['created_date'] = this.createdDate;
     data['modified_date'] = this.modifiedDate;

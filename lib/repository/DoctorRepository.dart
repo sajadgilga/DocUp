@@ -26,15 +26,15 @@ class DoctorRepository {
 
   Future<VisitEntity> getVisit(int patientId) async {
     final response = await _provider
-        .get("api/visits/" + patientId.toString() + "/", utf8Support: true);
+        .get("api/visit-related/" + patientId.toString() + "/", utf8Support: true);
     return VisitEntity.fromJson(response);
   }
 
   Future<VisitEntity> responseVisit(
-      int patientId, VisitEntity visitEntity) async {
+      int patientId, VisitEntity visitEntity, {isVisitAcceptance= false}) async {
     final response = await _provider.patch(
         "api/response-visit/" + patientId.toString() + "/",
-        body: visitEntity.toJson());
+        body: visitEntity.toJson(isAcceptance: isVisitAcceptance));
     return VisitEntity.fromJson(response);
   }
 

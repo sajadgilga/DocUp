@@ -41,7 +41,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
           content: Text('درخواست شما با موفقیت ثبت شد'),
           duration: Duration(seconds: 3),
         ));
-      } else if(data.status == Status.ERROR) {
+      } else if (data.status == Status.ERROR) {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text(data.message),
           duration: Duration(seconds: 3),
@@ -140,7 +140,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   icon: Icon(Icons.close),
                   color: IColors.red,
                   callBack: () {
-                    _bloc.responseVisit(entity, false);
+                    _bloc.responseVisit(entity, true);
                   },
                 ),
                 ActionButton(
@@ -149,7 +149,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   icon: Icon(Icons.check),
                   color: IColors.green,
                   callBack: () {
-                    _bloc.responseVisit(entity, true);
+                    _bloc.responseVisit(entity, false);
                   },
                 ),
               ],
@@ -219,7 +219,8 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
           children: <Widget>[
             SizedBox(width: 5),
             Text(
-                "${widget.patientEntity.user.firstName} ${widget.patientEntity.user.lastName}",
+//                "${widget.patientEntity.user.firstName} ${widget.patientEntity.user.lastName}",
+                widget.patientEntity.user.name,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           ],
         ),

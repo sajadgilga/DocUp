@@ -109,7 +109,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void _startTimer() {
     var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
-    Timer.periodic(Duration(seconds: 10), (timer) {
+    Timer.periodic(Duration(seconds: 7), (timer) {
       _chatMessageBloc.add(ChatMessageGet(
           panelId: widget.entity.iPanelId,
           size: 50,

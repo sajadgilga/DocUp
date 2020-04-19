@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
@@ -302,8 +304,13 @@ class NavigatorView extends StatelessWidget {
   }
 
   Widget _patientDetailPage(context, patient) {
+    PatientEntity _patient = patient;
+    try {
+      _patient.user.name = utf8.decode(_patient.user.name.codeUnits);
+    } catch (_) {
+    }
     return PatientRequestPage(
-      patientEntity: patient,
+      patientEntity: _patient,
     );
   }
 

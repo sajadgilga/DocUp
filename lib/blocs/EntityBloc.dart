@@ -39,20 +39,20 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
       var panels = (entity.mEntity as PatientEntity).panels;
       if (panels.length > 0) {
         for (var panel in panels) {
-          if (panel.doctorId == null)
-            continue;
+          if (panel.doctorId == null || panel.status < 2) continue;
           add(PartnerEntitySet(id: panel.doctorId, panelId: panel.id));
           break;
         }
       }
     } else if (state.entity.type == RoleType.DOCTOR) {
       var panels = (state.entity.mEntity as DoctorEntity).panels;
-      if (panels.length > 0) {for (var panel in panels) {
-        if (panel.patientId == null)
-          continue;
-        add(PartnerEntitySet(id: panel.patientId, panelId: panel.id));
-        break;
-      }}
+      if (panels.length > 0) {
+        for (var panel in panels) {
+          if (panel.patientId == null || panel.status < 2) continue;
+          add(PartnerEntitySet(id: panel.patientId, panelId: panel.id));
+          break;
+        }
+      }
     }
   }
 
