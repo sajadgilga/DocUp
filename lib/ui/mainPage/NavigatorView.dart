@@ -5,6 +5,7 @@ import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
+import 'package:docup/blocs/VisitBloc.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/PatientEntity.dart';
@@ -49,6 +50,7 @@ class NavigatorView extends StatelessWidget {
   final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
   final ChatMessageBloc _chatMessageBloc = ChatMessageBloc();
   final SearchBloc _searchBloc = SearchBloc();
+  final VisitBloc _visitBloc = VisitBloc();
   final PictureBloc _pictureBloc = PictureBloc();
   Function selectPage;
   final Doctor _doctor = Doctor(
@@ -305,13 +307,16 @@ class NavigatorView extends StatelessWidget {
     );
   }
 
-  Widget _searchPage(context) => BlocProvider<SearchBloc>.value(
-      value: _searchBloc,
-      child: SearchPage(
-        onPush: (direction, entity) {
-          _push(context, direction, entity: entity);
-        },
-      ));
+  Widget _searchPage(context) => MultiBlocProvider(
+          providers: [
+            BlocProvider<SearchBloc>.value(value: _searchBloc),
+//            BlocProvider<VisitBloc>.value(value: _visitBloc),
+          ],
+          child: SearchPage(
+            onPush: (direction, entity) {
+              _push(context, direction, entity: entity);
+            },
+          ));
 
   Widget _panelMenu(context) => MultiBlocProvider(
           providers: [
@@ -344,7 +349,6 @@ class InStructure extends StatefulWidget {
 }
 
 class InStructureState extends State<InStructure> {
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -359,7 +363,9 @@ class InStructureState extends State<InStructure> {
             ),
             Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
                 textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Image.asset(
               "assets/loading.gif",
               width: 70,

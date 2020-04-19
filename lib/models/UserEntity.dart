@@ -76,4 +76,8 @@ class Entity {
     return mEntity.panelMap[iPanelId]
         .sections[name].id;
   }
+
+  bool isActivePanel(panelId) {
+    return mEntity.panelMap[panelId].status > 1;
+  }
 }

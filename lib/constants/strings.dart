@@ -86,4 +86,7 @@ class Strings {
   static final String cognitiveTests = "cognitive_tests";
   static final String documents = "documents";
 
+  static final String notFoundRequest = 'درخواستی از جانب این بیمار ندارید';
+
+
 }

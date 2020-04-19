@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
@@ -69,7 +70,9 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   break;
                 case Status.ERROR:
                   return APICallError(
-                    errorMessage: snapshot.data.message,
+                    errorMessage: Strings.notFoundRequest
+//                    snapshot.data.message
+                    ,
                     onRetryPressed: () =>
                         _bloc.getVisit(widget.patientEntity.id),
                   );

@@ -1,5 +1,6 @@
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
+import 'package:docup/blocs/VisitBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
@@ -72,7 +73,14 @@ class SearchPage extends StatelessWidget {
       );
 
   Widget _resultList() {
-    return BlocBuilder<SearchBloc, SearchState>(
+//      BlocBuilder<VisitBloc, VisitState>(builder: (context, visitState) {
+//      var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
+//      if (_entity.isDoctor) {
+//        if (visitState is VisitLoaded) {
+//          return ResultList(onPush: onPush, isDoctor: _entity.isDoctor, results: visitState.result.results,)
+//        }
+//      }
+       return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
         if (state is SearchLoaded) {
           return ResultList(

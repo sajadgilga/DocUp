@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:docup/blocs/EntityBloc.dart';
@@ -75,6 +76,20 @@ class _MainPageState extends State<MainPage> {
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
     _entityBloc.add(EntityGet());
     _panelBloc.add(GetMyPanels());
+    _entityBloc.listen((data) {
+      Timer _timer;
+      if (data is EntityError) {
+        _timer = Timer.periodic(
+            Duration(seconds: 5), (Timer t) {
+              _entityBloc.add(EntityGet());
+              _panelBloc.add(GetMyPanels());
+        }
+            );
+      } else if (data is EntityLoaded) {
+        if (_timer.isActive)
+          _timer.cancel();
+      }
+    });
 
     _firebaseMessaging.getToken().then((String fcmToken) {
       assert(fcmToken != null);
@@ -98,7 +113,7 @@ class _MainPageState extends State<MainPage> {
     );
 
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('mipmap/ic_launcher');
+    new AndroidInitializationSettings('mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
 
     var initializationSettings = new InitializationSettings(
@@ -144,9 +159,10 @@ class _MainPageState extends State<MainPage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CallPage(
-          channelName: channelName,
-        ),
+        builder: (context) =>
+            CallPage(
+              channelName: channelName,
+            ),
       ),
     );
   }
@@ -179,32 +195,32 @@ class _MainPageState extends State<MainPage> {
                   alignment: Alignment.center,
                   child: (destination.isProfile
                       ? Container(
-                          width: 50,
-                          child: ClipPolygon(
-                              sides: 6,
-                              rotate: 90,
-                              boxShadows: [
-                                PolygonBoxShadow(
-                                    color: Colors.black, elevation: 1.0),
-                                PolygonBoxShadow(
-                                    color: Colors.grey, elevation: 2.0)
-                              ],
-                              child: (destination.img != null
-                                  ? destination.img
-                                  : Image.asset(Assets.doctorAvatar))),
-                        )
+                    width: 50,
+                    child: ClipPolygon(
+                        sides: 6,
+                        rotate: 90,
+                        boxShadows: [
+                          PolygonBoxShadow(
+                              color: Colors.black, elevation: 1.0),
+                          PolygonBoxShadow(
+                              color: Colors.grey, elevation: 2.0)
+                        ],
+                        child: (destination.img != null
+                            ? destination.img
+                            : Image.asset(Assets.doctorAvatar))),
+                  )
                       : (destination.hasImage
-                          ? SvgPicture.asset(
-                              destination.image,
-                              color: (_currentIndex == 1
-                                  ? IColors.themeColor
-                                  : Colors.grey),
-                              width: 25,
-                            )
-                          : Icon(
-                              destination.icon,
-                              size: 30,
-                            )))),
+                      ? SvgPicture.asset(
+                    destination.image,
+                    color: (_currentIndex == 1
+                        ? IColors.themeColor
+                        : Colors.grey),
+                    width: 25,
+                  )
+                      : Icon(
+                    destination.icon,
+                    size: 30,
+                  )))),
 //              Align(alignment: Alignment(0, -1), child: Container(
 //                decoration:
 //                    BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
@@ -247,7 +263,9 @@ class _MainPageState extends State<MainPage> {
     return Offstage(
       offstage: _currentIndex != index,
       child: NavigatorView(
-        selectPage: () {_chatPage();},
+        selectPage: () {
+          _chatPage();
+        },
         navigatorKey: _navigatorKeys[index],
         index: index,
         globalOnPush: (direction) => _push(context, direction),
@@ -289,9 +307,14 @@ class _MainPageState extends State<MainPage> {
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
     return {
       NavigatorRoutes.mainPage: (context) => _mainPage(),
-      NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage(
+      NavigatorRoutes.doctorDialogue: (context) =>
+          DoctorDetailPage(
             doctor:
-                BlocProvider.of<EntityBloc>(context).state.entity.partnerEntity,
+            BlocProvider
+                .of<EntityBloc>(context)
+                .state
+                .entity
+                .partnerEntity,
           )
     };
   }
@@ -317,12 +340,12 @@ class _MainPageState extends State<MainPage> {
         ProgressDialog(context, type: ProgressDialogType.Normal);
     _progressDialogue.style(message: "لطفا منتظر بمانید");
 
-    SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
 
     return MultiBlocProvider(
         providers: [BlocProvider<PanelBloc>.value(value: _panelBloc)],
         child: WillPopScope(child:
-                BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+        BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
           return _mainPage();
         }),
 //            Navigator(
@@ -337,15 +360,15 @@ class _MainPageState extends State<MainPage> {
 //                MyApp.globalNavigator.currentState.pop();
 //                return false;
 //              }
-          final isFirstRouteInCurrentRoute =
+              final isFirstRouteInCurrentRoute =
               !await _navigatorKeys[_currentIndex].currentState.maybePop();
-          if (isFirstRouteInCurrentRoute) {
-            if (_currentIndex != 0) {
-              _selectPage(0);
-              return false;
-            }
-          }
-          return isFirstRouteInCurrentRoute;
-        }));
+              if (isFirstRouteInCurrentRoute) {
+                if (_currentIndex != 0) {
+                  _selectPage(0);
+                  return false;
+                }
+              }
+              return isFirstRouteInCurrentRoute;
+            }));
   }
 }

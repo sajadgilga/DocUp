@@ -1,5 +1,6 @@
 import 'package:docup/models/AuthResponseEntity.dart';
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/ListResult.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/networking/ApiProvider.dart';
 
@@ -12,8 +13,8 @@ class DoctorRepository {
   }
 
   Future<DoctorEntity> update(DoctorEntity patient) async {
-    final response = await _provider.patch("api/auth/doctor/",
-        body: patient.toJson());
+    final response =
+        await _provider.patch("api/auth/doctor/", body: patient.toJson());
     return DoctorEntity.fromJson(response);
   }
 
@@ -29,11 +30,11 @@ class DoctorRepository {
     return VisitEntity.fromJson(response);
   }
 
-
-  Future<VisitEntity> responseVisit(int patientId, VisitEntity visitEntity) async {
-    final response = await _provider
-        .patch("api/response-visit/" + patientId.toString() + "/",
-    body: visitEntity.toJson());
+  Future<VisitEntity> responseVisit(
+      int patientId, VisitEntity visitEntity) async {
+    final response = await _provider.patch(
+        "api/response-visit/" + patientId.toString() + "/",
+        body: visitEntity.toJson());
     return VisitEntity.fromJson(response);
   }
 
@@ -47,5 +48,10 @@ class DoctorRepository {
       "request_visit_time": visitTime
     });
     return VisitEntity.fromJson(response);
+  }
+
+  Future<ListResult> getAllVisits() async {
+    final response = await _provider.get("api/visits/", utf8Support: true);
+    return ListResult.fromJson(response);
   }
 }

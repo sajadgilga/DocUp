@@ -126,7 +126,8 @@ class PatientPanelMenu extends StatelessWidget {
   Widget _myDoctors(isActive, partners, context) => PanelMenuMainItem(onPush,
       subItems: partners,
 //              [PanelSubItem('دکتر زهرا شادلو', 'doctor_1'),],
-      label: (isPatient?Strings.panelIDoctorLabel:Strings.panelIPatientLabel),
+      label:
+          (isPatient ? Strings.panelIDoctorLabel : Strings.panelIPatientLabel),
       icon: Icons.person,
       color: getColor(PatientPanelSection.DOCTOR_INTERFACE, context: context),
       isActive: isActive,
@@ -143,20 +144,22 @@ class PatientPanelMenu extends StatelessWidget {
     var state = BlocProvider.of<PanelBloc>(context).state;
     if (state is PanelsLoaded)
       for (var panel in state.panels) {
-        if (isPatient)
-          partners.add(PanelSubItem(
-              panel.doctor.user.name,
-              panel.doctor.id.toString(),
-              getColor(PatientPanelSection.DOCTOR_INTERFACE,
-                  id: panel.doctor.id, context: context),
-              panelId: panel.id));
-        else
-          partners.add(PanelSubItem(
-              panel.patient.user.name,
-              panel.patient.id.toString(),
-              getColor(PatientPanelSection.DOCTOR_INTERFACE,
-                  id: panel.patient.id, context: context),
-              panelId: panel.id));
+        if (panel.status > -1) {
+          if (isPatient)
+            partners.add(PanelSubItem(
+                panel.doctor.user.name,
+                panel.doctor.id.toString(),
+                getColor(PatientPanelSection.DOCTOR_INTERFACE,
+                    id: panel.doctor.id, context: context),
+                panelId: panel.id));
+          else
+            partners.add(PanelSubItem(
+                panel.patient.user.name,
+                panel.patient.id.toString(),
+                getColor(PatientPanelSection.DOCTOR_INTERFACE,
+                    id: panel.patient.id, context: context),
+                panelId: panel.id));
+        }
       }
     return partners;
   }
