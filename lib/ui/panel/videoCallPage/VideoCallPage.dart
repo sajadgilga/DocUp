@@ -8,6 +8,7 @@ import 'package:docup/repository/VideoCallRepository.dart';
 import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -25,6 +26,9 @@ class VideoCallPage extends StatefulWidget {
 }
 
 class _VideoCallPageState extends State<VideoCallPage> {
+  AlertDialog _loadingDialog = getLoadingDialog();
+  bool _loadingEnable;
+
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 20),
@@ -59,26 +63,44 @@ class _VideoCallPageState extends State<VideoCallPage> {
             color: IColors.themeColor,
             icon: Icon(Icons.videocam),
             title: "تماس تصویری",
-            callBack: onJoin,
+            callBack: () {
+              showLoadingDialog();
+              onJoin().then((value) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CallPage(
+                      channelName: value,
+                    ),
+                  ),
+                );
+              });
+            },
           )
         ],
       );
 
-  Future<void> onJoin() async {
+  showLoadingDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          Future.delayed(Duration(seconds: 6), () {
+            Navigator.of(context).pop(true);
+          });
+          return _loadingDialog;
+        });
+    _loadingEnable = true;
+  }
+
+  Future<String> onJoin() async {
     // await for camera and mic permissions before pushing video page
     await _handleCameraAndMic();
     // push video page with given channel name
 
     AgoraChannel channel =
         await VideoCallRepository().getChannelName(widget.entity.pId);
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CallPage(
-          channelName: channel.channelName,
-        ),
-      ),
-    );
+
+    return channel.channelName;
   }
 
   Future<void> _handleCameraAndMic() async {

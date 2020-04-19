@@ -88,6 +88,7 @@ class _MainPageState extends State<MainPage> {
         await _showNotificationWithDefaultSound(
             message['notification']['title'], message['notification']['body']);
       },
+      onBackgroundMessage: myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
       },

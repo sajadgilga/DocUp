@@ -47,7 +47,7 @@ dependencies:
   persian_datetime_picker: ^1.0.5
   shamsi_date: ^0.7.0
   jaguar_jwt: ^2.1.6
-  firebase_messaging: ^6.0.13
+  firebase_messaging: ^6.0.8
   datetime_picker_formfield: ^1.0.0
   introduction_screen: ^1.0.7
   flutter_launcher_icons: ">=0.6.1"
