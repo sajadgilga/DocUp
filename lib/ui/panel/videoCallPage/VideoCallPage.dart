@@ -27,7 +27,6 @@ class VideoCallPage extends StatefulWidget {
 
 class _VideoCallPageState extends State<VideoCallPage> {
   AlertDialog _loadingDialog = getLoadingDialog();
-  bool _loadingEnable;
 
   Widget build(BuildContext context) {
     return Container(
@@ -65,16 +64,16 @@ class _VideoCallPageState extends State<VideoCallPage> {
             title: "تماس تصویری",
             callBack: () {
               showLoadingDialog();
-              onJoin().then((value) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CallPage(
-                      channelName: value,
-                    ),
-                  ),
-                );
-              });
+//              onJoin().then((value) {
+//                Navigator.push(
+//                  context,
+//                  MaterialPageRoute(
+//                    builder: (context) => CallPage(
+//                      channelName: value,
+//                    ),
+//                  ),
+//                );
+//              });
             },
           )
         ],
@@ -89,23 +88,22 @@ class _VideoCallPageState extends State<VideoCallPage> {
           });
           return _loadingDialog;
         });
-    _loadingEnable = true;
   }
 
-  Future<String> onJoin() async {
-    // await for camera and mic permissions before pushing video page
-    await _handleCameraAndMic();
-    // push video page with given channel name
-
-    AgoraChannel channel =
-        await VideoCallRepository().getChannelName(widget.entity.pId);
-
-    return channel.channelName;
-  }
-
-  Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
-  }
+//  Future<String> onJoin() async {
+//     await for camera and mic permissions before pushing video page
+//    await _handleCameraAndMic();
+//     push video page with given channel name
+//
+//    AgoraChannel channel =
+//        await VideoCallRepository().getChannelName(widget.entity.pId);
+//
+//    return channel.channelName;
+//  }
+//
+//  Future<void> _handleCameraAndMic() async {
+//    await PermissionHandler().requestPermissions(
+//      [PermissionGroup.camera, PermissionGroup.microphone],
+//    );
+//  }
 }

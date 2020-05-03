@@ -1,0 +1,1 @@
+final String PAY_IR_API_KEY = "PAY_IR_API_KEY";

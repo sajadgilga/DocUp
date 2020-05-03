@@ -14,11 +14,9 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/NotificationRepository.dart';
-import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:docup/ui/start/RoleType.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,7 +42,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+//  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
 //  final PatientBloc _patientBloc = PatientBloc();
   final PanelBloc _panelBloc = PanelBloc();
@@ -91,26 +89,26 @@ class _MainPageState extends State<MainPage> {
       }
     });
 
-    _firebaseMessaging.getToken().then((String fcmToken) {
-      assert(fcmToken != null);
-      print("FCM " + fcmToken);
-      NotificationRepository().registerDevice(fcmToken);
-    });
+//    _firebaseMessaging.getToken().then((String fcmToken) {
+//      assert(fcmToken != null);
+//      print("FCM " + fcmToken);
+//      NotificationRepository().registerDevice(fcmToken);
+//    });
 //
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        await _showNotificationWithDefaultSound(
-            message['notification']['title'], message['notification']['body']);
-      },
-      onBackgroundMessage: myBackgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
-    );
+//    _firebaseMessaging.configure(
+//      onMessage: (Map<String, dynamic> message) async {
+//        print("onMessage: $message");
+//        await _showNotificationWithDefaultSound(
+//            message['notification']['title'], message['notification']['body']);
+//      },
+//      onBackgroundMessage: myBackgroundMessageHandler,
+//      onLaunch: (Map<String, dynamic> message) async {
+//        print("onLaunch: $message");
+//      },
+//      onResume: (Map<String, dynamic> message) async {
+//        print("onResume: $message");
+//      },
+//    );
 
     var initializationSettingsAndroid =
     new AndroidInitializationSettings('mipmap/ic_launcher');
@@ -137,35 +135,35 @@ class _MainPageState extends State<MainPage> {
     await flutterLocalNotificationsPlugin.show(
       0,
       title,
-      jsonBody['payload'],
+      title,
       platformChannelSpecifics,
       payload: jsonBody['payload'],
     );
   }
 
   Future onSelectNotification(String payload) async {
-    joinVideoCall(payload);
+//    joinVideoCall(payload);
   }
 
   bool videoCallStarted = false;
 
-  Future<void> joinVideoCall(String channelName) async {
-    if (videoCallStarted) return;
-    videoCallStarted = true;
+//  Future<void> joinVideoCall(String channelName) async {
+//    if (videoCallStarted) return;
+//    videoCallStarted = true;
     // await for camera and mic permissions before pushing video page
-    await _handleCameraAndMic();
+//    await _handleCameraAndMic();
     // push video page with given channel name
 
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            CallPage(
-              channelName: channelName,
-            ),
-      ),
-    );
-  }
+//    await Navigator.push(
+//      context,
+//      MaterialPageRoute(
+//        builder: (context) =>
+//            CallPage(
+//              channelName: channelName,
+//            ),
+//      ),
+//    );
+//  }
 
   Future<void> _handleCameraAndMic() async {
     await PermissionHandler().requestPermissions(
