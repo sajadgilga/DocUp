@@ -196,6 +196,8 @@ class _PicListState extends State<PicList> {
 
   Widget _recentPics() => BlocBuilder<PictureBloc, PictureState>(
         builder: (context, state) {
+          if (widget.listId <0)
+            return Container();
           if (state is PicturesLoaded) {
             if (state.section.id == widget.listId)
               return Container(

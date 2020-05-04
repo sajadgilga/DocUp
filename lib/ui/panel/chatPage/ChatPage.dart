@@ -42,7 +42,7 @@ class _ChatPageState extends State<ChatPage> {
         panelId: _entity.iPanelId));
     _controller.text = '';
     FocusScope.of(context).unfocus();
-    SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
   Widget _submitButton() => GestureDetector(
@@ -95,12 +95,21 @@ class _ChatPageState extends State<ChatPage> {
   Widget _chatBox() {
     return BlocBuilder<ChatMessageBloc, ChatMessageState>(
         builder: (context, state) {
-      if (state is ChatMessageLoaded || state is ChatMessageLoading) {
+      if (state is ChatMessageLoaded) {
 //      Navigator.of(context).pop();
         return _ChatBox(
           entity: widget.entity,
         );
-      } else if (state is ChatMessageEmpty) {
+      }
+      if (state is ChatMessageLoading) {
+        if ((state as ChatMessageLoading).chatMessages != null)
+          return _ChatBox(
+            entity: widget.entity,
+          );
+        else
+          return Expanded(flex: 2, child: Waiting());
+      }
+      if (state is ChatMessageEmpty) {
         return Expanded(flex: 2, child: Waiting());
       }
       return Expanded(flex: 2, child: Waiting());

@@ -73,8 +73,12 @@ class Entity {
   }
 
   int sectionId (String name){
-    return mEntity.panelMap[iPanelId]
-        .sections[name].id;
+    try {
+      return mEntity.panelMap[iPanelId]
+          .sections[name].id;
+    }catch(_) {
+      return -1;
+    }
   }
 
   bool isActivePanel(panelId) {

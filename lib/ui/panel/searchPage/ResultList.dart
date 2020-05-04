@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:docup/constants/colors.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
@@ -7,6 +8,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ResultList extends StatefulWidget {
   final Function(String, UserEntity) onPush;
@@ -39,7 +41,10 @@ class _ResultListState extends State<ResultList> {
     }
     return Container(
       constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 60),
+      BoxConstraints(maxHeight: MediaQuery
+          .of(context)
+          .size
+          .height - 60),
       margin: EdgeInsets.only(top: 20, right: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -91,18 +96,54 @@ class _SearchResultDoctorItem extends StatelessWidget {
     onPush(NavigatorRoutes.doctorDialogue, entity);
   }
 
-  Widget _image(context) => GestureDetector(
-      onTap: () => _showDoctorDialogue(context),
-      child: Container(
+  Widget _image(context) =>
+      GestureDetector(
+          onTap: () => _showDoctorDialogue(context),
           child: Container(
-              width: 70,
-              child: ClipPolygon(
-                sides: 6,
-                rotate: 90,
-                child: Image.network(entity.user.avatar),
-              ))));
+              child: Container(
+                  width: 70,
+                  child: ClipPolygon(
+                    sides: 6,
+                    rotate: 90,
+                    child: Image.network(entity.user.avatar),
+                  ))));
 
-  Widget _info() {
+  Widget _rating() =>
+      RatingBar(
+        itemCount: 5,
+        initialRating: 3.5,
+        direction: Axis.horizontal,
+        allowHalfRating: true,
+        itemSize: 15,
+        itemBuilder: (context, _) => Icon(Icons.star, color: Colors.amber),
+        onRatingUpdate: (rating) {},
+      );
+
+  Widget _tag(text) {
+    return Container(
+      padding: EdgeInsets.only(right: 10, left: 10),
+      margin: EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        color: IColors.themeColor,
+        borderRadius: BorderRadius.all(Radius.circular(7))
+      ),
+      child: Text(text, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 10),),
+    );
+  }
+
+  Widget _tags() {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+            _tag('ویزیت متنی'),
+            _tag('ویزیت صوتی'),
+        ],
+      ),
+    );
+  }
+
+  Widget _nameAndExpertise() {
     String utfName;
     String utfExpert;
     try {
@@ -117,8 +158,8 @@ class _SearchResultDoctorItem extends StatelessWidget {
       utfExpert = entity.expert;
     }
     return Container(
-      margin: EdgeInsets.only(right: 20),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Text(
             utfName,
@@ -127,24 +168,48 @@ class _SearchResultDoctorItem extends StatelessWidget {
           ),
           Text(
             utfExpert,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
             textAlign: TextAlign.right,
           ),
         ],
       ),
     );
   }
-    @override
-    Widget build(BuildContext context) {
-      return Container(
-        margin: EdgeInsets.only(top: 10, bottom: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[_info(), _image(context)],
+
+  Widget _info() {
+    return Expanded(
+      flex: 2,
+      child: Container(
+      margin: EdgeInsets.only(right: 20, left: 20),
+
+      child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                _rating(),
+                _nameAndExpertise()
+              ],
+            ),
+            _tags()
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 10, bottom: 10),
+      constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[_info(), _image(context)],
+      ),
+    );
+  }
+}
 
 
 class _SearchResultPatientItem extends StatelessWidget {
@@ -171,21 +236,24 @@ class _SearchResultPatientItem extends StatelessWidget {
     onPush(NavigatorRoutes.patientDialogue, entity);
   }
 
-  Widget _image(context) => GestureDetector(
-      onTap: () => _showDoctorDialogue(context),
-      child: Container(
+  Widget _image(context) =>
+      GestureDetector(
+          onTap: () => _showDoctorDialogue(context),
           child: Container(
-              width: 70,
-              child: ClipPolygon(
-                sides: 6,
-                rotate: 90,
-                child: Image.network(entity.user.avatar),
-              ))));
+              child: Container(
+                  width: 70,
+                  child: ClipPolygon(
+                    sides: 6,
+                    rotate: 90,
+                    child: Image.network(entity.user.avatar),
+                  ))));
 
   Widget _info() {
     String utfName;
     try {
-      utfName= utf8.decode(entity.user.name.toString().codeUnits);
+      utfName = utf8.decode(entity.user.name
+          .toString()
+          .codeUnits);
     } catch (_) {
       utfName = entity.user.name;
     }
@@ -207,12 +275,13 @@ class _SearchResultPatientItem extends StatelessWidget {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10, bottom: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[_info(), _image(context)],
       ),
     );
