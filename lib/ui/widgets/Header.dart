@@ -10,11 +10,12 @@ class Header extends StatelessWidget {
   Widget _docUpIcon() {
     return Container(
       padding: EdgeInsets.only(top: 20, right: 20),
-      child: SvgPicture.asset(
-        Assets.docUpIcon,
-        width: 35,
-        height: 35,
-      ),
+      child: Image.asset(Assets.docUpIcon, width: 35,),
+//      SvgPicture.asset(
+//        Assets.docUpIcon,
+//        width: 35,
+//        height: 35,
+//      ),
       alignment: Alignment.centerRight,
     );
   }

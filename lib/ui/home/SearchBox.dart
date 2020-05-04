@@ -6,32 +6,56 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../constants/strings.dart';
 import '../../constants/colors.dart';
+class SearchBox extends StatefulWidget {
 
-class SearchBox extends StatelessWidget {
   Function(String, UserEntity) onPush;
-  TextEditingController _controller;
   bool isPatient;
 
   SearchBox({this.onPush, @required this.isPatient = true});
 
   @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _SearchBoxState();
+  }
+}
+class _SearchBoxState extends State<SearchBox> {
+  String searchTag;
+  TextEditingController _controller;
+
+  @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    searchTag = (widget.isPatient ? 'تخصص' : 'درحال درمان');
+    super.initState();
   }
 
   double _getSearchBoxWidth(width) {
     return (width > 550 ? width * .6 : (width > 400 ? width * .5 : width * .4));
   }
 
+  void _changeTag() {
+
+  }
+
+  void _showTags() {
+
+  }
+
   void _search(context) {
     FocusScope.of(context).unfocus();
     SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
-    onPush(NavigatorRoutes.searchView, null);
+    widget.onPush(NavigatorRoutes.searchView, null);
   }
 
   Widget _filterText() {
-    return Text((isPatient ? 'تخصص' : 'درحال درمان'),
+    return Text(searchTag,
         style: TextStyle(
             fontSize: 9,
             fontWeight: FontWeight.bold,
@@ -78,7 +102,9 @@ class SearchBox extends StatelessWidget {
                         fillColor: IColors.themeColor),
                   )),
             ),
-        Row(
+        GestureDetector(onTap: () {
+
+        }, child: Row(
           children: <Widget>[
             _filterText(),
             Container(
@@ -89,7 +115,7 @@ class SearchBox extends StatelessWidget {
               margin: EdgeInsets.only(left: 5),
             ),
           ],
-        )
+        ))
       ]),
 //      ),child: Row(
 //        mainAxisAlignment: MainAxisAlignment.center,

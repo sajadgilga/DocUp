@@ -36,6 +36,11 @@ class IColors {
   static const Color trackingCuring = Colors.black;
   static const Color trackingCured = Color.fromRGBO(38, 163, 10, 1);
 
+  static const Color visitRequest = Color.fromRGBO(254, 95, 85, 1);
+  static const Color virtualVisitRequest = Color.fromRGBO(254, 95, 85, 1);
+  static const Color inContact = green;
+  static const Color cured = activePanelMenu;
+
   static void changeThemeColor(RoleType roleType) {
     Assets.changeIcons(roleType);
     switch(roleType) {

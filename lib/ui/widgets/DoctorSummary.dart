@@ -38,12 +38,12 @@ class PartnerSummary extends StatelessWidget {
               constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * .3),
               child: Text(
-                name,
+                (name != null? name: ''),
                 textDirection: TextDirection.rtl,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               )),
           Text(
-            speciality,
+            (speciality != null? speciality: ''),
             textDirection: TextDirection.rtl,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
@@ -51,7 +51,7 @@ class PartnerSummary extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
-                location,
+                (location != null? location: ''),
                 textDirection: TextDirection.rtl,
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
               ),

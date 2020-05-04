@@ -1,4 +1,5 @@
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/constants/assets.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
@@ -59,7 +60,9 @@ class PartnerInfo extends StatelessWidget {
                   child: ClipPolygon(
                     sides: 6,
                     rotate: 90,
-                    child: Image.network(entity.partnerEntity.user.avatar),
+                    child: (entity.partnerEntity.user.avatar != null
+                        ? Image.network(entity.partnerEntity.user.avatar)
+                        : Image.asset(Assets.emptyAvatar)),
                   )),
               Align(
                   alignment: Alignment(-.75, 1),

@@ -59,25 +59,25 @@ class _PanelState extends State<Panel> {
   Widget _header() => Header(
           child: Row(
         children: <Widget>[
-          GestureDetector(
-              onTap: () {
-                Navigator.of(context).maybePop();
-//                _showPanelMenu();
-              },
-              child: Container(
-                padding: EdgeInsets.only(top: 15, left: 10, right: 10),
-                child:
-                SvgPicture.asset(
-                  Assets.panelListIcon,
-                  width: 35,
-                  color: IColors.themeColor,
-                )
-//                Image(
-//                  image: AssetImage(Assets.panelListIcon),
-//                  height: 40,
-//                  width: 40,
-//                ),
-              )),
+//          GestureDetector(
+//              onTap: () {
+//                Navigator.of(context).maybePop();
+////                _showPanelMenu();
+//              },
+//              child: Container(
+//                padding: EdgeInsets.only(top: 15, left: 10, right: 10),
+//                child:
+//                SvgPicture.asset(
+//                  Assets.panelListIcon,
+//                  width: 35,
+//                  color: IColors.themeColor,
+//                )
+////                Image(
+////                  image: AssetImage(Assets.panelListIcon),
+////                  height: 40,
+////                  width: 40,
+////                ),
+//              )),
           Container(
             padding: EdgeInsets.only(top: 15, left: 15),
             child: GestureDetector(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/VisitBloc.dart';
@@ -42,11 +44,33 @@ class SearchPage extends StatelessWidget {
 
   Widget _docUpIcon() => Container(
         padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
-        child: SvgPicture.asset(Assets.docUpIcon, width: 50),
+        child: Image.asset(Assets.docUpIcon, width: 50),
+//        child: SvgPicture.asset(Assets.docUpIcon, width: 50),
         alignment: Alignment.centerRight,
       );
 
-  Widget _header() => _docUpIcon();
+  Widget _backArrow(context) {
+    return (Platform.isIOS
+        ? GestureDetector(
+            onTap: () {
+              Navigator.maybePop(context);
+            },
+            child: Container(
+                margin: EdgeInsets.only(left: 40),
+                child: Icon(
+                  Icons.keyboard_backspace,
+                  color: IColors.themeColor,
+                  size: 30,
+                )))
+        : Container());
+  }
+
+  Widget _header(context) => Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[_backArrow(context), _docUpIcon()],
+        ),
+      );
 
   Widget _searchBox(width, context) => Container(
         margin: EdgeInsets.only(right: 40, left: 40),
@@ -80,7 +104,7 @@ class SearchPage extends StatelessWidget {
 //          return ResultList(onPush: onPush, isDoctor: _entity.isDoctor, results: visitState.result.results,)
 //        }
 //      }
-       return BlocBuilder<SearchBloc, SearchState>(
+    return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
         if (state is SearchLoaded) {
           return ResultList(
@@ -113,7 +137,7 @@ class SearchPage extends StatelessWidget {
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
       child: Column(
         children: <Widget>[
-          _header(),
+          _header(context),
           _searchBox(MediaQuery.of(context).size.width, context),
           Expanded(flex: 2, child: _resultList())
         ],

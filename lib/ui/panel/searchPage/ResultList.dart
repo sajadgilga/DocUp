@@ -1,12 +1,15 @@
 import 'dart:convert';
 
+import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -22,7 +25,6 @@ class ResultList extends StatefulWidget {
 }
 
 class _ResultListState extends State<ResultList> {
-
   @override
   Widget build(BuildContext context) {
     List<Widget> results = [];
@@ -41,10 +43,7 @@ class _ResultListState extends State<ResultList> {
     }
     return Container(
       constraints:
-      BoxConstraints(maxHeight: MediaQuery
-          .of(context)
-          .size
-          .height - 60),
+          BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 60),
       margin: EdgeInsets.only(top: 20, right: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -96,20 +95,18 @@ class _SearchResultDoctorItem extends StatelessWidget {
     onPush(NavigatorRoutes.doctorDialogue, entity);
   }
 
-  Widget _image(context) =>
-      GestureDetector(
-          onTap: () => _showDoctorDialogue(context),
+  Widget _image(context) => GestureDetector(
+      onTap: () => _showDoctorDialogue(context),
+      child: Container(
           child: Container(
-              child: Container(
-                  width: 70,
-                  child: ClipPolygon(
-                    sides: 6,
-                    rotate: 90,
-                    child: Image.network(entity.user.avatar),
-                  ))));
+              width: 70,
+              child: ClipPolygon(
+                sides: 6,
+                rotate: 90,
+                child: Image.network(entity.user.avatar),
+              ))));
 
-  Widget _rating() =>
-      RatingBar(
+  Widget _rating() => RatingBar(
         itemCount: 5,
         initialRating: 3.5,
         direction: Axis.horizontal,
@@ -124,10 +121,13 @@ class _SearchResultDoctorItem extends StatelessWidget {
       padding: EdgeInsets.only(right: 10, left: 10),
       margin: EdgeInsets.symmetric(horizontal: 5),
       decoration: BoxDecoration(
-        color: IColors.themeColor,
-        borderRadius: BorderRadius.all(Radius.circular(7))
+          color: IColors.themeColor,
+          borderRadius: BorderRadius.all(Radius.circular(7))),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.white, fontSize: 10),
       ),
-      child: Text(text, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 10),),
     );
   }
 
@@ -136,8 +136,8 @@ class _SearchResultDoctorItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-            _tag('ویزیت متنی'),
-            _tag('ویزیت صوتی'),
+          _tag('ویزیت متنی'),
+          _tag('ویزیت صوتی'),
         ],
       ),
     );
@@ -147,12 +147,8 @@ class _SearchResultDoctorItem extends StatelessWidget {
     String utfName;
     String utfExpert;
     try {
-      utfName = utf8.decode(entity.user.name
-          .toString()
-          .codeUnits);
-      utfExpert = utf8.decode(entity.expert
-          .toString()
-          .codeUnits);
+      utfName = utf8.decode(entity.user.name.toString().codeUnits);
+      utfExpert = utf8.decode(entity.expert.toString().codeUnits);
     } catch (_) {
       utfName = entity.user.name;
       utfExpert = entity.expert;
@@ -180,16 +176,12 @@ class _SearchResultDoctorItem extends StatelessWidget {
     return Expanded(
       flex: 2,
       child: Container(
-      margin: EdgeInsets.only(right: 20, left: 20),
-
-      child: Column(
+        margin: EdgeInsets.only(right: 20, left: 20),
+        child: Column(
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                _rating(),
-                _nameAndExpertise()
-              ],
+              children: <Widget>[_rating(), _nameAndExpertise()],
             ),
             _tags()
           ],
@@ -202,7 +194,8 @@ class _SearchResultDoctorItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10, bottom: 10),
-      constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),
+      constraints:
+          BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[_info(), _image(context)],
@@ -210,7 +203,6 @@ class _SearchResultDoctorItem extends StatelessWidget {
     );
   }
 }
-
 
 class _SearchResultPatientItem extends StatelessWidget {
   final PatientEntity entity;
@@ -236,41 +228,57 @@ class _SearchResultPatientItem extends StatelessWidget {
     onPush(NavigatorRoutes.patientDialogue, entity);
   }
 
-  Widget _image(context) =>
-      GestureDetector(
-          onTap: () => _showDoctorDialogue(context),
+  Widget _image(context) => GestureDetector(
+      onTap: () => _showDoctorDialogue(context),
+      child: Container(
           child: Container(
-              child: Container(
-                  width: 70,
-                  child: ClipPolygon(
-                    sides: 6,
-                    rotate: 90,
-                    child: Image.network(entity.user.avatar),
-                  ))));
+              width: 70,
+              child: ClipPolygon(
+                sides: 6,
+                rotate: 90,
+                child: (entity.user.avatar != null
+                    ? Image.network(entity.user.avatar)
+                    : Image.asset(Assets.emptyAvatar)),
+              ))));
+
+  Widget _status() {
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Text(
+            PatientStatus.values[entity.status].text,
+            style: TextStyle(
+                color: PatientStatus.values[entity.status].color,
+                fontSize: 8,
+                fontWeight: FontWeight.bold),
+            textAlign: TextAlign.right,
+          ),
+          PatientStatus.values[entity.status].icon,
+        ],
+      ),
+    );
+  }
 
   Widget _info() {
     String utfName;
     try {
-      utfName = utf8.decode(entity.user.name
-          .toString()
-          .codeUnits);
+      utfName = utf8.decode(entity.user.name.toString().codeUnits);
     } catch (_) {
       utfName = entity.user.name;
     }
     return Container(
       margin: EdgeInsets.only(right: 20),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Text(
             utfName,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
             textAlign: TextAlign.right,
           ),
-          Text(
-            'درخواست ویزیت', //TODO
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
-            textAlign: TextAlign.right,
-          ),
+          _status()
         ],
       ),
     );
@@ -281,9 +289,69 @@ class _SearchResultPatientItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 10, bottom: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[_info(), _image(context)],
       ),
     );
+  }
+}
+
+enum PatientStatus { VIRTUAL_VISIT_REQUEST, VISIT_REQUEST, CURED, IN_CONTACT }
+
+extension PatientStatusExtension on PatientStatus {
+  Color get color {
+    switch (this) {
+      case PatientStatus.VISIT_REQUEST:
+        return IColors.visitRequest;
+      case PatientStatus.VIRTUAL_VISIT_REQUEST:
+        return IColors.virtualVisitRequest;
+      case PatientStatus.IN_CONTACT:
+        return IColors.inContact;
+      case PatientStatus.CURED:
+        return IColors.cured;
+      default:
+        return Colors.black87;
+    }
+  }
+
+  String get text {
+    switch (this) {
+      case PatientStatus.VISIT_REQUEST:
+        return Strings.visitRequestLabel;
+      case PatientStatus.VIRTUAL_VISIT_REQUEST:
+        return Strings.virtualVisitRequestLabel;
+      case PatientStatus.IN_CONTACT:
+        return Strings.inContactLabel;
+      case PatientStatus.CURED:
+        return Strings.curedLabel;
+      default:
+        return '';
+    }
+  }
+
+  get icon {
+    switch (this) {
+      case PatientStatus.VISIT_REQUEST:
+        return SvgPicture.asset('');
+      case PatientStatus.VIRTUAL_VISIT_REQUEST:
+        return SvgPicture.asset(
+          Assets.onCallMedicalIcon,
+          width: 15,
+        );
+      case PatientStatus.IN_CONTACT:
+        return Icon(
+          Icons.person,
+          size: 15,
+          color: this.color,
+        );
+      case PatientStatus.CURED:
+        return Icon(
+          Icons.update,
+          size: 15,
+          color: this.color
+        );
+      default:
+        return '';
+    }
   }
 }

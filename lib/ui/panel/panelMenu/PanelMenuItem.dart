@@ -82,25 +82,25 @@ class PanelMenuMainItem extends StatelessWidget {
       BlocProvider.of<TabSwitchBloc>(context).add(item.panelTabState);
     else {
       var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-      if (entity.isActivePanel(item.panelId))
+//      if (entity.isActivePanel(item.panelId))
       BlocProvider.of<EntityBloc>(context)
           .add(PartnerEntitySet(id: int.parse(item.ID), panelId: item.panelId));
-      else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  "این امکان وجود ندارد",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                content: Text("درخواست شما توسط دکتر هنوز پذیرفته نشده",
-                    textAlign: TextAlign.center, style: TextStyle(fontSize: 12)),
-              );
-            });
-        return;
-      }
+//      else {
+//        showDialog(
+//            context: context,
+//            builder: (BuildContext context) {
+//              return AlertDialog(
+//                title: Text(
+//                  "این امکان وجود ندارد",
+//                  textAlign: TextAlign.center,
+//                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+//                ),
+//                content: Text("درخواست شما توسط دکتر هنوز پذیرفته نشده",
+//                    textAlign: TextAlign.center, style: TextStyle(fontSize: 12)),
+//              );
+//            });
+//        return;
+//      }
     }
     if (!isPatient) {
       if (isMyPartners) {

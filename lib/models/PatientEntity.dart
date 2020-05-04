@@ -82,7 +82,7 @@ class User {
       lastName = json['last_name'];
     else
       lastName = '';
-    name = '$firstName $lastName';
+    name = '${firstName != null? firstName: ''} ${lastName != null? lastName: ''}';
     if (json.containsKey('email')) email = json['email'];
     if (json.containsKey('national_id')) nationalId = json['national_id'];
     if (json.containsKey('phone_number')) phoneNumber = json['phone_number'];

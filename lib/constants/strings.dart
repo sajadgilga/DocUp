@@ -86,6 +86,11 @@ class Strings {
   static final String cognitiveTests = "cognitive_tests";
   static final String documents = "documents";
 
+  static final String visitRequestLabel = "درخواست ویزیت حضوری";
+  static final String virtualVisitRequestLabel = "درخواست ویزیت مجازی";
+  static final String inContactLabel = "در حال درمان";
+  static final String curedLabel = "درمان شده";
+
   static final String notFoundRequest = 'درخواستی از جانب این بیمار ندارید';
 
 

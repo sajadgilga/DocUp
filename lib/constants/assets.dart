@@ -14,6 +14,7 @@ class Assets {
   static final String doctorAvatar = 'assets/doctorAvatar.svg';
   static final String calendarCheck = 'assets/calendarCheck.svg';
   static final String clinicPanel = 'assets/clinicPanel.svg';
+  static final String emptyAvatar = 'assets/avatar.png';
   static final String logoRectangle = 'assets/logoRec.png';
   static final String logoCircle = 'assets/logoCircle.png';
   static String docUpIcon = docUpPatientIcon;
@@ -29,5 +30,6 @@ class Assets {
       case RoleType.DOCTOR:
         docUpIcon = docUpDoctorIcon;
     }
+    docUpIcon = logoCircle;
   }
 }
