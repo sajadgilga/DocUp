@@ -80,12 +80,8 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   _userCreditWidget() {
-    var credit = "0";
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    if (entity.isPatient)
-      credit = entity.patient.user.credit;
-    else
-      credit = entity.doctor.user.credit;
+    var credit = entity.mEntity.user.credit;
     return Center(
       child: Container(
         width: 200,
@@ -109,41 +105,44 @@ class _AccountPageState extends State<AccountPage> {
 
   TextEditingController _amountTextController = TextEditingController();
 
-  _addCreditWidget() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Container(
-            height: 50,
-            width: MediaQuery.of(context).size.width * 0.4,
-            child: ActionButton(
-                title: "افزایش اعتبار",
-                icon: Icon(Icons.add),
-                color: IColors.themeColor,
-                callBack: () => _creditBloc.add(AddCredit(
-                    mobile: "09029191093",
-                    amount: int.parse(_amountTextController.text)))),
-          ),
-          Container(
-            height: 50,
-            width: MediaQuery.of(context).size.width * 0.5,
-            child: TextField(
-              controller: _amountTextController,
-              keyboardType: TextInputType.number,
-              decoration: new InputDecoration(
-                  border: new OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
+  _addCreditWidget() {
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Container(
+          height: 50,
+          width: MediaQuery.of(context).size.width * 0.4,
+          child: ActionButton(
+              title: "افزایش اعتبار",
+              icon: Icon(Icons.add),
+              color: IColors.themeColor,
+              callBack: () => _creditBloc.add(AddCredit(
+                  mobile: entity.mEntity.user.phoneNumber,
+                  amount: int.parse(_amountTextController.text)))),
+        ),
+        Container(
+          height: 50,
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: TextField(
+            controller: _amountTextController,
+            keyboardType: TextInputType.number,
+            decoration: new InputDecoration(
+                border: new OutlineInputBorder(
+                  borderRadius: const BorderRadius.all(
+                    const Radius.circular(20.0),
                   ),
-                  filled: true,
-                  hintStyle:
-                      new TextStyle(color: Colors.grey[800], fontSize: 12),
-                  hintText: "مبلغ مورد نظر را وارد نمایید",
-                  fillColor: Colors.white70),
-            ),
+                ),
+                filled: true,
+                hintStyle:
+                new TextStyle(color: Colors.grey[800], fontSize: 12),
+                hintText: "مبلغ مورد نظر را وارد نمایید",
+                fillColor: Colors.white70),
           ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 
   _userCreditLabelWidget() => Padding(
         padding: const EdgeInsets.all(12.0),

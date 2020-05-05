@@ -106,7 +106,9 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          DoctorData(doctorEntity: widget.doctorEntity),
+          DoctorData(
+              width: MediaQuery.of(context).size.width * 0.7,
+              doctorEntity: widget.doctorEntity),
           SizedBox(width: 10),
           Avatar(avatar: widget.doctorEntity.user.avatar),
         ],

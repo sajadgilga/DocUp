@@ -64,16 +64,16 @@ class _VideoCallPageState extends State<VideoCallPage> {
             title: "تماس تصویری",
             callBack: () {
               showLoadingDialog();
-//              onJoin().then((value) {
-//                Navigator.push(
-//                  context,
-//                  MaterialPageRoute(
-//                    builder: (context) => CallPage(
-//                      channelName: value,
-//                    ),
-//                  ),
-//                );
-//              });
+              onJoin().then((value) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CallPage(
+                      channelName: value,
+                    ),
+                  ),
+                );
+              });
             },
           )
         ],
@@ -90,20 +90,20 @@ class _VideoCallPageState extends State<VideoCallPage> {
         });
   }
 
-//  Future<String> onJoin() async {
+  Future<String> onJoin() async {
 //     await for camera and mic permissions before pushing video page
-//    await _handleCameraAndMic();
+    await _handleCameraAndMic();
 //     push video page with given channel name
-//
-//    AgoraChannel channel =
-//        await VideoCallRepository().getChannelName(widget.entity.pId);
-//
-//    return channel.channelName;
-//  }
-//
-//  Future<void> _handleCameraAndMic() async {
-//    await PermissionHandler().requestPermissions(
-//      [PermissionGroup.camera, PermissionGroup.microphone],
-//    );
-//  }
+
+    AgoraChannel channel =
+        await VideoCallRepository().getChannelName(widget.entity.pId);
+
+    return channel.channelName;
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
+  }
 }

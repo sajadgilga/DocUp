@@ -11,7 +11,7 @@ class PaymentRepository {
         await _provider.postWithBaseUrl("https://pay.ir/", "pg/send", body: {
       "api": PAY_IR_API_KEY,
       "amount": amount,
-      "redirect": "https://service.docup.ir:80/payment/transaction-call-back",
+      "redirect": "https://service.docup.ir/payment/transaction-call-back",
       "mobile": mobile
     });
     return PayResponseEntity.fromJson(response);

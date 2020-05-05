@@ -15,6 +15,7 @@ import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../constants/colors.dart';
 import 'VirtualReservationPage.dart';
@@ -31,31 +32,34 @@ class DoctorDetailPage extends StatefulWidget {
 class _DoctorDetailPageState extends State<DoctorDetailPage> {
   DoctorInfoBloc _bloc;
 
-//  BitmapDescriptor pinLocationIcon;
-//  Set<Marker> _markers = {};
-//  Completer<GoogleMapController> _controller = Completer();
-//  LatLng defaultPinLocation = LatLng(35.715298, 51.404343);
+  BitmapDescriptor pinLocationIcon;
+  Set<Marker> _markers = {};
+  Completer<GoogleMapController> _controller = Completer();
+  LatLng defaultPinLocation = LatLng(35.715298, 51.404343);
 
   @override
   void initState() {
     _bloc = DoctorInfoBloc();
-//    setCustomMapPin();
+    setCustomMapPin();
     super.initState();
   }
 
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
+        .buffer
+        .asUint8List();
+  }
 
-//  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-//    ByteData data = await rootBundle.load(path);
-//    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
-//    ui.FrameInfo fi = await codec.getNextFrame();
-//    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
-//  }
+  void setCustomMapPin() async {
+    final Uint8List markerIcon =
+        await getBytesFromAsset('assets/location.png', 60);
+    pinLocationIcon = BitmapDescriptor.fromBytes(markerIcon);
+  }
 
-//  void setCustomMapPin() async {
-//    final Uint8List markerIcon = await getBytesFromAsset('assets/location.png', 60);
-//    pinLocationIcon = BitmapDescriptor.fromBytes(markerIcon);
-//  }
-//
   @override
   Widget build(BuildContext context) {
     _bloc.getDoctor(widget.doctor.id);
@@ -89,23 +93,25 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
   }
 
   _doctorInfoWidget(DoctorEntity doctorEntity) {
-//    _markers.add(Marker(
-//      markerId: MarkerId("defaultMarker"),
-//      position: doctorEntity.clinic.latitude != null &&
-//              doctorEntity.clinic.longitude != null
-//          ? LatLng(doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
-//          : defaultPinLocation,
-//      icon: pinLocationIcon
-//    ));
+    _markers.add(Marker(
+        markerId: MarkerId("defaultMarker"),
+        position: doctorEntity.clinic.latitude != null &&
+                doctorEntity.clinic.longitude != null
+            ? LatLng(
+                doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
+            : defaultPinLocation,
+        icon: pinLocationIcon));
     return Column(
       children: <Widget>[
         SizedBox(height: 50),
         Avatar(avatar: doctorEntity.user.avatar),
         SizedBox(height: 10),
-        DoctorData(doctorEntity: doctorEntity),
+        DoctorData(
+            width: MediaQuery.of(context).size.width ,
+            doctorEntity: doctorEntity),
         SizedBox(height: 20),
-//        _doctorMapWidget(doctorEntity),
-//        SizedBox(height: 20),
+        _doctorMapWidget(doctorEntity),
+        SizedBox(height: 20),
         _doctorActionsWidget(doctorEntity)
       ],
     );
@@ -135,7 +141,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
         ],
       );
 
- /* ClipRRect _doctorMapWidget(DoctorEntity doctorEntity) {
+  ClipRRect _doctorMapWidget(DoctorEntity doctorEntity) {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(20)),
       child: Container(
@@ -145,7 +151,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
           myLocationEnabled: true,
           markers: _markers,
           onMapCreated: (controller) {
-//            _controller.complete(controller);
+            _controller.complete(controller);
           },
           initialCameraPosition: CameraPosition(
             target: doctorEntity.clinic.latitude != null &&
@@ -158,7 +164,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
         ),
       ),
     );
-  }*/
+  }
 
   @override
   void dispose() {

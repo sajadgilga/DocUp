@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 
 class DoctorData extends StatelessWidget {
   final DoctorEntity doctorEntity;
+  final double width;
 
   const DoctorData({
-    Key key, this.doctorEntity
+    Key key, this.doctorEntity, this.width
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.7,
+      width: this.width,
       child: Column(
         children: <Widget>[
           Text(
@@ -27,10 +28,13 @@ class DoctorData extends StatelessWidget {
                   style: TextStyle(fontSize: 14, color: Colors.grey)),
               Image.asset("assets/location.png"),
               SizedBox(width: 5),
-              Text("${doctorEntity.expert}",
-                  style: TextStyle(
-                    fontSize: 14,
-                  )),
+              Flexible(
+                child: Text("${doctorEntity.expert}",
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                overflow: TextOverflow.ellipsis,),
+              ),
             ],
           ),
           SizedBox(height: 10),
