@@ -26,13 +26,14 @@ class _AccountPageState extends State<AccountPage> {
 
   AlertDialog _loadingDialog = getLoadingDialog();
   bool _loadingEnable;
+  bool _isRequestForPay = false;
   BuildContext loadingContext;
 
   @override
   void initState() {
     _loadingEnable = false;
     _creditBloc.listen((event) {
-      if (!(event is AddCreditLoaded)) {
+      if (!(event is AddCreditLoaded) && _isRequestForPay) {
           showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -117,9 +118,12 @@ class _AccountPageState extends State<AccountPage> {
               title: "افزایش اعتبار",
               icon: Icon(Icons.add),
               color: IColors.themeColor,
-              callBack: () => _creditBloc.add(AddCredit(
-                  mobile: entity.mEntity.user.phoneNumber,
-                  amount: int.parse(_amountTextController.text)))),
+              callBack: () {
+                _isRequestForPay = true;
+                _creditBloc.add(AddCredit(
+                    mobile: entity.mEntity.user.phoneNumber,
+                    amount: int.parse(_amountTextController.text)));
+              }),
         ),
         Container(
           height: 50,
