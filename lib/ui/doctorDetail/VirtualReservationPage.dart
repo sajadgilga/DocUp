@@ -1,5 +1,6 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
@@ -12,6 +13,7 @@ import 'package:docup/utils/UiUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
@@ -299,4 +301,6 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         .toGregorian();
     return "${georgianDate.year}-${georgianDate.month}-${georgianDate.day}";
   }
+
+
 }

@@ -93,7 +93,7 @@ class _AccountPageState extends State<AccountPage> {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Text(
-            " $credit ریال ",
+            " ${replaceFarsiNumber(credit)} ریال ",
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white, fontSize: 20),
             textDirection: TextDirection.rtl,
