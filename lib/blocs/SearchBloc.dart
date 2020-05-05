@@ -20,11 +20,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
-  Stream<SearchState> _searchPatient(event) async* {
+  Stream<SearchState> _searchPatient(SearchPatient event) async* {
     yield SearchLoading();
     try {
-      final SearchResult searchResult =
-          await _repository.searchPatient(event.text);
+      SearchResult searchResult;
+      if (!event.isRequestOnly)
+        searchResult = await _repository.searchPatient(event.text);
+      else
+        searchResult = await _repository.searchPatientRequests(event.text);
       yield SearchLoaded(result: searchResult);
     } catch (e) {
       yield SearchError();
@@ -46,8 +49,9 @@ abstract class SearchEvent {}
 
 class SearchPatient extends SearchEvent {
   String text;
+  bool isRequestOnly;
 
-  SearchPatient({this.text});
+  SearchPatient({this.text, this.isRequestOnly});
 }
 
 class SearchDoctor extends SearchEvent {

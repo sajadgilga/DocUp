@@ -61,6 +61,12 @@ class PanelMenuMainItem extends StatelessWidget {
       this.color = IColors.activePanelMenu})
       : super(key: key);
 
+  void _selectMenuItem({context, menuItem}) {
+    if (menuItem == DoctorPanelSection.REQUESTS) {
+      onPush(NavigatorRoutes.requestsView);
+    }
+  }
+
   void _selectItem({item, context}) {
     if ((!isPatient && doctorSection != DoctorPanelSection.DOCTOR_INTERFACE) ||(isPatient && patientSection == PatientPanelSection.HEALTH_CALENDAR)) {
       showDialog(
@@ -176,7 +182,9 @@ class PanelMenuMainItem extends StatelessWidget {
       );
   }
 
-  Widget _label() => Container(
+  Widget _label(context) => GestureDetector(onTap: () {
+    _selectMenuItem(context: context, menuItem: doctorSection);
+  }, child: Container(
         margin: EdgeInsets.only(left: 10),
         child: Text(
           label,
@@ -184,7 +192,7 @@ class PanelMenuMainItem extends StatelessWidget {
           style: TextStyle(
               color: color, fontSize: 16, fontWeight: FontWeight.w900),
         ),
-      );
+      ));
 
   Widget _subLabel() => Container(
         margin: EdgeInsets.only(right: 10),
@@ -197,6 +205,29 @@ class PanelMenuMainItem extends StatelessWidget {
               fontWeight: FontWeight.w900),
         ),
       );
+
+
+  Widget _requestsCountCircle() {
+    return Container(
+        margin: EdgeInsets.only(right: 10, bottom: 15),
+        child: Wrap(children: <Widget>[
+          Container(
+              padding: EdgeInsets.only(left: 5, right: 5),
+              child: Text('15',
+                  style: TextStyle(color: Colors.white, fontSize: 12)),
+              decoration: BoxDecoration(
+                  color: IColors.themeColor,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: IColors.themeColor,
+                        offset: Offset(1, 3),
+                        blurRadius: 10)
+                  ])),
+        ]));
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +250,8 @@ class PanelMenuMainItem extends StatelessWidget {
                     : SizedBox(
                         width: 5,
                       )),
-                _label(),
+                (doctorSection == DoctorPanelSection.REQUESTS? _requestsCountCircle():Container()),
+                _label(context),
                 SizedBox(
                   width: 25,
                 ),

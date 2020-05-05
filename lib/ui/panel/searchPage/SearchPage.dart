@@ -18,17 +18,18 @@ import 'ResultList.dart';
 
 class SearchPage extends StatelessWidget {
   final Function(String, UserEntity) onPush;
+  final isRequestPage;
   TextEditingController _controller = TextEditingController();
 
 //  SearchBloc searchBloc = SearchBloc();
 
-  SearchPage({@required this.onPush});
+  SearchPage({@required this.onPush, this.isRequestPage = false});
 
   void _search(context) {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
     if (_state.entity.isDoctor)
-      searchBloc.add(SearchPatient(text: _controller.text));
+      searchBloc.add(SearchPatient(text: _controller.text, isRequestOnly: isRequestPage));
     else if (_state.entity.isPatient)
       searchBloc.add(SearchDoctor(text: _controller.text));
 
@@ -131,6 +132,7 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    _search(context);
 //    _controller.addListener((){print(_controller.text); });
     return Container(
       constraints:

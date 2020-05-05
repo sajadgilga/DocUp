@@ -296,7 +296,7 @@ class _SearchResultPatientItem extends StatelessWidget {
   }
 }
 
-enum PatientStatus { VIRTUAL_VISIT_REQUEST, VISIT_REQUEST, CURED, IN_CONTACT }
+enum PatientStatus { VIRTUAL_VISIT_REQUEST, VISIT_REQUEST, IN_CONTACT, CURED }
 
 extension PatientStatusExtension on PatientStatus {
   Color get color {

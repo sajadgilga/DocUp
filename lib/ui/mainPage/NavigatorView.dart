@@ -41,6 +41,7 @@ class NavigatorRoutes {
 
 //  static const String account = '/account';
   static const String searchView = '/searchView';
+  static const String requestsView = '/requestsView';
   static const String uploadPicDialogue = '/uploadPicDialogue';
 }
 
@@ -55,17 +56,6 @@ class NavigatorView extends StatelessWidget {
   final VisitBloc _visitBloc = VisitBloc();
   final PictureBloc _pictureBloc = PictureBloc();
   Function selectPage;
-  final Doctor _doctor = Doctor(
-      3,
-      "دکتر زهرا شادلو",
-      "متخصص پوست",
-      "اقدسیه",
-      Image(
-        image: AssetImage('assets/avatar.png'),
-      ),
-      []);
-
-//  Patient patient;
 
   NavigatorView(
       {Key key,
@@ -116,6 +106,7 @@ class NavigatorView extends StatelessWidget {
                 listId: entity,
               )),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
+          NavigatorRoutes.requestsView: (context) => _searchPage(context, isRequests: true),
         };
       case 3:
         return {
@@ -314,12 +305,13 @@ class NavigatorView extends StatelessWidget {
     );
   }
 
-  Widget _searchPage(context) => MultiBlocProvider(
+  Widget _searchPage(context, {isRequests = false}) => MultiBlocProvider(
           providers: [
             BlocProvider<SearchBloc>.value(value: _searchBloc),
 //            BlocProvider<VisitBloc>.value(value: _visitBloc),
           ],
           child: SearchPage(
+            isRequestPage: isRequests,
             onPush: (direction, entity) {
               _push(context, direction, entity: entity);
             },
