@@ -1,1 +1,1 @@
-final String PAY_IR_API_KEY = "PAY_IR_API_KEY";
+final String PAY_IR_API_KEY = "bb38ac16d644ad3b2d18f5ee4b35dce1";

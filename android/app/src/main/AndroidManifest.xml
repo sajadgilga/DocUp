@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
-        android:name=".Application"
+        android:name="io.flutter.app.FlutterApplication"
         android:label="docup"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -30,6 +30,14 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="docup"
+                    android:host="com.nilva.docup" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

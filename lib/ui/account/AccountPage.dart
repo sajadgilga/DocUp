@@ -22,26 +22,30 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  CreditBloc _paymentBloc;
+  CreditBloc _creditBloc = CreditBloc();
 
   AlertDialog _loadingDialog = getLoadingDialog();
   bool _loadingEnable;
+  BuildContext loadingContext;
 
   @override
   void initState() {
-    _paymentBloc = BlocProvider.of<CreditBloc>(context);
-    _paymentBloc.listen((event) {
-      if (!(event is AddCreditLoaded)){
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => _loadingDialog);
-        _loadingEnable = true;
+    _loadingEnable = false;
+    _creditBloc.listen((event) {
+      if (!(event is AddCreditLoaded)) {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                loadingContext = context;
+                return _loadingDialog;
+              });
+          _loadingEnable = true;
       } else {
         if (_loadingEnable) {
-          Navigator.of(context).pop();
+          Navigator.of(loadingContext).pop();
           _loadingEnable = false;
+          _launchURL("https://pay.ir/pg/${event.result.token}");
         }
-        _launchURL("https://pay.ir/pg/${event.result.token}");
       }
     });
     super.initState();
@@ -75,25 +79,33 @@ class _AccountPageState extends State<AccountPage> {
     ));
   }
 
-  _userCreditWidget() => Center(
-        child: Container(
-          width: 200,
-          height: 80,
-          decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: IColors.darkBlue),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-              " ۲۰,۰۰۰ ریال ",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 20),
-              textDirection: TextDirection.rtl,
-            ),
+  _userCreditWidget() {
+    var credit = "0";
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    if (entity.isPatient)
+      credit = entity.patient.user.credit;
+    else
+      credit = entity.doctor.user.credit;
+    return Center(
+      child: Container(
+        width: 200,
+        height: 80,
+        decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            color: IColors.darkBlue),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            " $credit ریال ",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+            textDirection: TextDirection.rtl,
           ),
         ),
-      );
+      ),
+    );
+  }
 
   TextEditingController _amountTextController = TextEditingController();
 
@@ -107,7 +119,7 @@ class _AccountPageState extends State<AccountPage> {
                 title: "افزایش اعتبار",
                 icon: Icon(Icons.add),
                 color: IColors.themeColor,
-                callBack: () => _paymentBloc.add(AddCredit(
+                callBack: () => _creditBloc.add(AddCredit(
                     mobile: "09029191093",
                     amount: int.parse(_amountTextController.text)))),
           ),
