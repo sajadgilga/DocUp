@@ -39,7 +39,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
           content: Text('درخواست شما با موفقیت ثبت شد'),
           duration: Duration(seconds: 3),
         ));
-      } else  if(data.status == Status.ERROR){
+      } else if(data.status == Status.ERROR){
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text(data.message),
           duration: Duration(seconds: 3),
@@ -74,6 +74,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
           SizedBox(height: 10),
           _priceWidget(),
           SizedBox(height: 10),
+          _enableVisitTimeWidget(),
           _timeSelectionWidget(),
           SizedBox(height: 10),
           _acceptPolicyWidget(),
@@ -171,72 +172,84 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
+  bool _enableVisitTime = false;
+
   _timeSelectionWidget() =>
-      Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Text(
-                "تعیین وقت قبلی ویزیت مجازی",
-                textAlign: TextAlign.right,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-              Switch(
-                value: true,
-                activeColor: IColors.themeColor,
-                onChanged: (d) {},
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "ساعت",
-                textAlign: TextAlign.right,
-              ),
-              Icon(Icons.access_time, size: 30),
-              SizedBox(width: 50),
-              Text("تاریخ"),
-              Icon(Icons.calendar_today),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.35,
-                child: DateTimeField(
-                  controller: timeTextController,
-                  format: DateFormat("HH:mm"),
-                  onShowPicker: (context, currentValue) async {
-                    final time = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-                    );
-                    return DateTimeField.convert(time);
-                  },
+      Visibility(
+        visible: _enableVisitTime,
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "ساعت",
+                  textAlign: TextAlign.right,
                 ),
-              ),
-              SizedBox(width: 50),
-              Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.35,
-                child: TextField(
-                    controller: dateTextController, onTap: _showDatePicker),
-              ),
-            ],
-          )
-        ],
+                Icon(Icons.access_time, size: 30),
+                SizedBox(width: 50),
+                Text("تاریخ"),
+                Icon(Icons.calendar_today),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.35,
+                  child: DateTimeField(
+                    controller: timeTextController,
+                    format: DateFormat("HH:mm"),
+                    onShowPicker: (context, currentValue) async {
+                      final time = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                      );
+                      return DateTimeField.convert(time);
+                    },
+                  ),
+                ),
+                SizedBox(width: 50),
+                Container(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.35,
+                  child: TextField(
+                      controller: dateTextController, onTap: _showDatePicker),
+                ),
+              ],
+            )
+          ],
+        ),
       );
+
+  Row _enableVisitTimeWidget() {
+    return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Text(
+              "تعیین وقت قبلی ویزیت مجازی",
+              textAlign: TextAlign.right,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+            Switch(
+              value: _enableVisitTime,
+              activeColor: IColors.themeColor,
+              onChanged: (d) {
+                setState(() {
+                  _enableVisitTime = d;
+                });
+              },
+            )
+          ],
+        );
+  }
 
   bool policyChecked = false;
 
