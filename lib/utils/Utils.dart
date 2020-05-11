@@ -53,6 +53,11 @@ void showOneButtonDialog(context, String message, String action, Function callba
       });
 }
 
+void showUnsupportedSessionDialog(context, Function callback) {
+  showOneButtonDialog(context, "ویزیت مجازی در حال حاضر وجود ندارد", "رزرو ویزیت", callback);
+}
+
+
 void showNextVersionDialog(context) {
   showDialog(
       context: context,
