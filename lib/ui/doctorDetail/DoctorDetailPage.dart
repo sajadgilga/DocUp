@@ -105,7 +105,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     return Column(
       children: <Widget>[
         SizedBox(height: 50),
-        Avatar(avatar: doctorEntity.user.avatar),
+        Avatar(user: doctorEntity.user),
         SizedBox(height: 10),
         DoctorData(
             width: MediaQuery.of(context).size.width ,

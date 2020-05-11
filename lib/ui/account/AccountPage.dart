@@ -218,7 +218,7 @@ class _AccountPageState extends State<AccountPage> {
                     ],
                   ),
                   SizedBox(width: 20),
-                  Avatar(avatar: user.avatar),
+                  Avatar(user: user),
                 ],
               );
             } else

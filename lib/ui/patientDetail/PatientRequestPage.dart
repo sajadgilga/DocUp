@@ -90,7 +90,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
               children: <Widget>[
                 _patientDataWidget(entity),
                 SizedBox(width: 10),
-                Avatar(avatar: widget.patientEntity.user.avatar),
+                Avatar(user: widget.patientEntity.user),
               ],
             ),
             SizedBox(height: 50),

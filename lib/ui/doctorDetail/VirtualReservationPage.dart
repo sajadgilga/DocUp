@@ -119,7 +119,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
               width: MediaQuery.of(context).size.width * 0.7,
               doctorEntity: widget.doctorEntity),
           SizedBox(width: 10),
-          Avatar(avatar: widget.doctorEntity.user.avatar),
+          Avatar(user: widget.doctorEntity.user),
         ],
       );
 
@@ -233,6 +233,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
       );
 
   Row _enableVisitTimeWidget() {
+    _enableVisitTime = widget.doctorEntity.user.online != 1;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
@@ -243,12 +244,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ),
         Switch(
           value: _enableVisitTime,
-          activeColor: IColors.themeColor,
-          onChanged: (d) {
-            setState(() {
-              _enableVisitTime = d;
-            });
-          },
+          activeColor: IColors.themeColor, onChanged: (bool value) {  },
         )
       ],
     );
