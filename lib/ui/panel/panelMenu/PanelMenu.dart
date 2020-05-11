@@ -14,7 +14,7 @@ import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/DoctorPanelMenu.dart';
 import 'package:docup/ui/panel/panelMenu/PatientPanelMenu.dart';
 import 'package:docup/ui/widgets/Header.dart';
-import 'package:docup/utils/UiUtils.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/customPainter/DrawerPainter.dart';

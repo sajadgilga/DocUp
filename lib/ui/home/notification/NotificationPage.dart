@@ -7,7 +7,7 @@ import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/customPainter/DrawerPainter.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
-import 'package:docup/utils/UiUtils.dart';
+import 'package:docup/utils/Utils.dart';
 
 //import 'package:docup/ui/home/notification/DrawerPainter.dart';
 import 'package:flutter/material.dart';

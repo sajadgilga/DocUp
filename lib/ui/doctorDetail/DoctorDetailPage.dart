@@ -11,7 +11,7 @@ import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
-import 'package:docup/utils/UiUtils.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,8 +22,9 @@ import 'VirtualReservationPage.dart';
 
 class DoctorDetailPage extends StatefulWidget {
   final DoctorEntity doctor;
+  final Function(String, String) onPush;
 
-  DoctorDetailPage({Key key, this.doctor}) : super(key: key);
+  DoctorDetailPage({Key key, this.doctor, this.onPush}) : super(key: key);
 
   @override
   _DoctorDetailPageState createState() => _DoctorDetailPageState();
@@ -131,11 +132,12 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             color: IColors.darkBlue,
             title: Strings.virtualReservationLabel,
             callBack: () => {
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          VirtualReservationPage(doctorEntity: doctorEntity)))
+                          VirtualReservationPage(doctorEntity: doctorEntity,
+                          onPush: widget.onPush,)))
             },
           ),
         ],

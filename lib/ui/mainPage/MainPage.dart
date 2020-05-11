@@ -299,6 +299,7 @@ class _MainPageState extends State<MainPage> {
       NavigatorRoutes.mainPage: (context) => _mainPage(),
       NavigatorRoutes.doctorDialogue: (context) =>
           DoctorDetailPage(
+            onPush: (direction, defaultCreditForCharge) => _push(context, direction),
             doctor:
             BlocProvider
                 .of<EntityBloc>(context)

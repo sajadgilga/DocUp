@@ -8,7 +8,7 @@ import 'package:docup/repository/VideoCallRepository.dart';
 import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/utils/UiUtils.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 

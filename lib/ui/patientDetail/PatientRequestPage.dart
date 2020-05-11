@@ -14,7 +14,7 @@ import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:docup/ui/widgets/PatientData.dart';
-import 'package:docup/utils/UiUtils.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

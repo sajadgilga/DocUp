@@ -24,7 +24,7 @@ import 'package:docup/ui/panel/searchPage/SearchPage.dart';
 import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/patientDetail/PatientRequestPage.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
-import 'package:docup/utils/UiUtils.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,7 +39,7 @@ class NavigatorRoutes {
   static const String panelMenu = '/panelMenu';
   static const String panel = '/panel';
 
-//  static const String account = '/account';
+  static const String account = '/account';
   static const String searchView = '/searchView';
   static const String requestsView = '/requestsView';
   static const String uploadPicDialogue = '/uploadPicDialogue';
@@ -75,6 +75,7 @@ class NavigatorView extends StatelessWidget {
         return {
           NavigatorRoutes.root: (context) => _home(context),
           NavigatorRoutes.notificationView: (context) => _notifictionPage(),
+          NavigatorRoutes.account: (context) => _account(context, defaultCreditForCharge: entity),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, entity),
           NavigatorRoutes.patientDialogue: (context) =>
@@ -106,7 +107,8 @@ class NavigatorView extends StatelessWidget {
                 listId: entity,
               )),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
-          NavigatorRoutes.requestsView: (context) => _searchPage(context, isRequests: true),
+          NavigatorRoutes.requestsView: (context) =>
+              _searchPage(context, isRequests: true),
         };
       case 3:
         return {
@@ -171,7 +173,8 @@ class NavigatorView extends StatelessWidget {
         },
       );
 
-  Widget _account(context) => AccountPage(
+  Widget _account(context, {defaultCreditForCharge}) => AccountPage(
+        defaultCreditForCharge: defaultCreditForCharge,
         onPush: (direction) {
           _push(context, direction);
         },
@@ -290,6 +293,9 @@ class NavigatorView extends StatelessWidget {
 
   Widget _doctorDetailPage(context, doctor) {
     return DoctorDetailPage(
+      onPush: (direction, entity) {
+        _push(context, direction, entity: entity);
+      },
       doctor: doctor,
     );
   }
@@ -298,8 +304,7 @@ class NavigatorView extends StatelessWidget {
     PatientEntity _patient = patient;
     try {
       _patient.user.name = utf8.decode(_patient.user.name.codeUnits);
-    } catch (_) {
-    }
+    } catch (_) {}
     return PatientRequestPage(
       patientEntity: _patient,
     );

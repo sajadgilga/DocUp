@@ -1,4 +1,7 @@
+import 'package:docup/constants/colors.dart';
+import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 String replaceFarsiNumber(String input) {
   const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -20,10 +23,35 @@ bool validatePhoneNumber(String value) {
 void hideKeyboard(context) => FocusScope.of(context).unfocus();
 
 getLoadingDialog() => AlertDialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      content: Waiting()
-    );
+    backgroundColor: Colors.white,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+    content: Waiting());
+
+void showOneButtonDialog(context, String message, String action, Function callback) {
+  BuildContext dialogContext;
+  AlertDialog dialog = AlertDialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+    title: Text(
+      message,
+      style: TextStyle(fontSize: 14),
+      textAlign: TextAlign.center,
+    ),
+    content: ActionButton(
+      color: IColors.themeColor,
+      title: "افزایش اعتبار",
+      callBack: () {
+        Navigator.pop(dialogContext);
+        callback();
+      },
+    ),
+  );
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        dialogContext = context;
+        return dialog;
+      });
+}
 
 void showNextVersionDialog(context) {
   showDialog(
@@ -41,7 +69,15 @@ void showNextVersionDialog(context) {
       });
 }
 
-void toast(context, String message){
+launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+void toast(context, String message) {
   Scaffold.of(context).showSnackBar(SnackBar(
     content: Text(message),
     duration: Duration(seconds: 3),
@@ -51,7 +87,6 @@ void toast(context, String message){
 class Waiting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -3,7 +3,7 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
-import 'package:docup/utils/UiUtils.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,8 +13,9 @@ import 'package:url_launcher/url_launcher.dart';
 class AccountPage extends StatefulWidget {
   final ValueChanged<String> onPush;
   final ValueChanged<String> globalOnPush;
+  final String defaultCreditForCharge;
 
-  AccountPage({Key key, @required this.onPush, this.globalOnPush})
+  AccountPage({Key key, @required this.onPush, this.globalOnPush, this.defaultCreditForCharge})
       : super(key: key);
 
   @override
@@ -34,30 +35,23 @@ class _AccountPageState extends State<AccountPage> {
     _loadingEnable = false;
     _creditBloc.listen((event) {
       if (!(event is AddCreditLoaded) && _isRequestForPay) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                loadingContext = context;
-                return _loadingDialog;
-              });
-          _loadingEnable = true;
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              loadingContext = context;
+              return _loadingDialog;
+            });
+        _loadingEnable = true;
       } else {
         if (_loadingEnable) {
           Navigator.of(loadingContext).pop();
           _loadingEnable = false;
-          _launchURL("https://pay.ir/pg/${event.result.token}");
+          launchURL("https://pay.ir/pg/${event.result.token}");
         }
       }
     });
+    _amountTextController.text = widget.defaultCreditForCharge;
     super.initState();
-  }
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   @override
@@ -75,10 +69,34 @@ class _AccountPageState extends State<AccountPage> {
         _userCreditLabelWidget(),
         _userCreditWidget(),
         SizedBox(height: 20),
-        _addCreditWidget()
+        _addCreditWidget(),
+        SizedBox(height: 10),
+        _supportWidget()
       ],
     ));
   }
+
+  _supportWidget() => GestureDetector(
+    onTap: () => launch("tel://09335705997"),
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: TextStyle(
+            fontFamily: 'iransans',
+            color: Colors.black87,
+            fontSize: 15
+          ),
+          children: <TextSpan>[
+            TextSpan(text: "لطفا انتقادات و پیشنهادات خود را با شماره تماس ۰۹۳۳۵۷۰۵۹۹۷ در واتس اپ یا تلگرام با تیم"),
+            TextSpan(text: " داکآپ ", style: TextStyle(color: IColors.themeColor, fontWeight: FontWeight.bold)),
+            TextSpan(text: "در میان بگذارید ")
+          ]
+        ),
+      )
+    ),
+  );
 
   _userCreditWidget() {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
@@ -86,17 +104,17 @@ class _AccountPageState extends State<AccountPage> {
     return Center(
       child: Container(
         width: 200,
-        height: 80,
+        height: 64,
         decoration: BoxDecoration(
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: IColors.darkBlue),
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(16.0),
           child: Text(
             " ${replaceFarsiNumber(credit)} ریال ",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 18),
             textDirection: TextDirection.rtl,
           ),
         ),
@@ -165,18 +183,21 @@ class _AccountPageState extends State<AccountPage> {
             textAlign: TextAlign.right),
       );
 
-  _changePasswordWidget(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(left: 20.0),
-        child: Row(
-          children: <Widget>[
-            ActionButton(
-              color: Colors.grey,
-              title: "تغییر رمز عبور",
-              callBack: () => showNextVersionDialog(context),
-            ),
-          ],
+  _changePasswordWidget(BuildContext context) => Visibility(
+    visible: false,
+    child: Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: Row(
+            children: <Widget>[
+              ActionButton(
+                color: Colors.grey,
+                title: "تغییر رمز عبور",
+                callBack: () => showNextVersionDialog(context),
+              ),
+            ],
+          ),
         ),
-      );
+  );
 
   _userInfoWidget() => BlocBuilder<EntityBloc, EntityState>(
         builder: (context, state) {

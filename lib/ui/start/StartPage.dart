@@ -13,7 +13,7 @@ import 'package:docup/ui/widgets/OptionButton.dart';
 import 'package:docup/ui/widgets/Timer.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/utils/UiUtils.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

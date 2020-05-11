@@ -1,15 +1,18 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/networking/Response.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:docup/ui/widgets/PatientData.dart';
-import 'package:docup/utils/UiUtils.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -21,8 +24,9 @@ import 'package:flutter/material.dart';
 
 class VirtualReservationPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
+  final Function(String, String) onPush;
 
-  VirtualReservationPage({Key key, this.doctorEntity}) : super(key: key);
+  VirtualReservationPage({Key key, this.doctorEntity, this.onPush}) : super(key: key);
 
   @override
   _VirtualReservationPageState createState() => _VirtualReservationPageState();
@@ -39,7 +43,13 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
       if (data.status == Status.COMPLETED) {
         toast(context, 'درخواست شما با موفقیت ثبت شد');
       } else if (data.status == Status.ERROR) {
-        toast(context, data.message);
+        if(data.message.startsWith("Unauthorised")){
+          showOneButtonDialog(context, "حساب شما اعتبار کافی ندارد. لطفا حساب تان را شارژ کنید", "افزایش اعتبار", () {
+            widget.onPush(NavigatorRoutes.account, _calculateVisitCost());
+          });
+        } else {
+          toast(context, data.message);
+        }
       }
     });
     super.initState();
@@ -150,15 +160,19 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
           Text("ریال", style: TextStyle(fontSize: 16)),
           SizedBox(width: 5),
           Text(
-              replaceFarsiNumber((widget.doctorEntity.fee *
-                      (typeSelected["نوع مشاوره"] + 1) *
-                      (typeSelected["مدت زمان مشاوره"] + 1))
-                  .toString()),
+              replaceFarsiNumber(_calculateVisitCost()),
               style: TextStyle(color: IColors.themeColor, fontSize: 18)),
           SizedBox(width: 5),
           Text("قیمت نهایی", style: TextStyle(fontSize: 16))
         ],
       );
+
+  String _calculateVisitCost() {
+    return (widget.doctorEntity.fee *
+                    (typeSelected["نوع مشاوره"] + 1) *
+                    (typeSelected["مدت زمان مشاوره"] + 1))
+                .toString();
+  }
 
   bool _enableVisitTime = false;
 

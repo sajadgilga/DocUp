@@ -1,6 +1,6 @@
 import 'package:docup/blocs/timer/TimerBloc.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/utils/UiUtils.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
