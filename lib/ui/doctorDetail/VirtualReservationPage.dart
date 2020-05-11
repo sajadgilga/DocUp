@@ -26,7 +26,8 @@ class VirtualReservationPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
   final Function(String, String) onPush;
 
-  VirtualReservationPage({Key key, this.doctorEntity, this.onPush}) : super(key: key);
+  VirtualReservationPage({Key key, this.doctorEntity, this.onPush})
+      : super(key: key);
 
   @override
   _VirtualReservationPageState createState() => _VirtualReservationPageState();
@@ -41,10 +42,18 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
   void initState() {
     _bloc.visitRequestStream.listen((data) {
       if (data.status == Status.COMPLETED) {
-        toast(context, 'درخواست شما با موفقیت ثبت شد');
+        showOneButtonDialog(
+            context,
+            "درخواست شما برای پزشک فرستاده شد. لطفا منتظر تایید باشید",
+            "متوجه شدم", () {
+          Navigator.pop(context);
+        });
       } else if (data.status == Status.ERROR) {
-        if(data.message.startsWith("Unauthorised")){
-          showOneButtonDialog(context, "حساب شما اعتبار کافی ندارد. لطفا حساب تان را شارژ کنید", "افزایش اعتبار", () {
+        if (data.message.startsWith("Unauthorised")) {
+          showOneButtonDialog(
+              context,
+              "حساب شما اعتبار کافی ندارد. لطفا حساب تان را شارژ کنید",
+              "افزایش اعتبار", () {
             widget.onPush(NavigatorRoutes.account, _calculateVisitCost());
           });
         } else {
@@ -158,8 +167,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         children: <Widget>[
           Text("ریال", style: TextStyle(fontSize: 16)),
           SizedBox(width: 5),
-          Text(
-              replaceFarsiNumber(_calculateVisitCost()),
+          Text(replaceFarsiNumber(_calculateVisitCost()),
               style: TextStyle(color: IColors.themeColor, fontSize: 18)),
           SizedBox(width: 5),
           Text("قیمت نهایی", style: TextStyle(fontSize: 16))
@@ -168,9 +176,9 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
 
   String _calculateVisitCost() {
     return (widget.doctorEntity.fee *
-                    (typeSelected["نوع مشاوره"] + 1) *
-                    (typeSelected["مدت زمان مشاوره"] + 1))
-                .toString();
+            (typeSelected["نوع مشاوره"] + 1) *
+            (typeSelected["مدت زمان مشاوره"] + 1))
+        .toString();
   }
 
   bool _enableVisitTime = false;
