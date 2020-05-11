@@ -41,6 +41,13 @@ void showNextVersionDialog(context) {
       });
 }
 
+void toast(context, String message){
+  Scaffold.of(context).showSnackBar(SnackBar(
+    content: Text(message),
+    duration: Duration(seconds: 3),
+  ));
+}
+
 class Waiting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

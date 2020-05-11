@@ -119,30 +119,40 @@ class _AccountPageState extends State<AccountPage> {
               icon: Icon(Icons.add),
               color: IColors.themeColor,
               callBack: () {
-                _isRequestForPay = true;
-                _creditBloc.add(AddCredit(
-                    mobile: entity.mEntity.user.phoneNumber,
-                    amount: int.parse(_amountTextController.text)));
+                if (_amountTextController.text.isEmpty) {
+                  toast(context, "لطفا مبلغ را وارد کنید");
+                } else {
+                  _isRequestForPay = true;
+                  _creditBloc.add(AddCredit(
+                      mobile: entity.mEntity.user.phoneNumber,
+                      amount: int.parse(_amountTextController.text)));
+                }
               }),
         ),
-        Container(
-          height: 50,
-          width: MediaQuery.of(context).size.width * 0.5,
-          child: TextField(
-            controller: _amountTextController,
-            keyboardType: TextInputType.number,
-            decoration: new InputDecoration(
-                border: new OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    const Radius.circular(20.0),
-                  ),
-                ),
-                filled: true,
-                hintStyle:
-                new TextStyle(color: Colors.grey[800], fontSize: 12),
-                hintText: "مبلغ مورد نظر را وارد نمایید",
-                fillColor: Colors.white70),
-          ),
+        Row(
+          children: <Widget>[
+            Text("ریال", style: TextStyle(fontSize: 18)),
+            SizedBox(width: 10,),
+            Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width * 0.4,
+              child: TextField(
+                controller: _amountTextController,
+                keyboardType: TextInputType.number,
+                decoration: new InputDecoration(
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(20.0),
+                      ),
+                    ),
+                    filled: true,
+                    hintStyle:
+                    new TextStyle(color: Colors.grey[800], fontSize: 12),
+                    hintText: "مبلغ را وارد نمایید",
+                    fillColor: Colors.white70),
+              ),
+            ),
+          ],
         ),
       ],
     );

@@ -37,15 +37,9 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   void initState() {
     _bloc.responseVisitStream.listen((data) {
       if (data.status == Status.COMPLETED) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('درخواست شما با موفقیت ثبت شد'),
-          duration: Duration(seconds: 3),
-        ));
+        toast(context, 'درخواست شما با موفقیت ثبت شد');
       } else if (data.status == Status.ERROR) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text(data.message),
-          duration: Duration(seconds: 3),
-        ));
+        toast(context, data.message);
       }
     });
     super.initState();

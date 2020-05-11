@@ -37,15 +37,9 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
   void initState() {
     _bloc.visitRequestStream.listen((data) {
       if (data.status == Status.COMPLETED) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('درخواست شما با موفقیت ثبت شد'),
-          duration: Duration(seconds: 3),
-        ));
-      } else if(data.status == Status.ERROR){
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text(data.message),
-          duration: Duration(seconds: 3),
-        ));
+        toast(context, 'درخواست شما با موفقیت ثبت شد');
+      } else if (data.status == Status.ERROR) {
+        toast(context, data.message);
       }
     });
     super.initState();
@@ -56,10 +50,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
       child: Container(
         margin: EdgeInsets.only(top: 50),
         constraints:
-        BoxConstraints(maxWidth: MediaQuery
-            .of(context)
-            .size
-            .width),
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
         child: Column(children: <Widget>[
           _headerWidget(),
           SizedBox(height: 10),
@@ -69,9 +60,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
               "مدت زمان مشاوره", ["پایه", "تکمیلی", "طولانی"]),
           SizedBox(height: 10),
           Text(
-              "ویزیت مجازی حداکثر ${replaceFarsiNumber(
-                  (typeSelected["مدت زمان مشاوره"] * 30 + 10)
-                      .toString())} دقیقه می‌باشد",
+              "ویزیت مجازی حداکثر ${replaceFarsiNumber((typeSelected["مدت زمان مشاوره"] * 30 + 10).toString())} دقیقه می‌باشد",
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
           SizedBox(height: 10),
           _priceWidget(),
@@ -104,8 +93,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
     );
   }
 
-  _headerWidget() =>
-      Row(
+  _headerWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -119,8 +107,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
 
   Map<String, int> typeSelected = {"نوع مشاوره": 2, "مدت زمان مشاوره": 2};
 
-  _reservationTypeWidget(String title, List<String> items) =>
-      Column(
+  _reservationTypeWidget(String title, List<String> items) => Column(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -157,16 +144,15 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
-  _priceWidget() =>
-      Row(
+  _priceWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text("ریال", style: TextStyle(fontSize: 16)),
           SizedBox(width: 5),
           Text(
               replaceFarsiNumber((widget.doctorEntity.fee *
-                  (typeSelected["نوع مشاوره"] + 1) *
-                  (typeSelected["مدت زمان مشاوره"] + 1))
+                      (typeSelected["نوع مشاوره"] + 1) *
+                      (typeSelected["مدت زمان مشاوره"] + 1))
                   .toString()),
               style: TextStyle(color: IColors.themeColor, fontSize: 18)),
           SizedBox(width: 5),
@@ -176,8 +162,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
 
   bool _enableVisitTime = false;
 
-  _timeSelectionWidget() =>
-      Visibility(
+  _timeSelectionWidget() => Visibility(
         visible: _enableVisitTime,
         child: Column(
           children: <Widget>[
@@ -200,17 +185,15 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.35,
+                  width: MediaQuery.of(context).size.width * 0.35,
                   child: DateTimeField(
                     controller: timeTextController,
                     format: DateFormat("HH:mm"),
                     onShowPicker: (context, currentValue) async {
                       final time = await showTimePicker(
                         context: context,
-                        initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                        initialTime: TimeOfDay.fromDateTime(
+                            currentValue ?? DateTime.now()),
                       );
                       return DateTimeField.convert(time);
                     },
@@ -218,10 +201,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
                 ),
                 SizedBox(width: 50),
                 Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.35,
+                  width: MediaQuery.of(context).size.width * 0.35,
                   child: TextField(
                       controller: dateTextController, onTap: _showDatePicker),
                 ),
@@ -233,30 +213,29 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
 
   Row _enableVisitTimeWidget() {
     return Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Text(
-              "تعیین وقت قبلی ویزیت مجازی",
-              textAlign: TextAlign.right,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-            Switch(
-              value: _enableVisitTime,
-              activeColor: IColors.themeColor,
-              onChanged: (d) {
-                setState(() {
-                  _enableVisitTime = d;
-                });
-              },
-            )
-          ],
-        );
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          "تعیین وقت قبلی ویزیت مجازی",
+          textAlign: TextAlign.right,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        ),
+        Switch(
+          value: _enableVisitTime,
+          activeColor: IColors.themeColor,
+          onChanged: (d) {
+            setState(() {
+              _enableVisitTime = d;
+            });
+          },
+        )
+      ],
+    );
   }
 
   bool policyChecked = false;
 
-  _acceptPolicyWidget() =>
-      Row(
+  _acceptPolicyWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Text(
@@ -276,8 +255,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
-  _submitWidget() =>
-      ActionButton(
+  _submitWidget() => ActionButton(
         color: policyChecked ? IColors.themeColor : Colors.grey,
         title: "شروع ویزیت مجازی",
         callBack: () {
@@ -297,10 +275,9 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
 
   String convertToGeorgianDate(String jalaliDate) {
     var array = jalaliDate.split("/");
-    var georgianDate = Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
-        .toGregorian();
+    var georgianDate =
+        Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
+            .toGregorian();
     return "${georgianDate.year}-${georgianDate.month}-${georgianDate.day}";
   }
-
-
 }
