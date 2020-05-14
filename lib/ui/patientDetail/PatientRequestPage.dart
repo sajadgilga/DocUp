@@ -65,9 +65,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   break;
                 case Status.ERROR:
                   return APICallError(
-                    errorMessage: Strings.notFoundRequest
-//                    snapshot.data.message
-                    ,
+                    errorMessage: Strings.notFoundRequest,
                     onRetryPressed: () =>
                         _bloc.getVisit(widget.patientEntity.id),
                   );
@@ -166,7 +164,6 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
             Container(
               width: 150.0,
               height: 100.0,
-//        margin: EdgeInsets.only(left: 10, right: 10),
               decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.cover, image: AssetImage('assets/hand1.jpg')),
@@ -214,7 +211,6 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
           children: <Widget>[
             SizedBox(width: 5),
             Text(
-//                "${widget.patientEntity.user.firstName} ${widget.patientEntity.user.lastName}",
                 widget.patientEntity.user.name,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           ],

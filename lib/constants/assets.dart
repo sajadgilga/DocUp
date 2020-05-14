@@ -17,6 +17,8 @@ class Assets {
   static final String emptyAvatar = 'assets/avatar.png';
   static final String logoRectangle = 'assets/logoRec.png';
   static final String logoCircle = 'assets/logoCircle.png';
+  static final String logoTransparent = 'assets/logoTransparent.png';
+
   static String docUpIcon = docUpPatientIcon;
 
   static void changeIcons(RoleType roleType) {

@@ -4,6 +4,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
+import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +14,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AccountPage extends StatefulWidget {
   final ValueChanged<String> onPush;
-  final Function(String, UserEntity) globalOnPush;
   final String defaultCreditForCharge;
 
   AccountPage(
       {Key key,
       @required this.onPush,
-      this.globalOnPush,
       this.defaultCreditForCharge})
       : super(key: key);
 
@@ -65,8 +64,7 @@ class _AccountPageState extends State<AccountPage> {
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        _docUpIcon(),
-        _headerWidget(),
+        DocUpHeader(title: "پروفایل من"),
         SizedBox(height: 10),
         _userInfoLabelWidget(),
         _userInfoWidget(),
@@ -245,19 +243,5 @@ class _AccountPageState extends State<AccountPage> {
         child: Text("اطلاعات کاربری",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             textAlign: TextAlign.right),
-      );
-
-  _headerWidget() => Center(
-      child: Text("پروفایل من",
-          style: TextStyle(color: IColors.themeColor, fontSize: 30)));
-
-  _docUpIcon() => Container(
-        padding: EdgeInsets.only(top: 20, right: 20),
-        child: SvgPicture.asset(
-          'assets/docUpHomePatient.svg',
-          width: 35,
-          height: 35,
-        ),
-        alignment: Alignment.centerRight,
       );
 }

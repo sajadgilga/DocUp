@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
               Text(
                 Strings.docUpIntroHomePart1,
                 textDirection: TextDirection.rtl,
-                style: TextStyle(fontSize: 22),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
                 Strings.docUpIntroHomePart2,
@@ -179,7 +179,7 @@ class _HomeState extends State<Home> {
                             OnCallMedicalHeaderIcon()
                           ]))),
                   Container(
-                    height: 10,
+                    height: 20,
                   ),
                   _intro(MediaQuery
                       .of(context)

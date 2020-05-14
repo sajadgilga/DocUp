@@ -13,6 +13,7 @@ import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/AccountPage.dart';
+import 'package:docup/ui/cognitiveTest/CognitiveTest.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
@@ -44,6 +45,7 @@ class NavigatorRoutes {
   static const String searchView = '/searchView';
   static const String requestsView = '/requestsView';
   static const String uploadPicDialogue = '/uploadPicDialogue';
+  static const String cognitiveTest = '/cognitiveTest';
 }
 
 class NavigatorView extends StatelessWidget {
@@ -80,6 +82,7 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
+          NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context),
           NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
               child: UploadSlider(
@@ -119,6 +122,7 @@ class NavigatorView extends StatelessWidget {
               _doctorDetailPage(context, entity),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
+          NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context),
           NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
               child: UploadSlider(
@@ -194,8 +198,13 @@ class NavigatorView extends StatelessWidget {
         onPush: (direction) {
           _push(context, direction);
         },
-        globalOnPush: pushOnBase,
       );
+
+  Widget _cognitiveTest(context) => CognitiveTest(
+    onPush: (direction) {
+      _push(context, direction);
+    },
+  );
 
   Widget _notifictionPage() => NotificationPage();
 
