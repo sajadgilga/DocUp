@@ -38,6 +38,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
     _bloc.responseVisitStream.listen((data) {
       if (data.status == Status.COMPLETED) {
         toast(context, 'درخواست شما با موفقیت ثبت شد');
+        Navigator.pop(context);
       } else if (data.status == Status.ERROR) {
         toast(context, data.message);
       }
