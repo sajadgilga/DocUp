@@ -3,7 +3,6 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/home/iPartner/IPartnerBody.dart';
-import 'package:docup/models/Doctor.dart';
 import 'package:docup/ui/widgets/DoctorSummary.dart';
 
 class IPartner extends StatelessWidget {
@@ -64,7 +63,7 @@ class IPartner extends StatelessWidget {
           _IDoctorLabel(),
           Expanded(
             child: IPartnerBody(
-              selectPage: selectPage,
+                selectPage: selectPage,
                 partner: partner,
                 onPush: onPush,
                 globalOnPush: globalOnPush,

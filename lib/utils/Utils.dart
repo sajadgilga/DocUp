@@ -38,7 +38,7 @@ void showOneButtonDialog(context, String message, String action, Function callba
     ),
     content: ActionButton(
       color: IColors.themeColor,
-      title: "افزایش اعتبار",
+      title: action,
       callBack: () {
         Navigator.pop(dialogContext);
         callback();

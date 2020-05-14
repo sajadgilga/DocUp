@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
-import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';

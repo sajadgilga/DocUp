@@ -8,8 +8,7 @@ import 'package:docup/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/home/iPartner/ChatBox.dart';
-import 'package:docup/models/Doctor.dart';
-import 'package:docup/ui/widgets/DoctorSummary.dart';
+ import 'package:docup/ui/widgets/DoctorSummary.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IPartnerBody extends StatelessWidget {

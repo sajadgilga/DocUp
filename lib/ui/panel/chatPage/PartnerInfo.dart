@@ -1,7 +1,6 @@
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/assets.dart';
-import 'package:docup/models/Doctor.dart';
-import 'package:docup/models/DoctorEntity.dart';
+ import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';

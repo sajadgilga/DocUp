@@ -5,13 +5,14 @@ typedef ActionCallBack = void Function();
 class ActionButton extends StatefulWidget {
   final double width;
   final Color color;
+  final Color textColor;
   final String title;
   final Icon icon;
   final ActionCallBack callBack;
   final bool rtl;
 
   ActionButton(
-      {Key key, this.width, this.color, this.title, this.icon, this.callBack, this.rtl})
+      {Key key, this.width, this.color, this.textColor, this.title, this.icon, this.callBack, this.rtl})
       : super(key: key);
 
   @override
@@ -33,7 +34,7 @@ class _ActionButtonState extends State<ActionButton> {
           padding: EdgeInsets.only(bottom: 10.0, top: 10.0, right: 10.0),
           child: Text(
             widget.title != null ? widget.title : "",
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16, color: widget.textColor),
             textAlign: TextAlign.center,
           ),
         ),

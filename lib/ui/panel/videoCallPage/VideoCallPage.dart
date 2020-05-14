@@ -1,7 +1,6 @@
 import 'package:docup/blocs/VideoCallBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
-import 'package:docup/models/Doctor.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/repository/VideoCallRepository.dart';

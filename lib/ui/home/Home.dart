@@ -14,8 +14,7 @@ import 'package:docup/ui/home/notification/Notification.dart';
 
 import 'package:docup/ui/home/iPartner/IPartner.dart';
 import 'package:docup/constants/strings.dart';
-import 'package:docup/models/Doctor.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'TrackingList.dart';
 import 'onCallMedical/OnCallMedicalHeaderIcon.dart';

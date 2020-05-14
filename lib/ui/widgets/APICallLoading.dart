@@ -13,7 +13,7 @@ class APICallLoading extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            loadingMessage,
+            loadingMessage == null ? "" : loadingMessage,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: IColors.themeColor,

@@ -1,8 +1,7 @@
 import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
-import 'package:docup/models/Doctor.dart';
-import 'package:docup/models/DoctorEntity.dart';
+ import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';

@@ -238,6 +238,7 @@ class _StartPageState extends State<StartPage> {
 
   @override
   void dispose() {
+    _controller.close();
     _usernameController.dispose();
     _doctorIdController.dispose();
     _verificationController.dispose();

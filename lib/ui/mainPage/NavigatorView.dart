@@ -9,11 +9,10 @@ import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/blocs/VisitBloc.dart';
 import 'package:docup/constants/strings.dart';
-import 'package:docup/models/Doctor.dart';
-import 'package:docup/models/PatientEntity.dart';
+ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/AccountPage.dart';
-import 'package:docup/ui/cognitiveTest/CognitiveTest.dart';
+import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
@@ -200,7 +199,7 @@ class NavigatorView extends StatelessWidget {
         },
       );
 
-  Widget _cognitiveTest(context) => CognitiveTest(
+  Widget _cognitiveTest(context) => MedicalTestPage(
     onPush: (direction) {
       _push(context, direction);
     },
