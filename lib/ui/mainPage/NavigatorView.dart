@@ -4,6 +4,7 @@ import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
+import 'package:docup/blocs/PatientTrackerBloc.dart';
 import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
@@ -57,6 +58,7 @@ class NavigatorView extends StatelessWidget {
   final SearchBloc _searchBloc = SearchBloc();
   final VisitBloc _visitBloc = VisitBloc();
   final PictureBloc _pictureBloc = PictureBloc();
+  final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
   Function selectPage;
 
   NavigatorView(
@@ -101,6 +103,8 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
+          NavigatorRoutes.requestsView: (context) =>
+              _searchPage(context, isRequests: true),
         };
       case 1:
         return {
@@ -184,13 +188,32 @@ class NavigatorView extends StatelessWidget {
     );
   }
 
-  Widget _home(context) => Home(
+  Widget _home(context) {
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    if (entity.isDoctor) {
+      return MultiBlocProvider(
+          providers: [
+            BlocProvider<PatientTrackerBloc>.value(
+              value: _trackerBloc,
+            )
+          ],
+          child: Home(
+            selectPage: selectPage,
+            onPush: (direction, entity) {
+              _push(context, direction, entity: entity);
+            },
+            globalOnPush: pushOnBase,
+          ));
+    } else if (entity.isPatient) {
+      return Home(
         selectPage: selectPage,
         onPush: (direction, entity) {
           _push(context, direction, entity: entity);
         },
         globalOnPush: pushOnBase,
       );
+    }
+  }
 
   Widget _account(context, {defaultCreditForCharge}) => AccountPage(
         defaultCreditForCharge: defaultCreditForCharge,
@@ -315,8 +338,7 @@ class NavigatorView extends StatelessWidget {
 
   Widget _doctorDetailPage(context, doctor) {
     return DoctorDetailPage(
-      onPush:
-      pushOnBase,
+      onPush: pushOnBase,
 //          (direction, entity) {
 //        _push(context, direction, entity: entity);
 //      },

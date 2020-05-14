@@ -1,5 +1,6 @@
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/NotificationBloc.dart';
+import 'package:docup/blocs/PatientTrackerBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/PatientEntity.dart';
@@ -14,7 +15,7 @@ import 'package:docup/ui/home/notification/Notification.dart';
 
 import 'package:docup/ui/home/iPartner/IPartner.dart';
 import 'package:docup/constants/strings.dart';
- import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'TrackingList.dart';
 import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
@@ -39,6 +40,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     _notificationBloc.add(GetNewestNotifications());
+    BlocProvider.of<PatientTrackerBloc>(context).add(TrackerGet());
     super.initState();
   }
 
@@ -75,19 +77,20 @@ class _HomeState extends State<Home> {
   }
 
   Widget _trackingList() {
-    return TrackingList(
-      all: 104,
-      cured: 23,
-      curing: 35,
-      visitPending: 45,
-    ); //TODO
+    return BlocBuilder<PatientTrackerBloc, TrackerState>(
+        builder: (context, state) {
+      return TrackingList(
+        all: state.patientTracker.all,
+        cured: state.patientTracker.cured,
+        curing: state.patientTracker.curing,
+        visitPending: state.patientTracker.visitPending,
+        onPush: widget.onPush,
+      );
+    });
   }
 
   Widget _homeList() {
-    var entity = BlocProvider
-        .of<EntityBloc>(context)
-        .state
-        .entity;
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isPatient) {
       return _reminderList();
     } else if (entity.isDoctor) {
@@ -96,23 +99,18 @@ class _HomeState extends State<Home> {
   }
 
   Widget _homeListLabel() {
-    var entity = BlocProvider
-        .of<EntityBloc>(context)
-        .state
-        .entity;
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isPatient) {
       return Text(
         Strings.medicineReminder,
         textAlign: TextAlign.center,
-        style:
-        TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
       );
     } else if (entity.isDoctor) {
       return Text(
         Strings.doctorTrackingLabel,
         textAlign: TextAlign.center,
-        style:
-        TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
       );
     }
   }
@@ -148,27 +146,24 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           Image(
             image: AssetImage(Assets.homeBackground),
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
+            width: MediaQuery.of(context).size.width,
             fit: BoxFit.fitWidth,
           ),
           Container(
               child: Column(
-                children: <Widget>[
-                  Header(
-                      child: GestureDetector(
-                          onTap: () {
-                            widget.onPush(NavigatorRoutes.notificationView, null);
-                          },
-                          child: Row(children: <Widget>[
-                            BlocBuilder<NotificationBloc, NotificationState>(
-                                bloc: _notificationBloc,
-                                builder: (context, state) {
-                                  if (state is NotificationsLoaded)
-                                    return HomeNotification(
-                                        newNotificationCount:
+            children: <Widget>[
+              Header(
+                  child: GestureDetector(
+                      onTap: () {
+                        widget.onPush(NavigatorRoutes.notificationView, null);
+                      },
+                      child: Row(children: <Widget>[
+                        BlocBuilder<NotificationBloc, NotificationState>(
+                            bloc: _notificationBloc,
+                            builder: (context, state) {
+                              if (state is NotificationsLoaded)
+                                return HomeNotification(
+                                    newNotificationCount:
                                         state.notifications.newestEventsCounts);
                                   else
                                     return HomeNotification(

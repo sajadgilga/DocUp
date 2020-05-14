@@ -1,6 +1,7 @@
 import 'package:docup/models/AuthResponseEntity.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/ListResult.dart';
+import 'package:docup/models/PatientTracker.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/networking/ApiProvider.dart';
 
@@ -48,6 +49,11 @@ class DoctorRepository {
       "request_visit_time": visitTime
     });
     return VisitEntity.fromJson(response);
+  }
+
+  Future<PatientTracker> getPatientTracker() async {
+    final response = await _provider.get('api/patient-tracking/');
+    return PatientTracker.fromJson(response);
   }
 
   Future<ListResult> getAllVisits() async {

@@ -11,12 +11,6 @@ class BasePage extends StatelessWidget {
           navigatorKey: nav,
         ),
         onWillPop: () async {
-//              final isMainPage =
-//              !await MyApp.globalNavigator.currentState.maybePop();
-//              if (isMainPage) {
-//                MyApp.globalNavigator.currentState.pop();
-//                return false;
-//
         final isMain = !await nav.currentState.maybePop();
           return isMain;
         });

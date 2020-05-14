@@ -307,18 +307,7 @@ class _MainPageState extends State<MainPage> {
                 BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
           return _mainPage();
         }),
-//            Navigator(
-//              key: MyApp.globalNavigator,
-//              initialRoute: NavigatorRoutes.mainPage,
-//              onGenerateRoute: (settings) => _route(settings, context),
-//            ),
             onWillPop: () async {
-//              final isMainPage =
-//              !await MyApp.globalNavigator.currentState.maybePop();
-//              if (isMainPage) {
-//                MyApp.globalNavigator.currentState.pop();
-//                return false;
-//              }
           final isFirstRouteInCurrentRoute =
               !await _navigatorKeys[_currentIndex].currentState.maybePop();
           if (isFirstRouteInCurrentRoute) {

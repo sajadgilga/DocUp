@@ -1,5 +1,7 @@
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -8,8 +10,17 @@ class TrackingList extends StatelessWidget {
   final int cured;
   final int curing;
   final int visitPending;
+  Function(String, UserEntity) onPush;
+  Function(String, dynamic) onGlobalPush;
 
-  TrackingList({Key key, this.all, this.cured, this.curing, this.visitPending})
+  TrackingList(
+      {Key key,
+      this.all,
+      this.cured,
+      this.curing,
+      this.visitPending,
+      this.onPush,
+      this.onGlobalPush})
       : super(key: key);
 
   @override
@@ -21,13 +32,17 @@ class TrackingList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              TrackingBlock(
-                label: Strings.patientTrackingVisitPendingLabel,
-                percent: visitPending / all,
-                color: IColors.trackingVisitPending,
-                backgroundColor: Colors.white,
-                borderColor: IColors.trackingVisitPending,
-              ),
+              GestureDetector(
+                  onTap: () {
+                    onPush(NavigatorRoutes.requestsView, null);
+                  },
+                  child: TrackingBlock(
+                    label: Strings.patientTrackingVisitPendingLabel,
+                    percent: visitPending / all,
+                    color: IColors.trackingVisitPending,
+                    backgroundColor: Colors.white,
+                    borderColor: IColors.trackingVisitPending,
+                  )),
               TrackingBlock(
                 label: Strings.patientTrackingCuringLabel,
                 percent: curing / all,
@@ -87,8 +102,8 @@ class TrackingBlock extends StatelessWidget {
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 9, color: color),
+          style:
+              TextStyle(fontWeight: FontWeight.bold, fontSize: 9, color: color),
         ),
       );
 
