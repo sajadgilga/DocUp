@@ -1,6 +1,7 @@
 import 'package:docup/blocs/CreditBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/utils/Utils.dart';
@@ -12,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AccountPage extends StatefulWidget {
   final ValueChanged<String> onPush;
-  final ValueChanged<String> globalOnPush;
+  final Function(String, UserEntity) globalOnPush;
   final String defaultCreditForCharge;
 
   AccountPage({Key key, @required this.onPush, this.globalOnPush, this.defaultCreditForCharge})

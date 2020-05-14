@@ -1,6 +1,7 @@
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/ui/BasePage.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/start/OnBoardingPage.dart';
 import 'package:docup/ui/start/StartPage.dart';
@@ -35,7 +36,7 @@ class _SplashPageState extends State<SplashPage> {
       bool isPatient = prefs.getBool("isPatient");
       switchRole(isPatient ? RoleType.PATIENT : RoleType.DOCTOR);
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => MainPage()));
+          context, MaterialPageRoute(builder: (context) => BasePage()));
     } else {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => OnBoardingPage()));

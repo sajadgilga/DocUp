@@ -5,6 +5,7 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/networking/Response.dart';
+import 'package:docup/ui/BasePage.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/blocs/timer/TimerEvent.dart';
@@ -95,7 +96,7 @@ class _StartPageState extends State<StartPage> {
       bool isPatient = prefs.getBool("isPatient");
       switchRole(isPatient ? RoleType.PATIENT : RoleType.DOCTOR);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MainPage()));
+          context, MaterialPageRoute(builder: (context) => BasePage()));
     }
   }
 
@@ -125,21 +126,21 @@ class _StartPageState extends State<StartPage> {
     _authBloc.signInStream.listen((data) {
       if (handle(data)) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainPage()));
+            context, MaterialPageRoute(builder: (context) => BasePage()));
       }
     });
 
     _patientBloc.dataStream.listen((data) {
       if (handle(data)) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainPage()));
+            context, MaterialPageRoute(builder: (context) => BasePage()));
       }
     });
 
     _doctorBloc.doctorStream.listen((data) {
       if (handle(data)) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainPage()));
+            context, MaterialPageRoute(builder: (context) => BasePage()));
       }
     });
     super.initState();

@@ -15,6 +15,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/AccountPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
+import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:docup/ui/panel/chatPage/ChatPage.dart';
@@ -48,7 +49,7 @@ class NavigatorRoutes {
 class NavigatorView extends StatelessWidget {
   final int index;
   final GlobalKey<NavigatorState> navigatorKey;
-  ValueChanged<String> globalOnPush;
+  Function(String, dynamic) pushOnBase;
   final TabSwitchBloc _tabSwitchBloc = TabSwitchBloc();
   final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
   final ChatMessageBloc _chatMessageBloc = ChatMessageBloc();
@@ -61,21 +62,38 @@ class NavigatorView extends StatelessWidget {
       {Key key,
       this.index,
       this.navigatorKey,
-      this.globalOnPush,
+      this.pushOnBase,
       this.selectPage})
       : super(key: key);
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context, {entity}) {
     switch (index) {
-//      case -1: return {
-//        NavigatorRoutes.mainPage: (context) => _mainPage(),
-//        NavigatorRoutes.doctorDialogue: (context) => DoctorDetailPage()
-//      };
+      case -1:
+        return {
+          NavigatorRoutes.root: (context) => MainPage(
+                pushOnBase: (direction, entity) {
+                  _push(context, direction, entity: entity);
+                },
+              ),
+          NavigatorRoutes.doctorDialogue: (context) =>
+              _doctorDetailPage(context, entity),
+          NavigatorRoutes.patientDialogue: (context) =>
+              _patientDetailPage(context, entity),
+          NavigatorRoutes.searchView: (context) => _searchPage(context),
+          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
+              value: _pictureBloc,
+              child: UploadSlider(
+                listId: entity,
+              )),
+          NavigatorRoutes.requestsView: (context) =>
+              _searchPage(context, isRequests: true),
+        };
       case 0:
         return {
           NavigatorRoutes.root: (context) => _home(context),
           NavigatorRoutes.notificationView: (context) => _notifictionPage(),
-          NavigatorRoutes.account: (context) => _account(context, defaultCreditForCharge: entity),
+          NavigatorRoutes.account: (context) =>
+              _account(context, defaultCreditForCharge: entity),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, entity),
           NavigatorRoutes.patientDialogue: (context) =>
@@ -168,9 +186,7 @@ class NavigatorView extends StatelessWidget {
         onPush: (direction, entity) {
           _push(context, direction, entity: entity);
         },
-        globalOnPush: (direction) {
-          _push(context, direction);
-        },
+        globalOnPush: pushOnBase,
       );
 
   Widget _account(context, {defaultCreditForCharge}) => AccountPage(
@@ -178,9 +194,7 @@ class NavigatorView extends StatelessWidget {
         onPush: (direction) {
           _push(context, direction);
         },
-        globalOnPush: (direction) {
-          _push(context, direction);
-        },
+        globalOnPush: pushOnBase,
       );
 
   Widget _notifictionPage() => NotificationPage();
@@ -293,9 +307,11 @@ class NavigatorView extends StatelessWidget {
 
   Widget _doctorDetailPage(context, doctor) {
     return DoctorDetailPage(
-      onPush: (direction, entity) {
-        _push(context, direction, entity: entity);
-      },
+      onPush:
+      pushOnBase,
+//          (direction, entity) {
+//        _push(context, direction, entity: entity);
+//      },
       doctor: doctor,
     );
   }

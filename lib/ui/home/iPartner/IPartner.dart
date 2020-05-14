@@ -10,7 +10,7 @@ class IPartner extends StatelessWidget {
   final UserEntity partner;
   final Function(String, UserEntity) onPush;
   final Function selectPage;
-  final ValueChanged<String> globalOnPush;
+  final Function(String, UserEntity) globalOnPush;
   final Color color;
   final String label;
 

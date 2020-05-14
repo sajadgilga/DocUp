@@ -82,7 +82,7 @@ class _ChatBoxState extends State<ChatBox> {
           child: _chatList(),
           flex: 2,
         ),
-        _myMessages(),
+//        _myMessages(),
       ],
     );
   }

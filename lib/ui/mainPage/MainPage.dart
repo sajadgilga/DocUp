@@ -34,6 +34,10 @@ import '../../constants/colors.dart';
 import 'NavigatorView.dart';
 
 class MainPage extends StatefulWidget {
+  Function(String, dynamic) pushOnBase;
+
+  MainPage({Key key, this.pushOnBase}) : super(key: key);
+
   @override
   _MainPageState createState() {
     return _MainPageState();
@@ -69,15 +73,12 @@ class _MainPageState extends State<MainPage> {
     _entityBloc.listen((data) {
       Timer _timer;
       if (data is EntityError) {
-        _timer = Timer.periodic(
-            Duration(seconds: 5), (Timer t) {
-              _entityBloc.add(EntityGet());
-              _panelBloc.add(GetMyPanels());
-        }
-            );
+        _timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
+          _entityBloc.add(EntityGet());
+          _panelBloc.add(GetMyPanels());
+        });
       } else if (data is EntityLoaded) {
-        if (_timer.isActive)
-          _timer.cancel();
+        if (_timer.isActive) _timer.cancel();
       }
     });
 
@@ -103,7 +104,7 @@ class _MainPageState extends State<MainPage> {
     );
 
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('mipmap/ic_launcher');
+        new AndroidInitializationSettings('mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
 
     var initializationSettings = new InitializationSettings(
@@ -149,13 +150,13 @@ class _MainPageState extends State<MainPage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            CallPage(
-              channelName: channelName,
-            ),
+        builder: (context) => CallPage(
+          channelName: channelName,
+        ),
       ),
     );
   }
+
 //
   Future<void> _handleCameraAndMic() async {
     await PermissionHandler().requestPermissions(
@@ -185,32 +186,32 @@ class _MainPageState extends State<MainPage> {
                   alignment: Alignment.center,
                   child: (destination.isProfile
                       ? Container(
-                    width: 50,
-                    child: ClipPolygon(
-                        sides: 6,
-                        rotate: 90,
-                        boxShadows: [
-                          PolygonBoxShadow(
-                              color: Colors.black, elevation: 1.0),
-                          PolygonBoxShadow(
-                              color: Colors.grey, elevation: 2.0)
-                        ],
-                        child: (destination.img != null
-                            ? destination.img
-                            : Image.asset(Assets.doctorAvatar))),
-                  )
+                          width: 50,
+                          child: ClipPolygon(
+                              sides: 6,
+                              rotate: 90,
+                              boxShadows: [
+                                PolygonBoxShadow(
+                                    color: Colors.black, elevation: 1.0),
+                                PolygonBoxShadow(
+                                    color: Colors.grey, elevation: 2.0)
+                              ],
+                              child: (destination.img != null
+                                  ? destination.img
+                                  : Image.asset(Assets.doctorAvatar))),
+                        )
                       : (destination.hasImage
-                      ? SvgPicture.asset(
-                    destination.image,
-                    color: (_currentIndex == 1
-                        ? IColors.themeColor
-                        : Colors.grey),
-                    width: 25,
-                  )
-                      : Icon(
-                    destination.icon,
-                    size: 30,
-                  )))),
+                          ? SvgPicture.asset(
+                              destination.image,
+                              color: (_currentIndex == 1
+                                  ? IColors.themeColor
+                                  : Colors.grey),
+                              width: 25,
+                            )
+                          : Icon(
+                              destination.icon,
+                              size: 30,
+                            )))),
 //              Align(alignment: Alignment(0, -1), child: Container(
 //                decoration:
 //                    BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
@@ -258,7 +259,7 @@ class _MainPageState extends State<MainPage> {
         },
         navigatorKey: _navigatorKeys[index],
         index: index,
-        globalOnPush: (direction) => _push(context, direction),
+        pushOnBase: widget.pushOnBase,
       ),
     );
   }
@@ -281,7 +282,7 @@ class _MainPageState extends State<MainPage> {
         ),
         body:
 //        _children()[_currentIndex]
-        IndexedStack(
+            IndexedStack(
           index: _currentIndex,
           children: <Widget>[
             _buildOffstageNavigator(0),
@@ -290,39 +291,7 @@ class _MainPageState extends State<MainPage> {
             _buildOffstageNavigator(3),
             _buildOffstageNavigator(4),
           ],
-        )
-    );
-  }
-
-  Map<String, WidgetBuilder> _routeBuilders(BuildContext context) {
-    return {
-      NavigatorRoutes.mainPage: (context) => _mainPage(),
-      NavigatorRoutes.doctorDialogue: (context) =>
-          DoctorDetailPage(
-            onPush: (direction, defaultCreditForCharge) => _push(context, direction),
-            doctor:
-            BlocProvider
-                .of<EntityBloc>(context)
-                .state
-                .entity
-                .partnerEntity,
-          )
-    };
-  }
-
-  void _push(BuildContext context, String direction) {
-    _route(RouteSettings(name: direction), context);
-    MyApp.globalNavigator.currentState
-        .push(_route(RouteSettings(name: direction), context));
-  }
-
-  Route<dynamic> _route(RouteSettings settings, BuildContext context) {
-    var routeBuilders = _routeBuilders(context);
-    return MaterialPageRoute(
-        settings: settings,
-        builder: (BuildContext context) {
-          return routeBuilders[settings.name](context);
-        });
+        ));
   }
 
   @override
@@ -336,7 +305,7 @@ class _MainPageState extends State<MainPage> {
     return MultiBlocProvider(
         providers: [BlocProvider<PanelBloc>.value(value: _panelBloc)],
         child: WillPopScope(child:
-        BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+                BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
           return _mainPage();
         }),
 //            Navigator(
@@ -351,15 +320,15 @@ class _MainPageState extends State<MainPage> {
 //                MyApp.globalNavigator.currentState.pop();
 //                return false;
 //              }
-              final isFirstRouteInCurrentRoute =
+          final isFirstRouteInCurrentRoute =
               !await _navigatorKeys[_currentIndex].currentState.maybePop();
-              if (isFirstRouteInCurrentRoute) {
-                if (_currentIndex != 0) {
-                  _selectPage(0);
-                  return false;
-                }
-              }
-              return isFirstRouteInCurrentRoute;
-            }));
+          if (isFirstRouteInCurrentRoute) {
+            if (_currentIndex != 0) {
+              _selectPage(0);
+              return false;
+            }
+          }
+          return isFirstRouteInCurrentRoute;
+        }));
   }
 }

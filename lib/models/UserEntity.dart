@@ -29,6 +29,8 @@ class Entity {
   }
 
   int get pId {
+    if (partnerEntity == null)
+      return null;
     if (isPatient)
       return (partnerEntity as DoctorEntity).id;
     else

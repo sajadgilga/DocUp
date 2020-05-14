@@ -22,7 +22,7 @@ import 'VirtualReservationPage.dart';
 
 class DoctorDetailPage extends StatefulWidget {
   final DoctorEntity doctor;
-  final Function(String, String) onPush;
+  final Function(String, dynamic) onPush;
 
   DoctorDetailPage({Key key, this.doctor, this.onPush}) : super(key: key);
 

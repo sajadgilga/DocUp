@@ -23,7 +23,7 @@ import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
 class Home extends StatefulWidget {
   final Function(String, UserEntity) onPush;
   final Function selectPage;
-  final ValueChanged<String> globalOnPush;
+  final Function(String, UserEntity) globalOnPush;
 
   Home({Key key, @required this.onPush, this.globalOnPush, this.selectPage}) : super(key: key);
 
