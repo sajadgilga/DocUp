@@ -16,7 +16,11 @@ class AccountPage extends StatefulWidget {
   final Function(String, UserEntity) globalOnPush;
   final String defaultCreditForCharge;
 
-  AccountPage({Key key, @required this.onPush, this.globalOnPush, this.defaultCreditForCharge})
+  AccountPage(
+      {Key key,
+      @required this.onPush,
+      this.globalOnPush,
+      this.defaultCreditForCharge})
       : super(key: key);
 
   @override
@@ -78,102 +82,109 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   _supportWidget() => GestureDetector(
-    onTap: () => launch("tel://09335705997"),
-    child: Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          style: TextStyle(
-            fontFamily: 'iransans',
-            color: Colors.black87,
-            fontSize: 15
-          ),
-          children: <TextSpan>[
-            TextSpan(text: "لطفا انتقادات و پیشنهادات خود را با شماره تماس ۰۹۳۳۵۷۰۵۹۹۷ در واتس اپ یا تلگرام با تیم"),
-            TextSpan(text: " داکآپ ", style: TextStyle(color: IColors.themeColor, fontWeight: FontWeight.bold)),
-            TextSpan(text: "در میان بگذارید ")
-          ]
-        ),
-      )
-    ),
-  );
-
-  _userCreditWidget() {
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    var credit = entity.mEntity.user.credit;
-    return Center(
-      child: Container(
-        width: 200,
-        height: 64,
-        decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: IColors.darkBlue),
+        onTap: () => launch("tel://09335705997"),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            " ${replaceFarsiNumber(credit)} ریال ",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: 18),
-            textDirection: TextDirection.rtl,
+            padding: const EdgeInsets.all(12.0),
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                  style: TextStyle(
+                      fontFamily: 'iransans',
+                      color: Colors.black87,
+                      fontSize: 15),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text:
+                            "لطفا انتقادات و پیشنهادات خود را با شماره تماس ۰۹۳۳۵۷۰۵۹۹۷ در واتس اپ یا تلگرام با تیم"),
+                    TextSpan(
+                        text: " داکآپ ",
+                        style: TextStyle(
+                            color: IColors.themeColor,
+                            fontWeight: FontWeight.bold)),
+                    TextSpan(text: "در میان بگذارید ")
+                  ]),
+            )),
+      );
+
+  _userCreditWidget() => BlocBuilder<EntityBloc, EntityState>(
+  builder: (context, state) {
+      return Center(
+        child: Container(
+          width: 200,
+          height: 64,
+          decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              color: IColors.darkBlue),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              " ${state is EntityLoaded && state.entity != null && state.entity.mEntity != null ? replaceFarsiNumber(state.entity.mEntity.user.credit) : "0"} ریال ",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 18),
+              textDirection: TextDirection.rtl,
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    });
 
   TextEditingController _amountTextController = TextEditingController();
 
   _addCreditWidget() {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Container(
-          height: 50,
-          width: MediaQuery.of(context).size.width * 0.4,
-          child: ActionButton(
-              title: "افزایش اعتبار",
-              icon: Icon(Icons.add),
-              color: IColors.themeColor,
-              callBack: () {
-                if (_amountTextController.text.isEmpty) {
-                  toast(context, "لطفا مبلغ را وارد کنید");
-                } else {
-                  _isRequestForPay = true;
-                  _creditBloc.add(AddCredit(
-                      mobile: entity.mEntity.user.phoneNumber,
-                      amount: int.parse(_amountTextController.text)));
-                }
-              }),
-        ),
-        Row(
-          children: <Widget>[
-            Text("ریال", style: TextStyle(fontSize: 18)),
-            SizedBox(width: 10,),
-            Container(
-              height: 50,
-              width: MediaQuery.of(context).size.width * 0.4,
-              child: TextField(
-                controller: _amountTextController,
-                keyboardType: TextInputType.number,
-                decoration: new InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(20.0),
-                      ),
-                    ),
-                    filled: true,
-                    hintStyle:
-                    new TextStyle(color: Colors.grey[800], fontSize: 12),
-                    hintText: "مبلغ را وارد نمایید",
-                    fillColor: Colors.white70),
+    return Visibility(
+      visible: entity.isPatient,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width * 0.4,
+            child: ActionButton(
+                title: "افزایش اعتبار",
+                icon: Icon(Icons.add),
+                color: IColors.themeColor,
+                callBack: () {
+                  if (_amountTextController.text.isEmpty) {
+                    toast(context, "لطفا مبلغ را وارد کنید");
+                  } else {
+                    _isRequestForPay = true;
+                    _creditBloc.add(AddCredit(
+                        mobile: entity.mEntity.user.phoneNumber,
+                        amount: int.parse(_amountTextController.text)));
+                  }
+                }),
+          ),
+          Row(
+            children: <Widget>[
+              Text("ریال", style: TextStyle(fontSize: 18)),
+              SizedBox(
+                width: 10,
               ),
-            ),
-          ],
-        ),
-      ],
+              Container(
+                height: 50,
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: TextField(
+                  controller: _amountTextController,
+                  keyboardType: TextInputType.number,
+                  decoration: new InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(20.0),
+                        ),
+                      ),
+                      filled: true,
+                      hintStyle:
+                          new TextStyle(color: Colors.grey[800], fontSize: 12),
+                      hintText: "مبلغ را وارد نمایید",
+                      fillColor: Colors.white70),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -185,8 +196,8 @@ class _AccountPageState extends State<AccountPage> {
       );
 
   _changePasswordWidget(BuildContext context) => Visibility(
-    visible: false,
-    child: Padding(
+        visible: false,
+        child: Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Row(
             children: <Widget>[
@@ -198,7 +209,7 @@ class _AccountPageState extends State<AccountPage> {
             ],
           ),
         ),
-  );
+      );
 
   _userInfoWidget() => BlocBuilder<EntityBloc, EntityState>(
         builder: (context, state) {
