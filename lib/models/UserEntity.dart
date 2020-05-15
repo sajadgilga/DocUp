@@ -64,7 +64,8 @@ class Entity {
 
   String get pClinicName {
     if (isPatient)
-      return (partnerEntity as DoctorEntity).clinic.clinicName;
+//      return (partnerEntity as DoctorEntity).clinic.clinicName;
+      return "";
     if (isDoctor) return "";
   }
 

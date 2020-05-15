@@ -85,7 +85,7 @@ class IllnessPage extends StatelessWidget {
         return Container(
             constraints:
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-            child: Expanded(flex: 2, child: Waiting()));
+            child:  Waiting());
       },
     );
   }

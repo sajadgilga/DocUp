@@ -175,7 +175,7 @@ class _ChatPageState extends State<ChatPage> {
         return Container(
             constraints:
                 BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-            child: Expanded(flex: 2, child: Waiting()));
+            child: Waiting());
       },
     );
   }

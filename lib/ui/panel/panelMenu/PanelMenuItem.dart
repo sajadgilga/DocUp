@@ -13,6 +13,7 @@ import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/PatientPanelMenu.dart';
 import 'package:docup/ui/widgets/Header.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/customPainter/DrawerPainter.dart';
@@ -69,19 +70,20 @@ class PanelMenuMainItem extends StatelessWidget {
 
   void _selectItem({item, context}) {
     if ((!isPatient && doctorSection != DoctorPanelSection.DOCTOR_INTERFACE) ||(isPatient && patientSection == PatientPanelSection.HEALTH_CALENDAR)) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(
-                "منتظر ما باشید",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
-                  textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-            );
-          });
+//      showDialog(
+//          context: context,
+//          builder: (BuildContext context) {
+//            return AlertDialog(
+//              title: Text(
+//                "منتظر ما باشید",
+//                textAlign: TextAlign.center,
+//                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+//              ),
+//              content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+//                  textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
+//            );
+//          });
+    showNextVersionDialog(context);
       return;
     }
     if (item.panelTabState != null)
@@ -237,7 +239,7 @@ class PanelMenuMainItem extends StatelessWidget {
       items.add(_subItem(context, item: item));
     }
     if (!isEmpty && items.length == 0)
-      items.add(_subItem(context, text: Strings.panelIDoctorEmptyLabel));
+      items.add(_subItem(context, text: (isPatient?Strings.panelIDoctorEmptyLabel:Strings.panelIPatientEmptyLabel)));
     return WillPopScope(
         child: Container(
           margin: EdgeInsets.only(bottom: 15),

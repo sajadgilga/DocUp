@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/ui/start/OnBoardingPage.dart';
 import 'package:docup/ui/start/SplashPage.dart';
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
+    Crashlytics.instance.enableInDevMode = true;  // Pass all uncaught errors from the framework to Crashlytics.
+    FlutterError.onError = Crashlytics.instance.recordFlutterError;
+
     return BlocProvider<EntityBloc>(
         create: (context) => EntityBloc(),
         child: MaterialApp(

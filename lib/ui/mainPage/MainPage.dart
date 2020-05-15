@@ -70,50 +70,54 @@ class _MainPageState extends State<MainPage> {
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
     _entityBloc.add(EntityGet());
     _panelBloc.add(GetMyPanels());
-    _entityBloc.listen((data) {
-      Timer _timer;
-      if (data is EntityError) {
-        _timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
-          _entityBloc.add(EntityGet());
-          _panelBloc.add(GetMyPanels());
-        });
-      } else if (data is EntityLoaded) {
-        if (_timer.isActive) _timer.cancel();
-      }
-    });
+//    _entityBloc.listen((data) {
+//      Timer _timer;
+//      if (data is EntityError) {
+//        _timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
+//          _entityBloc.add(EntityGet());
+//          _panelBloc.add(GetMyPanels());
+//        });
+//      } else if (data is EntityLoaded) {
+//        if (_timer.isActive) _timer.cancel();
+//      }
+//    });
 
-    _firebaseMessaging.getToken().then((String fcmToken) {
-      assert(fcmToken != null);
-      print("FCM " + fcmToken);
-      NotificationRepository().registerDevice(fcmToken);
-    });
-
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        await _showNotificationWithDefaultSound(
-            message['notification']['title'], message['notification']['body']);
-      },
-//      onBackgroundMessage: myBackgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
-    );
-
-    var initializationSettingsAndroid =
-        new AndroidInitializationSettings('mipmap/ic_launcher');
-    var initializationSettingsIOS = new IOSInitializationSettings();
-
-    var initializationSettings = new InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-
-    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
-
+//    try {
+//      _firebaseMessaging.getToken().then((String fcmToken) {
+//        assert(fcmToken != null);
+//        print("FCM " + fcmToken);
+//        NotificationRepository().registerDevice(fcmToken);
+//      });
+//
+//      _firebaseMessaging.configure(
+//        onMessage: (Map<String, dynamic> message) async {
+//          print("onMessage: $message");
+//          await _showNotificationWithDefaultSound(
+//              message['notification']['title'],
+//              message['notification']['body']);
+//        },
+////      onBackgroundMessage: myBackgroundMessageHandler,
+//        onLaunch: (Map<String, dynamic> message) async {
+//          print("onLaunch: $message");
+//        },
+//        onResume: (Map<String, dynamic> message) async {
+//          print("onResume: $message");
+//        },
+//      );
+//
+//      var initializationSettingsAndroid =
+//      new AndroidInitializationSettings('mipmap/ic_launcher');
+//      var initializationSettingsIOS = new IOSInitializationSettings();
+//
+//      var initializationSettings = new InitializationSettings(
+//          initializationSettingsAndroid, initializationSettingsIOS);
+//
+//      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+//      flutterLocalNotificationsPlugin.initialize(initializationSettings,
+//          onSelectNotification: onSelectNotification);
+//    } on Exception {
+//      print("oh oh");
+//    }
     super.initState();
   }
 
@@ -198,7 +202,7 @@ class _MainPageState extends State<MainPage> {
                               ],
                               child: (destination.img != null
                                   ? destination.img
-                                  : Image.asset(Assets.doctorAvatar))),
+                                  : Image.asset(Assets.emptyAvatar))),
                         )
                       : (destination.hasImage
                           ? SvgPicture.asset(
@@ -253,7 +257,14 @@ class _MainPageState extends State<MainPage> {
   Widget _buildOffstageNavigator(int index) {
     return Offstage(
       offstage: _currentIndex != index,
-      child: _children[index],
+      child: NavigatorView(
+        selectPage: (int section) {
+          _chatPage(section);
+        },
+        navigatorKey: _navigatorKeys[index],
+        index: index,
+        pushOnBase: widget.pushOnBase,
+      ),
     );
   }
 
@@ -280,13 +291,13 @@ class _MainPageState extends State<MainPage> {
 //  }
 
   Widget _mainPage() {
-    _children = <Widget>[
-      _buildNavigator(0),
-      _buildNavigator(1),
-      _buildNavigator(2),
-      _buildNavigator(3),
-      _buildNavigator(4),
-    ];
+//    _children = <Widget>[
+//      _buildNavigator(0),
+//      _buildNavigator(1),
+//      _buildNavigator(2),
+//      _buildNavigator(3),
+//      _buildNavigator(4),
+//    ];
     return Scaffold(
         backgroundColor: IColors.background,
         bottomNavigationBar: SizedBox(
@@ -303,7 +314,8 @@ class _MainPageState extends State<MainPage> {
             _buildOffstageNavigator(3),
             _buildOffstageNavigator(4),
           ],
-        ));
+        )
+    );
   }
 
   @override

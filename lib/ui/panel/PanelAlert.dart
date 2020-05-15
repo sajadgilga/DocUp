@@ -9,9 +9,7 @@ class PanelAlert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 2,
-      child: Container(
+    return Container(
         constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width,
             minHeight: MediaQuery.of(context).size.height),
@@ -55,7 +53,6 @@ class PanelAlert extends StatelessWidget {
             ),
           ),
         ),),
-      ),
-    );
+      );
   }
 }

@@ -36,6 +36,8 @@ class Strings {
   static final String panelHealthScheduleLabel = 'تقویم سلامت';
   static final String panelIDoctorEmptyLabel =
       'در حال حاضر با پزشکی ارتباط ندارید';
+ static final String panelIPatientEmptyLabel =
+      'در حال حاضر با بیماری ارتباط ندارید';
 
   static final String doctorPanelRequestsLabel = 'درخواست‌ها';
   static final String doctorPanelHistoryLabel = 'تاریخچه';

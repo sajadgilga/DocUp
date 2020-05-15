@@ -7,7 +7,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   NotificationRepository _repository = NotificationRepository();
 
   @override
-  get initialState => null;
+  get initialState => NotificationUnloaded();
 
   Stream<NotificationState> _get() async* {
     yield NotificationLoading();
