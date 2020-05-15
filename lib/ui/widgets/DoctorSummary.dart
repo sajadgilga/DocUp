@@ -35,8 +35,8 @@ class PartnerSummary extends StatelessWidget {
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(bottom: 5),
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * .3),
+//              constraints: BoxConstraints(
+//                  maxWidth: MediaQuery.of(context).size.width * .3),
               child: Text(
                 (name != null? name: ''),
                 textDirection: TextDirection.rtl,
@@ -48,7 +48,7 @@ class PartnerSummary extends StatelessWidget {
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Text(
                 (location != null? location: ''),
@@ -73,7 +73,7 @@ class PartnerSummary extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        _description(context),
+        Expanded(flex: 2, child: _description(context)),
         _doctorImage(),
       ],
     );

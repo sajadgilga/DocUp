@@ -7,7 +7,7 @@ import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/main.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
- import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/Panel.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
@@ -51,6 +51,7 @@ class _MainPageState extends State<MainPage> {
 //  final PatientBloc _patientBloc = PatientBloc();
   final PanelBloc _panelBloc = PanelBloc();
   ProgressDialog _progressDialogue;
+  List<Widget> _children;
 
 //  Patient _patient;
 //  List<Panel> panels;
@@ -244,7 +245,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  void _chatPage() {
+  void _chatPage(int section) {
     _selectPage(2);
 //    _navigatorKeys[2].currentState.push()
   }
@@ -252,28 +253,40 @@ class _MainPageState extends State<MainPage> {
   Widget _buildOffstageNavigator(int index) {
     return Offstage(
       offstage: _currentIndex != index,
-      child: NavigatorView(
-        selectPage: () {
-          _chatPage();
-        },
-        navigatorKey: _navigatorKeys[index],
-        index: index,
-        pushOnBase: widget.pushOnBase,
-      ),
+      child: _children[index],
     );
   }
 
-  List<Widget> _children() {
-    return <Widget>[
-      _buildOffstageNavigator(0),
-      _buildOffstageNavigator(1),
-      _buildOffstageNavigator(2),
-      _buildOffstageNavigator(3),
-      _buildOffstageNavigator(4),
-    ];
+  Widget _buildNavigator(int index) {
+    return NavigatorView(
+      selectPage: (int section) {
+        _chatPage(section);
+      },
+      navigatorKey: _navigatorKeys[index],
+      index: index,
+      pushOnBase: widget.pushOnBase,
+    );
   }
 
+//
+//  List<Widget> _children() {
+//    return <Widget>[
+//      _buildOffstageNavigator(0),
+//      _buildOffstageNavigator(1),
+//      _buildOffstageNavigator(2),
+//      _buildOffstageNavigator(3),
+//      _buildOffstageNavigator(4),
+//    ];
+//  }
+
   Widget _mainPage() {
+    _children = <Widget>[
+      _buildNavigator(0),
+      _buildNavigator(1),
+      _buildNavigator(2),
+      _buildNavigator(3),
+      _buildNavigator(4),
+    ];
     return Scaffold(
         backgroundColor: IColors.background,
         bottomNavigationBar: SizedBox(
@@ -304,10 +317,9 @@ class _MainPageState extends State<MainPage> {
     return MultiBlocProvider(
         providers: [BlocProvider<PanelBloc>.value(value: _panelBloc)],
         child: WillPopScope(child:
-                BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+            BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
           return _mainPage();
-        }),
-            onWillPop: () async {
+        }), onWillPop: () async {
           final isFirstRouteInCurrentRoute =
               !await _navigatorKeys[_currentIndex].currentState.maybePop();
           if (isFirstRouteInCurrentRoute) {

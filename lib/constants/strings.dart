@@ -92,6 +92,12 @@ class Strings {
   static final String curedLabel = "درمان شده";
 
   static final String notFoundRequest = 'درخواستی از جانب این بیمار ندارید';
+  static final String noAvailableVirtualVisit = 'ویزیت مجازی در حال حاضر وجود ندارد';
+  static final String reserveVirtualVisit = 'رزرو ویزیت';
+  static final String waitingForApproval = 'در انتظار تایید پزشک';
+  static final String requestSentLabel = 'درخواست شما ارسال گردید';
+
+
 
 
 }

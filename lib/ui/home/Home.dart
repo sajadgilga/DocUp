@@ -22,10 +22,11 @@ import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
 
 class Home extends StatefulWidget {
   final Function(String, UserEntity) onPush;
-  final Function selectPage;
+  final Function(int) selectPage;
   final Function(String, UserEntity) globalOnPush;
 
-  Home({Key key, @required this.onPush, this.globalOnPush, this.selectPage}) : super(key: key);
+  Home({Key key, @required this.onPush, this.globalOnPush, this.selectPage})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -40,28 +41,29 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     _notificationBloc.add(GetNewestNotifications());
-    BlocProvider.of<PatientTrackerBloc>(context).add(TrackerGet());
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    if (entity.isDoctor)
+      BlocProvider.of<PatientTrackerBloc>(context).add(TrackerGet());
     super.initState();
   }
 
-  Widget _intro(double width) =>
-      IgnorePointer(
+  Widget _intro(double width) => IgnorePointer(
           child: ListView(
-            padding: EdgeInsets.only(right: width * .075),
-            shrinkWrap: true,
-            children: <Widget>[
-              Text(
-                Strings.docUpIntroHomePart1,
-                textDirection: TextDirection.rtl,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                Strings.docUpIntroHomePart2,
-                textDirection: TextDirection.rtl,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
-              ),
-            ],
-          ));
+        padding: EdgeInsets.only(right: width * .075),
+        shrinkWrap: true,
+        children: <Widget>[
+          Text(
+            Strings.docUpIntroHomePart1,
+            textDirection: TextDirection.rtl,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            Strings.docUpIntroHomePart2,
+            textDirection: TextDirection.rtl,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+          ),
+        ],
+      ));
 
   Widget _reminderList() {
     return BlocBuilder<NotificationBloc, NotificationState>(
@@ -165,45 +167,41 @@ class _HomeState extends State<Home> {
                                 return HomeNotification(
                                     newNotificationCount:
                                         state.notifications.newestEventsCounts);
-                                  else
-                                    return HomeNotification(
-                                      newNotificationCount: 0,
-                                    );
-                                }),
-                            OnCallMedicalHeaderIcon()
-                          ]))),
-                  Container(
-                    height: 20,
-                  ),
-                  _intro(MediaQuery
-                      .of(context)
-                      .size
-                      .width),
-                  Container(
-                    height: 20,
-                  ),
-                  SearchBox(onPush: widget.onPush, isPatient: BlocProvider
-                      .of<EntityBloc>(context)
-                      .state
-                      .entity
-                      .isPatient
-                    ,),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  _homeListLabel(),
-                  SizedBox(height: 5),
-                  SizedBox(
-                      width: 20,
-                      height: 3,
-                      child: Divider(
-                        thickness: 2,
-                        color: Colors.white,
-                      )),
-                  _homeList(),
-                  _iPartner()
-                ],
-              ))
+                              else
+                                return HomeNotification(
+                                  newNotificationCount: 0,
+                                );
+                            }),
+                        OnCallMedicalHeaderIcon()
+                      ]))),
+              Container(
+                height: 20,
+              ),
+              _intro(MediaQuery.of(context).size.width),
+              Container(
+                height: 20,
+              ),
+              SearchBox(
+                onPush: widget.onPush,
+                isPatient:
+                    BlocProvider.of<EntityBloc>(context).state.entity.isPatient,
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              _homeListLabel(),
+              SizedBox(height: 5),
+              SizedBox(
+                  width: 20,
+                  height: 3,
+                  child: Divider(
+                    thickness: 2,
+                    color: Colors.white,
+                  )),
+              _homeList(),
+              _iPartner()
+            ],
+          ))
         ],
       ),
     );

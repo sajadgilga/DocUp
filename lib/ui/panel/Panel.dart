@@ -120,6 +120,7 @@ class _PanelState extends State<Panel> {
         children: <Widget>[
           _header(),
           _tabs(),
+          SizedBox(height: 10,),
           BlocBuilder<TabSwitchBloc, PanelTabState>(
             builder: (context, state) =>
                 Expanded(flex: 2, child: children()[state]),

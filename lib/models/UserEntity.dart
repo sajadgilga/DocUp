@@ -74,6 +74,10 @@ class Entity {
     if (isDoctor) return "";
   }
 
+  Panel get panel {
+    return mEntity.panelMap[iPanelId];
+  }
+
   int sectionId (String name){
     try {
       return mEntity.panelMap[iPanelId]

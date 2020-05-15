@@ -1,14 +1,18 @@
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/VideoCallBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/repository/VideoCallRepository.dart';
+import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class VideoCallPage extends StatefulWidget {
@@ -27,7 +31,7 @@ class VideoCallPage extends StatefulWidget {
 class _VideoCallPageState extends State<VideoCallPage> {
   AlertDialog _loadingDialog = getLoadingDialog();
 
-  Widget build(BuildContext context) {
+  Widget _VideoCallPage() {
     return Container(
       margin: EdgeInsets.only(top: 20),
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
@@ -44,6 +48,37 @@ class _VideoCallPageState extends State<VideoCallPage> {
           _videoCallPane()
         ],
       ),
+    );
+  }
+
+  Widget build(BuildContext context) {
+    return BlocBuilder<EntityBloc, EntityState>(
+      builder: (context, state) {
+        if (state is EntityLoaded) {
+          if (state.entity.panel.status == 0)
+            return Stack(children: <Widget>[
+              _VideoCallPage(),
+              PanelAlert(
+                label: Strings.requestSentLabel,
+                buttonLabel: Strings.waitingForApproval,
+              )
+            ]);
+          else if (state.entity.panel.status == 3)
+            return Stack(children: <Widget>[
+              _VideoCallPage(),
+              PanelAlert(
+                label: Strings.noAvailableVirtualVisit,
+                buttonLabel: Strings.reserveVirtualVisit,
+              )
+            ]);
+          else
+            return _VideoCallPage();
+        }
+        return Container(
+            constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+            child: Expanded(flex: 2, child: Waiting()));
+      },
     );
   }
 

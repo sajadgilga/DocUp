@@ -10,7 +10,7 @@ import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/blocs/VisitBloc.dart';
 import 'package:docup/constants/strings.dart';
- import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/AccountPage.dart';
 import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
@@ -59,21 +59,21 @@ class NavigatorView extends StatelessWidget {
   final VisitBloc _visitBloc = VisitBloc();
   final PictureBloc _pictureBloc = PictureBloc();
   final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
-  Function selectPage;
+  Function(int) selectPage;
 
-  NavigatorView(
-      {Key key,
-      this.index,
-      this.navigatorKey,
-      this.pushOnBase,
-      this.selectPage})
+  NavigatorView({Key key,
+    this.index,
+    this.navigatorKey,
+    this.pushOnBase,
+    this.selectPage})
       : super(key: key);
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context, {entity}) {
     switch (index) {
       case -1:
         return {
-          NavigatorRoutes.root: (context) => MainPage(
+          NavigatorRoutes.root: (context) =>
+              MainPage(
                 pushOnBase: (direction, entity) {
                   _push(context, direction, entity: entity);
                 },
@@ -84,11 +84,12 @@ class NavigatorView extends StatelessWidget {
               _patientDetailPage(context, entity),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context),
-          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
-              value: _pictureBloc,
-              child: UploadSlider(
-                listId: entity,
-              )),
+          NavigatorRoutes.uploadPicDialogue: (context) =>
+              BlocProvider.value(
+                  value: _pictureBloc,
+                  child: UploadSlider(
+                    listId: entity,
+                  )),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
         };
@@ -126,11 +127,12 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
           NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context),
-          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
-              value: _pictureBloc,
-              child: UploadSlider(
-                listId: entity,
-              )),
+          NavigatorRoutes.uploadPicDialogue: (context) =>
+              BlocProvider.value(
+                  value: _pictureBloc,
+                  child: UploadSlider(
+                    listId: entity,
+                  )),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
@@ -155,6 +157,18 @@ class NavigatorView extends StatelessWidget {
               _patientDetailPage(context, entity),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
+    }
+  }
+
+  void changePanelSection(int section) {
+    switch (section) {
+      case 0:
+        _panelSectionBloc.add(PanelSectionSelect(
+            patientSection: PatientPanelSection.DOCTOR_INTERFACE,
+            doctorSection: DoctorPanelSection.DOCTOR_INTERFACE,
+            section: PanelSection.PATIENT));
+        _tabSwitchBloc.add(PanelTabState.SecondTab);
+        break;
     }
   }
 
@@ -189,7 +203,10 @@ class NavigatorView extends StatelessWidget {
   }
 
   Widget _home(context) {
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    var entity = BlocProvider
+        .of<EntityBloc>(context)
+        .state
+        .entity;
     if (entity.isDoctor) {
       return MultiBlocProvider(
           providers: [
@@ -215,23 +232,28 @@ class NavigatorView extends StatelessWidget {
     }
   }
 
-  Widget _account(context, {defaultCreditForCharge}) => AccountPage(
+  Widget _account(context, {defaultCreditForCharge}) =>
+      AccountPage(
         defaultCreditForCharge: defaultCreditForCharge,
         onPush: (direction) {
           _push(context, direction);
         },
       );
 
-  Widget _cognitiveTest(context) => MedicalTestPage(
-    onPush: (direction) {
-      _push(context, direction);
-    },
-  );
+  Widget _cognitiveTest(context) =>
+      MedicalTestPage(
+        onPush: (direction) {
+          _push(context, direction);
+        },
+      );
 
   Widget _notifictionPage() => NotificationPage();
 
   Widget _panelPages(context) {
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    var entity = BlocProvider
+        .of<EntityBloc>(context)
+        .state
+        .entity;
     return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
       return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
         builder: (context, state) {
@@ -326,7 +348,7 @@ class NavigatorView extends StatelessWidget {
             if (state.panels.length > 0) return _panelPages(context);
           }
           return PanelMenu(
-            () {
+                () {
               _pop(context);
             },
             onPush: (direction) {
@@ -356,7 +378,8 @@ class NavigatorView extends StatelessWidget {
     );
   }
 
-  Widget _searchPage(context, {isRequests = false}) => MultiBlocProvider(
+  Widget _searchPage(context, {isRequests = false}) =>
+      MultiBlocProvider(
           providers: [
             BlocProvider<SearchBloc>.value(value: _searchBloc),
 //            BlocProvider<VisitBloc>.value(value: _visitBloc),
@@ -368,7 +391,8 @@ class NavigatorView extends StatelessWidget {
             },
           ));
 
-  Widget _panelMenu(context) => MultiBlocProvider(
+  Widget _panelMenu(context) =>
+      MultiBlocProvider(
           providers: [
             BlocProvider<TabSwitchBloc>.value(
               value: _tabSwitchBloc,
@@ -378,7 +402,7 @@ class NavigatorView extends StatelessWidget {
             ),
           ],
           child: PanelMenu(
-            () {
+                () {
               _pop(context);
             },
             onPush: (direction) {
