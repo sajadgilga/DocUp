@@ -31,9 +31,11 @@ class IPartnerBody extends StatelessWidget {
 //    globalOnPush(NavigatorRoutes.doctorDialogue);
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isPatient)
-      globalOnPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
+      onPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
+//      globalOnPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
     else if (entity.isDoctor)
-      globalOnPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
+      onPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
+//      globalOnPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
   }
 
   String _getSubHeader(context) {
