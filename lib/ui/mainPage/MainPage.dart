@@ -70,17 +70,13 @@ class _MainPageState extends State<MainPage> {
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
     _entityBloc.add(EntityGet());
     _panelBloc.add(GetMyPanels());
-//    _entityBloc.listen((data) {
-//      Timer _timer;
-//      if (data is EntityError) {
-//        _timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
+    _entityBloc.listen((data) {
+      Timer _timer;
+        _timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
 //          _entityBloc.add(EntityGet());
-//          _panelBloc.add(GetMyPanels());
-//        });
-//      } else if (data is EntityLoaded) {
-//        if (_timer.isActive) _timer.cancel();
-//      }
-//    });
+          _panelBloc.add(GetMyPanels());
+        });
+    });
 
 //    try {
 //      _firebaseMessaging.getToken().then((String fcmToken) {

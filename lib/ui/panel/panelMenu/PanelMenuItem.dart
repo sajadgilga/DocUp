@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
+import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
@@ -21,7 +22,8 @@ class PanelSubItem {
   PanelTabState panelTabState;
   int panelId;
 
-  PanelSubItem(this.text, this.ID, this.color, {this.panelTabState, this.panelId});
+  PanelSubItem(this.text, this.ID, this.color,
+      {this.panelTabState, this.panelId});
 }
 
 class PanelMenuMainItem extends StatelessWidget {
@@ -39,8 +41,7 @@ class PanelMenuMainItem extends StatelessWidget {
   bool isActive = false;
   bool isEmpty = false;
 
-  PanelMenuMainItem(
-      this.onPush,
+  PanelMenuMainItem(this.onPush,
       {Key key,
       this.patientSection,
       this.doctorSection,
@@ -63,7 +64,8 @@ class PanelMenuMainItem extends StatelessWidget {
   }
 
   void _selectItem({item, context}) {
-    if ((!isPatient && doctorSection != DoctorPanelSection.DOCTOR_INTERFACE) ||(isPatient && patientSection == PatientPanelSection.HEALTH_CALENDAR)) {
+    if ((!isPatient && doctorSection != DoctorPanelSection.DOCTOR_INTERFACE) ||
+        (isPatient && patientSection == PatientPanelSection.HEALTH_CALENDAR)) {
 //      showDialog(
 //          context: context,
 //          builder: (BuildContext context) {
@@ -77,7 +79,7 @@ class PanelMenuMainItem extends StatelessWidget {
 //                  textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
 //            );
 //          });
-    showNextVersionDialog(context);
+      showNextVersionDialog(context);
       return;
     }
     if (item.panelTabState != null)
@@ -116,7 +118,7 @@ class PanelMenuMainItem extends StatelessWidget {
             doctorSection: doctorSection,
             section: PanelSection.DOCTOR));
 //        Navigator.of(context).pop();
-      onPush(NavigatorRoutes.panel);
+        onPush(NavigatorRoutes.panel);
       }
     } else {
       BlocProvider.of<PanelSectionBloc>(context).add(PanelSectionSelect(
@@ -130,7 +132,7 @@ class PanelMenuMainItem extends StatelessWidget {
     String utfText;
     try {
       if (item != null)
-      utfText = utf8.decode(item.text.toString().codeUnits);
+        utfText = utf8.decode(item.text.toString().codeUnits);
       else
         utfText = text;
     } catch (_) {
@@ -181,9 +183,11 @@ class PanelMenuMainItem extends StatelessWidget {
       );
   }
 
-  Widget _label(context) => GestureDetector(onTap: () {
-    _selectMenuItem(context: context, menuItem: doctorSection);
-  }, child: Container(
+  Widget _label(context) => GestureDetector(
+      onTap: () {
+        _selectMenuItem(context: context, menuItem: doctorSection);
+      },
+      child: Container(
         margin: EdgeInsets.only(left: 10),
         child: Text(
           label,
@@ -205,28 +209,32 @@ class PanelMenuMainItem extends StatelessWidget {
         ),
       );
 
-
   Widget _requestsCountCircle() {
-    return Container(
-        margin: EdgeInsets.only(right: 10, bottom: 15),
-        child: Wrap(children: <Widget>[
-          Container(
-              padding: EdgeInsets.only(left: 5, right: 5),
-              child: Text('15',
-                  style: TextStyle(color: Colors.white, fontSize: 12)),
-              decoration: BoxDecoration(
-                  color: IColors.themeColor,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: IColors.themeColor,
-                        offset: Offset(1, 3),
-                        blurRadius: 10)
-                  ])),
-        ]));
+    return BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
+      if (state is SearchLoaded)
+        return Container(
+            margin: EdgeInsets.only(right: 10, bottom: 15),
+            child: Wrap(children: <Widget>[
+              Container(
+                  padding: EdgeInsets.only(left: 5, right: 5),
+                  child: Text(
+                      replaceFarsiNumber(
+                          (state as SearchLoaded).count.toString()),
+                      style: TextStyle(color: Colors.white, fontSize: 12)),
+                  decoration: BoxDecoration(
+                      color: IColors.themeColor,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: IColors.themeColor,
+                            offset: Offset(1, 3),
+                            blurRadius: 10)
+                      ])),
+            ]));
+      return Container();
+    });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -238,8 +246,9 @@ class PanelMenuMainItem extends StatelessWidget {
       }
       if (!isEmpty && items.length == 0)
         items.add(_subItem(context,
-            text: (isPatient ? Strings.panelIDoctorEmptyLabel : Strings
-                .panelIPatientEmptyLabel)));
+            text: (isPatient
+                ? Strings.panelIDoctorEmptyLabel
+                : Strings.panelIPatientEmptyLabel)));
       return WillPopScope(
           child: Container(
             margin: EdgeInsets.only(bottom: 15),
@@ -250,8 +259,8 @@ class PanelMenuMainItem extends StatelessWidget {
                   (subLabel != null
                       ? _subLabel()
                       : SizedBox(
-                    width: 5,
-                  )),
+                          width: 5,
+                        )),
                   (doctorSection == DoctorPanelSection.REQUESTS
                       ? _requestsCountCircle()
                       : Container()),
@@ -270,14 +279,12 @@ class PanelMenuMainItem extends StatelessWidget {
             ]),
           ),
           onWillPop: () async {
-            var state = BlocProvider
-                .of<PanelBloc>(context)
-                .state;
+            var state = BlocProvider.of<PanelBloc>(context).state;
             if (state is PanelsLoaded) if (state.panels.length == 0)
               Navigator.of(context).pop();
             return false;
           });
-    } catch(_) {
+    } catch (_) {
       return Container();
     }
   }

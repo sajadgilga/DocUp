@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
+import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
@@ -62,16 +63,19 @@ class DoctorPanelMenu extends StatelessWidget {
     return IColors.activePanelMenu;
   }
 
-  Widget _requests(isActive, mPatient, context) => PanelMenuMainItem(
-    onPush,
-      subItems: [],
-      doctorSection: DoctorPanelSection.REQUESTS,
-      label: Strings.doctorPanelRequestsLabel,
-      isActive: isActive,
-      color: getColor(DoctorPanelSection.REQUESTS, context: context),
-      isEmpty: true,
-      isPatient: false,
-      asset: Assets.doctorAvatar);
+  Widget _requests(isActive, mPatient, context) {
+    BlocProvider.of<SearchBloc>(context).add(SearchCountGet());
+    return PanelMenuMainItem(
+        onPush,
+        subItems: [],
+        doctorSection: DoctorPanelSection.REQUESTS,
+        label: Strings.doctorPanelRequestsLabel,
+        isActive: isActive,
+        color: getColor(DoctorPanelSection.REQUESTS, context: context),
+        isEmpty: true,
+        isPatient: false,
+        asset: Assets.doctorAvatar);
+  }
 
   Widget _history(isActive, mPatient, context) => PanelMenuMainItem(
     onPush,

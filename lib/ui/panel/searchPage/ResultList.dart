@@ -102,14 +102,14 @@ class _SearchResultDoctorItem extends StatelessWidget {
   }
 
   Widget _image(context) => Container(
-          child: Container(
-              width: 70,
-              child: ClipPolygon(
-                sides: 6,
-                rotate: 90,
-                child: Image.network(
-                    (entity.user.avatar != null ? entity.user.avatar : '')),
-              )));
+      child: Container(
+          width: 70,
+          child: ClipPolygon(
+            sides: 6,
+            rotate: 90,
+            child: Image.network(
+                (entity.user.avatar != null ? entity.user.avatar : '')),
+          )));
 
   Widget _rating() => RatingBar(
         itemCount: 5,
@@ -199,15 +199,15 @@ class _SearchResultDoctorItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () => _showDoctorDialogue(context),
-    child: Container(
-      margin: EdgeInsets.only(top: 10, bottom: 10),
-      constraints:
-          BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[_info(), _image(context)],
-      ),
-    ));
+        child: Container(
+          margin: EdgeInsets.only(top: 10, bottom: 10),
+          constraints:
+              BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[_info(), _image(context)],
+          ),
+        ));
   }
 }
 
@@ -235,18 +235,16 @@ class _SearchResultPatientItem extends StatelessWidget {
     onPush(NavigatorRoutes.patientDialogue, entity);
   }
 
-  Widget _image(context) => GestureDetector(
-      onTap: () => _showDoctorDialogue(context),
+  Widget _image(context) => Container(
       child: Container(
-          child: Container(
-              width: 70,
-              child: ClipPolygon(
-                sides: 6,
-                rotate: 90,
-                child: (entity.user.avatar != null
-                    ? Image.network(entity.user.avatar)
-                    : Image.asset(Assets.emptyAvatar)),
-              ))));
+          width: 70,
+          child: ClipPolygon(
+            sides: 6,
+            rotate: 90,
+            child: (entity.user.avatar != null
+                ? Image.network(entity.user.avatar)
+                : Image.asset(Assets.emptyAvatar)),
+          )));
 
   Widget _status() {
     return Container(
@@ -293,13 +291,15 @@ class _SearchResultPatientItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 10, bottom: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[_info(), _image(context)],
-      ),
-    );
+    return GestureDetector(
+        onTap: () => _showDoctorDialogue(context),
+        child: Container(
+          margin: EdgeInsets.only(top: 10, bottom: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[_info(), _image(context)],
+          ),
+        ));
   }
 }
 

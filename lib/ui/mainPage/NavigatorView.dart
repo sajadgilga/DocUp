@@ -64,19 +64,19 @@ class NavigatorView extends StatelessWidget {
   final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
   Function(int) selectPage;
 
-  NavigatorView({Key key,
-    this.index,
-    this.navigatorKey,
-    this.pushOnBase,
-    this.selectPage})
+  NavigatorView(
+      {Key key,
+      this.index,
+      this.navigatorKey,
+      this.pushOnBase,
+      this.selectPage})
       : super(key: key);
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context, {entity}) {
     switch (index) {
       case -1:
         return {
-          NavigatorRoutes.root: (context) =>
-              MainPage(
+          NavigatorRoutes.root: (context) => MainPage(
                 pushOnBase: (direction, entity) {
                   _push(context, direction, entity: entity);
                 },
@@ -87,12 +87,11 @@ class NavigatorView extends StatelessWidget {
               _patientDetailPage(context, entity),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context),
-          NavigatorRoutes.uploadPicDialogue: (context) =>
-              BlocProvider.value(
-                  value: _pictureBloc,
-                  child: UploadSlider(
-                    listId: entity,
-                  )),
+          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
+              value: _pictureBloc,
+              child: UploadSlider(
+                listId: entity,
+              )),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
           NavigatorRoutes.virtualReservationPage: (context) =>
@@ -132,12 +131,11 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
           NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context),
-          NavigatorRoutes.uploadPicDialogue: (context) =>
-              BlocProvider.value(
-                  value: _pictureBloc,
-                  child: UploadSlider(
-                    listId: entity,
-                  )),
+          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
+              value: _pictureBloc,
+              child: UploadSlider(
+                listId: entity,
+              )),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
@@ -210,10 +208,7 @@ class NavigatorView extends StatelessWidget {
   }
 
   Widget _home(context) {
-    var entity = BlocProvider
-        .of<EntityBloc>(context)
-        .state
-        .entity;
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isDoctor) {
       return MultiBlocProvider(
           providers: [
@@ -239,16 +234,14 @@ class NavigatorView extends StatelessWidget {
     }
   }
 
-  Widget _account(context, {defaultCreditForCharge}) =>
-      AccountPage(
+  Widget _account(context, {defaultCreditForCharge}) => AccountPage(
         defaultCreditForCharge: defaultCreditForCharge,
         onPush: (direction) {
           _push(context, direction);
         },
       );
 
-  Widget _cognitiveTest(context) =>
-      MedicalTestPage(
+  Widget _cognitiveTest(context) => MedicalTestPage(
         onPush: (direction) {
           _push(context, direction);
         },
@@ -257,10 +250,7 @@ class NavigatorView extends StatelessWidget {
   Widget _notifictionPage() => NotificationPage();
 
   Widget _panelPages(context) {
-    var entity = BlocProvider
-        .of<EntityBloc>(context)
-        .state
-        .entity;
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
       return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
         builder: (context, state) {
@@ -348,14 +338,14 @@ class NavigatorView extends StatelessWidget {
           ),
           BlocProvider<ChatMessageBloc>.value(
             value: _chatMessageBloc,
-          )
+          ),
         ],
         child: BlocBuilder<PanelBloc, PanelState>(builder: (context, state) {
           if (state is PanelsLoaded) {
             if (state.panels.length > 0) return _panelPages(context);
           }
           return PanelMenu(
-                () {
+            () {
               _pop(context);
             },
             onPush: (direction) {
@@ -367,8 +357,7 @@ class NavigatorView extends StatelessWidget {
 
   Widget _doctorDetailPage(context, doctor) {
     return DoctorDetailPage(
-      onPush:
-          (direction, entity) {
+      onPush: (direction, entity) {
         _push(context, direction, entity: entity);
       },
       doctor: doctor,
@@ -385,8 +374,7 @@ class NavigatorView extends StatelessWidget {
     );
   }
 
-  Widget _searchPage(context, {isRequests = false}) =>
-      MultiBlocProvider(
+  Widget _searchPage(context, {isRequests = false}) => MultiBlocProvider(
           providers: [
             BlocProvider<SearchBloc>.value(value: _searchBloc),
 //            BlocProvider<VisitBloc>.value(value: _visitBloc),
@@ -398,8 +386,7 @@ class NavigatorView extends StatelessWidget {
             },
           ));
 
-  Widget _panelMenu(context) =>
-      MultiBlocProvider(
+  Widget _panelMenu(context) => MultiBlocProvider(
           providers: [
             BlocProvider<TabSwitchBloc>.value(
               value: _tabSwitchBloc,
@@ -407,9 +394,11 @@ class NavigatorView extends StatelessWidget {
             BlocProvider<PanelSectionBloc>.value(
               value: _panelSectionBloc,
             ),
+            BlocProvider<SearchBloc>.value(value: _searchBloc),
+
           ],
           child: PanelMenu(
-                () {
+            () {
               _pop(context);
             },
             onPush: (direction) {
@@ -422,8 +411,10 @@ class NavigatorView extends StatelessWidget {
   }
 
   _virtualReservationPage(BuildContext context, entity) {
-    return VirtualReservationPage(doctorEntity: (entity as DoctorEntity),
-      onPush:pushOnBase,);
+    return VirtualReservationPage(
+      doctorEntity: (entity as DoctorEntity),
+      onPush: pushOnBase,
+    );
   }
 }
 
