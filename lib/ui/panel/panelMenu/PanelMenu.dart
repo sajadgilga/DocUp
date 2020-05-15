@@ -60,9 +60,7 @@ class _PanelMenuState extends State<PanelMenu> {
             padding: EdgeInsets.only(top: 10, left: 20),
             child: GestureDetector(
               onTap: () {
-                var state = BlocProvider.of<PanelBloc>(context).state;
-                if (state is PanelsLoaded) if (state.panels.length > 0)
-                  _popMenu();
+                widget.onPush(NavigatorRoutes.searchView);
               },
               child: SvgPicture.asset(
                 Assets.searchIcon,
@@ -116,14 +114,14 @@ class _PanelMenuState extends State<PanelMenu> {
                 padding: EdgeInsets.only(top: 100, right: 60),
                 child: _panelMenu()),
           ),
-          GestureDetector(
+          /*GestureDetector(
               onTap: () {
-                _popMenu();
+//                _popMenu();
               },
-              child: Container(
+              child:*/ Container(
                   constraints: BoxConstraints(maxHeight: 100),
                   alignment: Alignment.topCenter,
-                  child: _header(context))),
+                  child: _header(context)),
         ],
       ),
     );

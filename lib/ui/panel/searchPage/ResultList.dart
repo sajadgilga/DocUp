@@ -16,8 +16,13 @@ class ResultList extends StatefulWidget {
   final Function(String, UserEntity) onPush;
   List<UserEntity> results;
   bool isDoctor;
+  bool isRequestsOnly;
 
-  ResultList({this.onPush, @required this.results, this.isDoctor});
+  ResultList(
+      {this.onPush,
+      @required this.results,
+      this.isDoctor,
+      this.isRequestsOnly = false});
 
   @override
   _ResultListState createState() => _ResultListState();
@@ -50,7 +55,9 @@ class _ResultListState extends State<ResultList> {
           Container(
             alignment: Alignment.centerRight,
             child: Text(
-              'نتایج جستجو',
+              (widget.isRequestsOnly
+                  ? Strings.requestsSearchLabel
+                  : Strings.resultSearchLabel),
               style: TextStyle(
                   color: Colors.black54,
                   fontSize: 12,
@@ -94,16 +101,15 @@ class _SearchResultDoctorItem extends StatelessWidget {
     onPush(NavigatorRoutes.doctorDialogue, entity);
   }
 
-  Widget _image(context) => GestureDetector(
-      onTap: () => _showDoctorDialogue(context),
-      child: Container(
+  Widget _image(context) => Container(
           child: Container(
               width: 70,
               child: ClipPolygon(
                 sides: 6,
                 rotate: 90,
-                child: Image.network((entity.user.avatar!=null?entity.user.avatar:'')),
-              ))));
+                child: Image.network(
+                    (entity.user.avatar != null ? entity.user.avatar : '')),
+              )));
 
   Widget _rating() => RatingBar(
         itemCount: 5,
@@ -191,7 +197,9 @@ class _SearchResultDoctorItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+        onTap: () => _showDoctorDialogue(context),
+    child: Container(
       margin: EdgeInsets.only(top: 10, bottom: 10),
       constraints:
           BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),
@@ -199,7 +207,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[_info(), _image(context)],
       ),
-    );
+    ));
   }
 }
 
@@ -344,11 +352,7 @@ extension PatientStatusExtension on PatientStatus {
           color: this.color,
         );
       case PatientStatus.CURED:
-        return Icon(
-          Icons.update,
-          size: 15,
-          color: this.color
-        );
+        return Icon(Icons.update, size: 15, color: this.color);
       default:
         return '';
     }

@@ -99,7 +99,6 @@ class Strings {
   static final String waitingForApproval = 'در انتظار تایید پزشک';
   static final String requestSentLabel = 'درخواست شما ارسال گردید';
 
-
-
-
+  static final String resultSearchLabel = 'نتایج جستجو';
+  static final String requestsSearchLabel = 'درخواست ها';
 }

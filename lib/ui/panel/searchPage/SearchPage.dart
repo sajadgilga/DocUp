@@ -124,6 +124,7 @@ class SearchPage extends StatelessWidget {
             results: (state.result.isDoctor
                 ? state.result.doctor_results
                 : state.result.patient_results),
+            isRequestsOnly: isRequestPage,
           );
         }
         if (state is SearchError)
