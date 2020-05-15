@@ -4,19 +4,13 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
-import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/Panel.dart';
-import 'package:docup/ui/panel/panelMenu/PatientPanelMenu.dart';
-import 'package:docup/ui/widgets/Header.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
-import 'package:docup/ui/customPainter/DrawerPainter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -135,7 +129,10 @@ class PanelMenuMainItem extends StatelessWidget {
   Widget _subItem(context, {text, PanelSubItem item}) {
     String utfText;
     try {
+      if (item != null)
       utfText = utf8.decode(item.text.toString().codeUnits);
+      else
+        utfText = text;
     } catch (_) {
       if (item != null)
         utfText = item.text;
@@ -233,45 +230,55 @@ class PanelMenuMainItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!isActive) color = IColors.deactivePanelMenu;
-    List<Widget> items = [];
-    for (var item in subItems) {
-      items.add(_subItem(context, item: item));
+    try {
+      if (!isActive) color = IColors.deactivePanelMenu;
+      List<Widget> items = [];
+      for (var item in subItems) {
+        items.add(_subItem(context, item: item));
+      }
+      if (!isEmpty && items.length == 0)
+        items.add(_subItem(context,
+            text: (isPatient ? Strings.panelIDoctorEmptyLabel : Strings
+                .panelIPatientEmptyLabel)));
+      return WillPopScope(
+          child: Container(
+            margin: EdgeInsets.only(bottom: 15),
+            child: Column(children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  (subLabel != null
+                      ? _subLabel()
+                      : SizedBox(
+                    width: 5,
+                  )),
+                  (doctorSection == DoctorPanelSection.REQUESTS
+                      ? _requestsCountCircle()
+                      : Container()),
+                  _label(context),
+                  SizedBox(
+                    width: 25,
+                  ),
+                  _icon()
+                ],
+              ),
+              Container(
+                  padding: EdgeInsets.only(right: 40),
+                  child: Column(
+                    children: items,
+                  ))
+            ]),
+          ),
+          onWillPop: () async {
+            var state = BlocProvider
+                .of<PanelBloc>(context)
+                .state;
+            if (state is PanelsLoaded) if (state.panels.length == 0)
+              Navigator.of(context).pop();
+            return false;
+          });
+    } catch(_) {
+      return Container();
     }
-    if (!isEmpty && items.length == 0)
-      items.add(_subItem(context, text: (isPatient?Strings.panelIDoctorEmptyLabel:Strings.panelIPatientEmptyLabel)));
-    return WillPopScope(
-        child: Container(
-          margin: EdgeInsets.only(bottom: 15),
-          child: Column(children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                (subLabel != null
-                    ? _subLabel()
-                    : SizedBox(
-                        width: 5,
-                      )),
-                (doctorSection == DoctorPanelSection.REQUESTS? _requestsCountCircle():Container()),
-                _label(context),
-                SizedBox(
-                  width: 25,
-                ),
-                _icon()
-              ],
-            ),
-            Container(
-                padding: EdgeInsets.only(right: 40),
-                child: Column(
-                  children: items,
-                ))
-          ]),
-        ),
-        onWillPop: () async {
-          var state = BlocProvider.of<PanelBloc>(context).state;
-          if (state is PanelsLoaded) if (state.panels.length == 0)
-            Navigator.of(context).pop();
-          return false;
-        });
   }
 }

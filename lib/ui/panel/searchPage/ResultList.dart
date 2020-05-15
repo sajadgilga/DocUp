@@ -102,7 +102,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
               child: ClipPolygon(
                 sides: 6,
                 rotate: 90,
-                child: Image.network(entity.user.avatar),
+                child: Image.network((entity.user.avatar!=null?entity.user.avatar:'')),
               ))));
 
   Widget _rating() => RatingBar(

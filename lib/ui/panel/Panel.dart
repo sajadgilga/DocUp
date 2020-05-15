@@ -166,14 +166,14 @@ class TabsState extends State<Tabs> {
       color: _buttonBackground(state == tabState),
       child: Container(
           constraints:
-              BoxConstraints(minWidth: MediaQuery.of(context).size.width * .2),
+              BoxConstraints(minWidth: MediaQuery.of(context).size.width * .15),
           padding: EdgeInsets.only(top: 10, bottom: 10),
           alignment: Alignment.center,
           child: Text(
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: _buttonTextColor(state == tabState), fontSize: 12),
+                color: _buttonTextColor(state == tabState), fontSize: 10),
           )),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),

@@ -76,9 +76,11 @@ class _PanelMenuState extends State<PanelMenu> {
   Widget _panelMenu() {
     return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
       if (state is EntityError)
-        return Waiting();
-      if (state.entity == null)
-        return Waiting();
+        return Container(
+            constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height - 250),
+            child: Waiting());
+      if (state.entity == null) return Waiting();
       if (state.entity.isPatient) {
         return PatientPanelMenu(widget.onPush);
       } else if (state.entity.isDoctor)

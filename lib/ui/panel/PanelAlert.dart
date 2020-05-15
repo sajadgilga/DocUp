@@ -22,7 +22,7 @@ class PanelAlert extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white),
-              constraints: BoxConstraints(maxHeight: 260, maxWidth: 260),
+              constraints: BoxConstraints(maxHeight: 280, maxWidth: 280),
               padding:
                   EdgeInsets.only(top: 80, bottom: 40, right: 40, left: 40),
               child: Column(
