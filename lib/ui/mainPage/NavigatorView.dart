@@ -357,10 +357,10 @@ class NavigatorView extends StatelessWidget {
 
   Widget _doctorDetailPage(context, doctor) {
     return DoctorDetailPage(
-      onPush: (direction, entity) {
-        _push(context, direction, entity: entity);
+      onPush: (direction) {
+        _push(context, direction);
       },
-      doctor: doctor,
+      doctorEntity: doctor,
     );
   }
 
