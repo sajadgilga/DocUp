@@ -9,11 +9,12 @@ import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/blocs/VisitBloc.dart';
 import 'package:docup/constants/strings.dart';
- import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/AccountPage.dart';
 import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
+import 'package:docup/ui/doctorDetail/VirtualReservationPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
@@ -34,6 +35,7 @@ import '../home/Home.dart';
 class NavigatorRoutes {
   static const String mainPage = '/mainPage';
   static const String doctorDialogue = '/doctorDialogue';
+  static const String virtualReservation = '/virtualReservation';
   static const String patientDialogue = '/patientDialogue';
   static const String root = '/';
   static const String notificationView = '/notification';
@@ -78,6 +80,8 @@ class NavigatorView extends StatelessWidget {
               ),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, entity),
+          NavigatorRoutes.virtualReservation: (context) =>
+              _virtualReservationPage(context, entity),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
@@ -98,6 +102,8 @@ class NavigatorView extends StatelessWidget {
               _account(context, defaultCreditForCharge: entity),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, entity),
+          NavigatorRoutes.virtualReservation: (context) =>
+              _virtualReservationPage(context, entity),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
@@ -108,6 +114,8 @@ class NavigatorView extends StatelessWidget {
 //          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, entity),
+          NavigatorRoutes.virtualReservation: (context) =>
+              _virtualReservationPage(context, entity),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
@@ -119,6 +127,8 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.panel: (context) => _panel(context),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, entity),
+          NavigatorRoutes.virtualReservation: (context) =>
+              _virtualReservationPage(context, entity),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
           NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context),
@@ -147,6 +157,8 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.notificationView: (context) => _notifictionPage(),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, entity),
+          NavigatorRoutes.virtualReservation: (context) =>
+              _virtualReservationPage(context, entity),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
@@ -200,10 +212,10 @@ class NavigatorView extends StatelessWidget {
       );
 
   Widget _cognitiveTest(context) => MedicalTestPage(
-    onPush: (direction) {
-      _push(context, direction);
-    },
-  );
+        onPush: (direction) {
+          _push(context, direction);
+        },
+      );
 
   Widget _notifictionPage() => NotificationPage();
 
@@ -313,16 +325,20 @@ class NavigatorView extends StatelessWidget {
         }));
   }
 
-  Widget _doctorDetailPage(context, doctor) {
-    return DoctorDetailPage(
-      onPush:
-      pushOnBase,
-//          (direction, entity) {
-//        _push(context, direction, entity: entity);
-//      },
-      doctor: doctor,
-    );
-  }
+  _doctorDetailPage(context, doctorEntity) => DoctorDetailPage(
+        onPush: (direction) {
+          _push(context, direction);
+        },
+        doctorEntity: doctorEntity,
+      );
+
+  _virtualReservationPage(context, doctorEntity) => VirtualReservationPage(
+    onPush: (direction, cost) {
+      _push(context, direction, entity: cost);
+    },
+    doctorEntity: doctorEntity,
+  );
+
 
   Widget _patientDetailPage(context, patient) {
     PatientEntity _patient = patient;

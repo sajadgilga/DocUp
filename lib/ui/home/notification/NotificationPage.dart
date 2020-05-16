@@ -101,7 +101,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   ),
                   _notificationCountCircle(
                       data.newestEventsCounts + data.newestDrugsCounts),
-//                  _notificationsWidget(context, data),
+                  _notificationsWidget(context, data),
                 ],
               )),
           Container(
@@ -117,21 +117,28 @@ class _NotificationPageState extends State<NotificationPage> {
       );
 
   _notificationsWidget(context, NewestNotificationResponse notifications) {
-    return Expanded(
+    return (notifications.newestEventsCounts +
+        notifications.newestDrugsCounts) == 0 ? Expanded(
+      child: Positioned(
+        right: MediaQuery.of(context).size.width * 0.4,
+        top: MediaQuery.of(context).size.height * 0.4,
+        child: Text("اعلانی موجود نیست")
+      ),
+    ) : Expanded(
       child: Positioned(
         right: MediaQuery.of(context).size.width * 0.15,
         top: MediaQuery.of(context).size.height * 0.4,
-        child: new ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: notifications.newestDrugs.length,
-          itemBuilder: (BuildContext ctxt, int index) {
-            return new NotificationItem(
-              time: notifications.newestDrugs[index].consumingTime,
-              title: notifications.newestDrugs[index].drugName,
-              description: notifications.newestDrugs[index].drugName,
-            );
-          },
-        ),
+        child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: notifications.newestDrugs.length,
+                itemBuilder: (BuildContext ctxt, int index) {
+                  return new NotificationItem(
+                    time: notifications.newestDrugs[index].consumingTime,
+                    title: notifications.newestDrugs[index].drugName,
+                    description: notifications.newestDrugs[index].drugName,
+                  );
+                },
+              ),
       ),
     );
   }

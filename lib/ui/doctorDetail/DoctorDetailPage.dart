@@ -6,6 +6,7 @@ import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/networking/Response.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
@@ -21,10 +22,10 @@ import '../../constants/colors.dart';
 import 'VirtualReservationPage.dart';
 
 class DoctorDetailPage extends StatefulWidget {
-  final DoctorEntity doctor;
-  final Function(String, dynamic) onPush;
+  final DoctorEntity doctorEntity;
+  final Function(String) onPush;
 
-  DoctorDetailPage({Key key, this.doctor, this.onPush}) : super(key: key);
+  DoctorDetailPage({Key key, this.doctorEntity, this.onPush}) : super(key: key);
 
   @override
   _DoctorDetailPageState createState() => _DoctorDetailPageState();
@@ -57,16 +58,16 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
 
   void setCustomMapPin() async {
     final Uint8List markerIcon =
-        await getBytesFromAsset('assets/location.png', 60);
+    await getBytesFromAsset('assets/location.png', 60);
     pinLocationIcon = BitmapDescriptor.fromBytes(markerIcon);
   }
 
   @override
   Widget build(BuildContext context) {
-    _bloc.getDoctor(widget.doctor.id);
+    _bloc.getDoctor(widget.doctorEntity.id);
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () => _bloc.getDoctor(widget.doctor.id),
+        onRefresh: () => _bloc.getDoctor(widget.doctorEntity.id),
         child: StreamBuilder<Response<DoctorEntity>>(
           stream: _bloc.doctorInfoStream,
           builder: (context, snapshot) {
@@ -81,7 +82,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                 case Status.ERROR:
                   return APICallError(
                     errorMessage: snapshot.data.message,
-                    onRetryPressed: () => _bloc.getDoctor(widget.doctor.id),
+                    onRetryPressed: () => _bloc.getDoctor(widget.doctorEntity.id),
                   );
                   break;
               }
@@ -97,9 +98,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     _markers.add(Marker(
         markerId: MarkerId("defaultMarker"),
         position: doctorEntity.clinic.latitude != null &&
-                doctorEntity.clinic.longitude != null
+            doctorEntity.clinic.longitude != null
             ? LatLng(
-                doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
+            doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
             : defaultPinLocation,
         icon: pinLocationIcon));
     return Column(
@@ -108,7 +109,10 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
         Avatar(user: doctorEntity.user),
         SizedBox(height: 10),
         DoctorData(
-            width: MediaQuery.of(context).size.width ,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             doctorEntity: doctorEntity),
         SizedBox(height: 20),
         _doctorMapWidget(doctorEntity),
@@ -118,7 +122,8 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     );
   }
 
-  _doctorActionsWidget(DoctorEntity doctorEntity) => Column(
+  _doctorActionsWidget(DoctorEntity doctorEntity) =>
+      Column(
         children: <Widget>[
           ActionButton(
             width: 200,
@@ -128,18 +133,12 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
           ),
           SizedBox(height: 10),
           ActionButton(
-            width: 200,
-            color: IColors.darkBlue,
-            title: Strings.virtualReservationLabel,
-            callBack: () => {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          VirtualReservationPage(doctorEntity: doctorEntity,
-                          onPush: widget.onPush,)))
-            },
-          ),
+              width: 200,
+              color: IColors.darkBlue,
+              title: Strings.virtualReservationLabel,
+              callBack: () => {
+              widget.onPush(NavigatorRoutes.virtualReservation)
+          }),
         ],
       );
 
@@ -147,7 +146,10 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(20)),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * 0.8,
         height: 100,
         child: GoogleMap(
           myLocationEnabled: true,
@@ -157,9 +159,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
           },
           initialCameraPosition: CameraPosition(
             target: doctorEntity.clinic.latitude != null &&
-                    doctorEntity.clinic.longitude != null
+                doctorEntity.clinic.longitude != null
                 ? LatLng(
-                    doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
+                doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
                 : defaultPinLocation,
             zoom: 12.0,
           ),
