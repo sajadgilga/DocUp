@@ -23,7 +23,7 @@ import 'VirtualReservationPage.dart';
 
 class DoctorDetailPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
-  final Function(String) onPush;
+  final Function(String, dynamic) onPush;
 
   DoctorDetailPage({Key key, this.doctorEntity, this.onPush}) : super(key: key);
 
@@ -137,7 +137,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
               color: IColors.darkBlue,
               title: Strings.virtualReservationLabel,
               callBack: () => {
-              widget.onPush(NavigatorRoutes.virtualReservationPage)
+              widget.onPush(NavigatorRoutes.virtualReservationPage, doctorEntity)
           }),
         ],
       );

@@ -24,7 +24,7 @@ import 'package:flutter/material.dart';
 
 class VirtualReservationPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
-  final Function(String, String) onPush;
+  final Function(String, dynamic) onPush;
 
   VirtualReservationPage({Key key, this.doctorEntity, this.onPush})
       : super(key: key);

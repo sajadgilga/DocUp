@@ -110,6 +110,8 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
+          NavigatorRoutes.virtualReservationPage: (context) =>
+              _virtualReservationPage(context, entity)
         };
       case 1:
         return {
@@ -357,8 +359,8 @@ class NavigatorView extends StatelessWidget {
 
   Widget _doctorDetailPage(context, doctor) {
     return DoctorDetailPage(
-      onPush: (direction) {
-        _push(context, direction);
+      onPush: (direction, entity) {
+        _push(context, direction, entity: entity);
       },
       doctorEntity: doctor,
     );

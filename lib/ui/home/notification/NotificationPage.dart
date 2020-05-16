@@ -127,18 +127,17 @@ class _NotificationPageState extends State<NotificationPage> {
     ) : Expanded(
       child: Positioned(
         right: MediaQuery.of(context).size.width * 0.15,
-        top: MediaQuery.of(context).size.height * 0.4,
-        child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: notifications.newestDrugs.length,
-                itemBuilder: (BuildContext ctxt, int index) {
-                  return new NotificationItem(
-                    time: notifications.newestDrugs[index].consumingTime,
-                    title: notifications.newestDrugs[index].drugName,
-                    description: notifications.newestDrugs[index].drugName,
-                  );
-                },
-              ),
+        top: MediaQuery.of(context).size.height * 0.40,
+        child: Column(
+          children: <Widget>[
+            for (var index = 0; index < notifications.newestDrugs.length; index++)
+              NotificationItem(
+                time: notifications.newestDrugs[index].consumingTime,
+                title: notifications.newestDrugs[index].drugName,
+                description: notifications.newestDrugs[index].drugName,
+              )
+          ],
+        )
       ),
     );
   }
@@ -170,7 +169,7 @@ class NotificationItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: Text(
-                    time == null ? "هم اکنون" : time,
+                    time == null ? "هم اکنون" : replaceFarsiNumber(time),
                     textDirection: TextDirection.rtl,
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                   ),
