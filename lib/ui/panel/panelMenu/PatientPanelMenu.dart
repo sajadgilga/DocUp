@@ -144,8 +144,7 @@ class PatientPanelMenu extends StatelessWidget {
     var state = BlocProvider.of<PanelBloc>(context).state;
     if (state is PanelsLoaded)
       for (var panel in state.panels) {
-        if (panel.doctorId == null || panel.patientId == null)
-          continue;
+        if (panel.doctorId == null || panel.patientId == null) continue;
         if (panel.status > -1) {
           if (isPatient)
             partners.add(PanelSubItem(
@@ -177,10 +176,12 @@ class PatientPanelMenu extends StatelessWidget {
   Widget _menuList(height, context) {
     Entity entity = BlocProvider.of<EntityBloc>(context).state.entity;
     var mDoctor;
-    if (entity.isPatient)
-      mDoctor = (entity.partnerEntity as DoctorEntity);
-    else
-      mDoctor = (entity.partnerEntity as PatientEntity);
+    if (entity.partnerEntity != null) {
+      if (entity.isPatient)
+        mDoctor = (entity.partnerEntity as DoctorEntity);
+      else
+        mDoctor = (entity.partnerEntity as PatientEntity);
+    }
     var isActive = mDoctor != null;
     return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
       builder: (context, state) {

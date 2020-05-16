@@ -7,7 +7,7 @@ import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/main.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
- import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/Panel.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
@@ -51,6 +51,7 @@ class _MainPageState extends State<MainPage> {
 //  final PatientBloc _patientBloc = PatientBloc();
   final PanelBloc _panelBloc = PanelBloc();
   ProgressDialog _progressDialogue;
+  List<Widget> _children;
 
 //  Patient _patient;
 //  List<Panel> panels;
@@ -71,48 +72,48 @@ class _MainPageState extends State<MainPage> {
     _panelBloc.add(GetMyPanels());
     _entityBloc.listen((data) {
       Timer _timer;
-      if (data is EntityError) {
-        _timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
-          _entityBloc.add(EntityGet());
+        _timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
+//          _entityBloc.add(EntityGet());
           _panelBloc.add(GetMyPanels());
         });
-      } else if (data is EntityLoaded) {
-        if (_timer.isActive) _timer.cancel();
-      }
     });
 
-    _firebaseMessaging.getToken().then((String fcmToken) {
-      assert(fcmToken != null);
-      print("FCM " + fcmToken);
-      NotificationRepository().registerDevice(fcmToken);
-    });
-
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        await _showNotificationWithDefaultSound(
-            message['notification']['title'], message['notification']['body']);
-      },
-//      onBackgroundMessage: myBackgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
-    );
-
-    var initializationSettingsAndroid =
-        new AndroidInitializationSettings('mipmap/ic_launcher');
-    var initializationSettingsIOS = new IOSInitializationSettings();
-
-    var initializationSettings = new InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-
-    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
-
+//    try {
+//      _firebaseMessaging.getToken().then((String fcmToken) {
+//        assert(fcmToken != null);
+//        print("FCM " + fcmToken);
+//        NotificationRepository().registerDevice(fcmToken);
+//      });
+//
+//      _firebaseMessaging.configure(
+//        onMessage: (Map<String, dynamic> message) async {
+//          print("onMessage: $message");
+//          await _showNotificationWithDefaultSound(
+//              message['notification']['title'],
+//              message['notification']['body']);
+//        },
+////      onBackgroundMessage: myBackgroundMessageHandler,
+//        onLaunch: (Map<String, dynamic> message) async {
+//          print("onLaunch: $message");
+//        },
+//        onResume: (Map<String, dynamic> message) async {
+//          print("onResume: $message");
+//        },
+//      );
+//
+//      var initializationSettingsAndroid =
+//      new AndroidInitializationSettings('mipmap/ic_launcher');
+//      var initializationSettingsIOS = new IOSInitializationSettings();
+//
+//      var initializationSettings = new InitializationSettings(
+//          initializationSettingsAndroid, initializationSettingsIOS);
+//
+//      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+//      flutterLocalNotificationsPlugin.initialize(initializationSettings,
+//          onSelectNotification: onSelectNotification);
+//    } on Exception {
+//      print("oh oh");
+//    }
     super.initState();
   }
 
@@ -197,7 +198,7 @@ class _MainPageState extends State<MainPage> {
                               ],
                               child: (destination.img != null
                                   ? destination.img
-                                  : Image.asset(Assets.doctorAvatar))),
+                                  : Image.asset(Assets.emptyAvatar))),
                         )
                       : (destination.hasImage
                           ? SvgPicture.asset(
@@ -244,7 +245,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  void _chatPage() {
+  void _chatPage(int section) {
     _selectPage(2);
 //    _navigatorKeys[2].currentState.push()
   }
@@ -253,8 +254,8 @@ class _MainPageState extends State<MainPage> {
     return Offstage(
       offstage: _currentIndex != index,
       child: NavigatorView(
-        selectPage: () {
-          _chatPage();
+        selectPage: (int section) {
+          _chatPage(section);
         },
         navigatorKey: _navigatorKeys[index],
         index: index,
@@ -263,17 +264,36 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  List<Widget> _children() {
-    return <Widget>[
-      _buildOffstageNavigator(0),
-      _buildOffstageNavigator(1),
-      _buildOffstageNavigator(2),
-      _buildOffstageNavigator(3),
-      _buildOffstageNavigator(4),
-    ];
+  Widget _buildNavigator(int index) {
+    return NavigatorView(
+      selectPage: (int section) {
+        _chatPage(section);
+      },
+      navigatorKey: _navigatorKeys[index],
+      index: index,
+      pushOnBase: widget.pushOnBase,
+    );
   }
 
+//
+//  List<Widget> _children() {
+//    return <Widget>[
+//      _buildOffstageNavigator(0),
+//      _buildOffstageNavigator(1),
+//      _buildOffstageNavigator(2),
+//      _buildOffstageNavigator(3),
+//      _buildOffstageNavigator(4),
+//    ];
+//  }
+
   Widget _mainPage() {
+//    _children = <Widget>[
+//      _buildNavigator(0),
+//      _buildNavigator(1),
+//      _buildNavigator(2),
+//      _buildNavigator(3),
+//      _buildNavigator(4),
+//    ];
     return Scaffold(
         backgroundColor: IColors.background,
         bottomNavigationBar: SizedBox(
@@ -290,7 +310,8 @@ class _MainPageState extends State<MainPage> {
             _buildOffstageNavigator(3),
             _buildOffstageNavigator(4),
           ],
-        ));
+        )
+    );
   }
 
   @override
@@ -304,21 +325,9 @@ class _MainPageState extends State<MainPage> {
     return MultiBlocProvider(
         providers: [BlocProvider<PanelBloc>.value(value: _panelBloc)],
         child: WillPopScope(child:
-                BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+            BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
           return _mainPage();
-        }),
-//            Navigator(
-//              key: MyApp.globalNavigator,
-//              initialRoute: NavigatorRoutes.mainPage,
-//              onGenerateRoute: (settings) => _route(settings, context),
-//            ),
-            onWillPop: () async {
-//              final isMainPage =
-//              !await MyApp.globalNavigator.currentState.maybePop();
-//              if (isMainPage) {
-//                MyApp.globalNavigator.currentState.pop();
-//                return false;
-//              }
+        }), onWillPop: () async {
           final isFirstRouteInCurrentRoute =
               !await _navigatorKeys[_currentIndex].currentState.maybePop();
           if (isFirstRouteInCurrentRoute) {

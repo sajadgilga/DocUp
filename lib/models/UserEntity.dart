@@ -64,7 +64,8 @@ class Entity {
 
   String get pClinicName {
     if (isPatient)
-      return (partnerEntity as DoctorEntity).clinic.clinicName;
+//      return (partnerEntity as DoctorEntity).clinic.clinicName;
+      return "";
     if (isDoctor) return "";
   }
 
@@ -72,6 +73,10 @@ class Entity {
     if (isPatient)
       return (partnerEntity as DoctorEntity).expert;
     if (isDoctor) return "";
+  }
+
+  Panel get panel {
+    return mEntity.panelMap[iPanelId];
   }
 
   int sectionId (String name){

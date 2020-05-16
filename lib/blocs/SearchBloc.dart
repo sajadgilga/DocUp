@@ -28,7 +28,18 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         searchResult = await _repository.searchPatient(event.text);
       else
         searchResult = await _repository.searchPatientRequests(event.text);
-      yield SearchLoaded(result: searchResult);
+      yield SearchLoaded(result: searchResult, count: searchResult.count);
+    } catch (e) {
+      yield SearchError();
+    }
+  }
+
+  Stream<SearchState> _searchCount(SearchCountGet event) async* {
+    yield SearchLoading();
+    try {
+      SearchResult searchResult;
+      searchResult = await _repository.searchPatientRequests(event.text);
+      yield SearchLoaded(result: null, count: searchResult.count);
     } catch (e) {
       yield SearchError();
     }
@@ -40,6 +51,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield* _searchDoctor(event);
     } else if (event is SearchPatient) {
       yield* _searchPatient(event);
+    } else if (event is SearchCountGet) {
+      yield* _searchCount(event);
     }
   }
 }
@@ -60,6 +73,12 @@ class SearchDoctor extends SearchEvent {
   SearchDoctor({this.text});
 }
 
+class SearchCountGet extends SearchEvent {
+  String text;
+
+  SearchCountGet({this.text = ''});
+}
+
 // states
 abstract class SearchState {}
 
@@ -67,8 +86,9 @@ class SearchError extends SearchState {}
 
 class SearchLoaded extends SearchState {
   SearchResult result;
+  int count;
 
-  SearchLoaded({this.result});
+  SearchLoaded({this.result, this.count});
 }
 
 class SearchLoading extends SearchState {}

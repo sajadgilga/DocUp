@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/ChatMessage.dart';
- import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -125,8 +127,7 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  Widget build(BuildContext context) {
-    _startTimer();
+  Widget _ChatPage() {
     return Container(
       margin: EdgeInsets.only(top: 20),
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
@@ -144,6 +145,38 @@ class _ChatPageState extends State<ChatPage> {
           _sendBox(),
         ],
       ),
+    );
+  }
+
+  Widget build(BuildContext context) {
+    _startTimer();
+    return BlocBuilder<EntityBloc, EntityState>(
+      builder: (context, state) {
+        if (state is EntityLoaded) {
+          if (state.entity.panel.status == 0)
+            return Stack(children: <Widget>[
+              _ChatPage(),
+              PanelAlert(
+                label: Strings.requestSentLabel,
+                buttonLabel: Strings.waitingForApproval,
+              )
+            ]);
+          else if (state.entity.panel.status == 3)
+            return Stack(children: <Widget>[
+              _ChatPage(),
+              PanelAlert(
+                label: Strings.noAvailableVirtualVisit,
+                buttonLabel: Strings.reserveVirtualVisit,
+              )
+            ]);
+          else
+            return _ChatPage();
+        }
+        return Container(
+            constraints:
+                BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+            child: Waiting());
+      },
     );
   }
 }

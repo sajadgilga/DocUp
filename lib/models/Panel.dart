@@ -23,6 +23,7 @@ class Panel {
   int status;
   int doctorId;
   int patientId;
+  bool enabled;
   List<PanelSection> section;
   Map<String, PanelSection> sections = {};
   List<String> sectionNames;
@@ -37,6 +38,8 @@ class Panel {
     try {
       id = json['id'];
       status = json['status'];
+      enabled = true;
+      if (json.containsKey('enabled')) enabled = json['enabled'];
       if (json.containsKey('doctor')) doctorId = json['doctor'];
       if (json.containsKey('patient')) patientId = json['patient'];
       modified_date =

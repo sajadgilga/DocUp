@@ -8,13 +8,13 @@ import 'package:docup/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/home/iPartner/ChatBox.dart';
- import 'package:docup/ui/widgets/DoctorSummary.dart';
+import 'package:docup/ui/widgets/DoctorSummary.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IPartnerBody extends StatelessWidget {
   final UserEntity partner;
   final Function(String, UserEntity) onPush;
-  final Function selectPage;
+  final Function(int) selectPage;
   final Function(String, UserEntity) globalOnPush;
   final Color color;
 
@@ -23,7 +23,7 @@ class IPartnerBody extends StatelessWidget {
       this.color,
       this.partner,
       @required this.onPush,
-        this.selectPage,
+      this.selectPage,
       this.globalOnPush})
       : super(key: key);
 
@@ -31,9 +31,11 @@ class IPartnerBody extends StatelessWidget {
 //    globalOnPush(NavigatorRoutes.doctorDialogue);
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isPatient)
-      globalOnPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
+      onPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
+//      globalOnPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
     else if (entity.isDoctor)
-      globalOnPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
+      onPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
+//      globalOnPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
   }
 
   String _getSubHeader(context) {
@@ -59,7 +61,7 @@ class IPartnerBody extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        Expanded(child: ChatBox(selectPage: selectPage,color: color)),
+        ChatBox(selectPage: selectPage, color: color),
         SizedBox(
           width: 5,
         ),
@@ -74,16 +76,17 @@ class IPartnerBody extends StatelessWidget {
         SizedBox(
           width: 3,
         ),
-        GestureDetector(
-            onTap: () {
-              _showDoctorDialogue(context);
-            },
-            child: PartnerSummary(
-                  name: (partner != null ? partner.user.name : ''),
-                  speciality: _getSubHeader(context),
-                  location: _getLocation(context),
-                  url: (partner != null ? partner.user.avatar : null)),
-            )
+        Expanded(
+            child: GestureDetector(
+          onTap: () {
+            _showDoctorDialogue(context);
+          },
+          child: PartnerSummary(
+              name: (partner != null ? partner.user.name : ''),
+              speciality: _getSubHeader(context),
+              location: _getLocation(context),
+              url: (partner != null ? partner.user.avatar : null)),
+        ))
       ],
     );
   }

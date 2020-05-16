@@ -37,10 +37,20 @@ class SearchPage extends StatelessWidget {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
+  void _initialSearch(context) {
+    var _state = BlocProvider.of<EntityBloc>(context).state;
+    var searchBloc = BlocProvider.of<SearchBloc>(context);
+    if (_state.entity.isDoctor)
+      searchBloc.add(SearchPatient(text: _controller.text, isRequestOnly: isRequestPage));
+    else if (_state.entity.isPatient)
+      searchBloc.add(SearchDoctor(text: _controller.text));
+
+  }
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    _controller.dispose();
+    _controller?.dispose();
   }
 
   Widget _docUpIcon() => Container(
@@ -114,6 +124,7 @@ class SearchPage extends StatelessWidget {
             results: (state.result.isDoctor
                 ? state.result.doctor_results
                 : state.result.patient_results),
+            isRequestsOnly: isRequestPage,
           );
         }
         if (state is SearchError)
@@ -132,7 +143,8 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-    _search(context);
+    _initialSearch(context);
+//    _search(context);
 //    _controller.addListener((){print(_controller.text); });
     return Container(
       constraints:
