@@ -47,8 +47,8 @@ class _PicListState extends State<PicList> {
       );
 
   void _showUploadDialogue() {
-//    widget.onPush(NavigatorRoutes.uploadPicDialogue, widget.listId);
-    widget.onPush(NavigatorRoutes.cognitiveTest, "10000");
+    widget.onPush(NavigatorRoutes.uploadPicDialogue, widget.listId);
+//    widget.onPush(NavigatorRoutes.cognitiveTest, "10000");
   }
 
   Widget _uploadBoxLabel() => Container(
