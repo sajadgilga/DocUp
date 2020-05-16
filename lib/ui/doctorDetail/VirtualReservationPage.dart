@@ -232,6 +232,8 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ),
       );
 
+  bool visitTimeChecked = false;
+
   Row _enableVisitTimeWidget() {
     _enableVisitTime = widget.doctorEntity.user.online != 1;
     return Row(
@@ -244,7 +246,8 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ),
         Switch(
           value: _enableVisitTime,
-          activeColor: IColors.themeColor, onChanged: (bool value) {  },
+          activeColor: IColors.themeColor,
+          onChanged: (bool value) {},
         )
       ],
     );
@@ -274,7 +277,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
 
   _submitWidget() => ActionButton(
         color: policyChecked ? IColors.themeColor : Colors.grey,
-        title: "شروع ویزیت مجازی",
+        title: _enableVisitTime ? "تعیین وقت قبلی" : "شروع ویزیت مجازی",
         callBack: () {
           if (policyChecked) {
             _bloc.visitRequest(
