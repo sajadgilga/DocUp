@@ -134,8 +134,13 @@ class _HomeState extends State<Home> {
             );
           }
         }
-        return SizedBox(
-          width: 5,
+        return IPartner(
+          color: IColors.themeColor,
+          label: (state.entity.isPatient
+              ? Strings.iDoctorLabel
+              : Strings.iPatientLabel),
+          onPush: widget.onPush,
+          isEmpty: true,
         );
       },
     );

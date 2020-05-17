@@ -57,7 +57,7 @@ class IPartner extends StatelessWidget {
     if (isEmpty)
       return Expanded(
         child: Center(
-          child: Text(Strings.emptyDoctorLabel),
+          child: Text(Strings.emptyDoctorLabel, style: TextStyle(fontSize: 10), textAlign: TextAlign.center,),
         ),
       );
     return Expanded(
