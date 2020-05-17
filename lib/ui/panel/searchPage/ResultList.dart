@@ -35,8 +35,8 @@ class _ResultListState extends State<ResultList> {
         child: Center(
           child: Text(
             (widget.isDoctor
-                ? Strings.emptySearchDoctorSide
-                : Strings.emptySearch),
+                ? Strings.emptySearch
+                : Strings.emptySearchDoctorSide),
             style: TextStyle(fontSize: 10),
             textAlign: TextAlign.center,
           ),
