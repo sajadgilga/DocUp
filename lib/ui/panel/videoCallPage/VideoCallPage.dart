@@ -55,7 +55,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
         if (state is EntityLoaded) {
-          if (state.entity.panel.status == 0)
+          if (state.entity.panel.status == 1)
             return Stack(children: <Widget>[
               _VideoCallPage(),
               PanelAlert(
@@ -64,6 +64,18 @@ class _VideoCallPageState extends State<VideoCallPage> {
               )
             ]);
           else if (state.entity.panel.status == 3)
+            return Stack(children: <Widget>[
+              _VideoCallPage(),
+              PanelAlert(
+                label: Strings.notRequestTime,
+                buttonLabel: Strings.waitLabel,
+              )
+            ]);
+          else if (state.entity.panel.status == 6 ||
+              state.entity.panel.status == 7 ||
+              state.entity.panel.status == 4 ||
+              state.entity.panel.status == 0 ||
+              state.entity.panel.status == 2)
             return Stack(children: <Widget>[
               _VideoCallPage(),
               PanelAlert(

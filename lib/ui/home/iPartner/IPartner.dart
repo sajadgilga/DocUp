@@ -1,4 +1,5 @@
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ class IPartner extends StatelessWidget {
   final Function(String, UserEntity) globalOnPush;
   final Color color;
   final String label;
+  final bool isEmpty;
 
   IPartner(
       {Key key,
@@ -20,7 +22,8 @@ class IPartner extends StatelessWidget {
       this.globalOnPush,
       this.color,
       this.selectPage,
-      this.label})
+      this.label,
+      this.isEmpty = false})
       : super(key: key);
 
   Widget _IDoctorLabel() => Container(
@@ -50,6 +53,23 @@ class IPartner extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(10)),
       color: Color.fromRGBO(255, 255, 255, .8));
 
+  Widget _body() {
+    if (isEmpty)
+      return Expanded(
+        child: Center(
+          child: Text(Strings.emptyDoctorLabel),
+        ),
+      );
+    return Expanded(
+      child: IPartnerBody(
+          selectPage: selectPage,
+          partner: partner,
+          onPush: onPush,
+          globalOnPush: globalOnPush,
+          color: color),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,14 +81,7 @@ class IPartner extends StatelessWidget {
       child: Column(
         children: <Widget>[
           _IDoctorLabel(),
-          Expanded(
-            child: IPartnerBody(
-                selectPage: selectPage,
-                partner: partner,
-                onPush: onPush,
-                globalOnPush: globalOnPush,
-                color: color),
-          ),
+          _body()
         ],
       ),
     );

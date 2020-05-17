@@ -29,6 +29,21 @@ class ResultList extends StatefulWidget {
 }
 
 class _ResultListState extends State<ResultList> {
+  Widget _list(List<Widget> results) {
+    if (results.length == 0)
+      return Expanded(
+        child: Center(
+          child: Text('خالی'),
+        ),
+      );
+    return Expanded(
+      flex: 2,
+      child: ListView(
+        children: results,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> results = [];
@@ -65,12 +80,7 @@ class _ResultListState extends State<ResultList> {
               textAlign: TextAlign.right,
             ),
           ),
-          Expanded(
-            flex: 2,
-            child: ListView(
-              children: results,
-            ),
-          )
+          _list(results)
         ],
       ),
     );

@@ -98,7 +98,12 @@ class Strings {
   static final String reserveVirtualVisit = 'رزرو ویزیت';
   static final String waitingForApproval = 'در انتظار تایید پزشک';
   static final String requestSentLabel = 'درخواست شما ارسال گردید';
+  static final String notRequestTime = 'اکنون زمان ویزیت شما نیست';
+  static final String waitLabel = 'منتظر بمانید';
 
   static final String resultSearchLabel = 'نتایج جستجو';
   static final String requestsSearchLabel = 'درخواست ها';
+
+  static final String emptyDoctorLabel = 'شما به پزشکی متصل نیستید n\ لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
+  static final String emptyPatientLabel = 'شما به پزشکی متصل نیستید n\ لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
 }
