@@ -34,6 +34,22 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
     }
   }
 
+  Stream<EntityState> _update() async* {
+    Entity entity = state.entity;
+    try {
+      UserEntity uEntity;
+      if (state.entity.type == RoleType.PATIENT)
+        uEntity = await _patientRepository.get();
+      else if (state.entity.type == RoleType.DOCTOR)
+        uEntity = await _doctorRepository.get();
+      entity.mEntity = uEntity;
+      _raiseUpdatePartnerEntity(entity);
+      yield EntityLoaded(entity: entity);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void _raiseGetPartnerEntity(entity) {
     if (entity.type == RoleType.PATIENT) {
       var panels = (entity.mEntity as PatientEntity).panels;
@@ -56,9 +72,31 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
     }
   }
 
+  void _raiseUpdatePartnerEntity(Entity entity) {
+    var partner = entity.partnerEntity.id;
+    var panelId = entity.iPanelId;
+    add(PartnerEntityUpdate(id: partner, panelId: panelId));
+  }
+
   Stream<EntityState> _getPartner(id, panelId) async* {
     Entity entity = state.entity;
     yield EntityPartnerLoading(entity: entity);
+    try {
+      UserEntity uEntity;
+      if (state.entity.type == RoleType.PATIENT)
+        uEntity = await _doctorRepository.getDoctor(id);
+      else if (state.entity.type == RoleType.DOCTOR)
+        uEntity = await _patientRepository.getPatient(id);
+      entity.partnerEntity = uEntity;
+      entity.iPanelId = panelId;
+      yield EntityLoaded(entity: entity);
+    } catch (e) {
+      yield EntityError(entity: entity);
+    }
+  }
+
+  Stream<EntityState> _updatePartner(id, panelId) async* {
+    Entity entity = state.entity;
     try {
       UserEntity uEntity;
       if (state.entity.type == RoleType.PATIENT)
@@ -84,7 +122,10 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
   Stream<EntityState> mapEventToState(event) async* {
     if (event is EntityGet) {
       yield* _get();
-    } else if (event is EntityUpdate) {
+    } else if (event is EntityUpdate)
+      yield* _update();
+    else if (event is PartnerEntityUpdate) {
+      yield* _updatePartner(event.id, event.panelId);
     } else if (event is EntityChangeType) {
       yield* _changeType(event.type);
     } else if (event is PartnerEntitySet) {
@@ -105,6 +146,13 @@ class EntityChangeType extends EntityEvent {
 }
 
 class EntityUpdate extends EntityEvent {}
+
+class PartnerEntityUpdate extends EntityEvent {
+  final int id;
+  final int panelId;
+
+  PartnerEntityUpdate({@required this.id, this.panelId});
+}
 
 class PartnerEntitySet extends EntityEvent {
   final int id;

@@ -49,8 +49,6 @@ class ApiProvider {
       responseJson = _response(httpResponse: response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
-    } on Exception {
-      print('hello');
     }
     return responseJson;
   }

@@ -94,6 +94,8 @@ class NavigatorView extends StatelessWidget {
               )),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
+          NavigatorRoutes.account: (context) =>
+              _account(context, defaultCreditForCharge: entity),
           NavigatorRoutes.virtualReservationPage: (context) =>
               _virtualReservationPage(context, entity)
         };
@@ -110,6 +112,8 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
+          NavigatorRoutes.account: (context) =>
+              _account(context, defaultCreditForCharge: entity),
           NavigatorRoutes.virtualReservationPage: (context) =>
               _virtualReservationPage(context, entity)
         };
@@ -143,6 +147,8 @@ class NavigatorView extends StatelessWidget {
               _searchPage(context, isRequests: true),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: entity),
+          NavigatorRoutes.virtualReservationPage: (context) =>
+              _virtualReservationPage(context, entity)
         };
       case 3:
         return {
@@ -415,7 +421,9 @@ class NavigatorView extends StatelessWidget {
   _virtualReservationPage(BuildContext context, entity) {
     return VirtualReservationPage(
       doctorEntity: (entity as DoctorEntity),
-      onPush: pushOnBase,
+      onPush: (direction, entity) {
+        _push(context, direction);
+      },
     );
   }
 }

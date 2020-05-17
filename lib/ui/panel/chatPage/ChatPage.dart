@@ -153,7 +153,8 @@ class _ChatPageState extends State<ChatPage> {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
         if (state is EntityLoaded) {
-          if (state.entity.panel.status == 1)
+          if (state.entity.panel.status == 0 ||
+              state.entity.panel.status == 1) if (state.entity.isPatient)
             return Stack(children: <Widget>[
               _ChatPage(),
               PanelAlert(
@@ -161,7 +162,15 @@ class _ChatPageState extends State<ChatPage> {
                 buttonLabel: Strings.waitingForApproval,
               )
             ]);
-          else if (state.entity.panel.status == 3)
+          else
+            return Stack(children: <Widget>[
+              _ChatPage(),
+              PanelAlert(
+                label: Strings.requestSentLabelDoctorSide,
+                buttonLabel: Strings.waitingForApprovalDoctorSide,
+              )
+            ]);
+          else if (state.entity.panel.status == 3) if (state.entity.isPatient)
             return Stack(children: <Widget>[
               _ChatPage(),
               PanelAlert(
@@ -169,16 +178,31 @@ class _ChatPageState extends State<ChatPage> {
                 buttonLabel: Strings.waitLabel,
               )
             ]);
+          else
+            return Stack(children: <Widget>[
+              _ChatPage(),
+              PanelAlert(
+                label: Strings.notRequestTimeDoctorSide,
+                buttonLabel: Strings.waitLabel,
+              )
+            ]);
           else if (state.entity.panel.status == 6 ||
               state.entity.panel.status == 7 ||
               state.entity.panel.status == 4 ||
-              state.entity.panel.status == 0 ||
-              state.entity.panel.status == 2)
+              state.entity.panel.status == 2) if (state.entity.isPatient)
             return Stack(children: <Widget>[
               _ChatPage(),
               PanelAlert(
                 label: Strings.noAvailableVirtualVisit,
                 buttonLabel: Strings.reserveVirtualVisit,
+              )
+            ]);
+          else
+            return Stack(children: <Widget>[
+              _ChatPage(),
+              PanelAlert(
+                label: Strings.noAvailableVirtualVisit,
+                buttonLabel: Strings.reserveVirtualVisitDoctorSide,
               )
             ]);
           else

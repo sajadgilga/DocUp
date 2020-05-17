@@ -72,6 +72,7 @@ class IllnessPage extends StatelessWidget {
       builder: (context, state) {
         if (state is EntityLoaded) {
           if (state.entity.panel.status == 0 || state.entity.panel.status == 1)
+            if (entity.isPatient)
             return Stack(children: <Widget>[
               _IllnessPage(times),
               PanelAlert(
@@ -79,6 +80,14 @@ class IllnessPage extends StatelessWidget {
                 buttonLabel: Strings.waitingForApproval,
               )
             ]);
+            else
+              return Stack(children: <Widget>[
+                _IllnessPage(times),
+                PanelAlert(
+                  label: Strings.requestSentLabelDoctorSide,
+                  buttonLabel: Strings.waitingForApprovalDoctorSide,
+                )
+              ]);
           else
             return _IllnessPage(times);
         }

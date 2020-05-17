@@ -52,6 +52,7 @@ class _MainPageState extends State<MainPage> {
   final PanelBloc _panelBloc = PanelBloc();
   ProgressDialog _progressDialogue;
   List<Widget> _children;
+  Timer _timer;
 
 //  Patient _patient;
 //  List<Panel> panels;
@@ -71,10 +72,10 @@ class _MainPageState extends State<MainPage> {
     _entityBloc.add(EntityGet());
     _panelBloc.add(GetMyPanels());
     _entityBloc.listen((data) {
-      Timer _timer;
-        _timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
-//          _entityBloc.add(EntityGet());
-          _panelBloc.add(GetMyPanels());
+      if (_timer == null)
+        _timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+          _entityBloc.add(EntityUpdate());
+//          _panelBloc.add(GetMyPanels());
         });
     });
 
@@ -310,8 +311,7 @@ class _MainPageState extends State<MainPage> {
             _buildOffstageNavigator(3),
             _buildOffstageNavigator(4),
           ],
-        )
-    );
+        ));
   }
 
   @override

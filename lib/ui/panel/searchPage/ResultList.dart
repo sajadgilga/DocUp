@@ -33,7 +33,13 @@ class _ResultListState extends State<ResultList> {
     if (results.length == 0)
       return Expanded(
         child: Center(
-          child: Text('خالی'),
+          child: Text(
+            (widget.isDoctor
+                ? Strings.emptySearchDoctorSide
+                : Strings.emptySearch),
+            style: TextStyle(fontSize: 10),
+            textAlign: TextAlign.center,
+          ),
         ),
       );
     return Expanded(
@@ -313,7 +319,16 @@ class _SearchResultPatientItem extends StatelessWidget {
   }
 }
 
-enum PatientStatus { VIRTUAL_VISIT_REQUEST, VISIT_REQUEST, IN_CONTACT, CURED }
+enum PatientStatus {
+  VISIT_REQUEST,
+  VIRTUAL_VISIT_REQUEST,
+  VISIT_REQUEST_VERIFIED,
+  VIRTUAL_VISIT_REQUEST_VERIFIED,
+  VISIT_IN_CONTACT,
+  VIRTUAL_VISIT_IN_CONTACT,
+  CURED,
+  REJECTED,
+}
 
 extension PatientStatusExtension on PatientStatus {
   Color get color {
@@ -322,7 +337,13 @@ extension PatientStatusExtension on PatientStatus {
         return IColors.visitRequest;
       case PatientStatus.VIRTUAL_VISIT_REQUEST:
         return IColors.virtualVisitRequest;
-      case PatientStatus.IN_CONTACT:
+      case PatientStatus.VIRTUAL_VISIT_IN_CONTACT:
+        return IColors.inContact;
+      case PatientStatus.VISIT_IN_CONTACT:
+        return IColors.inContact;
+      case PatientStatus.VISIT_REQUEST_VERIFIED:
+        return IColors.inContact;
+      case PatientStatus.VIRTUAL_VISIT_REQUEST_VERIFIED:
         return IColors.inContact;
       case PatientStatus.CURED:
         return IColors.cured;
@@ -337,7 +358,13 @@ extension PatientStatusExtension on PatientStatus {
         return Strings.visitRequestLabel;
       case PatientStatus.VIRTUAL_VISIT_REQUEST:
         return Strings.virtualVisitRequestLabel;
-      case PatientStatus.IN_CONTACT:
+      case PatientStatus.VIRTUAL_VISIT_IN_CONTACT:
+        return Strings.inContactLabel;
+      case PatientStatus.VISIT_IN_CONTACT:
+        return Strings.inContactLabel;
+      case PatientStatus.VISIT_REQUEST_VERIFIED:
+        return Strings.inContactLabel;
+      case PatientStatus.VIRTUAL_VISIT_REQUEST_VERIFIED:
         return Strings.inContactLabel;
       case PatientStatus.CURED:
         return Strings.curedLabel;
@@ -348,18 +375,32 @@ extension PatientStatusExtension on PatientStatus {
 
   get icon {
     switch (this) {
+      case PatientStatus.VIRTUAL_VISIT_IN_CONTACT:
+        return IColors.inContact;
+      case PatientStatus.VISIT_IN_CONTACT:
+        return Icon(
+          Icons.person,
+          size: 15,
+          color: this.color,
+        );
+      case PatientStatus.VISIT_REQUEST_VERIFIED:
+        return Icon(
+          Icons.person,
+          size: 15,
+          color: this.color,
+        );
+      case PatientStatus.VIRTUAL_VISIT_REQUEST_VERIFIED:
+        return Icon(
+          Icons.person,
+          size: 15,
+          color: this.color,
+        );
       case PatientStatus.VISIT_REQUEST:
         return SvgPicture.asset('');
       case PatientStatus.VIRTUAL_VISIT_REQUEST:
         return SvgPicture.asset(
           Assets.onCallMedicalIcon,
           width: 15,
-        );
-      case PatientStatus.IN_CONTACT:
-        return Icon(
-          Icons.person,
-          size: 15,
-          color: this.color,
         );
       case PatientStatus.CURED:
         return Icon(Icons.update, size: 15, color: this.color);

@@ -96,9 +96,13 @@ class Strings {
   static final String notFoundRequest = 'درخواستی از جانب این بیمار ندارید';
   static final String noAvailableVirtualVisit = 'ویزیت مجازی در حال حاضر وجود ندارد';
   static final String reserveVirtualVisit = 'رزرو ویزیت';
+  static final String reserveVirtualVisitDoctorSide = 'متوجه شدم';
   static final String waitingForApproval = 'در انتظار تایید پزشک';
+  static final String waitingForApprovalDoctorSide = 'مشاهده درخواست';
   static final String requestSentLabel = 'درخواست شما ارسال گردید';
+  static final String requestSentLabelDoctorSide = 'درخواست بیمار را قبول یا رد کنید';
   static final String notRequestTime = 'اکنون زمان ویزیت شما نیست';
+  static final String notRequestTimeDoctorSide = 'اکنون زمان ویزیت نیست';
   static final String waitLabel = 'منتظر بمانید';
 
   static final String resultSearchLabel = 'نتایج جستجو';
@@ -106,4 +110,7 @@ class Strings {
 
   static final String emptyDoctorLabel = 'شما به پزشکی متصل نیستید n\ لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
   static final String emptyPatientLabel = 'شما به پزشکی متصل نیستید n\ لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
+
+  static final String emptySearch = 'متاسفانه پزشکی با این نام در داکآپ موجود نمی‌باشد';
+  static final String emptySearchDoctorSide = 'متاسفانه بیماری با این نام در لیست بیماران شما موجود نمی‌باشد';
 }
