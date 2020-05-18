@@ -16,6 +16,7 @@ import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:docup/ui/start/RoleType.dart';
+import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -68,6 +69,9 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    // initialize socket helper for web socket messages
+    SocketHelper().init('185.252.30.163');
+    // get user entity & panels, also periodically update entity's info
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
     _entityBloc.add(EntityGet());
     _panelBloc.add(GetMyPanels());
@@ -75,10 +79,10 @@ class _MainPageState extends State<MainPage> {
       if (_timer == null)
         _timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
           _entityBloc.add(EntityUpdate());
-//          _panelBloc.add(GetMyPanels());
         });
     });
 
+    // firebase initialization for notifications & push notifications
 //    try {
 //      _firebaseMessaging.getToken().then((String fcmToken) {
 //        assert(fcmToken != null);

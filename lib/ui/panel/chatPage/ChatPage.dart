@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
@@ -10,6 +11,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/utils/Utils.dart';
+import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,14 +35,20 @@ class _ChatPageState extends State<ChatPage> {
   TextEditingController _controller = TextEditingController();
 
   void _submitMsg() {
-    var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
+//    var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
+    if (_controller.text == '') {
+      return;
+    }
     var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    _chatMessageBloc.add(ChatMessageSend(
-        msg: ChatMessage(
-            message: _controller.text,
-            direction: (_entity.isPatient ? 0 : 1),
-            type: 0),
-        panelId: _entity.iPanelId));
+//    _chatMessageBloc.add(ChatMessageSend(
+//        msg: ChatMessage(
+//            message: _controller.text,
+//            direction: (_entity.isPatient ? 0 : 1),
+//            type: 0),
+//        panelId: _entity.iPanelId));
+    SocketHelper().sendMessage(
+        type: 0, panelId: _entity.iPanelId, message: _controller.text);
+
     _controller.text = '';
     FocusScope.of(context).unfocus();
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -94,40 +102,29 @@ class _ChatPageState extends State<ChatPage> {
       ));
 
   Widget _chatBox() {
-    return BlocBuilder<ChatMessageBloc, ChatMessageState>(
-        builder: (context, state) {
-      if (state is ChatMessageLoaded) {
-//      Navigator.of(context).pop();
-        return _ChatBox(
-          entity: widget.entity,
-        );
-      }
-      if (state is ChatMessageLoading) {
-        if ((state as ChatMessageLoading).chatMessages != null)
-          return _ChatBox(
-            entity: widget.entity,
-          );
-        else
-          return Expanded(flex: 2, child: Waiting());
-      }
-      if (state is ChatMessageEmpty) {
-        return Expanded(flex: 2, child: Waiting());
-      }
-      return Expanded(flex: 2, child: Waiting());
-    });
-  }
+    List<ChatMessage> _messages = [];
+    var _state = BlocProvider.of<ChatMessageBloc>(context).state;
+    if (_state is ChatMessageLoaded)
+      _messages =
+          (BlocProvider.of<ChatMessageBloc>(context).state as ChatMessageLoaded)
+              .chatMessages;
+    if (_state is ChatMessageLoading)
+      _messages = (BlocProvider.of<ChatMessageBloc>(context).state
+              as ChatMessageLoading)
+          .chatMessages;
 
-  void _startTimer() {
-    var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
-    Timer.periodic(Duration(seconds: 7), (timer) {
-      _chatMessageBloc.add(ChatMessageGet(
-          panelId: widget.entity.iPanelId,
-          size: 50,
-          isPatient: widget.entity.isPatient));
-    });
+    return _ChatBox(
+      entity: widget.entity,
+      messages: _messages,
+    );
   }
 
   Widget _ChatPage() {
+    var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
+    _chatMessageBloc.add(ChatMessageGet(
+        panelId: widget.entity.iPanelId,
+        size: 50,
+        isPatient: widget.entity.isPatient));
     return Container(
       margin: EdgeInsets.only(top: 20),
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
@@ -149,7 +146,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget build(BuildContext context) {
-    _startTimer();
+//    _startTimer();
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
         if (state is EntityLoaded) {
@@ -171,13 +168,7 @@ class _ChatPageState extends State<ChatPage> {
               )
             ]);
           else if (state.entity.panel.status == 3) if (state.entity.isPatient)
-            return Stack(children: <Widget>[
-              _ChatPage(),
-              PanelAlert(
-                label: Strings.notRequestTime,
-                buttonLabel: Strings.waitLabel,
-              )
-            ]);
+              _ChatPage();
           else
             return Stack(children: <Widget>[
               _ChatPage(),
@@ -219,8 +210,9 @@ class _ChatPageState extends State<ChatPage> {
 
 class _ChatBox extends StatefulWidget {
   final Entity entity;
+  final List<ChatMessage> messages;
 
-  _ChatBox({Key key, this.entity}) : super(key: key);
+  _ChatBox({Key key, this.entity, this.messages}) : super(key: key);
 
   @override
   _ChatBoxState createState() {
@@ -231,52 +223,18 @@ class _ChatBox extends StatefulWidget {
 class _ChatBoxState extends State<_ChatBox> {
   List<ChatMessage> _messages = [];
 
-  @override
-  Widget build(BuildContext context) {
-    var _state = BlocProvider.of<ChatMessageBloc>(context).state;
-    if (_state is ChatMessageLoaded)
-      _messages =
-          (BlocProvider.of<ChatMessageBloc>(context).state as ChatMessageLoaded)
-              .chatMessages;
-    if (_state is ChatMessageLoading)
-      _messages = (BlocProvider.of<ChatMessageBloc>(context).state
-              as ChatMessageLoading)
-          .chatMessages;
-//    _messages.add(ChatMessage.fromPatient(
-//      text: "آخ آخ. یادم رفت. همین الان میفرستم",
-//      sentDate: DateTime.now(),
-//      doctor: widget.entity.doctor,
-//      patient: widget.entity.patient,
-//    ));
-//    _messages.add(ChatMessage.fromDoctor(
-//      text: "جواب آزمایش‌هاتون رو فرستادین برام؟",
-//      sentDate: DateTime.now(),
-//      doctor: widget.entity.doctor,
-//      patient: widget.entity.patient,
-//    ));
-//    _messages.add(ChatMessage.fromPatient(
-//      text: "سلام. ممنون دکتر. امیدوارم شماهم خوب باشید",
-//      sentDate: DateTime.now(),
-//      doctor: widget.entity.doctor,
-//      patient: widget.entity.patient,
-//    ));
-//    _messages.add(ChatMessage.fromDoctor(
-//      text: "سلام دوست عزیز. خوب هستی شما؟",
-//      sentDate: DateTime.now(),
-//      doctor: widget.entity.doctor,
-//      patient: widget.entity.patient,
-//    ));
-
-    var messages = <Widget>[];
-    for (var message in _messages) {
-      messages.add(ChatBubble(
-        message: message,
-        isHomePageChat: false,
-      ));
-    }
-    return Expanded(
-        flex: 2,
-        child: Container(
+  Widget _msgList() {
+    return StreamBuilder(
+      stream: SocketHelper().channel.stream,
+      builder: (context, snapshot) {
+        var data = json.decode(snapshot.toString());
+        if (data['request_type'] == 'NEW_MESSAGE') {
+          setState(() {
+            _messages
+                .add(ChatMessage.fromSocket(data, widget.entity.isPatient));
+          });
+        }
+        return Container(
             child: ListView.builder(
                 reverse: true,
                 itemCount: _messages.length,
@@ -285,11 +243,47 @@ class _ChatBoxState extends State<_ChatBox> {
                     message: _messages[index],
                     isHomePageChat: false,
                   );
-                })
-//          ListView(
-//            reverse: true,
-//            children: messages,
-//          ),
-            ));
+                }));
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _messages = widget.messages;
+    return Expanded(
+        flex: 2,
+        child: BlocBuilder<ChatMessageBloc, ChatMessageState>(
+            builder: (context, state) {
+          if (state is ChatMessageLoaded) {
+            if (_messages.length > 0)
+              return _msgList();
+            else
+              return Center(
+                child: Text(
+                  Strings.emptyChatPage,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: IColors.darkGrey),
+                ),
+              );
+          }
+          if (state is ChatMessageLoading) {
+            if (state.chatMessages != null) {
+              if (_messages.length > 0)
+                return _msgList();
+              else
+                return Center(
+                  child: Text(
+                    Strings.emptyChatPage,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: IColors.darkGrey),
+                  ),
+                );
+            } else
+              return Waiting();
+          }
+          if (state is ChatMessageEmpty) return Waiting();
+          return Waiting();
+        }));
   }
 }

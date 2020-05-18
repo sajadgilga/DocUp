@@ -58,6 +58,11 @@ void showUnsupportedSessionDialog(context, Function callback) {
 }
 
 
+void showMessageEmptyDialog(context, Function callback) {
+  showOneButtonDialog(context, "پیام خالی ارسال نمی‌شود", "باشه", (){});
+}
+
+
 void showNextVersionDialog(context) {
   showDialog(
       context: context,

@@ -73,13 +73,8 @@ class _VideoCallPageState extends State<VideoCallPage> {
               )
             ]);
           else if (state.entity.panel.status == 3) if (state.entity.isPatient)
-            return Stack(children: <Widget>[
-              _VideoCallPage(),
-              PanelAlert(
-                label: Strings.notRequestTime,
-                buttonLabel: Strings.waitLabel,
-              )
-            ]);
+            return
+              _VideoCallPage();
           else
             return Stack(children: <Widget>[
               _VideoCallPage(),
