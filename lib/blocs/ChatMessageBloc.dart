@@ -52,6 +52,20 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
       print(e);
     }
   }
+  Stream<ChatMessageState> _addToList(ChatMessageAddToList event) async* {
+    if (state is ChatMessageLoading) {
+      var msgs = (state as ChatMessageLoading).chatMessages;
+      msgs.add(event.msg);
+      yield ChatMessageLoading(
+          chatMessages: msgs);
+    }
+    if (state is ChatMessageLoaded) {
+      var msgs = (state as ChatMessageLoaded).chatMessages;
+      msgs.add(event.msg);
+      yield ChatMessageLoaded(
+          chatMessages: msgs);
+    }
+  }
 
   @override
   Stream<ChatMessageState> mapEventToState(event) async* {
@@ -60,6 +74,8 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
     } else if (event is ChatMessageUpdate) {
     } else if (event is ChatMessageSend) {
       yield* _send(event);
+    }else if (event is ChatMessageAddToList) {
+      yield* _addToList(event);
     }
   }
 }
@@ -89,6 +105,12 @@ class ChatMessageSend extends ChatMessageEvent {
   int panelId;
 
   ChatMessageSend({@required this.msg, this.panelId});
+}
+
+class ChatMessageAddToList extends ChatMessageEvent {
+  final ChatMessage msg;
+
+  ChatMessageAddToList({@required this.msg});
 }
 
 class ChatMessageUpdate extends ChatMessageEvent {}

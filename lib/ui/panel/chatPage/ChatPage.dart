@@ -102,20 +102,8 @@ class _ChatPageState extends State<ChatPage> {
       ));
 
   Widget _chatBox() {
-    List<ChatMessage> _messages = [];
-    var _state = BlocProvider.of<ChatMessageBloc>(context).state;
-    if (_state is ChatMessageLoaded)
-      _messages =
-          (BlocProvider.of<ChatMessageBloc>(context).state as ChatMessageLoaded)
-              .chatMessages;
-    if (_state is ChatMessageLoading)
-      _messages = (BlocProvider.of<ChatMessageBloc>(context).state
-              as ChatMessageLoading)
-          .chatMessages;
-
     return _ChatBox(
       entity: widget.entity,
-      messages: _messages,
     );
   }
 
@@ -223,7 +211,7 @@ class _ChatBox extends StatefulWidget {
 class _ChatBoxState extends State<_ChatBox> {
   List<ChatMessage> _messages = [];
 
-  Widget _msgList() {
+  Widget _msgList({messages}) {
     return StreamBuilder(
       stream: SocketHelper().channel.stream,
       builder: (context, snapshot) {
@@ -250,14 +238,15 @@ class _ChatBoxState extends State<_ChatBox> {
 
   @override
   Widget build(BuildContext context) {
-    _messages = widget.messages;
     return Expanded(
         flex: 2,
         child: BlocBuilder<ChatMessageBloc, ChatMessageState>(
             builder: (context, state) {
           if (state is ChatMessageLoaded) {
-            if (_messages.length > 0)
+            _messages = state.chatMessages;
+            if (_messages.length > 0) {
               return _msgList();
+            }
             else
               return Center(
                 child: Text(
@@ -268,6 +257,7 @@ class _ChatBoxState extends State<_ChatBox> {
               );
           }
           if (state is ChatMessageLoading) {
+            _messages = state.chatMessages;
             if (state.chatMessages != null) {
               if (_messages.length > 0)
                 return _msgList();
