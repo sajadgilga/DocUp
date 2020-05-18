@@ -10,13 +10,14 @@ class PictureEntity {
   String imageURL;
   Image picture;
   String imagePath;
+  String base64;
 
-  PictureEntity(
-      {this.picture,
-      this.title,
-      this.description,
-      this.imagePath,
-      this.imageURL});
+  PictureEntity({this.picture,
+    this.title,
+    this.description,
+    this.base64,
+    this.imagePath,
+    this.imageURL});
 
   FormData toFormData() {
     FormData data = FormData.fromMap({
@@ -27,13 +28,22 @@ class PictureEntity {
     return data;
   }
 
+  Map<String, dynamic> toJson() {
+    Map json = Map<String, dynamic>();
+    json['title'] = title;
+    json['description'] = description;
+    json['image'] = base64;
+    return json;
+  }
+
   PictureEntity.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     if (json.containsKey('title')) title = json['title'];
-    if (json.containsKey('title')) description = json['description'];
-    if (json.containsKey('title')) imageURL = json['image'];
-    if (json.containsKey('title')) created_date = (json['created_at'] != null?DateTime.parse(json['created_at']): null);
-    if (json.containsKey('title')) parent = json['parent'];
+    if (json.containsKey('description')) description = json['description'];
+    if (json.containsKey('image')) imageURL = json['image'];
+    if (json.containsKey('created_at')) created_date =
+    (json['created_at'] != null ? DateTime.parse(json['created_at']) : null);
+    if (json.containsKey('parent')) parent = json['parent'];
   }
 
   Image get image {

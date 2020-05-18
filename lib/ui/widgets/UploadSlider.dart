@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
@@ -39,7 +41,8 @@ class UploadSliderState extends State<UploadSlider> {
           fit: BoxFit.cover,
         ),
         description: '',
-        title: 'دست',
+        title: image.path.split('/').last,
+        base64: base64Encode(image.readAsBytesSync()),
         imagePath: image.path);
     setState(() {
       picture = newPicture;
@@ -48,17 +51,18 @@ class UploadSliderState extends State<UploadSlider> {
   }
 
   void _onDescriptionSubmit() {
+    setState(() {
+      picture.description = _controller.text;
+    });
     FocusScope.of(context).unfocus();
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
   Widget _pictureHolder(width, height) {
     return Container(
-      constraints: BoxConstraints(
-        minWidth: width,
-        maxWidth: width,
-        minHeight: (height * .4 < 250 ? height * .4 : 250),
-        maxHeight: (height * .4 < 250 ? height * .4 : 250),
+      constraints: BoxConstraints.expand(
+        width: width,
+        height: (height * .3 < 200 ? height * .3 : 200),
       ),
       child: GestureDetector(
         child: (picture.image != null

@@ -108,8 +108,12 @@ class Strings {
   static final String resultSearchLabel = 'نتایج جستجو';
   static final String requestsSearchLabel = 'درخواست ها';
 
-  static final String emptyDoctorLabel = 'شما به پزشکی متصل نیستید n\ لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
-  static final String emptyPatientLabel = 'شما به پزشکی متصل نیستید n\ لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
+  static final String emptyDoctorLabel = 'شما به پزشکی متصل نیستید '
+      '\n'
+      ' لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
+  static final String emptyPatientLabel = 'شما به پزشکی متصل نیستید '
+      '\n'
+      ' لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
 
   static final String emptyChatPage = 'پیامی تاکنون ارسال نشده است';
 

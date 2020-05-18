@@ -6,9 +6,9 @@ class PictureRepository {
   ApiProvider _provider = ApiProvider();
 
   Future<PictureEntity> uploadPicture(PictureEntity picture, int listId) async {
-    var data = picture.toFormData();
-    final response = await _provider.postDio('api/create-image/$listId/',
-        data: data);
+    var data = picture.toJson();
+    final response = await _provider.post('api/create-image/$listId/',
+        body: data);
     return PictureEntity.fromJson(response);
   }
 
