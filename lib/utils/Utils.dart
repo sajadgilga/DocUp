@@ -20,6 +20,12 @@ bool validatePhoneNumber(String value) {
   return regex.hasMatch(value);
 }
 
+normalizeCredit(String credit){
+  if(credit.contains(".")) {
+    return credit.split(".")[0];
+  } else return credit;
+}
+
 void hideKeyboard(context) => FocusScope.of(context).unfocus();
 
 getLoadingDialog() => AlertDialog(

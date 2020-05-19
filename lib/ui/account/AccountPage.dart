@@ -16,10 +16,7 @@ class AccountPage extends StatefulWidget {
   final ValueChanged<String> onPush;
   final String defaultCreditForCharge;
 
-  AccountPage(
-      {Key key,
-      @required this.onPush,
-      this.defaultCreditForCharge})
+  AccountPage({Key key, @required this.onPush, this.defaultCreditForCharge})
       : super(key: key);
 
   @override
@@ -104,28 +101,28 @@ class _AccountPageState extends State<AccountPage> {
             )),
       );
 
-  _userCreditWidget() => BlocBuilder<EntityBloc, EntityState>(
-  builder: (context, state) {
-      return Center(
-        child: Container(
-          width: 200,
-          height: 64,
-          decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: IColors.darkBlue),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              " ${state is EntityLoaded && state.entity != null && state.entity.mEntity != null ? replaceFarsiNumber(state.entity.mEntity.user.credit) : "0"} ریال ",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 18),
-              textDirection: TextDirection.rtl,
+  _userCreditWidget() =>
+      BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+        return Center(
+          child: Container(
+            width: 200,
+            height: 64,
+            decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                color: IColors.darkBlue),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                " ${state is EntityLoaded && state.entity != null && state.entity.mEntity != null ? replaceFarsiNumber(normalizeCredit(state.entity.mEntity.user.credit)) : "0"} ریال ",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 18),
+                textDirection: TextDirection.rtl,
+              ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      });
 
   TextEditingController _amountTextController = TextEditingController();
 
