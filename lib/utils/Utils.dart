@@ -63,6 +63,16 @@ void showMessageEmptyDialog(context, Function callback) {
 }
 
 
+void showPicUploadedDialog(context, Function callback) {
+  showOneButtonDialog(context, "تصویر ارسال شد", "باشه", callback);
+}
+
+
+void showAlertDialog(context, String text, Function callback) {
+  showOneButtonDialog(context, text, "باشه", callback);
+}
+
+
 void showNextVersionDialog(context) {
   showDialog(
       context: context,

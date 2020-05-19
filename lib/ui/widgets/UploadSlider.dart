@@ -4,6 +4,7 @@ import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Picture.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,20 @@ class UploadSliderState extends State<UploadSlider> {
   PictureEntity picture =
       PictureEntity(picture: null, title: '', description: '');
   TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    BlocProvider.of<PictureBloc>(context).listen((data) {
+      if (data is PictureUploaded) {
+        showPicUploadedDialog(context, () {
+          BlocProvider.of<PictureBloc>(context)
+              .add(PictureListGet(listId: widget.listId));
+          Navigator.of(context).maybePop();
+        });
+      }
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -118,6 +133,10 @@ class UploadSliderState extends State<UploadSlider> {
 //                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
 //          );
 //        });
+    if (picture.picture == null) {
+      showAlertDialog(context, 'تصویری انتخاب نشده است', () {});
+      return;
+    }
     picture.description = _controller.text;
     BlocProvider.of<PictureBloc>(context)
         .add(PictureUpload(listId: widget.listId, picture: picture));

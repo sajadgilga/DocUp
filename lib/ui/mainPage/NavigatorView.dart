@@ -258,10 +258,11 @@ class NavigatorView extends StatelessWidget {
   Widget _notifictionPage() => NotificationPage();
 
   Widget _panelPages(context) {
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+//    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    return BlocBuilder<EntityBloc, EntityState>(builder: (context, entityState) {
       return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
         builder: (context, state) {
+          var entity = entityState.entity;
           if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE) {
             return Panel(
               onPush: (direction, entity) {

@@ -25,9 +25,17 @@ class PictureBloc extends Bloc<PictureEvent, PictureState> {
 
 
   Stream<PictureState> _upload(PictureUpload event) async* {
+    if (state is PictureUploading)
+      return;
+    if (state is PicturesLoaded)
+      yield PictureUploading(section: (state as PicturesLoaded).section);
+    if (state is PictureLoading)
+      yield PictureUploading(section: (state as PictureLoading).section);
     try {
       final response = await _repository.uploadPicture(
           event.picture, event.listId);
+      yield PictureUploaded();
+      yield PicturesLoaded(section: (state as PictureUploading).section);
     } catch (e) {
 //      yield PictureError();
     print(e.toString());
@@ -79,4 +87,12 @@ class PicturesLoaded extends PictureState {
   PanelSection section;
 
   PicturesLoaded({this.section});
+}
+
+class PictureUploaded extends PictureState {}
+
+class PictureUploading extends PictureState {
+  PanelSection section;
+
+  PictureUploading({this.section});
 }
