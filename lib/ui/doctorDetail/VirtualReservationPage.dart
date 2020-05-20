@@ -116,6 +116,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         return PersianDateTimePicker(
           color: IColors.themeColor,
           type: "date",
+          disable: ,
           onSelect: (date) {
             dateTextController.text = date;
           },
