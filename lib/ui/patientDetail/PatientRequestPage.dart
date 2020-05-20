@@ -37,7 +37,8 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   void initState() {
     _bloc.responseVisitStream.listen((data) {
       if (data.status == Status.COMPLETED) {
-        toast(context, 'درخواست شما با موفقیت ثبت شد');
+        String span = data.data.status == 1 ? "تایید" : "رد";
+        toast(context, 'درخواست بیمار با موفقیت $span شد');
         Navigator.pop(context);
       } else if (data.status == Status.ERROR) {
         toast(context, data.message);
@@ -133,7 +134,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   icon: Icon(Icons.close),
                   color: IColors.red,
                   callBack: () {
-                    _bloc.responseVisit(entity, true);
+                    _bloc.responseVisit(entity, false);
                   },
                 ),
                 ActionButton(
@@ -142,7 +143,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   icon: Icon(Icons.check),
                   color: IColors.green,
                   callBack: () {
-                    _bloc.responseVisit(entity, false);
+                    _bloc.responseVisit(entity, true);
                   },
                 ),
               ],
@@ -210,8 +211,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(width: 5),
-            Text(
-                widget.patientEntity.user.name,
+            Text(widget.patientEntity.user.name,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           ],
         ),
@@ -233,14 +233,5 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
         ),
       ],
     );
-  }
-
-  normalizeTime(String visitTime) {
-    var date = visitTime.split("T")[0].split("-");
-    var jajaliDate =
-        Gregorian(int.parse(date[0]), int.parse(date[1]), int.parse(date[2]))
-            .toJalali();
-    return replaceFarsiNumber(
-        "${jajaliDate.year}/${jajaliDate.month}/${jajaliDate.day}");
   }
 }

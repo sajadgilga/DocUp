@@ -3,6 +3,7 @@ import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/networking/Response.dart';
@@ -30,18 +31,18 @@ enum VisitMethod { TEXT, VOICE, VIDEO }
 
 enum VisitDurationPlan { BASE, SUPPLEMENTARY, LONG }
 
-class VirtualReservationPage extends StatefulWidget {
+class PhysicalVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
   final Function(String, dynamic) onPush;
 
-  VirtualReservationPage({Key key, this.doctorEntity, this.onPush})
+  PhysicalVisitPage({Key key, this.doctorEntity, this.onPush})
       : super(key: key);
 
   @override
-  _VirtualReservationPageState createState() => _VirtualReservationPageState();
+  _PhysicalVisitPageState createState() => _PhysicalVisitPageState();
 }
 
-class _VirtualReservationPageState extends State<VirtualReservationPage> {
+class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
   TextEditingController timeTextController = TextEditingController();
   TextEditingController dateTextController = TextEditingController();
@@ -51,24 +52,22 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
     VISIT_DURATION_PLAN: VisitDurationPlan.BASE.index
   };
 
+  bool visitTimeChecked = false;
+
   @override
   void initState() {
     _bloc.visitRequestStream.listen((data) {
       if (data.status == Status.COMPLETED) {
-        showOneButtonDialog(
-            context,
-            "درخواست شما برای پزشک فرستاده شد. لطفا منتظر تایید باشید",
-            "متوجه شدم", () {
-          Navigator.pop(context);
-        });
+        showOneButtonDialog(context, Strings.visitRequestedMessage,
+            Strings.understandAction, () => Navigator.pop(context));
       } else if (data.status == Status.ERROR) {
         if (data.message.startsWith("Unauthorised")) {
           showOneButtonDialog(
               context,
-              "حساب شما اعتبار کافی ندارد. لطفا حساب تان را شارژ کنید",
-              "افزایش اعتبار", () {
-            widget.onPush(NavigatorRoutes.account, _calculateVisitCost());
-          });
+              Strings.notEnoughCreditMessage,
+              Strings.addCreditAction,
+              () => widget.onPush(
+                  NavigatorRoutes.account, _calculateVisitCost()));
         } else {
           toast(context, data.message);
         }
@@ -86,14 +85,11 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         child: Column(children: <Widget>[
           _headerWidget(),
           ALittleVerticalSpace(),
-          _reservationTypeWidget(VISIT_METHOD, ["متنی", "تصویری"]),
+          _visitTypeWidget(VISIT_METHOD, ["متنی", "تصویری"]),
           ALittleVerticalSpace(),
-          _reservationTypeWidget(
-              VISIT_DURATION_PLAN, ["پایه", "تکمیلی", "طولانی"]),
-          SizedBox(height: 10),
-          Text(
-              "ویزیت مجازی حداکثر ${replaceFarsiNumber((typeSelected[VISIT_DURATION_PLAN] * 30 + 10).toString())} دقیقه می‌باشد",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+          _visitTypeWidget(VISIT_DURATION_PLAN, ["پایه", "تکمیلی", "طولانی"]),
+          ALittleVerticalSpace(),
+          _visitDurationTimeWidget(),
           ALittleVerticalSpace(),
           _priceWidget(),
           ALittleVerticalSpace(),
@@ -109,6 +105,12 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
     );
   }
 
+  Text _visitDurationTimeWidget() {
+    return Text(
+            "ویزیت مجازی حداکثر ${replaceFarsiNumber((typeSelected[VISIT_DURATION_PLAN] * 30 + 10).toString())} دقیقه می‌باشد",
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
+  }
+
   void _showDatePicker() {
     showDialog(
       context: context,
@@ -116,7 +118,6 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         return PersianDateTimePicker(
           color: IColors.themeColor,
           type: "date",
-          disable: ,
           onSelect: (date) {
             dateTextController.text = date;
           },
@@ -137,7 +138,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ],
       );
 
-  _reservationTypeWidget(String title, List<String> items) => Column(
+  _visitTypeWidget(String title, List<String> items) => Column(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -152,7 +153,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          ALittleVerticalSpace(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -246,8 +247,6 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         ),
       );
 
-  bool visitTimeChecked = false;
-
   Row _enableVisitTimeWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -276,7 +275,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Text(
-            "من همه قوانین و مقررات رزرو ویزیت مجازی را خوانده و موافقت میکنم",
+            Strings.privacyPolicyMessage,
             textAlign: TextAlign.right,
             style: TextStyle(fontSize: 10),
           ),
@@ -305,7 +304,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
     if (visitTimeChecked) {
       if (dateTextController.text.isEmpty || timeTextController.text.isEmpty) {
         showOneButtonDialog(
-            context, "لطفا زمان ویزیت را وارد کنید", "باشه", () {});
+            context, Strings.enterVisitTimeMessage, Strings.okAction, () {});
       } else {
         sendVisitRequest();
       }
@@ -314,10 +313,7 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
         sendVisitRequest();
       } else {
         showOneButtonDialog(
-            context,
-            " پزشک آنلاین نیست لطفا زمانی را برای ویزیت ویزیت مشخص کنید",
-            "باشه",
-            () {});
+            context, Strings.offlineDoctorMessage, Strings.okAction, () {});
       }
     }
   }

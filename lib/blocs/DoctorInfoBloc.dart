@@ -86,7 +86,12 @@ class DoctorInfoBloc {
     responseVisitSink.add(Response.loading(''));
     try {
       VisitEntity response = await _repository.responseVisit(
-          entity.id, VisitEntity(status: status ? 2 : 1, enabled: entity.enabled, visitTime: entity.visitTime), isVisitAcceptance: true);
+          entity.id,
+          VisitEntity(
+              status: status ? 1 : 2,
+              enabled: entity.enabled,
+              visitTime: entity.visitTime),
+          isVisitAcceptance: true);
       responseVisitSink.add(Response.completed(response));
     } catch (e) {
       responseVisitSink.add(Response.error(e.toString()));

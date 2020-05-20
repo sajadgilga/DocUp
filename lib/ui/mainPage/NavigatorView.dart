@@ -16,7 +16,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/AccountPage.dart';
 import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
-import 'package:docup/ui/doctorDetail/VirtualReservationPage.dart';
+import 'package:docup/ui/doctorDetail/PhysicalVisitPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
@@ -420,7 +420,7 @@ class NavigatorView extends StatelessWidget {
   }
 
   _virtualReservationPage(BuildContext context, entity) {
-    return VirtualReservationPage(
+    return PhysicalVisitPage(
       doctorEntity: (entity as DoctorEntity),
       onPush: (direction, entity) {
         _push(context, direction);
