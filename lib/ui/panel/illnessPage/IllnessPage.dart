@@ -9,6 +9,7 @@ import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/widgets/VisitBox.dart';
+import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';

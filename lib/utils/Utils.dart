@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shamsi_date/shamsi_date.dart';
@@ -139,29 +140,4 @@ void toast(context, String message) {
     content: Text(message),
     duration: Duration(seconds: 3),
   ));
-}
-
-class Waiting extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Image.asset(
-            "assets/loading.gif",
-            width: 70,
-            height: 70,
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Text(
-            "منتظر باشید",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          )
-        ],
-      ),
-    );
-  }
 }

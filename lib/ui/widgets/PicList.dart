@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:dashed_container/dashed_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'Waiting.dart';
+
 class PicList extends StatefulWidget {
   final String picLabel;
   final String recentLabel;

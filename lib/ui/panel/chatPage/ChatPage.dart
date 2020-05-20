@@ -10,6 +10,7 @@ import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
+import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:flutter/material.dart';
