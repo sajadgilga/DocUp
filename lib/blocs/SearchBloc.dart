@@ -39,7 +39,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     try {
       SearchResult searchResult;
       searchResult = await _repository.searchPatientRequests(event.text);
-      yield SearchLoaded(result: null, count: searchResult.count);
+      yield SearchLoaded(result: searchResult, count: searchResult.count);
     } catch (e) {
       yield SearchError();
     }

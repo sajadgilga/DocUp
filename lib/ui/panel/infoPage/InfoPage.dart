@@ -1,7 +1,7 @@
 import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
- import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
@@ -17,6 +17,7 @@ class InfoPage extends StatelessWidget {
   final Function(String, dynamic) onPush;
   final String picListLabel;
   final String lastPicsLabel;
+  final String uploadLabel;
   final String pageName;
   bool uploadAvailable;
 
@@ -27,36 +28,39 @@ class InfoPage extends StatelessWidget {
       @required this.pageName,
       this.lastPicsLabel,
       this.uploadAvailable = true,
+      this.uploadLabel,
       @required this.onPush})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<PictureBloc>(context).add(PictureListGet(listId: entity.sectionId(pageName)));
+    BlocProvider.of<PictureBloc>(context)
+        .add(PictureListGet(listId: entity.sectionId(pageName)));
 
     return SingleChildScrollView(
-            child: Container(
-          child: Column(
-            children: <Widget>[
-              PartnerInfo(
-                entity: entity,
-                onPush: onPush,
-              ),
-              PicList(
-                listId: entity.sectionId(pageName),
-                uploadAvailable: uploadAvailable,
-                picLabel: picListLabel,
-                recentLabel: lastPicsLabel,
-                asset: SvgPicture.asset(
-                  "assets/cloud.svg",
-                  height: 35,
-                  width: 35,
-                  color: IColors.themeColor,
-                ),
-                onPush: onPush,
-              )
-            ],
+        child: Container(
+      child: Column(
+        children: <Widget>[
+          PartnerInfo(
+            entity: entity,
+            onPush: onPush,
           ),
-        ));
+          PicList(
+            listId: entity.sectionId(pageName),
+            uploadAvailable: uploadAvailable,
+            picLabel: picListLabel,
+            recentLabel: lastPicsLabel,
+            uploadLabel: uploadLabel,
+            asset: SvgPicture.asset(
+              "assets/cloud.svg",
+              height: 35,
+              width: 35,
+              color: IColors.themeColor,
+            ),
+            onPush: onPush,
+          )
+        ],
+      ),
+    ));
   }
 }

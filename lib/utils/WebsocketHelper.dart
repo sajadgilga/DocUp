@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -8,6 +10,7 @@ class SocketHelper {
   String url;
   String token;
   IOWebSocketChannel _channel;
+  StreamController _broadcastStreamer = StreamController.broadcast();
 
   factory SocketHelper() {
     return _helper;
@@ -23,16 +26,22 @@ class SocketHelper {
   }
 
   void connect(String url) {
-    if (token != null && token.isNotEmpty)
+    if (token != null && token.isNotEmpty) {
       _channel = IOWebSocketChannel.connect(
           "ws://$url/ws/chat/?Authorization=JWT $token");
-    else
+      _channel.stream.listen((event) {
+        onReceive(event);
+      });
+    } else
       print('no token set for websocket to connect');
   }
 
   void reconnect() {
     _channel = IOWebSocketChannel.connect(
         "ws://$url/ws/chat/?Authorization=JWT $token");
+    _channel.stream.listen((event) {
+      onReceive(event);
+    });
   }
 
   void onError(err) {
@@ -44,7 +53,7 @@ class SocketHelper {
     _channel.sink.close(code, reason);
   }
 
-  void sendMessage({type, panelId, message, msgType = 0, file}) {
+  void sendMessage({type='NEW_MESSAGE', panelId, message, msgType = 0, file}) {
     Map data = Map<String, dynamic>();
     data['request_type'] = type;
     data['panel_id'] = panelId;
@@ -55,10 +64,15 @@ class SocketHelper {
   }
 
   void onReceive(data) {
+    _broadcastStreamer.add(data);
     //TODO
   }
 
   IOWebSocketChannel get channel {
     return _channel;
+  }
+
+  Stream get stream {
+    return _broadcastStreamer.stream;
   }
 }

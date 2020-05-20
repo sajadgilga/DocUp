@@ -15,6 +15,7 @@ import 'Waiting.dart';
 
 class PicList extends StatefulWidget {
   final String picLabel;
+  final String uploadLabel;
   final String recentLabel;
   final Widget asset;
   final bool uploadAvailable;
@@ -28,7 +29,8 @@ class PicList extends StatefulWidget {
       this.asset,
       @required this.listId,
       this.uploadAvailable = true,
-      @required this.onPush})
+      @required this.onPush,
+      this.uploadLabel})
       : super(key: key);
 
   @override
@@ -60,7 +62,7 @@ class _PicListState extends State<PicList> {
         children: <Widget>[
           widget.asset,
           Text(
-            Strings.illnessInfoPicUploadLabel,
+            widget.uploadLabel,
             style: TextStyle(
                 fontSize: 8,
                 color: IColors.themeColor,
@@ -199,8 +201,7 @@ class _PicListState extends State<PicList> {
 
   Widget _recentPics() => BlocBuilder<PictureBloc, PictureState>(
         builder: (context, state) {
-          if (widget.listId <0)
-            return Container();
+          if (widget.listId < 0) return Container();
           if (state is PicturesLoaded) {
             if (state.section.id == widget.listId)
               return Container(
