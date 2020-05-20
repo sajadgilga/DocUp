@@ -44,6 +44,7 @@ class IllnessPage extends StatelessWidget {
                 uploadAvailable: entity.isPatient,
                 picLabel: Strings.illnessInfoPicListLabel,
                 recentLabel: Strings.illnessInfoLastPicsLabel,
+                uploadLabel: Strings.illnessInfoPicUploadLabel,
                 asset: SvgPicture.asset(
                   "assets/cloud.svg",
                   height: 35,

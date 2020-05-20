@@ -22,7 +22,7 @@ import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:docup/ui/panel/chatPage/ChatPage.dart';
-import 'package:docup/ui/panel/healthFile/InfoPage.dart';
+import 'package:docup/ui/panel/infoPage/InfoPage.dart';
 import 'package:docup/ui/panel/illnessPage/IllnessPage.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
 import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
@@ -306,6 +306,7 @@ class NavigatorView extends StatelessWidget {
                       pageName: Strings.documents,
                       picListLabel: Strings.panelDocumentsPicLabel,
                       lastPicsLabel: Strings.panelDocumentsPicListLabel,
+                      uploadLabel: Strings.panelDocumentsPicUploadLabel,
                     ),
                     InfoPage(
                       uploadAvailable: entity.isDoctor,
@@ -316,6 +317,7 @@ class NavigatorView extends StatelessWidget {
                       pageName: Strings.prescriptions,
                       picListLabel: Strings.panelPrescriptionsPicLabel,
                       lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
+                      uploadLabel: Strings.panelPrescriptionsUploadLabel,
                     ),
                     InfoPage(
                       uploadAvailable: entity.isPatient,
@@ -326,6 +328,7 @@ class NavigatorView extends StatelessWidget {
                       pageName: Strings.testResults,
                       picListLabel: Strings.panelTestResultsPicLabel,
                       lastPicsLabel: Strings.panelTestResultsPicListLabel,
+                      uploadLabel: Strings.panelTestResultsPicUploadLabel,
                     ),
                   ],
                 ));

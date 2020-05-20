@@ -60,9 +60,12 @@ class Strings {
 
   static final String panelDocumentsPicLabel = 'مدارک';
   static final String panelDocumentsPicListLabel = 'مدارک سابق';
+  static final String panelDocumentsPicUploadLabel = 'ارسال مدرک';
   static final String panelPrescriptionsPicLabel = 'نسخه‌ها';
+  static final String panelPrescriptionsUploadLabel = 'ارسال نسخه';
   static final String panelPrescriptionsPicListLabel = 'نسخه‌های پیشین';
   static final String panelTestResultsPicLabel = 'آزمایش‌ها';
+  static final String panelTestResultsPicUploadLabel = 'ارسال آزمایش';
   static final String panelTestResultsPicListLabel = 'نتایج آزمایش‌های پیشین';
 
   static final String panelIllnessInfoLabel = 'اطلاعات بیماری';
@@ -111,7 +114,7 @@ class Strings {
   static final String emptyDoctorLabel = 'شما به پزشکی متصل نیستید '
       '\n'
       ' لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
-  static final String emptyPatientLabel = 'شما به پزشکی متصل نیستید '
+  static final String emptyPatientLabel = 'شما به بیماری متصل نیستید '
       '\n'
       ' لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
 

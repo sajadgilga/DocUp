@@ -1,3 +1,4 @@
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:docup/ui/home/iPartner/IPartnerBody.dart';
 import 'package:docup/ui/widgets/DoctorSummary.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IPartner extends StatelessWidget {
   final UserEntity partner;
@@ -53,11 +55,18 @@ class IPartner extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(10)),
       color: Color.fromRGBO(255, 255, 255, .8));
 
-  Widget _body() {
+  Widget _body(context) {
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (isEmpty)
       return Expanded(
         child: Center(
-          child: Text(Strings.emptyDoctorLabel, style: TextStyle(fontSize: 10), textAlign: TextAlign.center,),
+          child: Text(
+            (entity.isPatient
+                ? Strings.emptyDoctorLabel
+                : Strings.emptyPatientLabel),
+            style: TextStyle(fontSize: 10),
+            textAlign: TextAlign.center,
+          ),
         ),
       );
     return Expanded(
@@ -79,10 +88,7 @@ class IPartner extends StatelessWidget {
       constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width, maxHeight: 160),
       child: Column(
-        children: <Widget>[
-          _IDoctorLabel(),
-          _body()
-        ],
+        children: <Widget>[_IDoctorLabel(), _body(context)],
       ),
     );
   }

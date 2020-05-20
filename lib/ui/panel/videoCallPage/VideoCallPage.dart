@@ -73,17 +73,8 @@ class _VideoCallPageState extends State<VideoCallPage> {
                 buttonLabel: Strings.waitingForApprovalDoctorSide,
               )
             ]);
-          else if (state.entity.panel.status == 3) if (state.entity.isPatient)
-            return
-              _VideoCallPage();
-          else
-            return Stack(children: <Widget>[
-              _VideoCallPage(),
-              PanelAlert(
-                label: Strings.notRequestTimeDoctorSide,
-                buttonLabel: Strings.waitLabel,
-              )
-            ]);
+          else if (state.entity.panel.status == 3)
+            return _VideoCallPage();
           else if (state.entity.panel.status == 6 ||
               state.entity.panel.status == 7 ||
               state.entity.panel.status == 4 ||
@@ -108,7 +99,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
         }
         return Container(
             constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+                BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
             child: Expanded(flex: 2, child: Waiting()));
       },
     );

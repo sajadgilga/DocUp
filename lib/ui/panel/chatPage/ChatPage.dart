@@ -138,53 +138,57 @@ class _ChatPageState extends State<ChatPage> {
 //    _startTimer();
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
-        if (state is EntityLoaded) {
+        if (state is EntityLoaded || state is EntityLoading) {
           if (state.entity.panel.status == 0 ||
-              state.entity.panel.status == 1) if (state.entity.isPatient)
-            return Stack(children: <Widget>[
-              _ChatPage(),
-              PanelAlert(
-                label: Strings.requestSentLabel,
-                buttonLabel: Strings.waitingForApproval,
-              )
-            ]);
-          else
-            return Stack(children: <Widget>[
-              _ChatPage(),
-              PanelAlert(
-                label: Strings.requestSentLabelDoctorSide,
-                buttonLabel: Strings.waitingForApprovalDoctorSide,
-              )
-            ]);
-          else if (state.entity.panel.status == 3) if (state.entity.isPatient)
-              _ChatPage();
-          else
-            return Stack(children: <Widget>[
-              _ChatPage(),
-              PanelAlert(
-                label: Strings.notRequestTimeDoctorSide,
-                buttonLabel: Strings.waitLabel,
-              )
-            ]);
+              state.entity.panel.status == 1) {
+            if (state.entity.isPatient)
+              return Stack(children: <Widget>[
+                _ChatPage(),
+                PanelAlert(
+                  label: Strings.requestSentLabel,
+                  buttonLabel: Strings.waitingForApproval,
+                )
+              ]);
+            else
+              return Stack(children: <Widget>[
+                _ChatPage(),
+                PanelAlert(
+                  label: Strings.requestSentLabelDoctorSide,
+                  buttonLabel: Strings.waitingForApprovalDoctorSide,
+                )
+              ]);
+          }
+          else if (state.entity.panel.status == 3)
+              return _ChatPage();
+//          else
+//            return Stack(children: <Widget>[
+//              _ChatPage(),
+//              PanelAlert(
+//                label: Strings.notRequestTimeDoctorSide,
+//                buttonLabel: Strings.waitLabel,
+//              )
+//            ]);
           else if (state.entity.panel.status == 6 ||
               state.entity.panel.status == 7 ||
               state.entity.panel.status == 4 ||
-              state.entity.panel.status == 2) if (state.entity.isPatient)
-            return Stack(children: <Widget>[
-              _ChatPage(),
-              PanelAlert(
-                label: Strings.noAvailableVirtualVisit,
-                buttonLabel: Strings.reserveVirtualVisit,
-              )
-            ]);
-          else
-            return Stack(children: <Widget>[
-              _ChatPage(),
-              PanelAlert(
-                label: Strings.noAvailableVirtualVisit,
-                buttonLabel: Strings.reserveVirtualVisitDoctorSide,
-              )
-            ]);
+              state.entity.panel.status == 2) {
+            if (state.entity.isPatient)
+              return Stack(children: <Widget>[
+                _ChatPage(),
+                PanelAlert(
+                  label: Strings.noAvailableVirtualVisit,
+                  buttonLabel: Strings.reserveVirtualVisit,
+                )
+              ]);
+            else
+              return Stack(children: <Widget>[
+                _ChatPage(),
+                PanelAlert(
+                  label: Strings.noAvailableVirtualVisit,
+                  buttonLabel: Strings.reserveVirtualVisitDoctorSide,
+                )
+              ]);
+          }
           else
             return _ChatPage();
         }
@@ -214,14 +218,18 @@ class _ChatBoxState extends State<_ChatBox> {
 
   Widget _msgList({messages}) {
     return StreamBuilder(
-      stream: SocketHelper().channel.stream,
+      stream: SocketHelper().stream,
       builder: (context, snapshot) {
-        var data = json.decode(snapshot.toString());
-        if (data['request_type'] == 'NEW_MESSAGE') {
-          setState(() {
-            _messages
-                .add(ChatMessage.fromSocket(data, widget.entity.isPatient));
-          });
+        try {
+          var data = json.decode(snapshot.toString());
+          if (data['request_type'] == 'NEW_MESSAGE') {
+            setState(() {
+              _messages
+                  .add(ChatMessage.fromSocket(data, widget.entity.isPatient));
+            });
+          }
+        } catch (_) {
+          print('snapshot was not string');
         }
         return Container(
             child: ListView.builder(
