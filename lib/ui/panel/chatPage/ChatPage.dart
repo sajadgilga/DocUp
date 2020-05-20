@@ -47,8 +47,8 @@ class _ChatPageState extends State<ChatPage> {
 //            direction: (_entity.isPatient ? 0 : 1),
 //            type: 0),
 //        panelId: _entity.iPanelId));
-    SocketHelper().sendMessage(
-        type: 0, panelId: _entity.iPanelId, message: _controller.text);
+    SocketHelper()
+        .sendMessage(panelId: _entity.iPanelId, message: _controller.text);
 
     _controller.text = '';
     FocusScope.of(context).unfocus();
@@ -103,9 +103,18 @@ class _ChatPageState extends State<ChatPage> {
       ));
 
   Widget _chatBox() {
-    return _ChatBox(
-      entity: widget.entity,
-    );
+    return StreamBuilder(
+        stream: SocketHelper().stream,
+        builder: (context, snapshot) {
+          var data = json.decode(snapshot.data.toString());
+          ChatMessage msg = null;
+          if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
+            msg = ChatMessage.fromSocket(data, widget.entity.isPatient);
+            var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
+//            _chatMessageBloc.add(ChatMessageAddToList(msg: msg));
+          }
+          return _ChatBox(entity: widget.entity, message: msg);
+        });
   }
 
   Widget _ChatPage() {
@@ -157,17 +166,15 @@ class _ChatPageState extends State<ChatPage> {
                   buttonLabel: Strings.waitingForApprovalDoctorSide,
                 )
               ]);
-          }
-          else if (state.entity.panel.status == 3)
-              return _ChatPage();
-//          else
-//            return Stack(children: <Widget>[
-//              _ChatPage(),
-//              PanelAlert(
-//                label: Strings.notRequestTimeDoctorSide,
-//                buttonLabel: Strings.waitLabel,
-//              )
-//            ]);
+          } else if (state.entity.panel.status == 3)
+//            return _ChatPage();
+            return Stack(children: <Widget>[
+              _ChatPage(),
+              PanelAlert(
+                label: Strings.notRequestTimeDoctorSide,
+                buttonLabel: Strings.waitLabel,
+              )
+            ]);
           else if (state.entity.panel.status == 6 ||
               state.entity.panel.status == 7 ||
               state.entity.panel.status == 4 ||
@@ -188,8 +195,7 @@ class _ChatPageState extends State<ChatPage> {
                   buttonLabel: Strings.reserveVirtualVisitDoctorSide,
                 )
               ]);
-          }
-          else
+          } else
             return _ChatPage();
         }
         return Container(
@@ -203,9 +209,9 @@ class _ChatPageState extends State<ChatPage> {
 
 class _ChatBox extends StatefulWidget {
   final Entity entity;
-  final List<ChatMessage> messages;
+  final ChatMessage message;
 
-  _ChatBox({Key key, this.entity, this.messages}) : super(key: key);
+  _ChatBox({Key key, this.entity, this.message}) : super(key: key);
 
   @override
   _ChatBoxState createState() {
@@ -215,23 +221,33 @@ class _ChatBox extends StatefulWidget {
 
 class _ChatBoxState extends State<_ChatBox> {
   List<ChatMessage> _messages = [];
+  int length = 0;
+
+  @override
+  void didUpdateWidget(oldWidget) {
+//    setState(() {
+////      _messages = _messages;
+//    length = _messages.length;
+//    });
+    super.didUpdateWidget(oldWidget);
+  }
 
   Widget _msgList({messages}) {
-    return StreamBuilder(
-      stream: SocketHelper().stream,
-      builder: (context, snapshot) {
-        try {
-          var data = json.decode(snapshot.toString());
-          if (data['request_type'] == 'NEW_MESSAGE') {
-            setState(() {
-              _messages
-                  .add(ChatMessage.fromSocket(data, widget.entity.isPatient));
-            });
-          }
-        } catch (_) {
-          print('snapshot was not string');
-        }
-        return Container(
+    return
+//      StreamBuilder(
+//      stream: SocketHelper().stream,
+//      builder: (context, snapshot) {
+//        var data = json.decode(snapshot.data.toString());
+//        var msgs = _messages;
+//        if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
+////            setState(() {
+////            });
+//          var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
+//          _chatMessageBloc.add(ChatMessageAddToList(
+//              msg: ChatMessage.fromSocket(data, widget.entity.isPatient)));
+//        }
+//        return
+        Container(
             child: ListView.builder(
                 reverse: true,
                 itemCount: _messages.length,
@@ -241,8 +257,6 @@ class _ChatBoxState extends State<_ChatBox> {
                     isHomePageChat: false,
                   );
                 }));
-      },
-    );
   }
 
   @override
@@ -253,10 +267,11 @@ class _ChatBoxState extends State<_ChatBox> {
             builder: (context, state) {
           if (state is ChatMessageLoaded) {
             _messages = state.chatMessages;
+            if (widget.message != null) _messages.insert(0, widget.message);
             if (_messages.length > 0) {
+              length = _messages.length;
               return _msgList();
-            }
-            else
+            } else
               return Center(
                 child: Text(
                   Strings.emptyChatPage,
@@ -268,8 +283,11 @@ class _ChatBoxState extends State<_ChatBox> {
           if (state is ChatMessageLoading) {
             _messages = state.chatMessages;
             if (state.chatMessages != null) {
-              if (_messages.length > 0)
+              if (widget.message != null) _messages.insert(0, widget.message);
+              if (_messages.length > 0) {
+                length = _messages.length;
                 return _msgList();
+              }
               else
                 return Center(
                   child: Text(

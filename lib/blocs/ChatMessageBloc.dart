@@ -107,6 +107,13 @@ class ChatMessageSend extends ChatMessageEvent {
   ChatMessageSend({@required this.msg, this.panelId});
 }
 
+class ChatMessageAdd extends ChatMessageEvent {
+  final ChatMessage msg;
+  int panelId;
+
+  ChatMessageAdd({@required this.msg, this.panelId});
+}
+
 class ChatMessageAddToList extends ChatMessageEvent {
   final ChatMessage msg;
 

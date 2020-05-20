@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -52,7 +53,7 @@ class SocketHelper {
     _channel.sink.close(code, reason);
   }
 
-  void sendMessage({type, panelId, message, msgType = 0, file}) {
+  void sendMessage({type='NEW_MESSAGE', panelId, message, msgType = 0, file}) {
     Map data = Map<String, dynamic>();
     data['request_type'] = type;
     data['panel_id'] = panelId;
