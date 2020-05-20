@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/MedicalTestBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/MedicalTest.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
@@ -16,7 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MedicalTestPage extends StatefulWidget {
-  final ValueChanged<String> onPush;
+  final Function(String, dynamic) onPush;
 
   MedicalTestPage({Key key, @required this.onPush}) : super(key: key);
 
@@ -60,27 +62,41 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
           ALittleVerticalSpace(),
           QuestionList(test.questions, answeringController),
           MediumVerticalSpace(),
-          _showTestResultButtonWidget(),
+          _showTestResultButtonWidget(test.questions.length),
           MediumVerticalSpace()
         ],
       );
 
-  _showTestResultButtonWidget() => Center(
+  _showTestResultButtonWidget(int questionsCount) => Center(
         child: ActionButton(
             width: MediaQuery.of(context).size.width * 0.5,
-            title: "مشاهده پاسخ",
+            title: "ارسال نتایج",
             color: IColors.blue,
-            callBack: showTestResult),
+            callBack: () => showTestResult(questionsCount)),
       );
 
-  void showTestResult() => showOneButtonDialog(
-      context,
-      " ${calculateTestScore()} امتیاز شما از این آزمون ",
-      "متوجه شدم",
-      () => Navigator.pop(context));
+  void showTestResult(int questionsCount) {
+    if (patientAnswers.values.length != questionsCount) {
+      showOneButtonDialog(
+          context, "لطفا به همه سوالات پاسخ دهید", "باشه", () {});
+    } else {
+      final score = calculateTestScore();
+      if (score >= 0) {
+        showOneButtonDialog(
+            context,
+            "ریسک آلزایمر بالا است ",
+            "رزرو ویزیت",
+            () => widget.onPush(NavigatorRoutes.doctorDialogue,
+                BlocProvider.of<EntityBloc>(context).state.entity.partnerEntity));
+      } else {
+        showOneButtonDialog(context, "ریسک آلزایمر پایین است ", "متوجه شدم",
+            () => Navigator.pop(context));
+      }
+    }
+  }
 
   calculateTestScore() =>
-      replaceFarsiNumber("${patientAnswers.values.reduce((sum, score) => sum + score)}");
+      patientAnswers.values.reduce((sum, score) => sum + score);
 
   void dispose() {
     answeringController.close();

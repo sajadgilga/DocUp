@@ -6,8 +6,10 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitTime.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
+import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/VisitBox.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
@@ -44,14 +46,14 @@ class IllnessPage extends StatelessWidget {
                 uploadAvailable: entity.isPatient,
                 picLabel: Strings.illnessInfoPicListLabel,
                 recentLabel: Strings.illnessInfoLastPicsLabel,
-                uploadLabel: Strings.illnessInfoPicUploadLabel,
+                uploadLabel: "شما ۱ تست از سوی پزشک دارید",
                 asset: SvgPicture.asset(
                   "assets/cloud.svg",
                   height: 35,
                   width: 35,
                   color: IColors.themeColor,
                 ),
-                onPush: onPush,
+                tapCallback: () => onPush(NavigatorRoutes.cognitiveTest, entity.partnerEntity),
               )
             ],
           ),
@@ -96,7 +98,7 @@ class IllnessPage extends StatelessWidget {
         return Container(
             constraints:
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-            child:  Waiting());
+            child:  APICallLoading());
       },
     );
   }

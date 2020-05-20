@@ -6,6 +6,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Picture.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:dashed_container/dashed_container.dart';
@@ -20,7 +21,7 @@ class PicList extends StatefulWidget {
   final Widget asset;
   final bool uploadAvailable;
   final int listId;
-  final Function(String, dynamic) onPush;
+  final VoidCallback tapCallback;
 
   PicList(
       {Key key,
@@ -29,7 +30,7 @@ class PicList extends StatefulWidget {
       this.asset,
       @required this.listId,
       this.uploadAvailable = true,
-      @required this.onPush,
+      this.tapCallback,
       this.uploadLabel})
       : super(key: key);
 
@@ -49,11 +50,6 @@ class _PicListState extends State<PicList> {
           textAlign: TextAlign.right,
         ),
       );
-
-  void _showUploadDialogue() {
-    widget.onPush(NavigatorRoutes.uploadPicDialogue, widget.listId);
-//    widget.onPush(NavigatorRoutes.cognitiveTest, "10000");
-  }
 
   Widget _uploadBoxLabel() => Container(
       alignment: Alignment.center,
@@ -91,7 +87,7 @@ class _PicListState extends State<PicList> {
           blankLength: 10,
           strokeWidth: 2.5,
         ),
-        onTap: _showUploadDialogue,
+        onTap: () => widget.tapCallback(),
       );
     else
       return Container();
@@ -217,7 +213,7 @@ class _PicListState extends State<PicList> {
           if (state is PictureLoading) {
             if (state.section == null)
               return Container(
-                  margin: EdgeInsets.only(top: 40), child: Waiting());
+                  margin: EdgeInsets.only(top: 40), child: APICallLoading());
 
             if (state.section.id == widget.listId)
               return Container(
@@ -231,7 +227,7 @@ class _PicListState extends State<PicList> {
               );
             else
               return Container(
-                  margin: EdgeInsets.only(top: 40), child: Waiting());
+                  margin: EdgeInsets.only(top: 40), child: APICallLoading());
           }
           return Container(
             child: Text(''),

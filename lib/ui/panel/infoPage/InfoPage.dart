@@ -6,6 +6,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/widgets/VisitBox.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -57,7 +58,7 @@ class InfoPage extends StatelessWidget {
               width: 35,
               color: IColors.themeColor,
             ),
-            onPush: onPush,
+            tapCallback: () => showNextVersionDialog(context),
           )
         ],
       ),

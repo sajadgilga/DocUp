@@ -88,7 +88,7 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
-          NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context),
+          NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context, entity),
           NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
               child: UploadSlider(
@@ -142,7 +142,7 @@ class NavigatorView extends StatelessWidget {
               _doctorDetailPage(context, entity),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, entity),
-          NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context),
+          NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context, entity),
           NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
               child: UploadSlider(
@@ -257,9 +257,9 @@ class NavigatorView extends StatelessWidget {
         },
       );
 
-  Widget _cognitiveTest(context) => MedicalTestPage(
-    onPush: (direction) {
-      _push(context, direction);
+  Widget _cognitiveTest(context, UserEntity entity) => MedicalTestPage(
+    onPush: (direction, entity) {
+      _push(context, direction, entity: entity);
     },
   );
 
