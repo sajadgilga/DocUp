@@ -24,8 +24,7 @@ class VirtualVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
   final Function(String, dynamic) onPush;
 
-  VirtualVisitPage({Key key, this.doctorEntity, this.onPush})
-      : super(key: key);
+  VirtualVisitPage({Key key, this.doctorEntity, this.onPush}) : super(key: key);
 
   @override
   _VirtualVisitPageState createState() => _VirtualVisitPageState();
@@ -103,43 +102,42 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
 
   _visitTypeWidget(String title, List<String> items) => Column(
         children: <Widget>[
-          _tabLayoutLabelWidget(title),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  textAlign: TextAlign.right,
+                ),
+              ],
+            ),
+          ),
           ALittleVerticalSpace(),
-          _itemsWidget(items, title)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              for (var index = items.length - 1; index >= 0; index--)
+                Padding(
+                  padding: const EdgeInsets.only(right: 4.0, left: 4.0),
+                  child: ActionButton(
+                    width: 120,
+                    color: typeSelected[title] == index
+                        ? IColors.themeColor
+                        : Colors.grey,
+                    title: items[index],
+                    callBack: () {
+                      setState(() {
+                        typeSelected[title] = index;
+                      });
+                    },
+                  ),
+                ),
+            ],
+          )
         ],
-      );
-
-  _itemsWidget(List<String> items, String title) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          for (var index = 0; index < items.length; index++)
-            ActionButton(
-              width: 120,
-              color: typeSelected[title] == index
-                  ? IColors.themeColor
-                  : Colors.grey,
-              title: items[index],
-              callBack: () {
-                setState(() {
-                  typeSelected[title] = index;
-                });
-              },
-            ),
-        ],
-      );
-
-  _tabLayoutLabelWidget(String title) => Padding(
-        padding: const EdgeInsets.only(right: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Text(
-              title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              textAlign: TextAlign.right,
-            ),
-          ],
-        ),
       );
 
   _priceWidget() => Row(
@@ -232,7 +230,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Text(
-            Strings.privacyPolicyMessage,
+            Strings.virtualVisitPrivacyPolicyMessage,
             textAlign: TextAlign.right,
             style: TextStyle(fontSize: 10),
           ),
@@ -278,12 +276,12 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
   void sendVisitRequest() {
     _bloc.visitRequest(
         widget.doctorEntity.id,
-        _isDoctorOnline() ? 1 : 0,
+        1,
         typeSelected[VISIT_METHOD],
         typeSelected[VISIT_DURATION_PLAN],
         convertToGeorgianDate(dateTextController.text) +
             "T" +
             timeTextController.text +
-            ":00Z");
+            "+04:30");
   }
 }

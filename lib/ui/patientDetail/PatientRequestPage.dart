@@ -1,10 +1,8 @@
 import 'dart:ui';
 
 import 'package:docup/blocs/DoctorInfoBloc.dart';
-import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
-import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/networking/Response.dart';
@@ -12,14 +10,10 @@ import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
-import 'package:docup/ui/widgets/DoctorData.dart';
-import 'package:docup/ui/widgets/PatientData.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-import 'package:shamsi_date/shamsi_date.dart';
 
 class PatientRequestPage extends StatefulWidget {
   final PatientEntity patientEntity;

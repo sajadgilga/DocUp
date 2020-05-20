@@ -113,17 +113,16 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             width: 200,
             color: IColors.themeColor,
             title: Strings.physicalReservationLabel,
-            callBack: () => showNextVersionDialog(context),
+            callBack: () => widget.onPush(
+                NavigatorRoutes.physicalVisitPage, doctorEntity),
           ),
           SizedBox(height: 10),
           ActionButton(
               width: 200,
               color: IColors.darkBlue,
               title: Strings.virtualReservationLabel,
-              callBack: () => {
-                    widget.onPush(
-                        NavigatorRoutes.virtualReservationPage, doctorEntity)
-                  }),
+              callBack: () => widget.onPush(
+                  NavigatorRoutes.virtualVisitPage, doctorEntity)),
         ],
       );
 

@@ -16,6 +16,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/AccountPage.dart';
 import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
+import 'package:docup/ui/visit/PhysicalVisitPage.dart';
 import 'package:docup/ui/visit/VirtualVisitPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
@@ -46,7 +47,8 @@ class NavigatorRoutes {
   static const String account = '/account';
   static const String searchView = '/searchView';
   static const String requestsView = '/requestsView';
-  static const String virtualReservationPage = '/virtualReservationPage';
+  static const String virtualVisitPage = '/virtualVisitPage';
+  static const String physicalVisitPage = '/physicalVisitPage';
   static const String uploadPicDialogue = '/uploadPicDialogue';
   static const String cognitiveTest = '/cognitiveTest';
 }
@@ -96,8 +98,10 @@ class NavigatorView extends StatelessWidget {
               _searchPage(context, isRequests: true),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: entity),
-          NavigatorRoutes.virtualReservationPage: (context) =>
-              _virtualReservationPage(context, entity)
+          NavigatorRoutes.virtualVisitPage: (context) =>
+              _virtualVisitPage(context, entity),
+          NavigatorRoutes.physicalVisitPage: (context) =>
+              _physicalVisitPage(context, entity)
         };
       case 0:
         return {
@@ -114,8 +118,10 @@ class NavigatorView extends StatelessWidget {
               _searchPage(context, isRequests: true),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: entity),
-          NavigatorRoutes.virtualReservationPage: (context) =>
-              _virtualReservationPage(context, entity)
+          NavigatorRoutes.virtualVisitPage: (context) =>
+              _virtualVisitPage(context, entity),
+          NavigatorRoutes.physicalVisitPage: (context) =>
+              _physicalVisitPage(context, entity)
         };
       case 1:
         return {
@@ -147,8 +153,10 @@ class NavigatorView extends StatelessWidget {
               _searchPage(context, isRequests: true),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: entity),
-          NavigatorRoutes.virtualReservationPage: (context) =>
-              _virtualReservationPage(context, entity)
+          NavigatorRoutes.virtualVisitPage: (context) =>
+              _virtualVisitPage(context, entity),
+          NavigatorRoutes.physicalVisitPage: (context) =>
+              _physicalVisitPage(context, entity)
         };
       case 3:
         return {
@@ -419,8 +427,17 @@ class NavigatorView extends StatelessWidget {
     return InStructure();
   }
 
-  _virtualReservationPage(BuildContext context, entity) {
+  _virtualVisitPage(BuildContext context, entity) {
     return VirtualVisitPage(
+      doctorEntity: (entity as DoctorEntity),
+      onPush: (direction, entity) {
+        _push(context, direction);
+      },
+    );
+  }
+
+  _physicalVisitPage(BuildContext context, entity) {
+    return PhysicalVisitPage(
       doctorEntity: (entity as DoctorEntity),
       onPush: (direction, entity) {
         _push(context, direction);

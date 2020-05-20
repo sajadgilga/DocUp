@@ -27,14 +27,14 @@ bool validatePhoneNumber(String value) {
   return regex.hasMatch(value);
 }
 
-normalizeCredit(String credit) {
+String normalizeCredit(String credit) {
   if (credit.contains(".")) {
     return credit.split(".")[0];
   } else
     return credit;
 }
 
-normalizeTime(String visitTime) {
+String normalizeTime(String visitTime) {
   var date = visitTime.split("T")[0].split("-");
   var jajaliDate =
       Gregorian(int.parse(date[0]), int.parse(date[1]), int.parse(date[2]))
@@ -53,7 +53,7 @@ String convertToGeorgianDate(String jalaliDate) {
 
 void hideKeyboard(context) => FocusScope.of(context).unfocus();
 
-getLoadingDialog() => AlertDialog(
+AlertDialog getLoadingDialog() => AlertDialog(
     backgroundColor: Colors.white,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
     content: Waiting());
@@ -65,12 +65,28 @@ void showDatePickerDialog(context, TextEditingController controller) {
       return PersianDateTimePicker(
         color: IColors.themeColor,
         type: "date",
+        initial: getTodayInJalali(),
+        min: getTodayInJalali(),
         onSelect: (date) {
           controller.text = date;
         },
       );
     },
   );
+}
+
+String getTodayInJalali() {
+  final jalali = Jalali.fromDateTime(DateTime.now());
+  final now = "${jalali.year}/${jalali.month}/${jalali.day}";
+  return now;
+}
+
+String getTomorrowInJalali() {
+  DateTime dt = DateTime.now();
+  dt = dt.add(Duration(days: 1));
+  final jalali = Jalali.fromDateTime(dt);
+  final tomorrow = "${jalali.year}/${jalali.month}/${jalali.day}";
+  return tomorrow;
 }
 
 void showOneButtonDialog(
