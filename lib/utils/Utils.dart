@@ -5,6 +5,7 @@ import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
@@ -36,8 +37,8 @@ normalizeCredit(String credit) {
 normalizeTime(String visitTime) {
   var date = visitTime.split("T")[0].split("-");
   var jajaliDate =
-  Gregorian(int.parse(date[0]), int.parse(date[1]), int.parse(date[2]))
-      .toJalali();
+      Gregorian(int.parse(date[0]), int.parse(date[1]), int.parse(date[2]))
+          .toJalali();
   return replaceFarsiNumber(
       "${jajaliDate.year}/${jajaliDate.month}/${jajaliDate.day}");
 }
@@ -56,6 +57,21 @@ getLoadingDialog() => AlertDialog(
     backgroundColor: Colors.white,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
     content: Waiting());
+
+void showDatePickerDialog(context, TextEditingController controller) {
+  showDialog(
+    context: context,
+    builder: (BuildContext _) {
+      return PersianDateTimePicker(
+        color: IColors.themeColor,
+        type: "date",
+        onSelect: (date) {
+          controller.text = date;
+        },
+      );
+    },
+  );
+}
 
 void showOneButtonDialog(
     context, String message, String action, Function callback) {

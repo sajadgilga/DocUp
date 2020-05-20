@@ -1,28 +1,17 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/Avatar.dart';
-import 'package:docup/ui/widgets/DoctorData.dart';
-import 'package:docup/ui/widgets/PatientData.dart';
+import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
+import 'package:docup/ui/widgets/TimeSelectionWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-import 'package:shamsi_date/shamsi_date.dart';
-import 'package:flutter/material.dart';
 
 const VISIT_METHOD = "نوع مشاوره";
 const VISIT_DURATION_PLAN = "مدت زمان مشاوره";
@@ -31,18 +20,18 @@ enum VisitMethod { TEXT, VOICE, VIDEO }
 
 enum VisitDurationPlan { BASE, SUPPLEMENTARY, LONG }
 
-class PhysicalVisitPage extends StatefulWidget {
+class VirtualVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
   final Function(String, dynamic) onPush;
 
-  PhysicalVisitPage({Key key, this.doctorEntity, this.onPush})
+  VirtualVisitPage({Key key, this.doctorEntity, this.onPush})
       : super(key: key);
 
   @override
-  _PhysicalVisitPageState createState() => _PhysicalVisitPageState();
+  _VirtualVisitPageState createState() => _VirtualVisitPageState();
 }
 
-class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
+class _VirtualVisitPageState extends State<VirtualVisitPage> {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
   TextEditingController timeTextController = TextEditingController();
   TextEditingController dateTextController = TextEditingController();
@@ -53,6 +42,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
   };
 
   bool visitTimeChecked = false;
+  bool policyChecked = false;
 
   @override
   void initState() {
@@ -83,7 +73,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
         constraints:
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
         child: Column(children: <Widget>[
-          _headerWidget(),
+          DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
           ALittleVerticalSpace(),
           _visitTypeWidget(VISIT_METHOD, ["متنی", "تصویری"]),
           ALittleVerticalSpace(),
@@ -107,72 +97,49 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
 
   Text _visitDurationTimeWidget() {
     return Text(
-            "ویزیت مجازی حداکثر ${replaceFarsiNumber((typeSelected[VISIT_DURATION_PLAN] * 30 + 10).toString())} دقیقه می‌باشد",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
+        "ویزیت مجازی حداکثر ${replaceFarsiNumber((typeSelected[VISIT_DURATION_PLAN] * 30 + 10).toString())} دقیقه می‌باشد",
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
   }
-
-  void _showDatePicker() {
-    showDialog(
-      context: context,
-      builder: (BuildContext _) {
-        return PersianDateTimePicker(
-          color: IColors.themeColor,
-          type: "date",
-          onSelect: (date) {
-            dateTextController.text = date;
-          },
-        );
-      },
-    );
-  }
-
-  _headerWidget() => Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          DoctorData(
-              width: MediaQuery.of(context).size.width * 0.7,
-              doctorEntity: widget.doctorEntity),
-          SizedBox(width: 10),
-          Avatar(user: widget.doctorEntity.user),
-        ],
-      );
 
   _visitTypeWidget(String title, List<String> items) => Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
-          ),
+          _tabLayoutLabelWidget(title),
           ALittleVerticalSpace(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              for (var index = 0; index < items.length; index++)
-                ActionButton(
-                  width: 120,
-                  color: typeSelected[title] == index
-                      ? IColors.themeColor
-                      : Colors.grey,
-                  title: items[index],
-                  callBack: () {
-                    setState(() {
-                      typeSelected[title] = index;
-                    });
-                  },
-                ),
-            ],
-          )
+          _itemsWidget(items, title)
         ],
+      );
+
+  _itemsWidget(List<String> items, String title) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          for (var index = 0; index < items.length; index++)
+            ActionButton(
+              width: 120,
+              color: typeSelected[title] == index
+                  ? IColors.themeColor
+                  : Colors.grey,
+              title: items[index],
+              callBack: () {
+                setState(() {
+                  typeSelected[title] = index;
+                });
+              },
+            ),
+        ],
+      );
+
+  _tabLayoutLabelWidget(String title) => Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Text(
+              title,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              textAlign: TextAlign.right,
+            ),
+          ],
+        ),
       );
 
   _priceWidget() => Row(
@@ -222,24 +189,16 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
               children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width * 0.35,
-                  child: DateTimeField(
-                    controller: timeTextController,
-                    format: DateFormat("HH:mm"),
-                    onShowPicker: (context, currentValue) async {
-                      final time = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.fromDateTime(
-                            currentValue ?? DateTime.now()),
-                      );
-                      return DateTimeField.convert(time);
-                    },
-                  ),
+                  child: TimeSelectionWidget(
+                      timeTextController: timeTextController),
                 ),
                 SizedBox(width: 50),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.35,
                   child: TextField(
-                      controller: dateTextController, onTap: _showDatePicker),
+                      controller: dateTextController,
+                      onTap: () =>
+                          showDatePickerDialog(context, dateTextController)),
                 ),
               ],
             )
@@ -268,8 +227,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
       ],
     );
   }
-
-  bool policyChecked = false;
 
   _acceptPolicyWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
