@@ -103,18 +103,19 @@ class _ChatPageState extends State<ChatPage> {
       ));
 
   Widget _chatBox() {
-    return StreamBuilder(
-        stream: SocketHelper().stream,
-        builder: (context, snapshot) {
-          var data = json.decode(snapshot.data.toString());
-          ChatMessage msg = null;
-          if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
-            msg = ChatMessage.fromSocket(data, widget.entity.isPatient);
-            var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
+//    return
+//      StreamBuilder(
+//        stream: SocketHelper().stream,
+//        builder: (context, snapshot) {
+//          var data = json.decode(snapshot.data.toString());
+//          ChatMessage msg = null;
+//          if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
+//            msg = ChatMessage.fromSocket(data, widget.entity.isPatient);
+//            var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
 //            _chatMessageBloc.add(ChatMessageAddToList(msg: msg));
-          }
-          return _ChatBox(entity: widget.entity, message: msg);
-        });
+//          }
+    return _ChatBox(entity: widget.entity);
+//        });
   }
 
   Widget _ChatPage() {
@@ -232,31 +233,50 @@ class _ChatBoxState extends State<_ChatBox> {
     super.didUpdateWidget(oldWidget);
   }
 
+  bool isUnique(msgId) {
+    for (ChatMessage m in _messages) {
+      if (m.id == msgId) return false;
+    }
+    return true;
+  }
+
+  void uniqueMaker() {
+    Map<int, dynamic> map = Map();
+    List<ChatMessage> removes = [];
+    for (ChatMessage m in _messages) {
+      if (map.containsKey(m.id))
+        removes.add(m);
+      else
+        map[m.id] = '';
+    }
+    _messages.removeWhere((element) => removes.contains(element));
+  }
+
   Widget _msgList({messages}) {
-    return
-//      StreamBuilder(
-//      stream: SocketHelper().stream,
-//      builder: (context, snapshot) {
-//        var data = json.decode(snapshot.data.toString());
-//        var msgs = _messages;
-//        if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
-////            setState(() {
-////            });
+    return StreamBuilder(
+        stream: SocketHelper().stream,
+        builder: (context, snapshot) {
+          var data = json.decode(snapshot.data.toString());
+          if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
+//            setState(() {
+//            });
 //          var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
-//          _chatMessageBloc.add(ChatMessageAddToList(
-//              msg: ChatMessage.fromSocket(data, widget.entity.isPatient)));
-//        }
-//        return
-        Container(
-            child: ListView.builder(
-                reverse: true,
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  return ChatBubble(
-                    message: _messages[index],
-                    isHomePageChat: false,
-                  );
-                }));
+            if (isUnique(data['id']))
+              _messages.insert(
+                  0, ChatMessage.fromSocket(data, widget.entity.isPatient));
+          }
+          uniqueMaker();
+          return Container(
+              child: ListView.builder(
+                  reverse: true,
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    return ChatBubble(
+                      message: _messages[index],
+                      isHomePageChat: false,
+                    );
+                  }));
+        });
   }
 
   @override
@@ -287,8 +307,7 @@ class _ChatBoxState extends State<_ChatBox> {
               if (_messages.length > 0) {
                 length = _messages.length;
                 return _msgList();
-              }
-              else
+              } else
                 return Center(
                   child: Text(
                     Strings.emptyChatPage,

@@ -65,8 +65,7 @@ class DoctorPanelMenu extends StatelessWidget {
 
   Widget _requests(isActive, mPatient, context) {
     BlocProvider.of<SearchBloc>(context).add(SearchCountGet());
-    return PanelMenuMainItem(
-        onPush,
+    return PanelMenuMainItem(onPush,
         subItems: [],
         doctorSection: DoctorPanelSection.REQUESTS,
         label: Strings.doctorPanelRequestsLabel,
@@ -77,8 +76,7 @@ class DoctorPanelMenu extends StatelessWidget {
         asset: Assets.doctorAvatar);
   }
 
-  Widget _history(isActive, mPatient, context) => PanelMenuMainItem(
-    onPush,
+  Widget _history(isActive, mPatient, context) => PanelMenuMainItem(onPush,
       subItems: [],
       label: Strings.doctorPanelHistoryLabel,
       isActive: isActive,
@@ -88,8 +86,7 @@ class DoctorPanelMenu extends StatelessWidget {
       isPatient: false,
       icon: Icons.history);
 
-  Widget _healthEvents(isActive, mPatient, context) => PanelMenuMainItem(
-    onPush,
+  Widget _healthEvents(isActive, mPatient, context) => PanelMenuMainItem(onPush,
       subItems: [PanelSubItem('تقویم', 'schedule', IColors.activePanelMenu)],
       label: Strings.doctorPanelHealthEventsLabel,
       isActive: isActive,
@@ -98,8 +95,7 @@ class DoctorPanelMenu extends StatelessWidget {
       isPatient: false,
       asset: Assets.calendarCheck);
 
-  Widget _myPatinets(isActive, partners, context) => PanelMenuMainItem(
-    onPush,
+  Widget _myPatinets(isActive, partners, context) => PanelMenuMainItem(onPush,
       subItems: partners,
       label: Strings.panelIPatientLabel,
       icon: Icons.person,
@@ -123,11 +119,12 @@ class DoctorPanelMenu extends StatelessWidget {
     if (state is PanelsLoaded)
       for (var panel in state.panels) {
         if (panel.status > 1)
-        partners.add(PanelSubItem(
-            panel.patient.user.name,
-            panel.patient.id.toString(),
-            getColor(DoctorPanelSection.DOCTOR_INTERFACE,
-                id: panel.patient.id, context: context), panelId: panel.id));
+          partners.add(PanelSubItem(
+              panel.patient.user.name,
+              panel.patient.id.toString(),
+              getColor(DoctorPanelSection.DOCTOR_INTERFACE,
+                  id: panel.patient.id, context: context),
+              panelId: panel.id));
       }
     return partners;
   }

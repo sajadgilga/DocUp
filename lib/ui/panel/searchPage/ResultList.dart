@@ -18,11 +18,10 @@ class ResultList extends StatefulWidget {
   bool isDoctor;
   bool isRequestsOnly;
 
-  ResultList(
-      {this.onPush,
-      @required this.results,
-      this.isDoctor,
-      this.isRequestsOnly = false});
+  ResultList({this.onPush,
+    @required this.results,
+    this.isDoctor,
+    this.isRequestsOnly = false});
 
   @override
   _ResultListState createState() => _ResultListState();
@@ -68,7 +67,10 @@ class _ResultListState extends State<ResultList> {
     }
     return Container(
       constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 60),
+      BoxConstraints(maxHeight: MediaQuery
+          .of(context)
+          .size
+          .height - 60),
       margin: EdgeInsets.only(top: 20, right: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -117,17 +119,19 @@ class _SearchResultDoctorItem extends StatelessWidget {
     onPush(NavigatorRoutes.doctorDialogue, entity);
   }
 
-  Widget _image(context) => Container(
-      child: Container(
-          width: 70,
-          child: ClipPolygon(
-            sides: 6,
-            rotate: 90,
-            child: Image.network(
-                (entity.user.avatar != null ? entity.user.avatar : '')),
-          )));
+  Widget _image(context) =>
+      Container(
+          child: Container(
+              width: 70,
+              child: ClipPolygon(
+                sides: 6,
+                rotate: 90,
+                child: Image.network(
+                    (entity.user.avatar != null ? entity.user.avatar : '')),
+              )));
 
-  Widget _rating() => RatingBar(
+  Widget _rating() =>
+      RatingBar(
         itemCount: 5,
         initialRating: 3.5,
         direction: Axis.horizontal,
@@ -168,8 +172,12 @@ class _SearchResultDoctorItem extends StatelessWidget {
     String utfName;
     String utfExpert;
     try {
-      utfName = utf8.decode(entity.user.name.toString().codeUnits);
-      utfExpert = utf8.decode(entity.expert.toString().codeUnits);
+      utfName = utf8.decode(entity.user.name
+          .toString()
+          .codeUnits);
+      utfExpert = utf8.decode(entity.expert
+          .toString()
+          .codeUnits);
     } catch (_) {
       utfName = entity.user.name;
       utfExpert = entity.expert;
@@ -218,7 +226,10 @@ class _SearchResultDoctorItem extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.only(top: 10, bottom: 10),
           constraints:
-              BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),
+          BoxConstraints(minWidth: MediaQuery
+              .of(context)
+              .size
+              .width - 60),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[_info(), _image(context)],
@@ -251,16 +262,17 @@ class _SearchResultPatientItem extends StatelessWidget {
     onPush(NavigatorRoutes.patientDialogue, entity);
   }
 
-  Widget _image(context) => Container(
-      child: Container(
-          width: 70,
-          child: ClipPolygon(
-            sides: 6,
-            rotate: 90,
-            child: (entity.user.avatar != null
-                ? Image.network(entity.user.avatar)
-                : Image.asset(Assets.emptyAvatar)),
-          )));
+  Widget _image(context) =>
+      Container(
+          child: Container(
+              width: 70,
+              child: ClipPolygon(
+                sides: 6,
+                rotate: 90,
+                child: (entity.user.avatar != null
+                    ? Image.network(entity.user.avatar)
+                    : Image.asset(Assets.emptyAvatar)),
+              )));
 
   Widget _status() {
     return Container(
@@ -285,7 +297,9 @@ class _SearchResultPatientItem extends StatelessWidget {
   Widget _info() {
     String utfName;
     try {
-      utfName = utf8.decode(entity.user.name.toString().codeUnits);
+      utfName = utf8.decode(entity.user.name
+          .toString()
+          .codeUnits);
     } catch (_) {
       utfName = entity.user.name;
     }
@@ -376,7 +390,11 @@ extension PatientStatusExtension on PatientStatus {
   get icon {
     switch (this) {
       case PatientStatus.VIRTUAL_VISIT_IN_CONTACT:
-        return IColors.inContact;
+        return Icon(
+          Icons.person,
+          size: 15,
+          color: this.color,
+        );
       case PatientStatus.VISIT_IN_CONTACT:
         return Icon(
           Icons.person,
