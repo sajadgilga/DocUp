@@ -12,6 +12,7 @@ import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:docup/ui/widgets/PatientData.dart';
+import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,13 @@ import 'package:intl/intl.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:flutter/material.dart';
+
+const VISIT_METHOD = "نوع مشاوره";
+const VISIT_DURATION_PLAN = "مدت زمان مشاوره";
+
+enum VisitMethod { TEXT, VOICE, VIDEO }
+
+enum VisitDurationPlan { BASE, SUPPLEMENTARY, LONG }
 
 class VirtualReservationPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
@@ -37,6 +45,11 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
   TextEditingController timeTextController = TextEditingController();
   TextEditingController dateTextController = TextEditingController();
+
+  Map<String, int> typeSelected = {
+    VISIT_METHOD: VisitMethod.TEXT.index,
+    VISIT_DURATION_PLAN: VisitDurationPlan.BASE.index
+  };
 
   @override
   void initState() {
@@ -72,25 +85,25 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
         child: Column(children: <Widget>[
           _headerWidget(),
-          SizedBox(height: 10),
-          _reservationTypeWidget("نوع مشاوره", ["متنی", "تصویری"]),
-          SizedBox(height: 10),
+          ALittleVerticalSpace(),
+          _reservationTypeWidget(VISIT_METHOD, ["متنی", "تصویری"]),
+          ALittleVerticalSpace(),
           _reservationTypeWidget(
-              "مدت زمان مشاوره", ["پایه", "تکمیلی", "طولانی"]),
+              VISIT_DURATION_PLAN, ["پایه", "تکمیلی", "طولانی"]),
           SizedBox(height: 10),
           Text(
-              "ویزیت مجازی حداکثر ${replaceFarsiNumber((typeSelected["مدت زمان مشاوره"] * 30 + 10).toString())} دقیقه می‌باشد",
+              "ویزیت مجازی حداکثر ${replaceFarsiNumber((typeSelected[VISIT_DURATION_PLAN] * 30 + 10).toString())} دقیقه می‌باشد",
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
+          ALittleVerticalSpace(),
           _priceWidget(),
-          SizedBox(height: 10),
+          ALittleVerticalSpace(),
           _enableVisitTimeWidget(),
           _timeSelectionWidget(),
-          SizedBox(height: 10),
+          ALittleVerticalSpace(),
           _acceptPolicyWidget(),
-          SizedBox(height: 10),
+          ALittleVerticalSpace(),
           _submitWidget(),
-          SizedBox(height: 10),
+          ALittleVerticalSpace(),
         ]),
       ),
     );
@@ -122,8 +135,6 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
           Avatar(user: widget.doctorEntity.user),
         ],
       );
-
-  Map<String, int> typeSelected = {"نوع مشاوره": 2, "مدت زمان مشاوره": 2};
 
   _reservationTypeWidget(String title, List<String> items) => Column(
         children: <Widget>[
@@ -175,16 +186,18 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
       );
 
   String _calculateVisitCost() {
-    return (widget.doctorEntity.fee *
-            (typeSelected["نوع مشاوره"] + 1) *
-            (typeSelected["مدت زمان مشاوره"] + 1))
-        .toString();
+    int cost = 0;
+    if (typeSelected[VISIT_METHOD] == VisitMethod.TEXT.index) {
+      cost = widget.doctorEntity.plan.baseTextPrice;
+    } else if (typeSelected[VISIT_METHOD] == VisitMethod.VIDEO.index) {
+      cost = widget.doctorEntity.plan.baseVideoPrice;
+    }
+    cost *= (typeSelected[VISIT_DURATION_PLAN] + 1);
+    return cost.toString();
   }
 
-  bool _enableVisitTime = false;
-
   _timeSelectionWidget() => Visibility(
-        visible: _enableVisitTime,
+        visible: visitTimeChecked,
         child: Column(
           children: <Widget>[
             Row(
@@ -235,7 +248,6 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
   bool visitTimeChecked = false;
 
   Row _enableVisitTimeWidget() {
-    _enableVisitTime = widget.doctorEntity.user.online != 1;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
@@ -245,9 +257,13 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
         Switch(
-          value: _enableVisitTime,
+          value: visitTimeChecked,
           activeColor: IColors.themeColor,
-          onChanged: (bool value) {},
+          onChanged: (bool value) {
+            setState(() {
+              visitTimeChecked = !visitTimeChecked;
+            });
+          },
         )
       ],
     );
@@ -277,27 +293,43 @@ class _VirtualReservationPageState extends State<VirtualReservationPage> {
 
   _submitWidget() => ActionButton(
         color: policyChecked ? IColors.themeColor : Colors.grey,
-        title: _enableVisitTime ? "تعیین وقت قبلی" : "شروع ویزیت مجازی",
-        callBack: () {
-          if (policyChecked) {
-            _bloc.visitRequest(
-                widget.doctorEntity.id,
-                typeSelected["نوع مشاوره"],
-                2,
-                typeSelected["مدت زمان مشاوره"],
-                convertToGeorgianDate(dateTextController.text) +
-                    "T" +
-                    timeTextController.text +
-                    ":00Z");
-          }
-        },
+        title: "شروع ویزیت مجازی",
+        callBack: _submit,
       );
 
-  String convertToGeorgianDate(String jalaliDate) {
-    var array = jalaliDate.split("/");
-    var georgianDate =
-        Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
-            .toGregorian();
-    return "${georgianDate.year}-${georgianDate.month}-${georgianDate.day}";
+  _isDoctorOnline() => widget.doctorEntity.user.online == 1;
+
+  void _submit() {
+    if (!policyChecked) return;
+    if (visitTimeChecked) {
+      if (dateTextController.text.isEmpty || timeTextController.text.isEmpty) {
+        showOneButtonDialog(
+            context, "لطفا زمان ویزیت را وارد کنید", "باشه", () {});
+      } else {
+        sendVisitRequest();
+      }
+    } else {
+      if (_isDoctorOnline()) {
+        sendVisitRequest();
+      } else {
+        showOneButtonDialog(
+            context,
+            " پزشک آنلاین نیست لطفا زمانی را برای ویزیت ویزیت مشخص کنید",
+            "باشه",
+            () {});
+      }
+    }
+  }
+
+  void sendVisitRequest() {
+    _bloc.visitRequest(
+        widget.doctorEntity.id,
+        _isDoctorOnline() ? 1 : 0,
+        typeSelected[VISIT_METHOD],
+        typeSelected[VISIT_DURATION_PLAN],
+        convertToGeorgianDate(dateTextController.text) +
+            "T" +
+            timeTextController.text +
+            ":00Z");
   }
 }

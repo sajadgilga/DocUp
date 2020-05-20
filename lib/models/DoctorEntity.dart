@@ -1,3 +1,4 @@
+import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/models/Panel.dart';
 
 import 'PatientEntity.dart';
@@ -10,6 +11,8 @@ class DoctorEntity extends UserEntity {
   String clinicNumber;
   String clinicAddress;
   int fee;
+
+  DoctorPlan plan;
 
   DoctorEntity(
       {

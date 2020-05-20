@@ -1,5 +1,6 @@
 import 'package:docup/models/AuthResponseEntity.dart';
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/models/ListResult.dart';
 import 'package:docup/models/PatientTracker.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
@@ -31,6 +32,13 @@ class DoctorRepository {
     return VisitEntity.fromJson(response);
   }
 
+  Future<DoctorPlan> getDoctorPlan(int doctorId) async {
+    final response = await _provider
+        .get("api/doctor-plan/" + doctorId.toString());
+    return DoctorPlan.fromJson(response);
+  }
+
+
   Future<VisitEntity> responseVisit(
       int patientId, VisitEntity visitEntity, {isVisitAcceptance= false}) async {
     final response = await _provider.patch(
@@ -60,4 +68,6 @@ class DoctorRepository {
     final response = await _provider.get("api/visits/", utf8Support: true);
     return ListResult.fromJson(response);
   }
+
+
 }

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'dart:ui' as ui;
 
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/strings.dart';
@@ -15,11 +14,9 @@ import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../constants/colors.dart';
-import 'VirtualReservationPage.dart';
 
 class DoctorDetailPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
@@ -46,19 +43,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     super.initState();
   }
 
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
-        .buffer
-        .asUint8List();
-  }
-
   void setCustomMapPin() async {
     final Uint8List markerIcon =
-    await getBytesFromAsset('assets/location.png', 60);
+        await getBytesFromAsset('assets/location.png', 60);
     pinLocationIcon = BitmapDescriptor.fromBytes(markerIcon);
   }
 
@@ -82,7 +69,8 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                 case Status.ERROR:
                   return APICallError(
                     errorMessage: snapshot.data.message,
-                    onRetryPressed: () => _bloc.getDoctor(widget.doctorEntity.id),
+                    onRetryPressed: () =>
+                        _bloc.getDoctor(widget.doctorEntity.id),
                   );
                   break;
               }
@@ -98,9 +86,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     _markers.add(Marker(
         markerId: MarkerId("defaultMarker"),
         position: doctorEntity.clinic.latitude != null &&
-            doctorEntity.clinic.longitude != null
+                doctorEntity.clinic.longitude != null
             ? LatLng(
-            doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
+                doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
             : defaultPinLocation,
         icon: pinLocationIcon));
     return Column(
@@ -109,10 +97,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
         Avatar(user: doctorEntity.user),
         SizedBox(height: 10),
         DoctorData(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
+            width: MediaQuery.of(context).size.width,
             doctorEntity: doctorEntity),
         SizedBox(height: 20),
         _doctorMapWidget(doctorEntity),
@@ -122,8 +107,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     );
   }
 
-  _doctorActionsWidget(DoctorEntity doctorEntity) =>
-      Column(
+  _doctorActionsWidget(DoctorEntity doctorEntity) => Column(
         children: <Widget>[
           ActionButton(
             width: 200,
@@ -137,8 +121,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
               color: IColors.darkBlue,
               title: Strings.virtualReservationLabel,
               callBack: () => {
-              widget.onPush(NavigatorRoutes.virtualReservationPage, doctorEntity)
-          }),
+                    widget.onPush(
+                        NavigatorRoutes.virtualReservationPage, doctorEntity)
+                  }),
         ],
       );
 
@@ -146,10 +131,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(20)),
       child: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * 0.8,
+        width: MediaQuery.of(context).size.width * 0.8,
         height: 100,
         child: GoogleMap(
           myLocationEnabled: true,
@@ -159,9 +141,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
           },
           initialCameraPosition: CameraPosition(
             target: doctorEntity.clinic.latitude != null &&
-                doctorEntity.clinic.longitude != null
+                    doctorEntity.clinic.longitude != null
                 ? LatLng(
-                doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
+                    doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
                 : defaultPinLocation,
             zoom: 12.0,
           ),
