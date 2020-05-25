@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IPartner extends StatelessWidget {
   final UserEntity partner;
-  final Function(String, UserEntity) onPush;
+  final Function(String, dynamic) onPush;
   final Function(int) selectPage;
   final Function(String, UserEntity) globalOnPush;
   final Color color;

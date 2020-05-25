@@ -53,10 +53,27 @@ class NavigatorRoutes {
   static const String cognitiveTest = '/cognitiveTest';
 }
 
-class NavigatorView extends StatelessWidget {
+class NavigatorView extends StatefulWidget {
   final int index;
   final GlobalKey<NavigatorState> navigatorKey;
   Function(String, dynamic) pushOnBase;
+  Function(int) selectPage;
+
+  NavigatorView(
+      {Key key,
+        this.index,
+        this.navigatorKey,
+        this.pushOnBase,
+        this.selectPage})
+      : super(key: key);
+
+
+  @override
+  State<StatefulWidget> createState() {
+    return NavigatorViewState();
+  }
+}
+class NavigatorViewState extends State<NavigatorView> {
   final TabSwitchBloc _tabSwitchBloc = TabSwitchBloc();
   final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
   final ChatMessageBloc _chatMessageBloc = ChatMessageBloc();
@@ -64,99 +81,92 @@ class NavigatorView extends StatelessWidget {
   final VisitBloc _visitBloc = VisitBloc();
   final PictureBloc _pictureBloc = PictureBloc();
   final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
-  Function(int) selectPage;
 
-  NavigatorView(
-      {Key key,
-      this.index,
-      this.navigatorKey,
-      this.pushOnBase,
-      this.selectPage})
-      : super(key: key);
-
-  Map<String, WidgetBuilder> _routeBuilders(BuildContext context, {entity}) {
-    switch (index) {
+  Map<String, WidgetBuilder> _routeBuilders(BuildContext context, {detail}) {
+    switch (widget.index) {
       case -1:
         return {
           NavigatorRoutes.root: (context) => MainPage(
                 pushOnBase: (direction, entity) {
-                  _push(context, direction, entity: entity);
+                  push(context, direction, detail: entity);
                 },
               ),
           NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, entity),
+              _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
-              _patientDetailPage(context, entity),
+              _patientDetailPage(context, detail),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
-          NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context, entity),
+          NavigatorRoutes.cognitiveTest: (context) =>
+              _cognitiveTest(context, detail),
           NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
               child: UploadSlider(
-                listId: entity,
+                listId: detail,
               )),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
           NavigatorRoutes.account: (context) =>
-              _account(context, defaultCreditForCharge: entity),
+              _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
-              _virtualVisitPage(context, entity),
+              _virtualVisitPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
-              _physicalVisitPage(context, entity)
+              _physicalVisitPage(context, detail)
         };
       case 0:
         return {
           NavigatorRoutes.root: (context) => _home(context),
           NavigatorRoutes.notificationView: (context) => _notifictionPage(),
           NavigatorRoutes.account: (context) =>
-              _account(context, defaultCreditForCharge: entity),
+              _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, entity),
+              _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
-              _patientDetailPage(context, entity),
+              _patientDetailPage(context, detail),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
           NavigatorRoutes.account: (context) =>
-              _account(context, defaultCreditForCharge: entity),
+              _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
-              _virtualVisitPage(context, entity),
+              _virtualVisitPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
-              _physicalVisitPage(context, entity)
+              _physicalVisitPage(context, detail)
         };
       case 1:
         return {
           NavigatorRoutes.root: (context) => _empty(context),
 //          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, entity),
+              _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
-              _patientDetailPage(context, entity),
+              _patientDetailPage(context, detail),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
       case 2:
         return {
           NavigatorRoutes.root: (context) => _panelMenu(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-          NavigatorRoutes.panel: (context) => _panel(context),
+          NavigatorRoutes.panel: (context) => _panel(context, detail: detail),
           NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, entity),
+              _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
-              _patientDetailPage(context, entity),
-          NavigatorRoutes.cognitiveTest: (context) => _cognitiveTest(context, entity),
+              _patientDetailPage(context, detail),
+          NavigatorRoutes.cognitiveTest: (context) =>
+              _cognitiveTest(context, detail),
           NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
               child: UploadSlider(
-                listId: entity,
+                listId: detail,
               )),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
           NavigatorRoutes.account: (context) =>
-              _account(context, defaultCreditForCharge: entity),
+              _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
-              _virtualVisitPage(context, entity),
+              _virtualVisitPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
-              _physicalVisitPage(context, entity)
+              _physicalVisitPage(context, detail)
         };
       case 3:
         return {
@@ -173,30 +183,30 @@ class NavigatorView extends StatelessWidget {
           NavigatorRoutes.root: (context) => _home(context),
           NavigatorRoutes.notificationView: (context) => _notifictionPage(),
           NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, entity),
+              _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
-              _patientDetailPage(context, entity),
+              _patientDetailPage(context, detail),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
         };
     }
   }
 
-  void changePanelSection(int section) {
-    switch (section) {
-      case 0:
-        _panelSectionBloc.add(PanelSectionSelect(
-            patientSection: PatientPanelSection.DOCTOR_INTERFACE,
-            doctorSection: DoctorPanelSection.DOCTOR_INTERFACE,
-            section: PanelSection.PATIENT));
-        _tabSwitchBloc.add(PanelTabState.SecondTab);
-        break;
-    }
-  }
+//  void changePanelSection(int section) {
+//    switch (section) {
+//      case 0:
+//        _panelSectionBloc.add(PanelSectionSelect(
+//            patientSection: PatientPanelSection.DOCTOR_INTERFACE,
+//            doctorSection: DoctorPanelSection.DOCTOR_INTERFACE,
+//            section: PanelSection.PATIENT));
+//        _tabSwitchBloc.add(PanelTabState.SecondTab);
+//        break;
+//    }
+//  }
 
-  void _push(BuildContext context, String direction, {entity}) {
-    _route(RouteSettings(name: direction), context, entity: entity);
-    Navigator.push(context,
-        _route(RouteSettings(name: direction), context, entity: entity));
+  void push(contet, String direction, {detail}) {
+    _route(RouteSettings(name: direction), context, detail: detail);
+    widget.navigatorKey.currentState.push(
+        _route(RouteSettings(name: direction), context, detail: detail));
   }
 
   void _pop(BuildContext context) {
@@ -204,8 +214,8 @@ class NavigatorView extends StatelessWidget {
   }
 
   Route<dynamic> _route(RouteSettings settings, BuildContext context,
-      {entity}) {
-    var routeBuilders = _routeBuilders(context, entity: entity);
+      {detail}) {
+    var routeBuilders = _routeBuilders(context, detail: detail);
     return MaterialPageRoute(
         settings: settings,
         builder: (BuildContext context) {
@@ -216,7 +226,7 @@ class NavigatorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      key: navigatorKey,
+      key: widget.navigatorKey,
       initialRoute: NavigatorRoutes.root,
       observers: <NavigatorObserver>[HeroController()],
       onGenerateRoute: (settings) => _route(settings, context),
@@ -233,19 +243,19 @@ class NavigatorView extends StatelessWidget {
             )
           ],
           child: Home(
-            selectPage: selectPage,
+            selectPage: widget.selectPage,
             onPush: (direction, entity) {
-              _push(context, direction, entity: entity);
+              push(context, direction, detail: entity);
             },
-            globalOnPush: pushOnBase,
+            globalOnPush: widget.pushOnBase,
           ));
     } else if (entity.isPatient) {
       return Home(
-        selectPage: selectPage,
+        selectPage: widget.selectPage,
         onPush: (direction, entity) {
-          _push(context, direction, entity: entity);
+          push(context, direction, detail: entity);
         },
-        globalOnPush: pushOnBase,
+        globalOnPush: widget.pushOnBase,
       );
     }
   }
@@ -253,46 +263,47 @@ class NavigatorView extends StatelessWidget {
   Widget _account(context, {defaultCreditForCharge}) => AccountPage(
         defaultCreditForCharge: defaultCreditForCharge,
         onPush: (direction) {
-          _push(context, direction);
+          push(context, direction);
         },
       );
 
   Widget _cognitiveTest(context, UserEntity entity) => MedicalTestPage(
-    onPush: (direction, entity) {
-      _push(context, direction, entity: entity);
-    },
-  );
+        onPush: (direction, entity) {
+          push(context, direction, detail: entity);
+        },
+      );
 
   Widget _notifictionPage() => NotificationPage();
 
   Widget _panelPages(context) {
 //    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    return BlocBuilder<EntityBloc, EntityState>(builder: (context, entityState) {
+    return BlocBuilder<EntityBloc, EntityState>(
+        builder: (context, entityState) {
       return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
         builder: (context, state) {
           var entity = entityState.entity;
           if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE) {
             return Panel(
               onPush: (direction, entity) {
-                _push(context, direction, entity: entity);
+                push(context, direction, detail: entity);
               },
               pages: <Widget>[
                 IllnessPage(
                   entity: entity,
                   onPush: (direction, entity) {
-                    _push(context, direction, entity: entity);
+                    push(context, direction, detail: entity);
                   },
                 ),
                 ChatPage(
                   entity: entity,
                   onPush: (direction, entity) {
-                    _push(context, direction, entity: entity);
+                    push(context, direction, detail: entity);
                   },
                 ),
                 VideoCallPage(
                   entity: entity,
                   onPush: (direction, entity) {
-                    _push(context, direction, entity: entity);
+                    push(context, direction, detail: entity);
                   },
                 )
               ],
@@ -302,14 +313,14 @@ class NavigatorView extends StatelessWidget {
                 value: _pictureBloc,
                 child: Panel(
                   onPush: (direction, entity) {
-                    _push(context, direction, entity: entity);
+                    push(context, direction, detail: entity);
                   },
                   pages: <Widget>[
                     InfoPage(
                       uploadAvailable: entity.isPatient,
                       entity: entity,
                       onPush: (direction, entity) {
-                        _push(context, direction, entity: entity);
+                        push(context, direction, detail: entity);
                       },
                       pageName: Strings.documents,
                       picListLabel: Strings.panelDocumentsPicLabel,
@@ -320,7 +331,7 @@ class NavigatorView extends StatelessWidget {
                       uploadAvailable: entity.isDoctor,
                       entity: entity,
                       onPush: (direction, entity) {
-                        _push(context, direction, entity: entity);
+                        push(context, direction, detail: entity);
                       },
                       pageName: Strings.prescriptions,
                       picListLabel: Strings.panelPrescriptionsPicLabel,
@@ -331,7 +342,7 @@ class NavigatorView extends StatelessWidget {
                       uploadAvailable: entity.isPatient,
                       entity: entity,
                       onPush: (direction, entity) {
-                        _push(context, direction, entity: entity);
+                        push(context, direction, detail: entity);
                       },
                       pageName: Strings.testResults,
                       picListLabel: Strings.panelTestResultsPicLabel,
@@ -347,7 +358,17 @@ class NavigatorView extends StatelessWidget {
     });
   }
 
-  Widget _panel(context, {incomplete}) {
+  Widget _panel(context, {incomplete, detail}) {
+    if (detail != null)
+      switch (detail) {
+        case "chat":
+          _panelSectionBloc.add(PanelSectionSelect(
+              patientSection: PatientPanelSection.DOCTOR_INTERFACE));
+          _tabSwitchBloc.add(PanelTabState.SecondTab);
+          break;
+        default:
+          break;
+      }
     return MultiBlocProvider(
         providers: [
           BlocProvider<TabSwitchBloc>.value(
@@ -369,7 +390,7 @@ class NavigatorView extends StatelessWidget {
               _pop(context);
             },
             onPush: (direction) {
-              _push(context, direction);
+              push(context, direction);
             },
           );
         }));
@@ -378,7 +399,7 @@ class NavigatorView extends StatelessWidget {
   Widget _doctorDetailPage(context, doctor) {
     return DoctorDetailPage(
       onPush: (direction, entity) {
-        _push(context, direction, entity: entity);
+        push(context, direction, detail: entity);
       },
       doctorEntity: doctor,
     );
@@ -402,7 +423,7 @@ class NavigatorView extends StatelessWidget {
           child: SearchPage(
             isRequestPage: isRequests,
             onPush: (direction, entity) {
-              _push(context, direction, entity: entity);
+              push(context, direction, detail: entity);
             },
           ));
 
@@ -415,14 +436,13 @@ class NavigatorView extends StatelessWidget {
               value: _panelSectionBloc,
             ),
             BlocProvider<SearchBloc>.value(value: _searchBloc),
-
           ],
           child: PanelMenu(
             () {
               _pop(context);
             },
             onPush: (direction) {
-              _push(context, direction);
+              push(context, direction);
             },
           ));
 
@@ -434,7 +454,7 @@ class NavigatorView extends StatelessWidget {
     return VirtualVisitPage(
       doctorEntity: (entity as DoctorEntity),
       onPush: (direction, entity) {
-        _push(context, direction);
+        push(context, direction);
       },
     );
   }
@@ -443,7 +463,7 @@ class NavigatorView extends StatelessWidget {
     return PhysicalVisitPage(
       doctorEntity: (entity as DoctorEntity),
       onPush: (direction, entity) {
-        _push(context, direction);
+        push(context, direction);
       },
     );
   }

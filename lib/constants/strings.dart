@@ -116,7 +116,12 @@ class Strings {
       ' لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
   static final String emptyPatientLabel = 'شما به بیماری متصل نیستید '
       '\n'
-      ' لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
+      ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
+
+  static final String emptyWaitDoctorLabel = 'منتظر بمانید';
+//  static final String emptyWaitPatientLabel = 'شما به بیماری متصل نیستید '
+//      '\n'
+//      ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
 
   static final String emptyChatPage = 'پیامی تاکنون ارسال نشده است';
 

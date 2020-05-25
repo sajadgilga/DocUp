@@ -321,6 +321,8 @@ class _SearchResultPatientItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (entity.user == null)
+      return Container();
     return GestureDetector(
         onTap: () => _showDoctorDialogue(context),
         child: Container(

@@ -21,7 +21,7 @@ import 'TrackingList.dart';
 import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
 
 class Home extends StatefulWidget {
-  final Function(String, UserEntity) onPush;
+  final Function(String, dynamic) onPush;
   final Function(int) selectPage;
   final Function(String, UserEntity) globalOnPush;
 
