@@ -90,7 +90,7 @@ String getTomorrowInJalali() {
 }
 
 void showOneButtonDialog(
-    context, String message, String action, Function callback) {
+    context, String message, String action, Function callback, {Color color}) {
   BuildContext dialogContext;
   AlertDialog dialog = AlertDialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -100,7 +100,7 @@ void showOneButtonDialog(
       textAlign: TextAlign.center,
     ),
     content: ActionButton(
-      color: IColors.themeColor,
+      color: color == null ? IColors.themeColor : color,
       title: action,
       callBack: () {
         Navigator.pop(dialogContext);

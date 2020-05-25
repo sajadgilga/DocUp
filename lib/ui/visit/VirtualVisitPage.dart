@@ -156,7 +156,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
     int cost = 0;
     if (typeSelected[VISIT_METHOD] == VisitMethod.TEXT.index) {
       cost = widget.doctorEntity.plan.baseTextPrice;
-    } else if (typeSelected[VISIT_METHOD] == VisitMethod.VIDEO.index) {
+    } else if (typeSelected[VISIT_METHOD] == VisitMethod.VIDEO.index - 1) {
       cost = widget.doctorEntity.plan.baseVideoPrice;
     }
     cost *= (typeSelected[VISIT_DURATION_PLAN] + 1);
@@ -248,7 +248,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
 
   _submitWidget() => ActionButton(
         color: policyChecked ? IColors.themeColor : Colors.grey,
-        title: "شروع ویزیت مجازی",
+        title: _isDoctorOnline() ? "ویزیت مجازی هم‌اکنون" : "ویزیت مجازی",
         callBack: _submit,
       );
 

@@ -12,6 +12,7 @@ class InputField extends StatefulWidget {
   bool needToHideKeyboard;
   String errorMessage;
   bool obscureText;
+  ValueChanged<String> onChanged;
 
   InputField(
       {this.inputHint,
@@ -20,6 +21,7 @@ class InputField extends StatefulWidget {
       this.needToHideKeyboard = true,
       this.validationCallback,
       this.errorMessage,
+      this.onChanged,
       this.obscureText = false});
 
   @override
@@ -52,6 +54,7 @@ class _InputFieldState extends State<InputField> {
         }
       },
       onChanged: (text) {
+        widget.onChanged(text);
         setState(() {
           isValid = widget.validationCallback(text);
         });
@@ -67,4 +70,3 @@ class _InputFieldState extends State<InputField> {
     );
   }
 }
-

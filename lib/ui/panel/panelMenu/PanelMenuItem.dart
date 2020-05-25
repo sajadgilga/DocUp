@@ -66,19 +66,6 @@ class PanelMenuMainItem extends StatelessWidget {
   void _selectItem({item, context}) {
     if ((!isPatient && doctorSection != DoctorPanelSection.DOCTOR_INTERFACE) ||
         (isPatient && patientSection == PatientPanelSection.HEALTH_CALENDAR)) {
-//      showDialog(
-//          context: context,
-//          builder: (BuildContext context) {
-//            return AlertDialog(
-//              title: Text(
-//                "منتظر ما باشید",
-//                textAlign: TextAlign.center,
-//                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//              ),
-//              content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
-//                  textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-//            );
-//          });
       showNextVersionDialog(context);
       return;
     }
@@ -89,22 +76,6 @@ class PanelMenuMainItem extends StatelessWidget {
 //      if (entity.isActivePanel(item.panelId))
       BlocProvider.of<EntityBloc>(context)
           .add(PartnerEntitySet(id: int.parse(item.ID), panelId: item.panelId));
-//      else {
-//        showDialog(
-//            context: context,
-//            builder: (BuildContext context) {
-//              return AlertDialog(
-//                title: Text(
-//                  "این امکان وجود ندارد",
-//                  textAlign: TextAlign.center,
-//                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//                ),
-//                content: Text("درخواست شما توسط دکتر هنوز پذیرفته نشده",
-//                    textAlign: TextAlign.center, style: TextStyle(fontSize: 12)),
-//              );
-//            });
-//        return;
-//      }
     }
     if (!isPatient) {
       if (isMyPartners) {

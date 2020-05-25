@@ -23,7 +23,7 @@ class AccountPage extends StatefulWidget {
   _AccountPageState createState() => _AccountPageState();
 }
 
-class _AccountPageState extends State<AccountPage> {
+class _AccountPageState extends State<AccountPage> with WidgetsBindingObserver {
   CreditBloc _creditBloc = CreditBloc();
 
   AlertDialog _loadingDialog = getLoadingDialog();
@@ -53,7 +53,23 @@ class _AccountPageState extends State<AccountPage> {
     });
     _amountTextController.text = widget.defaultCreditForCharge;
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed) {
+      _amountTextController.text = "";
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

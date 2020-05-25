@@ -124,7 +124,7 @@ class Strings {
   static final String emptySearchDoctorSide = 'متاسفانه بیماری با این نام در لیست بیماران شما موجود نمی‌باشد';
 
   static final String visitRequestedMessage = "درخواست رزرو شما با موفقیت ثبت شد در صورت تایید پزشک با مراجعه به پنل کاربری میتوانید ویزیت خود را در زمان مقرر شده انجام بدهید.";
-  static final String physicalVisitRequestedMessage = "درخواست رزرو شما با موفقیت ثبت شد خواهشمند است در زمان و تاریخ تعیین شده به پزشک خود مراجعه بفرمایید";
+  static final String physicalVisitRequestedMessage = "درخواست رزرو شما با موفقیت ثبت شد";
   static final String notEnoughCreditMessage = "حساب شما اعتبار کافی ندارد. لطفا حساب تان را شارژ کنید";
   static final String addCreditAction = "افزایش اعتبار";
   static final String understandAction ="متوجه شدم";
@@ -132,5 +132,5 @@ class Strings {
   static final String virtualVisitPrivacyPolicyMessage ="من همه قوانین و مقررات رزرو ویزیت مجازی را خوانده و موافقت میکنم";
   static final String physicalVisitPrivacyPolicyMessage ="من همه قوانین و مقررات رزرو ویزیت حضوری را خوانده و موافقت میکنم";
   static final String enterVisitTimeMessage ="لطفا زمان ویزیت را وارد کنید";
-  static final String offlineDoctorMessage =" پزشک آنلاین نیست لطفا زمانی را برای ویزیت ویزیت مشخص کنید";
+  static final String offlineDoctorMessage =" پزشک آنلاین نیست لطفا زمانی را برای ویزیت مشخص کنید";
 }

@@ -61,10 +61,11 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
 
   @override
   void initState() {
+    dateTextController.text = getTomorrowInJalali();
     _bloc.visitRequestStream.listen((data) {
       if (data.status == Status.COMPLETED) {
         showOneButtonDialog(context, Strings.physicalVisitRequestedMessage,
-            Strings.understandAction, () => Navigator.pop(context));
+            "در انتظار تایید پزشک", () => Navigator.pop(context), color: Colors.black54);
       } else if (data.status == Status.ERROR) {
         toast(context, data.message);
       }
@@ -77,15 +78,32 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
       child: Container(
         margin: EdgeInsets.only(top: 50),
         constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+        BoxConstraints(maxWidth: MediaQuery
+            .of(context)
+            .size
+            .width),
         child: Column(children: <Widget>[
           DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
           ALittleVerticalSpace(),
-          _labelAndItemsWidget(VISIT_METHOD, ["حضوری"]),
+          _labelWidget("حضوری"),
+          ALittleVerticalSpace(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              ActionButton(
+                width: 120,
+                color: IColors.themeColor,
+                title: "حضوری",
+                callBack: () {}
+              ),
+            ],
+          ),
           ALittleVerticalSpace(),
           _calendarWidget(),
           ALittleVerticalSpace(),
-          _labelAndItemsWidget(TIME_SELECTION, _getVisitTimes()),
+          _labelWidget(TIME_SELECTION),
+          ALittleVerticalSpace(),
+          _timesWidget(TIME_SELECTION, _getVisitTimes()),
           ALittleVerticalSpace(),
           _acceptPolicyWidget(),
           ALittleVerticalSpace(),
@@ -96,7 +114,8 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
     );
   }
 
-  _calendarWidget() => Column(
+  _calendarWidget() =>
+      Column(
         children: <Widget>[
           _labelWidget("زمان برگزاری"),
           ALittleVerticalSpace(),
@@ -136,16 +155,19 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
       final to = (i + 2).toString();
       visitTimes.add(replaceFarsiNumber("از " + from + " تا " + to));
     }
-    return visitTimes.take(3).toList().reversed.toList();
+    return visitTimes
+        .toList();
   }
 
-  _submitWidget() => ActionButton(
+  _submitWidget() =>
+      ActionButton(
         color: policyChecked ? IColors.themeColor : Colors.grey,
         title: "رزرو نوبت",
         callBack: _sendVisitRequest,
       );
 
-  _acceptPolicyWidget() => Row(
+  _acceptPolicyWidget() =>
+      Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Text(
@@ -165,15 +187,16 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
         ],
       );
 
-  _labelAndItemsWidget(String title, List<String> items) => Column(
-        children: <Widget>[
-          _labelWidget(title),
-          ALittleVerticalSpace(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              for (var index = 0; index < items.length; index++)
-                Padding(
+  _timesWidget(String title, List<String> items) =>
+      Container(
+        height: 50,
+        child: ListView(
+          reverse: true,
+          scrollDirection: Axis.horizontal,
+          children: <Widget>[
+            for (var index = 0; index < items.length; index++)
+              Wrap(
+                children: <Widget>[Padding(
                   padding: const EdgeInsets.only(right: 4.0, left: 4.0),
                   child: ActionButton(
                     width: 120,
@@ -188,13 +211,15 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
                       });
                     },
                   ),
-                ),
-            ],
-          )
-        ],
+                ),],
+              ),
+          ],
+        ),
       );
 
-  _labelWidget(String title) => Padding(
+
+  _labelWidget(String title) =>
+      Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,

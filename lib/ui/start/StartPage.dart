@@ -285,7 +285,9 @@ class _StartPageState extends State<StartPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           ActionButton(
-            color: Colors.grey,
+            color: isContinueEnable
+                ? IColors.themeColor
+                : Colors.grey,
             title: Strings.continueAction,
             callBack: submit,
           ),
@@ -414,6 +416,10 @@ class _StartPageState extends State<StartPage> {
       padding: EdgeInsets.only(left: 40.0, right: 40.0),
       child: Container(child: _inputFieldsInnerWidget()));
 
+  _isVerificationCodeValid(String validationCode) => validationCode.length == 6;
+
+  bool isContinueEnable = false;
+
   _inputFieldsInnerWidget() {
     switch (startType) {
       case StartType.SIGN_UP:
@@ -446,12 +452,16 @@ class _StartPageState extends State<StartPage> {
               );
       case StartType.LOGIN:
         return InputField(
-          inputHint: Strings.verificationHint,
-          controller: _verificationController,
-          textInputType: TextInputType.number,
-          validationCallback: (text) => text.length == 6,
-          errorMessage: "کدفعالسازی ۶رقمی است",
-        );
+            inputHint: Strings.verificationHint,
+            controller: _verificationController,
+            textInputType: TextInputType.number,
+            validationCallback: (text) => _isVerificationCodeValid(text),
+            errorMessage: "کدفعالسازی ۶رقمی است",
+            onChanged: (text) {
+              setState(() {
+                isContinueEnable = _isVerificationCodeValid(text);
+              });
+            });
       case StartType.REGISTER:
         return Column(
           children: <Widget>[
