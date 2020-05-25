@@ -55,7 +55,7 @@ class ChatMessage {
   }
 
   ChatMessage.fromSocket(Map<String, dynamic> json, bool isPatient) {
-    id = json['message_id'];
+    id = json['id'];
     if (json.containsKey('created_date'))
       createdDate = DateTime.parse(json['created_date']);
     else

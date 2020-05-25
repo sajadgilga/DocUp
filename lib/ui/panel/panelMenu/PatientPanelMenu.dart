@@ -103,15 +103,16 @@ class PatientPanelMenu extends StatelessWidget {
             getColor(PatientPanelSection.HEALTH_FILE,
                 panelTabState: PanelTabState.FirstTab, context: context),
             panelTabState: PanelTabState.FirstTab),
+
         PanelSubItem(
-            Strings.panelResultsSubLabel,
-            'results',
+            Strings.panelMedicinesSubLabel,
+            'medicines',
             getColor(PatientPanelSection.HEALTH_FILE,
                 panelTabState: PanelTabState.SecondTab, context: context),
             panelTabState: PanelTabState.SecondTab),
         PanelSubItem(
-            Strings.panelMedicinesSubLabel,
-            'medicines',
+            Strings.panelResultsSubLabel,
+            'results',
             getColor(PatientPanelSection.HEALTH_FILE,
                 panelTabState: PanelTabState.ThirdTab, context: context),
             panelTabState: PanelTabState.ThirdTab),

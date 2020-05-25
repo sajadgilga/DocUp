@@ -116,12 +116,18 @@ class Strings {
       ' لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
   static final String emptyPatientLabel = 'شما به بیماری متصل نیستید '
       '\n'
-      ' لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
+      ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
+
+  static final String emptyWaitDoctorLabel = 'منتظر بمانید';
+//  static final String emptyWaitPatientLabel = 'شما به بیماری متصل نیستید '
+//      '\n'
+//      ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
 
   static final String emptyChatPage = 'پیامی تاکنون ارسال نشده است';
 
   static final String emptySearch = 'متاسفانه پزشکی با این نام در داکآپ موجود نمی‌باشد';
   static final String emptySearchDoctorSide = 'متاسفانه بیماری با این نام در لیست بیماران شما موجود نمی‌باشد';
+  static final String emptyRequestsDoctorSide = 'درخواستی در حال حاضر موجود نمی‌باشد';
 
   static final String visitRequestedMessage = "درخواست رزرو شما با موفقیت ثبت شد در صورت تایید پزشک با مراجعه به پنل کاربری میتوانید ویزیت خود را در زمان مقرر شده انجام بدهید.";
   static final String physicalVisitRequestedMessage = "درخواست رزرو شما با موفقیت ثبت شد";

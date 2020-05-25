@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:docup/blocs/DoctorInfoBloc.dart';
+import 'package:docup/blocs/PanelBloc.dart';
+import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/PatientEntity.dart';
@@ -14,6 +16,7 @@ import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PatientRequestPage extends StatefulWidget {
   final PatientEntity patientEntity;
@@ -27,12 +30,20 @@ class PatientRequestPage extends StatefulWidget {
 class _PatientRequestPageState extends State<PatientRequestPage> {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
 
+  void _updateSearch() {
+    var searchBloc = BlocProvider.of<SearchBloc>(context);
+    searchBloc.add(SearchPatient(text: '', isRequestOnly: true));
+    var _panelBloc = BlocProvider.of<PanelBloc>(context);
+    _panelBloc.add(GetMyPanels());
+  }
+
   @override
   void initState() {
     _bloc.responseVisitStream.listen((data) {
       if (data.status == Status.COMPLETED) {
         String span = data.data.status == 1 ? "تایید" : "رد";
         toast(context, 'درخواست بیمار با موفقیت $span شد');
+        _updateSearch();
         Navigator.pop(context);
       } else if (data.status == Status.ERROR) {
         toast(context, data.message);

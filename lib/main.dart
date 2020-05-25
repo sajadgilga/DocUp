@@ -1,3 +1,4 @@
+import 'package:docup/blocs/PanelBloc.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/ui/start/OnBoardingPage.dart';
@@ -20,20 +21,25 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> globalNavigator =
       GlobalKey<NavigatorState>();
+
 //  Widget _startPage = MainPage();
 //  Widget _startPage = StartPage();
   Widget _startPage = SplashPage();
-//  Widget _startPage = OnBoardingPage();
+//  final PanelBloc _panelBloc = PanelBloc();
 
+//  Widget _startPage = OnBoardingPage();
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
 //    Crashlytics.instance.enableInDevMode = true;  // Pass all uncaught errors from the framework to Crashlytics.
     FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
-    return BlocProvider<EntityBloc>(
-        create: (context) => EntityBloc(),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<PanelBloc>.value(value: PanelBloc()),
+          BlocProvider<EntityBloc>.value(value: EntityBloc()),
+        ],
         child: MaterialApp(
           title: Strings.appTitle,
           theme: ThemeData(

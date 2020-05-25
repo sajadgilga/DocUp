@@ -46,6 +46,7 @@ class SocketHelper {
 
   void onError(err) {
     print(err);
+    reconnect();
     //TODO
   }
 
@@ -60,6 +61,7 @@ class SocketHelper {
     data['message'] = message;
     data['type'] = msgType;
     data['file'] = file;
+    data['isMe'] = '';
     _channel.sink.add(jsonEncode(data));
   }
 

@@ -3,7 +3,9 @@ import 'dart:convert';
 
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
+import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
+import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/main.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
@@ -14,6 +16,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
+import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
@@ -49,14 +52,15 @@ class _MainPageState extends State<MainPage> {
 
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
-//  final PatientBloc _patientBloc = PatientBloc();
-  final PanelBloc _panelBloc = PanelBloc();
   ProgressDialog _progressDialogue;
-  List<Widget> _children;
+  Map<int, GlobalKey<NavigatorViewState>> _children = {
+    0: GlobalKey<NavigatorViewState>(),
+    1: GlobalKey<NavigatorViewState>(),
+    2: GlobalKey<NavigatorViewState>(),
+    3: GlobalKey<NavigatorViewState>(),
+    4: GlobalKey<NavigatorViewState>(),
+  };
   Timer _timer;
-
-//  Patient _patient;
-//  List<Panel> panels;
 
   int _currentIndex = 0;
   Map<int, GlobalKey<NavigatorState>> _navigatorKeys = {
@@ -74,6 +78,7 @@ class _MainPageState extends State<MainPage> {
     // get user entity & panels, also periodically update entity's info
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
     _entityBloc.add(EntityGet());
+    var _panelBloc = BlocProvider.of<PanelBloc>(context);
     _panelBloc.add(GetMyPanels());
     _entityBloc.listen((data) {
       if (_timer == null)
@@ -252,21 +257,12 @@ class _MainPageState extends State<MainPage> {
 
   void _chatPage(int section) {
     _selectPage(2);
-//    _navigatorKeys[2].currentState.push()
+    _children[2].currentState.push(null, NavigatorRoutes.panel, detail: 'chat');
   }
 
   Widget _buildOffstageNavigator(int index) {
     return Offstage(
-      offstage: _currentIndex != index,
-      child: NavigatorView(
-        selectPage: (int section) {
-          _chatPage(section);
-        },
-        navigatorKey: _navigatorKeys[index],
-        index: index,
-        pushOnBase: widget.pushOnBase,
-      ),
-    );
+        offstage: _currentIndex != index, child: _buildNavigator(index));
   }
 
   Widget _buildNavigator(int index) {
@@ -277,36 +273,17 @@ class _MainPageState extends State<MainPage> {
       navigatorKey: _navigatorKeys[index],
       index: index,
       pushOnBase: widget.pushOnBase,
+      key: _children[index],
     );
   }
 
-//
-//  List<Widget> _children() {
-//    return <Widget>[
-//      _buildOffstageNavigator(0),
-//      _buildOffstageNavigator(1),
-//      _buildOffstageNavigator(2),
-//      _buildOffstageNavigator(3),
-//      _buildOffstageNavigator(4),
-//    ];
-//  }
-
   Widget _mainPage() {
-//    _children = <Widget>[
-//      _buildNavigator(0),
-//      _buildNavigator(1),
-//      _buildNavigator(2),
-//      _buildNavigator(3),
-//      _buildNavigator(4),
-//    ];
     return Scaffold(
         backgroundColor: IColors.background,
         bottomNavigationBar: SizedBox(
           child: _bottomNavigationBar(),
         ),
-        body:
-//        _children()[_currentIndex]
-            IndexedStack(
+        body: IndexedStack(
           index: _currentIndex,
           children: <Widget>[
             _buildOffstageNavigator(0),
@@ -326,21 +303,19 @@ class _MainPageState extends State<MainPage> {
 
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
 
-    return MultiBlocProvider(
-        providers: [BlocProvider<PanelBloc>.value(value: _panelBloc)],
-        child: WillPopScope(child:
-            BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
-          return _mainPage();
-        }), onWillPop: () async {
-          final isFirstRouteInCurrentRoute =
-              !await _navigatorKeys[_currentIndex].currentState.maybePop();
-          if (isFirstRouteInCurrentRoute) {
-            if (_currentIndex != 0) {
-              _selectPage(0);
-              return false;
-            }
-          }
-          return isFirstRouteInCurrentRoute;
-        }));
+    return WillPopScope(
+        child: BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+      return _mainPage();
+    }), onWillPop: () async {
+      final isFirstRouteInCurrentRoute =
+          !await _navigatorKeys[_currentIndex].currentState.maybePop();
+      if (isFirstRouteInCurrentRoute) {
+        if (_currentIndex != 0) {
+          _selectPage(0);
+          return false;
+        }
+      }
+      return isFirstRouteInCurrentRoute;
+    });
   }
 }

@@ -8,6 +8,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/ChatMessage.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
@@ -103,18 +104,19 @@ class _ChatPageState extends State<ChatPage> {
       ));
 
   Widget _chatBox() {
-    return StreamBuilder(
-        stream: SocketHelper().stream,
-        builder: (context, snapshot) {
-          var data = json.decode(snapshot.data.toString());
-          ChatMessage msg = null;
-          if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
-            msg = ChatMessage.fromSocket(data, widget.entity.isPatient);
-            var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
+//    return
+//      StreamBuilder(
+//        stream: SocketHelper().stream,
+//        builder: (context, snapshot) {
+//          var data = json.decode(snapshot.data.toString());
+//          ChatMessage msg = null;
+//          if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
+//            msg = ChatMessage.fromSocket(data, widget.entity.isPatient);
+//            var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
 //            _chatMessageBloc.add(ChatMessageAddToList(msg: msg));
-          }
-          return _ChatBox(entity: widget.entity, message: msg);
-        });
+//          }
+    return _ChatBox(entity: widget.entity);
+//        });
   }
 
   Widget _ChatPage() {
@@ -156,6 +158,7 @@ class _ChatPageState extends State<ChatPage> {
                 PanelAlert(
                   label: Strings.requestSentLabel,
                   buttonLabel: Strings.waitingForApproval,
+                  btnColor: IColors.disabledButton,
                 )
               ]);
             else
@@ -164,27 +167,35 @@ class _ChatPageState extends State<ChatPage> {
                 PanelAlert(
                   label: Strings.requestSentLabelDoctorSide,
                   buttonLabel: Strings.waitingForApprovalDoctorSide,
+                  callback: () {
+                    widget.onPush(NavigatorRoutes.patientDialogue,
+                        state.entity.partnerEntity);
+                  },
                 )
               ]);
-          } else if (state.entity.panel.status == 3)
+          } else if (state.entity.panel.status == 3 ||
+              state.entity.panel.status == 2)
 //            return _ChatPage();
             return Stack(children: <Widget>[
               _ChatPage(),
               PanelAlert(
                 label: Strings.notRequestTimeDoctorSide,
                 buttonLabel: Strings.waitLabel,
-              )
+                btnColor: IColors.disabledButton,
+              ) //TODO: change to timer
             ]);
           else if (state.entity.panel.status == 6 ||
-              state.entity.panel.status == 7 ||
-              state.entity.panel.status == 4 ||
-              state.entity.panel.status == 2) {
+              state.entity.panel.status == 7) {
             if (state.entity.isPatient)
               return Stack(children: <Widget>[
                 _ChatPage(),
                 PanelAlert(
                   label: Strings.noAvailableVirtualVisit,
                   buttonLabel: Strings.reserveVirtualVisit,
+                  callback: () {
+                    widget.onPush(NavigatorRoutes.doctorDialogue,
+                        state.entity.partnerEntity);
+                  },
                 )
               ]);
             else
@@ -193,6 +204,7 @@ class _ChatPageState extends State<ChatPage> {
                 PanelAlert(
                   label: Strings.noAvailableVirtualVisit,
                   buttonLabel: Strings.reserveVirtualVisitDoctorSide,
+                  btnColor: IColors.disabledButton,
                 )
               ]);
           } else
@@ -232,31 +244,50 @@ class _ChatBoxState extends State<_ChatBox> {
     super.didUpdateWidget(oldWidget);
   }
 
+  bool isUnique(msgId) {
+    for (ChatMessage m in _messages) {
+      if (m.id == msgId) return false;
+    }
+    return true;
+  }
+
+  void uniqueMaker() {
+    Map<int, dynamic> map = Map();
+    List<ChatMessage> removes = [];
+    for (ChatMessage m in _messages) {
+      if (map.containsKey(m.id))
+        removes.add(m);
+      else
+        map[m.id] = '';
+    }
+    _messages.removeWhere((element) => removes.contains(element));
+  }
+
   Widget _msgList({messages}) {
-    return
-//      StreamBuilder(
-//      stream: SocketHelper().stream,
-//      builder: (context, snapshot) {
-//        var data = json.decode(snapshot.data.toString());
-//        var msgs = _messages;
-//        if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
-////            setState(() {
-////            });
+    return StreamBuilder(
+        stream: SocketHelper().stream,
+        builder: (context, snapshot) {
+          var data = json.decode(snapshot.data.toString());
+          if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
+//            setState(() {
+//            });
 //          var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
-//          _chatMessageBloc.add(ChatMessageAddToList(
-//              msg: ChatMessage.fromSocket(data, widget.entity.isPatient)));
-//        }
-//        return
-        Container(
-            child: ListView.builder(
-                reverse: true,
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  return ChatBubble(
-                    message: _messages[index],
-                    isHomePageChat: false,
-                  );
-                }));
+            if (isUnique(data['id']))
+              _messages.insert(
+                  0, ChatMessage.fromSocket(data, widget.entity.isPatient));
+          }
+          uniqueMaker();
+          return Container(
+              child: ListView.builder(
+                  reverse: true,
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    return ChatBubble(
+                      message: _messages[index],
+                      isHomePageChat: false,
+                    );
+                  }));
+        });
   }
 
   @override
@@ -287,8 +318,7 @@ class _ChatBoxState extends State<_ChatBox> {
               if (_messages.length > 0) {
                 length = _messages.length;
                 return _msgList();
-              }
-              else
+              } else
                 return Center(
                   child: Text(
                     Strings.emptyChatPage,

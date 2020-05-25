@@ -36,7 +36,9 @@ class _ResultListState extends State<ResultList> {
           child: Text(
             (widget.isDoctor
                 ? Strings.emptySearch
-                : Strings.emptySearchDoctorSide),
+                : (widget.isRequestsOnly
+                    ? Strings.emptyRequestsDoctorSide
+                    : Strings.emptySearchDoctorSide)),
             style: TextStyle(fontSize: 10),
             textAlign: TextAlign.center,
           ),
@@ -69,7 +71,7 @@ class _ResultListState extends State<ResultList> {
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 60),
-      margin: EdgeInsets.only(top: 20, right: 40),
+      margin: EdgeInsets.only(top: 20, right: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
@@ -290,7 +292,7 @@ class _SearchResultPatientItem extends StatelessWidget {
       utfName = entity.user.name;
     }
     return Container(
-      margin: EdgeInsets.only(right: 20),
+      margin: EdgeInsets.only(right: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
@@ -307,9 +309,11 @@ class _SearchResultPatientItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (entity.user == null) return Container();
     return GestureDetector(
         onTap: () => _showDoctorDialogue(context),
         child: Container(
+          color: Color.fromRGBO(0, 0, 0, 0),
           margin: EdgeInsets.only(top: 10, bottom: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -376,7 +380,11 @@ extension PatientStatusExtension on PatientStatus {
   get icon {
     switch (this) {
       case PatientStatus.VIRTUAL_VISIT_IN_CONTACT:
-        return IColors.inContact;
+        return Icon(
+          Icons.person,
+          size: 15,
+          color: this.color,
+        );
       case PatientStatus.VISIT_IN_CONTACT:
         return Icon(
           Icons.person,
@@ -405,7 +413,7 @@ extension PatientStatusExtension on PatientStatus {
       case PatientStatus.CURED:
         return Icon(Icons.update, size: 15, color: this.color);
       default:
-        return '';
+        return Container();
     }
   }
 }
