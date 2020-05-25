@@ -81,7 +81,7 @@ class MedicineReminder extends StatefulWidget {
 //  Color color;
 
   MedicineReminder(this.time, this.title, this.type, this.count,
-      {this.state, this.textSize = 12.0});
+      {this.state = null, this.textSize = 12.0});
 
   @override
   _MedicineReminderState createState() {
@@ -102,6 +102,13 @@ class _MedicineReminderState extends State<MedicineReminder> {
   void initState() {
     if (widget.state != null) _reminderState = widget.state;
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(MedicineReminder oldWidget) {
+    if (widget.state != null)
+      _reminderState = widget.state;
+    super.didUpdateWidget(oldWidget);
   }
 
   void _finishReminder() {

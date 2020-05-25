@@ -43,6 +43,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     _notificationBloc.add(GetNewestNotifications());
+    _medicineBloc.add(MedicineGet());
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isDoctor)
       BlocProvider.of<PatientTrackerBloc>(context).add(TrackerGet());

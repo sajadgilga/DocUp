@@ -17,6 +17,7 @@ class Medicine {
     if (json.containsKey('patient')) patient = json['patient'];
     if (json.containsKey('doctor')) doctor = json['doctor'];
     if (json.containsKey('panel')) panel = json['panel'];
+    if (json.containsKey('usage')) usage = json['usage'];
   }
 }
 

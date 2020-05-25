@@ -23,7 +23,7 @@ class PatientRepository {
     return PatientEntity.fromJson(response);
   }
 
-  List<Medicine> _medicineList(List<Map<String, dynamic>> list) {
+  List<Medicine> _medicineList(List<dynamic> list) {
     List<Medicine> medicines = [];
     list.forEach((element) {
       medicines.add(Medicine.fromJson(element));
