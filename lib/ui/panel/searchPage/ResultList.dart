@@ -71,7 +71,7 @@ class _ResultListState extends State<ResultList> {
           .of(context)
           .size
           .height - 60),
-      margin: EdgeInsets.only(top: 20, right: 40),
+      margin: EdgeInsets.only(top: 20, right: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
@@ -304,7 +304,7 @@ class _SearchResultPatientItem extends StatelessWidget {
       utfName = entity.user.name;
     }
     return Container(
-      margin: EdgeInsets.only(right: 20),
+      margin: EdgeInsets.only(right: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
@@ -326,6 +326,7 @@ class _SearchResultPatientItem extends StatelessWidget {
     return GestureDetector(
         onTap: () => _showDoctorDialogue(context),
         child: Container(
+          color: Color.fromRGBO(0, 0, 0, 0),
           margin: EdgeInsets.only(top: 10, bottom: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,

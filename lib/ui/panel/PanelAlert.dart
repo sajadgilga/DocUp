@@ -4,21 +4,24 @@ import 'package:flutter/material.dart';
 class PanelAlert extends StatelessWidget {
   String label;
   String buttonLabel;
+  Function callback;
 
-  PanelAlert({this.label, this.buttonLabel});
+  PanelAlert({this.label, this.buttonLabel, this.callback});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            minHeight: MediaQuery.of(context).size.height),
-        decoration: BoxDecoration(color: Color.fromRGBO(10, 10, 10, .3)),
-        child: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 20, bottom: 20),
-          child: Container(
-            constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height - 240),
-            child: Center(child: Container(
+      constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width,
+          minHeight: MediaQuery.of(context).size.height),
+      decoration: BoxDecoration(color: Color.fromRGBO(10, 10, 10, .3)),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 20, bottom: 20),
+        child: Container(
+          constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height - 240),
+          child: Center(
+            child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white),
@@ -36,23 +39,26 @@ class PanelAlert extends StatelessWidget {
                   SizedBox(
                     height: 40,
                   ),
-                  Container(
-                    padding: EdgeInsets.only(
-                        top: 10, bottom: 10, right: 25, left: 25),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                        color: IColors.themeColor),
-                    child: Text(
-                      buttonLabel,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14, color: Colors.white),
-                    ),
-                  )
+                  GestureDetector(
+                      onTap: callback,
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            top: 10, bottom: 10, right: 25, left: 25),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            color: IColors.themeColor),
+                        child: Text(
+                          buttonLabel,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                      ))
                 ],
               ),
             ),
           ),
-        ),),
-      );
+        ),
+      ),
+    );
   }
 }
