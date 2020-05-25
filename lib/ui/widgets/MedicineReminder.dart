@@ -106,8 +106,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
 
   @override
   void didUpdateWidget(MedicineReminder oldWidget) {
-    if (widget.state != null)
-      _reminderState = widget.state;
+    if (widget.state != null) _reminderState = widget.state;
     super.didUpdateWidget(oldWidget);
   }
 

@@ -11,13 +11,17 @@ class ReminderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> items = [];
-    if (medicines != null) {
+    if (medicines != null && medicines.length > 0) {
       for (var medicine in medicines) {
-        items.add(MedicineReminder(medicine.consumingTime, medicine.drugName,
-            MedicineType.capsule, medicine.usage, state: ReminderState.near,));
+        items.add(MedicineReminder(
+          medicine.consumingTime,
+          medicine.drugName,
+          MedicineType.capsule,
+          medicine.usage,
+          state: ReminderState.near,
+        ));
       }
-    }
-    else {
+    } else {
       items.add(MedicineReminder(
         null,
         'دارویی در حال حاضر موجود نمی باشد',
