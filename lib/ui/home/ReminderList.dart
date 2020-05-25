@@ -16,25 +16,22 @@ class ReminderList extends StatelessWidget {
         items.add(MedicineReminder(medicine.consumingTime, medicine.drugName,
             MedicineType.capsule, 'دو عدد'));
       }
+    else
+      items.add(MedicineReminder(
+        null,
+        'دارویی در حال حاضر موجود نمی باشد',
+        MedicineType.capsule,
+        '',
+        state: ReminderState.disabled,
+        textSize: 9,
+      ));
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Container(
           height: 160,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              MedicineReminder(
-                  '۱۸:۰۰', 'کپسول فلان', MedicineType.capsule, 'دوعدد'),
-              MedicineReminder(
-                  '۱۸:۰۰', 'کپسول فلان', MedicineType.capsule, 'دوعدد'),
-              MedicineReminder(
-                  '۱۸:۰۰', 'کپسول فلان', MedicineType.capsule, 'دوعدد'),
-              MedicineReminder(
-                  '۱۸:۰۰', 'کپسول فلان', MedicineType.capsule, 'دوعدد'),
-              MedicineReminder(
-                  '۱۸:۰۰', 'کپسول فلان', MedicineType.capsule, 'دوعدد'),
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: items),
         ));
   }
 }

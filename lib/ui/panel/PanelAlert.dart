@@ -2,11 +2,12 @@ import 'package:docup/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class PanelAlert extends StatelessWidget {
-  String label;
-  String buttonLabel;
-  Function callback;
+  final String label;
+  final String buttonLabel;
+  final Function callback;
+  final Color btnColor;
 
-  PanelAlert({this.label, this.buttonLabel, this.callback});
+  PanelAlert({this.label, this.buttonLabel, this.callback, this.btnColor});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class PanelAlert extends StatelessWidget {
                             top: 10, bottom: 10, right: 25, left: 25),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(25)),
-                            color: IColors.themeColor),
+                            color: (btnColor != null? btnColor:IColors.themeColor)),
                         child: Text(
                           buttonLabel,
                           textAlign: TextAlign.center,

@@ -8,6 +8,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/ChatMessage.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
@@ -157,6 +158,7 @@ class _ChatPageState extends State<ChatPage> {
                 PanelAlert(
                   label: Strings.requestSentLabel,
                   buttonLabel: Strings.waitingForApproval,
+                  btnColor: IColors.disabledButton,
                 )
               ]);
             else
@@ -165,27 +167,35 @@ class _ChatPageState extends State<ChatPage> {
                 PanelAlert(
                   label: Strings.requestSentLabelDoctorSide,
                   buttonLabel: Strings.waitingForApprovalDoctorSide,
+                  callback: () {
+                    widget.onPush(NavigatorRoutes.patientDialogue,
+                        state.entity.partnerEntity);
+                  },
                 )
               ]);
-          } else if (state.entity.panel.status == 3)
+          } else if (state.entity.panel.status == 3 ||
+              state.entity.panel.status == 2)
 //            return _ChatPage();
             return Stack(children: <Widget>[
               _ChatPage(),
               PanelAlert(
                 label: Strings.notRequestTimeDoctorSide,
                 buttonLabel: Strings.waitLabel,
-              )
+                btnColor: IColors.disabledButton,
+              ) //TODO: change to timer
             ]);
           else if (state.entity.panel.status == 6 ||
-              state.entity.panel.status == 7 ||
-              state.entity.panel.status == 4 ||
-              state.entity.panel.status == 2) {
+              state.entity.panel.status == 7) {
             if (state.entity.isPatient)
               return Stack(children: <Widget>[
                 _ChatPage(),
                 PanelAlert(
                   label: Strings.noAvailableVirtualVisit,
                   buttonLabel: Strings.reserveVirtualVisit,
+                  callback: () {
+                    widget.onPush(NavigatorRoutes.doctorDialogue,
+                        state.entity.partnerEntity);
+                  },
                 )
               ]);
             else
@@ -194,6 +204,7 @@ class _ChatPageState extends State<ChatPage> {
                 PanelAlert(
                   label: Strings.noAvailableVirtualVisit,
                   buttonLabel: Strings.reserveVirtualVisitDoctorSide,
+                  btnColor: IColors.disabledButton,
                 )
               ]);
           } else

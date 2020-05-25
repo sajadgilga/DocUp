@@ -20,7 +20,7 @@ extension MedicineExtension on MedicineType {
   }
 }
 
-enum ReminderState { done, overdue, near }
+enum ReminderState { done, overdue, near, disabled }
 
 extension ReminderStateExtension on ReminderState {
   Color get color {
@@ -30,6 +30,8 @@ extension ReminderStateExtension on ReminderState {
       case ReminderState.near:
         return IColors.themeColor;
       case ReminderState.overdue:
+        return Colors.grey;
+      case ReminderState.disabled:
         return Colors.grey;
       default:
         return Colors.grey;
@@ -44,6 +46,8 @@ extension ReminderStateExtension on ReminderState {
         return Border.all(width: 4.0, color: this.color);
       case ReminderState.overdue:
         return Border.all(width: 4.0, color: this.color);
+      case ReminderState.disabled:
+        return Border.all(width: 0, color: this.color);
       default:
         return Border.all(width: 0);
     }
@@ -57,6 +61,8 @@ extension ReminderStateExtension on ReminderState {
         return Colors.black;
       case ReminderState.overdue:
         return Colors.black;
+      case ReminderState.disabled:
+        return Colors.white;
       default:
         return Colors.black;
     }
@@ -69,10 +75,13 @@ class MedicineReminder extends StatefulWidget {
   MedicineType type;
   String title;
   String count;
+  ReminderState state;
+  double textSize;
 
 //  Color color;
 
-  MedicineReminder(this.time, this.title, this.type, this.count);
+  MedicineReminder(this.time, this.title, this.type, this.count,
+      {this.state, this.textSize = 12.0});
 
   @override
   _MedicineReminderState createState() {
@@ -89,7 +98,14 @@ class _MedicineReminderState extends State<MedicineReminder> {
 //        : (_reminderState == ReminderState.done ? Colors.green : Colors.grey));
 //  }
 
+  @override
+  void initState() {
+    if (widget.state != null) _reminderState = widget.state;
+    super.initState();
+  }
+
   void _finishReminder() {
+    if (_reminderState == ReminderState.disabled) return;
     setState(() {
       _reminderState = (_reminderState == ReminderState.done
           ? ReminderState.near
@@ -130,7 +146,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
             'ساعت ${widget.time}',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 10,
+                fontSize: widget.textSize - 2,
                 color: _reminderState.color,
                 fontWeight: FontWeight.bold),
           ),
@@ -148,56 +164,64 @@ class _MedicineReminderState extends State<MedicineReminder> {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       );
 
+  Widget _reminderBoxBody() => DecoratedBox(
+        decoration: _reminderBoxDecoration(),
+        child: Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Column(children: <Widget>[
+              (widget.time == null
+                  ? SizedBox(
+                      height: 10,
+                    )
+                  : _header()),
+              SizedBox(
+                height: 10,
+              ),
+              SvgPicture.asset(
+                widget.type.asset,
+                alignment: Alignment.center,
+                color: _reminderState.color,
+                width: 15,
+                height: 15,
+              ),
+              Text(
+                '${widget.count}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: widget.textSize - 4,
+                    color: _reminderState.color,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '${widget.title}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: widget.textSize,
+                    color: _reminderState.color,
+                    fontWeight: FontWeight.w900),
+              ),
+            ])),
+      );
+
   Widget _reminderBox() => Container(
       constraints: BoxConstraints(maxHeight: 120, maxWidth: 120),
       child: Stack(
         children: <Widget>[
-          InkWell(
-            child: DecoratedBox(
-              decoration: _reminderBoxDecoration(),
-              child: Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Column(children: <Widget>[
-                    _header(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    SvgPicture.asset(
-                      widget.type.asset,
-                      alignment: Alignment.center,
-                      color: _reminderState.color,
-                      width: 15,
-                      height: 15,
-                    ),
-                    Text(
-                      '${widget.count}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 8,
-                          color: _reminderState.color,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      '${widget.title}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: _reminderState.color,
-                          fontWeight: FontWeight.w900),
-                    ),
-                  ])),
-            ),
-          ),
+          InkWell(child: _reminderBoxBody()),
           Positioned.fill(
               child: new Material(
                   color: Colors.transparent,
                   child: new InkWell(
+                    splashColor: (widget.time == null
+                        ? Colors.transparent
+                        : Theme.of(context).splashColor),
+                    highlightColor: (widget.time == null
+                        ? Colors.transparent
+                        : Theme.of(context).highlightColor),
                     onTap: () {
                       _finishReminder();
                     },
-                  )
-              )
-          ),
+                  ))),
         ],
       ));
 

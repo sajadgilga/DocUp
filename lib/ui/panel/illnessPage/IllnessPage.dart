@@ -82,6 +82,7 @@ class IllnessPage extends StatelessWidget {
               PanelAlert(
                 label: Strings.requestSentLabel,
                 buttonLabel: Strings.waitingForApproval,
+                btnColor: IColors.disabledButton,
               )
             ]);
             else
@@ -90,6 +91,10 @@ class IllnessPage extends StatelessWidget {
                 PanelAlert(
                   label: Strings.requestSentLabelDoctorSide,
                   buttonLabel: Strings.waitingForApprovalDoctorSide,
+                  callback: () {
+                    onPush(NavigatorRoutes.patientDialogue,
+                        state.entity.partnerEntity);
+                  },
                 )
               ]);
           else

@@ -61,18 +61,18 @@ class NavigatorView extends StatefulWidget {
 
   NavigatorView(
       {Key key,
-        this.index,
-        this.navigatorKey,
-        this.pushOnBase,
-        this.selectPage})
+      this.index,
+      this.navigatorKey,
+      this.pushOnBase,
+      this.selectPage})
       : super(key: key);
-
 
   @override
   State<StatefulWidget> createState() {
     return NavigatorViewState();
   }
 }
+
 class NavigatorViewState extends State<NavigatorView> {
   final TabSwitchBloc _tabSwitchBloc = TabSwitchBloc();
   final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
@@ -205,8 +205,8 @@ class NavigatorViewState extends State<NavigatorView> {
 
   void push(contet, String direction, {detail}) {
     _route(RouteSettings(name: direction), context, detail: detail);
-    widget.navigatorKey.currentState.push(
-        _route(RouteSettings(name: direction), context, detail: detail));
+    widget.navigatorKey.currentState
+        .push(_route(RouteSettings(name: direction), context, detail: detail));
   }
 
   void _pop(BuildContext context) {
@@ -410,9 +410,14 @@ class NavigatorViewState extends State<NavigatorView> {
     try {
       _patient.user.name = utf8.decode(_patient.user.name.codeUnits);
     } catch (_) {}
-    return PatientRequestPage(
-      patientEntity: _patient,
-    );
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<SearchBloc>.value(value: _searchBloc),
+//            BlocProvider<VisitBloc>.value(value: _visitBloc),
+        ],
+        child: PatientRequestPage(
+          patientEntity: _patient,
+        ));
   }
 
   Widget _searchPage(context, {isRequests = false}) => MultiBlocProvider(

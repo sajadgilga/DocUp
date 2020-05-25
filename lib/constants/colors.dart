@@ -23,11 +23,13 @@ class IColors {
   static const Color darkBlue = Color.fromRGBO(44, 62, 80, 1);
   static const Color background = Color.fromRGBO(242, 242, 242, 1);
   static const Color doctorChatBubble = Color.fromRGBO(242, 242, 242, 1);
+  static const Color disabledButton = Colors.black54;
   static Color themeColor = blue;
   static Color selfChatBubble = themeColor;
   static Color doctorChatText = Colors.black;
   static Color selfChatText = Colors.white;
   static Color grey = Color.fromRGBO(245, 245, 245, 1);
+  static Color transparentGrey = Color.fromRGBO(10, 10, 10, 1);
   static Color darkGrey = Color.fromRGBO(144, 144, 144, 1);
   static const Color deactivePanelMenu = Colors.black38;
   static const Color activePanelMenu = Colors.black54;

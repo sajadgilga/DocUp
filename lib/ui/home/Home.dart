@@ -1,4 +1,5 @@
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/MedicineBloc.dart';
 import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/blocs/PatientTrackerBloc.dart';
 import 'package:docup/constants/assets.dart';
@@ -37,6 +38,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 //  List<Doctor> iDoctors;
   NotificationBloc _notificationBloc = NotificationBloc();
+  MedicineBloc _medicineBloc = MedicineBloc();
 
   @override
   void initState() {
@@ -45,6 +47,13 @@ class _HomeState extends State<Home> {
     if (entity.isDoctor)
       BlocProvider.of<PatientTrackerBloc>(context).add(TrackerGet());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _medicineBloc.close();
+    _notificationBloc.close();
+    super.dispose();
   }
 
   Widget _intro(double width) => IgnorePointer(
@@ -66,12 +75,12 @@ class _HomeState extends State<Home> {
       ));
 
   Widget _reminderList() {
-    return BlocBuilder<NotificationBloc, NotificationState>(
-        bloc: _notificationBloc,
+    return BlocBuilder<MedicineBloc, MedicineState>(
+        bloc: _medicineBloc,
         builder: (context, state) {
-          if (state is NotificationsLoaded)
+          if (state is MedicineLoaded)
             return ReminderList(
-              medicines: state.notifications.newestDrugs,
+              medicines: state.medicines,
             );
           else
             return ReminderList();
@@ -121,6 +130,20 @@ class _HomeState extends State<Home> {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
         if (state is EntityLoaded) {
+          if (state.entity.partnerEntity != null) {
+            return IPartner(
+              selectPage: widget.selectPage,
+              partner: state.entity.partnerEntity,
+              onPush: widget.onPush,
+              globalOnPush: widget.globalOnPush,
+              color: IColors.themeColor,
+              label: (state.entity.isPatient
+                  ? Strings.iDoctorLabel
+                  : Strings.iPatientLabel),
+            );
+          }
+        }
+        if (state is EntityLoading) {
           if (state.entity.partnerEntity != null) {
             return IPartner(
               selectPage: widget.selectPage,

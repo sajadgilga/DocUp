@@ -127,6 +127,7 @@ class Strings {
 
   static final String emptySearch = 'متاسفانه پزشکی با این نام در داکآپ موجود نمی‌باشد';
   static final String emptySearchDoctorSide = 'متاسفانه بیماری با این نام در لیست بیماران شما موجود نمی‌باشد';
+  static final String emptyRequestsDoctorSide = 'درخواستی در حال حاضر موجود نمی‌باشد';
 
   static final String visitRequestedMessage = "درخواست رزرو شما با موفقیت ثبت شد در صورت تایید پزشک با مراجعه به پنل کاربری میتوانید ویزیت خود را در زمان مقرر شده انجام بدهید.";
   static final String physicalVisitRequestedMessage = "درخواست رزرو شما با موفقیت ثبت شد خواهشمند است در زمان و تاریخ تعیین شده به پزشک خود مراجعه بفرمایید";

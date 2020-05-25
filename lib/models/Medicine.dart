@@ -1,20 +1,22 @@
 class Medicine {
   int id;
   String drugName;
+  String usage;
   String consumingTime;
-  UserEntity patient;
-  UserEntity doctor;
+  String consumingDay;
+  int patient;
+  int doctor;
+  int panel;
 
   Medicine.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    drugName = json['drug_name'];
-    consumingTime = json['consuming_time'];
-    if (patient != null) {
-      patient = UserEntity.fromJson(json['patient']);
-    }
-    if(doctor != null) {
-      doctor = UserEntity.fromJson(json['doctor']);
-    }
+    if (json.containsKey('id')) id = json['id'];
+    if (json.containsKey('drug_name')) drugName = json['drug_name'];
+    if (json.containsKey('consuming_time'))
+      consumingTime = json['consuming_time'];
+    if (json.containsKey('consuming_day')) consumingDay = json['consuming_day'];
+    if (json.containsKey('patient')) patient = json['patient'];
+    if (json.containsKey('doctor')) doctor = json['doctor'];
+    if (json.containsKey('panel')) panel = json['panel'];
   }
 }
 
