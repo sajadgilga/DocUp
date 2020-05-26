@@ -218,6 +218,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
     return GestureDetector(
         onTap: () => _showDoctorDialogue(context),
         child: Container(
+          color: Color.fromRGBO(0, 0, 0, 0),
           margin: EdgeInsets.only(top: 10, bottom: 10),
           constraints:
               BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),

@@ -4,6 +4,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitTime.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/widgets/VisitBox.dart';
 import 'package:docup/utils/Utils.dart';
@@ -58,7 +59,10 @@ class InfoPage extends StatelessWidget {
               width: 35,
               color: IColors.themeColor,
             ),
-            tapCallback: () => showNextVersionDialog(context),
+            tapCallback: () => {
+              onPush(
+                  NavigatorRoutes.uploadPicDialogue, entity.sectionId(pageName))
+            },
           )
         ],
       ),

@@ -88,42 +88,42 @@ class _MainPageState extends State<MainPage> {
     });
 
     // firebase initialization for notifications & push notifications
-//    try {
-//      _firebaseMessaging.getToken().then((String fcmToken) {
-//        assert(fcmToken != null);
-//        print("FCM " + fcmToken);
-//        NotificationRepository().registerDevice(fcmToken);
-//      });
-//
-//      _firebaseMessaging.configure(
-//        onMessage: (Map<String, dynamic> message) async {
-//          print("onMessage: $message");
-//          await _showNotificationWithDefaultSound(
-//              message['notification']['title'],
-//              message['notification']['body']);
-//        },
-////      onBackgroundMessage: myBackgroundMessageHandler,
-//        onLaunch: (Map<String, dynamic> message) async {
-//          print("onLaunch: $message");
-//        },
-//        onResume: (Map<String, dynamic> message) async {
-//          print("onResume: $message");
-//        },
-//      );
-//
-//      var initializationSettingsAndroid =
-//      new AndroidInitializationSettings('mipmap/ic_launcher');
-//      var initializationSettingsIOS = new IOSInitializationSettings();
-//
-//      var initializationSettings = new InitializationSettings(
-//          initializationSettingsAndroid, initializationSettingsIOS);
-//
-//      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-//      flutterLocalNotificationsPlugin.initialize(initializationSettings,
-//          onSelectNotification: onSelectNotification);
-//    } on Exception {
-//      print("oh oh");
-//    }
+    try {
+      _firebaseMessaging.getToken().then((String fcmToken) {
+        assert(fcmToken != null);
+        print("FCM " + fcmToken);
+        NotificationRepository().registerDevice(fcmToken);
+      });
+
+      _firebaseMessaging.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print("onMessage: $message");
+          await _showNotificationWithDefaultSound(
+              message['notification']['title'],
+              message['notification']['body']);
+        },
+//      onBackgroundMessage: myBackgroundMessageHandler,
+        onLaunch: (Map<String, dynamic> message) async {
+          print("onLaunch: $message");
+        },
+        onResume: (Map<String, dynamic> message) async {
+          print("onResume: $message");
+        },
+      );
+
+      var initializationSettingsAndroid =
+      new AndroidInitializationSettings('mipmap/ic_launcher');
+      var initializationSettingsIOS = new IOSInitializationSettings();
+
+      var initializationSettings = new InitializationSettings(
+          initializationSettingsAndroid, initializationSettingsIOS);
+
+      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+      flutterLocalNotificationsPlugin.initialize(initializationSettings,
+          onSelectNotification: onSelectNotification);
+    } on Exception {
+      print("oh oh");
+    }
     super.initState();
   }
 
@@ -145,7 +145,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future onSelectNotification(String payload) async {
-//    joinVideoCall(payload);
+    joinVideoCall(payload);
   }
 
   bool videoCallStarted = false;
@@ -167,7 +167,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-//
+
   Future<void> _handleCameraAndMic() async {
     await PermissionHandler().requestPermissions(
       [PermissionGroup.camera, PermissionGroup.microphone],
