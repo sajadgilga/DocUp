@@ -1,4 +1,5 @@
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/MedicalTestBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/constants/colors.dart';
@@ -27,6 +28,8 @@ class IllnessPage extends StatelessWidget {
 
   IllnessPage({Key key, this.entity, @required this.onPush}) : super(key: key);
 
+  MedicalTestBloc _bloc = MedicalTestBloc();
+
   Widget _IllnessPage(times) {
     return BlocProvider.value(
         value: _pictureBloc,
@@ -53,16 +56,31 @@ class IllnessPage extends StatelessWidget {
                   width: 35,
                   color: IColors.themeColor,
                 ),
-                tapCallback: () => onPush(NavigatorRoutes.cognitiveTest, entity.partnerEntity),
+                tapCallback: () =>
+                    onPush(NavigatorRoutes.cognitiveTest, entity.partnerEntity),
               )
             ],
           ),
         )));
   }
 
+  _addTest(context) {
+    final tests = ["تست حافظه", "GDS تست ", "تست غربال گری"];
+    showListDialog(context, tests, "فرستادن برای سلامت‌جو", (selectedIndex) {
+      _bloc.add(AddTestToPatient(
+          testId: selectedIndex, patientId: entity.partnerEntity.id));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<VisitTime> times = [];
+    _bloc.listen((event) {
+      if(event is AddTestToPatientLoaded){
+        toast(context, "تست مورد نظر با موفقیت فرستاده شد");
+      } else if(event is AddTestToPatientError) {
+        toast(context, "خطایی رخ داده است");
+      }
+    });    List<VisitTime> times = [];
     times.add(VisitTime(Month.ESF, '۷', '۱۳۹۸', true));
     times.add(VisitTime(Month.DAY, '۱۶', '۱۳۹۸', false));
     times.add(VisitTime(Month.ABN, '۷', '۱۳۹۸', false));
@@ -72,19 +90,42 @@ class IllnessPage extends StatelessWidget {
     _pictureBloc
         .add(PictureListGet(listId: entity.sectionId(Strings.cognitiveTests)));
 
-    return BlocBuilder<EntityBloc, EntityState>(
-      builder: (context, state) {
-        if (state is EntityLoaded) {
-          if (state.entity.panel.status == 0 || state.entity.panel.status == 1)
-            if (entity.isPatient)
-            return Stack(children: <Widget>[
-              _IllnessPage(times),
-              PanelAlert(
-                label: Strings.requestSentLabel,
-                buttonLabel: Strings.waitingForApproval,
-                btnColor: IColors.disabledButton,
-              )
-            ]);
+    return Scaffold(
+      floatingActionButton: Visibility(
+        visible: entity.isDoctor,
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  FloatingActionButton(
+                    mini: true,
+                    onPressed: () => _addTest(context),
+                    child: Icon(Icons.add),
+                    backgroundColor: IColors.themeColor,
+                  ),
+                  Text("تست جدید", style: TextStyle(fontSize: 12))
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: BlocBuilder<EntityBloc, EntityState>(
+        builder: (context, state) {
+          if (state is EntityLoaded) {
+            if (state.entity.panel.status == 0 ||
+                state.entity.panel.status == 1) if (entity.isPatient)
+              return Stack(children: <Widget>[
+                _IllnessPage(times),
+                PanelAlert(
+                  label: Strings.requestSentLabel,
+                  buttonLabel: Strings.waitingForApproval,
+                  btnColor: IColors.disabledButton,
+                )
+              ]);
             else
               return Stack(children: <Widget>[
                 _IllnessPage(times),
@@ -97,14 +138,15 @@ class IllnessPage extends StatelessWidget {
                   },
                 )
               ]);
-          else
-            return _IllnessPage(times);
-        }
-        return Container(
-            constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-            child:  APICallLoading());
-      },
+            else
+              return _IllnessPage(times);
+          }
+          return Container(
+              constraints:
+                  BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+              child: APICallLoading());
+        },
+      ),
     );
   }
 }

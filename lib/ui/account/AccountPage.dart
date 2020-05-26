@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:docup/blocs/CreditBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
@@ -10,7 +12,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart' show PlatformException;
+
 
 class AccountPage extends StatefulWidget {
   final ValueChanged<String> onPush;
@@ -33,6 +38,7 @@ class _AccountPageState extends State<AccountPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    initUniLinks();
     _loadingEnable = false;
     _creditBloc.listen((event) {
       if (!(event is AddCreditLoaded) && _isRequestForPay) {
@@ -59,6 +65,7 @@ class _AccountPageState extends State<AccountPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _sub.cancel();
     super.dispose();
   }
 
@@ -257,4 +264,27 @@ class _AccountPageState extends State<AccountPage> with WidgetsBindingObserver {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             textAlign: TextAlign.right),
       );
+
+
+  StreamSubscription _sub;
+
+  Future<Null> initUniLinks() async {
+    try {
+      _sub = getUriLinksStream().listen((Uri link) {
+        final query = link.queryParameters;
+        if(query["success"] == "false"){
+         showOneButtonDialog(context, "پرداخت با خطا مواجه شد", "متوجه شدم", (){});
+        } else {
+          _amountTextController.text = query["credit"];
+          showOneButtonDialog(context, "شارژ حساب کاربری با موفقیت انجام شد", "متوجه شدم", (){});
+        }
+        }, onError: (err) {
+        print("link error $err");
+      });
+    } on PlatformException {
+      print("link error");
+    }
+  }
+
+
 }

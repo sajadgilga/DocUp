@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -90,7 +91,8 @@ String getTomorrowInJalali() {
 }
 
 void showOneButtonDialog(
-    context, String message, String action, Function callback, {Color color}) {
+    context, String message, String action, Function callback,
+    {Color color}) {
   BuildContext dialogContext;
   AlertDialog dialog = AlertDialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -108,6 +110,39 @@ void showOneButtonDialog(
       },
     ),
   );
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        dialogContext = context;
+        return dialog;
+      });
+}
+
+void showListDialog(
+    context, List<String> items, String action, Function callback) {
+  BuildContext dialogContext;
+
+  AlertDialog dialog = AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      content: Container(
+        height: MediaQuery.of(context).size.height / 3,
+        width: MediaQuery.of(context).size.width / 3,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: items.length,
+                itemBuilder: (BuildContext context, int index) => ListTile(
+                      title: Text(items[index], textAlign: TextAlign.center),
+                      onTap: () {
+                        Navigator.pop(dialogContext);
+                        callback(index);
+                      },
+                    )),
+          ],
+        ),
+      ));
   showDialog(
       context: context,
       builder: (BuildContext context) {
