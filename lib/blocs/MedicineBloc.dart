@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/Medicine.dart';
-import 'package:docup/repository/PatientRepository.dart';
+import 'package:DocUp/models/Medicine.dart';
+import 'package:DocUp/repository/PatientRepository.dart';
 
 class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
   PatientRepository _repository = PatientRepository();

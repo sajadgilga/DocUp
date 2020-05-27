@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:docup/models/NewestNotificationResponse.dart';
-import 'package:docup/networking/Response.dart';
-import 'package:docup/repository/NotificationRepository.dart';
+import 'package:DocUp/models/NewestNotificationResponse.dart';
+import 'package:DocUp/networking/Response.dart';
+import 'package:DocUp/repository/NotificationRepository.dart';
 
 
 class NotificationBlocV2 {

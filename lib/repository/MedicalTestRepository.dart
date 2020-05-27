@@ -1,8 +1,8 @@
-import 'package:docup/models/AddTestEntity.dart';
-import 'package:docup/models/AuthResponseEntity.dart';
-import 'package:docup/models/MedicalTest.dart';
-import 'package:docup/networking/ApiProvider.dart';
-import 'package:docup/networking/Response.dart';
+import 'package:DocUp/models/AddTestEntity.dart';
+import 'package:DocUp/models/AuthResponseEntity.dart';
+import 'package:DocUp/models/MedicalTest.dart';
+import 'package:DocUp/networking/ApiProvider.dart';
+import 'package:DocUp/networking/Response.dart';
 
 class MedicalTestRepository {
   ApiProvider _provider = ApiProvider();

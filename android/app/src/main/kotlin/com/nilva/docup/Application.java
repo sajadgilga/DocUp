@@ -1,4 +1,4 @@
-package com.nilva.docup;
+package com.nilva.DocUp;
 
 import io.flutter.app.FlutterApplication;
 import io.flutter.plugin.common.PluginRegistry;

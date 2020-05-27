@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:docup/models/AgoraChannelEntity.dart';
-import 'package:docup/networking/Response.dart';
-import 'package:docup/repository/VideoCallRepository.dart';
+import 'package:DocUp/models/AgoraChannelEntity.dart';
+import 'package:DocUp/networking/Response.dart';
+import 'package:DocUp/repository/VideoCallRepository.dart';
 
 class VideoCallBloc {
   VideoCallRepository _repository;

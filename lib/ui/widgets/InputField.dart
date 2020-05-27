@@ -1,6 +1,6 @@
 // ignore: must_be_immutable
 
-import 'package:docup/utils/Utils.dart';
+import 'package:DocUp/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

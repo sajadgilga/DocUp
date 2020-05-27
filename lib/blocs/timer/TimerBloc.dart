@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:docup/blocs/timer/TimerEvent.dart';
+import 'package:DocUp/blocs/timer/TimerEvent.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'TimerState.dart';

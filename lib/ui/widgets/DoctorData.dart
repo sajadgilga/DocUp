@@ -1,4 +1,4 @@
-import 'package:docup/models/DoctorEntity.dart';
+import 'package:DocUp/models/DoctorEntity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

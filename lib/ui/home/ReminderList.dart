@@ -1,4 +1,4 @@
-import 'package:docup/models/Medicine.dart';
+import 'package:DocUp/models/Medicine.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/MedicineReminder.dart';

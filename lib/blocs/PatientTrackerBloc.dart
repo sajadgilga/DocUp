@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/PatientTracker.dart';
-import 'package:docup/repository/DoctorRepository.dart';
+import 'package:DocUp/models/PatientTracker.dart';
+import 'package:DocUp/repository/DoctorRepository.dart';
 
 class PatientTrackerBloc extends Bloc<TrackerEvent, TrackerState> {
   DoctorRepository _repository = DoctorRepository();

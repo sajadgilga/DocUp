@@ -1,4 +1,4 @@
-import 'package:docup/models/DoctorEntity.dart';
+import 'package:DocUp/models/DoctorEntity.dart';
 import 'package:flutter/widgets.dart';
 
 import 'Avatar.dart';

@@ -1,13 +1,13 @@
-import 'package:docup/blocs/DoctorInfoBloc.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/networking/Response.dart';
-import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
-import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
-import 'package:docup/ui/widgets/VerticalSpace.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:DocUp/blocs/DoctorInfoBloc.dart';
+import 'package:DocUp/constants/colors.dart';
+import 'package:DocUp/constants/strings.dart';
+import 'package:DocUp/models/DoctorEntity.dart';
+import 'package:DocUp/networking/Response.dart';
+import 'package:DocUp/ui/visit/calendar/persian_datetime_picker2.dart';
+import 'package:DocUp/ui/widgets/ActionButton.dart';
+import 'package:DocUp/ui/widgets/DoctorSummaryWidget.dart';
+import 'package:DocUp/ui/widgets/VerticalSpace.dart';
+import 'package:DocUp/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:docup/constants/colors.dart';
-import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/VerticalSpace.dart';
-import 'package:docup/ui/widgets/Waiting.dart';
+import 'package:DocUp/constants/colors.dart';
+import 'package:DocUp/ui/widgets/ActionButton.dart';
+import 'package:DocUp/ui/widgets/VerticalSpace.dart';
+import 'package:DocUp/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';

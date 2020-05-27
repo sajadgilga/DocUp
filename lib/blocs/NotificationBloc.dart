@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/NewestNotificationResponse.dart';
-import 'package:docup/repository/NotificationRepository.dart';
+import 'package:DocUp/models/NewestNotificationResponse.dart';
+import 'package:DocUp/repository/NotificationRepository.dart';
 import 'package:equatable/equatable.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {

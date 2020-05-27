@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/ui/panel/Panel.dart';
+import 'package:DocUp/ui/panel/Panel.dart';
 
 class TabSwitchBloc extends Bloc<PanelTabState, PanelTabState> {
   @override

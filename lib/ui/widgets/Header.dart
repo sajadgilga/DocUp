@@ -1,5 +1,5 @@
-import 'package:docup/constants/assets.dart';
-import 'package:docup/ui/widgets/DocupHeader.dart';
+import 'package:DocUp/constants/assets.dart';
+import 'package:DocUp/ui/widgets/DocUpHeader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

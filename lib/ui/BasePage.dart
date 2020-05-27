@@ -1,4 +1,4 @@
-import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:DocUp/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/cupertino.dart';
 
 class BasePage extends StatelessWidget {

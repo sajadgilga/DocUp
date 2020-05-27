@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:docup/constants/colors.dart';
-import 'package:docup/ui/start/RoleType.dart';
+import 'package:DocUp/constants/colors.dart';
+import 'package:DocUp/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

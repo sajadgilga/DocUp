@@ -1,5 +1,5 @@
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/PatientEntity.dart';
+import 'package:DocUp/models/DoctorEntity.dart';
+import 'package:DocUp/models/PatientEntity.dart';
 
 class SearchResult {
   int count;

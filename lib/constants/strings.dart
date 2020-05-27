@@ -23,8 +23,8 @@ class Strings {
   static const String enterAction = "ورود";
   static const String accountQuestion = "حساب کاربری دارید؟";
   static final String searchBoxHint = 'جستجو';
-  static final String docUpIntroHomePart1 = 'داک‌ آپ،' ;
-  static final String docUpIntroHomePart2 = 'پل ارتباطی بین پزشک و بیمار';
+  static final String DocUpIntroHomePart1 = 'داک‌ آپ،' ;
+  static final String DocUpIntroHomePart2 = 'پل ارتباطی بین پزشک و بیمار';
   static final String medicineReminder = 'یادآوری داروها';
   static final String doctorTrackingLabel = 'مراجعین من';
   static final String patientPanelMenuLabel = 'پنل کاربری';

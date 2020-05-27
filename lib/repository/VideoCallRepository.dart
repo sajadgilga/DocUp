@@ -1,5 +1,5 @@
-import 'package:docup/models/AgoraChannelEntity.dart';
-import 'package:docup/networking/ApiProvider.dart';
+import 'package:DocUp/models/AgoraChannelEntity.dart';
+import 'package:DocUp/networking/ApiProvider.dart';
 
 class VideoCallRepository {
   ApiProvider _provider = ApiProvider();

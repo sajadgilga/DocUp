@@ -1,4 +1,4 @@
-package com.nilva.docup
+package com.nilva.DocUp
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

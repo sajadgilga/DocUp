@@ -1,4 +1,4 @@
-import 'package:docup/constants/assets.dart';
+import 'package:DocUp/constants/assets.dart';
 
 enum RoleType {
   PATIENT, DOCTOR, CLINIC

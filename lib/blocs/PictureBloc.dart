@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/Panel.dart';
-import 'package:docup/models/Picture.dart';
-import 'package:docup/repository/PictureRepository.dart';
+import 'package:DocUp/models/Panel.dart';
+import 'package:DocUp/models/Picture.dart';
+import 'package:DocUp/repository/PictureRepository.dart';
 
 class PictureBloc extends Bloc<PictureEvent, PictureState> {
   PictureRepository _repository = PictureRepository();

@@ -1,21 +1,21 @@
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/MedicineBloc.dart';
-import 'package:docup/blocs/NotificationBloc.dart';
-import 'package:docup/blocs/PatientTrackerBloc.dart';
-import 'package:docup/constants/assets.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/start/RoleType.dart';
+import 'package:DocUp/blocs/EntityBloc.dart';
+import 'package:DocUp/blocs/MedicineBloc.dart';
+import 'package:DocUp/blocs/NotificationBloc.dart';
+import 'package:DocUp/blocs/PatientTrackerBloc.dart';
+import 'package:DocUp/constants/assets.dart';
+import 'package:DocUp/constants/colors.dart';
+import 'package:DocUp/models/PatientEntity.dart';
+import 'package:DocUp/models/UserEntity.dart';
+import 'package:DocUp/ui/mainPage/NavigatorView.dart';
+import 'package:DocUp/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
-import 'package:docup/ui/widgets/Header.dart';
-import 'package:docup/ui/home/ReminderList.dart';
-import 'package:docup/ui/home/SearchBox.dart';
-import 'package:docup/ui/home/notification/Notification.dart';
+import 'package:DocUp/ui/widgets/Header.dart';
+import 'package:DocUp/ui/home/ReminderList.dart';
+import 'package:DocUp/ui/home/SearchBox.dart';
+import 'package:DocUp/ui/home/notification/Notification.dart';
 
-import 'package:docup/ui/home/iPartner/IPartner.dart';
-import 'package:docup/constants/strings.dart';
+import 'package:DocUp/ui/home/iPartner/IPartner.dart';
+import 'package:DocUp/constants/strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'TrackingList.dart';
@@ -63,12 +63,12 @@ class _HomeState extends State<Home> {
         shrinkWrap: true,
         children: <Widget>[
           Text(
-            Strings.docUpIntroHomePart1,
+            Strings.DocUpIntroHomePart1,
             textDirection: TextDirection.rtl,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           Text(
-            Strings.docUpIntroHomePart2,
+            Strings.DocUpIntroHomePart2,
             textDirection: TextDirection.rtl,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
           ),

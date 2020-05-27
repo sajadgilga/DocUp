@@ -1,4 +1,4 @@
-import 'package:docup/ui/visit/calendar/utils/consts.dart';
+import 'package:DocUp/ui/visit/calendar/utils/consts.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 class DateUtils {

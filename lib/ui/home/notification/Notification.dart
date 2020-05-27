@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:docup/constants/colors.dart';
+import 'package:DocUp/constants/colors.dart';
 
 class HomeNotification extends StatelessWidget {
   int newNotificationCount;

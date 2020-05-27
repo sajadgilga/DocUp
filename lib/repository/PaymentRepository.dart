@@ -1,7 +1,7 @@
-import 'package:docup/models/AuthResponseEntity.dart';
-import 'package:docup/models/PayResponseEntity.dart';
-import 'package:docup/networking/ApiProvider.dart';
-import 'package:docup/networking/Constants.dart';
+import 'package:DocUp/models/AuthResponseEntity.dart';
+import 'package:DocUp/models/PayResponseEntity.dart';
+import 'package:DocUp/networking/ApiProvider.dart';
+import 'package:DocUp/networking/Constants.dart';
 
 class PaymentRepository {
   ApiProvider _provider = ApiProvider();
@@ -11,7 +11,7 @@ class PaymentRepository {
         await _provider.postWithBaseUrl("https://pay.ir/", "pg/send", body: {
       "api": PAY_IR_API_KEY,
       "amount": amount,
-      "redirect": "https://service.docup.ir/payment/transaction-call-back",
+      "redirect": "https://service.DocUp.ir/payment/transaction-call-back",
       "mobile": mobile
     });
     return PayResponseEntity.fromJson(response);

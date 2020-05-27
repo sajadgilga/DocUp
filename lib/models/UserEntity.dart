@@ -1,5 +1,5 @@
-import 'package:docup/models/Panel.dart';
-import 'package:docup/ui/start/RoleType.dart';
+import 'package:DocUp/models/Panel.dart';
+import 'package:DocUp/ui/start/RoleType.dart';
 
 import 'DoctorEntity.dart';
 import 'PatientEntity.dart';

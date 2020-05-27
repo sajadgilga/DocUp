@@ -1,5 +1,5 @@
-import 'package:docup/models/DoctorPlan.dart';
-import 'package:docup/models/Panel.dart';
+import 'package:DocUp/models/DoctorPlan.dart';
+import 'package:DocUp/models/Panel.dart';
 
 import 'PatientEntity.dart';
 import 'UserEntity.dart';

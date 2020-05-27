@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/repository/DoctorRepository.dart';
-import 'package:docup/repository/PatientRepository.dart';
-import 'package:docup/ui/start/RoleType.dart';
+import 'package:DocUp/constants/colors.dart';
+import 'package:DocUp/models/DoctorEntity.dart';
+import 'package:DocUp/models/PatientEntity.dart';
+import 'package:DocUp/models/UserEntity.dart';
+import 'package:DocUp/repository/DoctorRepository.dart';
+import 'package:DocUp/repository/PatientRepository.dart';
+import 'package:DocUp/ui/start/RoleType.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 

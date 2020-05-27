@@ -1,4 +1,4 @@
-import 'package:docup/ui/start/RoleType.dart';
+import 'package:DocUp/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 
 import 'assets.dart';

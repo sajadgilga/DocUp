@@ -1,9 +1,9 @@
-import 'package:docup/models/ChatMessage.dart';
+import 'package:DocUp/models/ChatMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:docup/ui/widgets/ChatBubble.dart';
-import 'package:docup/constants/colors.dart';
+import 'package:DocUp/ui/widgets/ChatBubble.dart';
+import 'package:DocUp/constants/colors.dart';
 
 class ChatBox extends StatefulWidget {
   final Function(int) selectPage;

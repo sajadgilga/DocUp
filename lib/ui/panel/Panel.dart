@@ -1,22 +1,22 @@
-import 'package:docup/blocs/PanelSectionBloc.dart';
-import 'package:docup/blocs/TabSwitchBloc.dart';
-import 'package:docup/constants/assets.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
- import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
-import 'package:docup/ui/widgets/Header.dart';
+import 'package:DocUp/blocs/PanelSectionBloc.dart';
+import 'package:DocUp/blocs/TabSwitchBloc.dart';
+import 'package:DocUp/constants/assets.dart';
+import 'package:DocUp/constants/colors.dart';
+import 'package:DocUp/constants/strings.dart';
+ import 'package:DocUp/models/DoctorEntity.dart';
+import 'package:DocUp/models/PatientEntity.dart';
+import 'package:DocUp/models/UserEntity.dart';
+import 'package:DocUp/ui/mainPage/NavigatorView.dart';
+import 'package:DocUp/ui/panel/videoCallPage/VideoCallPage.dart';
+import 'package:DocUp/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
-import 'package:docup/ui/panel/chatPage/ChatPage.dart';
+import 'package:DocUp/ui/panel/chatPage/ChatPage.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
+import 'package:DocUp/ui/panel/panelMenu/PanelMenu.dart';
 import 'illnessPage/IllnessPage.dart';
 
 enum PanelTabState { FirstTab, SecondTab, ThirdTab }

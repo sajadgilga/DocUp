@@ -1,6 +1,6 @@
-import 'package:docup/constants/assets.dart';
+import 'package:DocUp/constants/assets.dart';
 import 'package:flutter/material.dart';
-import 'package:docup/constants/colors.dart';
+import 'package:DocUp/constants/colors.dart';
 
 /// Destination item data container for bottom navigation in main page.
 ///

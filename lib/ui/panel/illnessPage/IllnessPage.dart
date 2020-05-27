@@ -1,25 +1,25 @@
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/MedicalTestBloc.dart';
-import 'package:docup/blocs/PanelBloc.dart';
-import 'package:docup/blocs/PictureBloc.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/models/VisitTime.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/panel/PanelAlert.dart';
-import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
-import 'package:docup/ui/widgets/APICallLoading.dart';
-import 'package:docup/ui/widgets/VisitBox.dart';
-import 'package:docup/ui/widgets/Waiting.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:DocUp/blocs/EntityBloc.dart';
+import 'package:DocUp/blocs/MedicalTestBloc.dart';
+import 'package:DocUp/blocs/PanelBloc.dart';
+import 'package:DocUp/blocs/PictureBloc.dart';
+import 'package:DocUp/constants/colors.dart';
+import 'package:DocUp/constants/strings.dart';
+import 'package:DocUp/models/DoctorEntity.dart';
+import 'package:DocUp/models/UserEntity.dart';
+import 'package:DocUp/models/VisitTime.dart';
+import 'package:DocUp/ui/mainPage/NavigatorView.dart';
+import 'package:DocUp/ui/panel/PanelAlert.dart';
+import 'package:DocUp/ui/panel/chatPage/PartnerInfo.dart';
+import 'package:DocUp/ui/widgets/APICallLoading.dart';
+import 'package:DocUp/ui/widgets/VisitBox.dart';
+import 'package:DocUp/ui/widgets/Waiting.dart';
+import 'package:DocUp/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'package:docup/ui/widgets/PicList.dart';
+import 'package:DocUp/ui/widgets/PicList.dart';
 
 class IllnessPage extends StatelessWidget {
   final Entity entity;

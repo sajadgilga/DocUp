@@ -1,6 +1,6 @@
-import 'package:docup/models/Panel.dart';
-import 'package:docup/models/Picture.dart';
-import 'package:docup/networking/ApiProvider.dart';
+import 'package:DocUp/models/Panel.dart';
+import 'package:DocUp/models/Picture.dart';
+import 'package:DocUp/networking/ApiProvider.dart';
 
 class PictureRepository {
   ApiProvider _provider = ApiProvider();
