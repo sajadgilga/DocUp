@@ -22,6 +22,17 @@ String replaceFarsiNumber(String input) {
   return input;
 }
 
+String normalizeDateAndTime(String str) {
+  String date = str.split("T")[0];
+  String time = str.split("T")[1].split("+")[0];
+  final jalaliDate = Jalali.fromDateTime(DateTime(
+          int.parse(date.split("-")[0]),
+          int.parse(date.split("-")[1]),
+          int.parse(date.split("-")[2])));
+  String finalDate = "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
+  return "تاریخ: $finalDate زمان : $time ";
+}
+
 bool validatePhoneNumber(String value) {
   Pattern pattern = r'^(\+98|0)?9\d{9}$';
   RegExp regex = new RegExp(pattern);

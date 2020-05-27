@@ -7,6 +7,7 @@ import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/customPainter/DrawerPainter.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
+import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 
 //import 'package:docup/ui/home/notification/DrawerPainter.dart';
@@ -118,28 +119,35 @@ class _NotificationPageState extends State<NotificationPage> {
 
   _notificationsWidget(context, NewestNotificationResponse notifications) {
     return (notifications.newestEventsCounts +
-        notifications.newestDrugsCounts) == 0 ? Expanded(
-      child: Positioned(
-        right: MediaQuery.of(context).size.width * 0.4,
-        top: MediaQuery.of(context).size.height * 0.4,
-        child: Text("اعلانی موجود نیست")
-      ),
-    ) : Expanded(
-      child: Positioned(
-        right: MediaQuery.of(context).size.width * 0.15,
-        top: MediaQuery.of(context).size.height * 0.40,
-        child: Column(
-          children: <Widget>[
-            for (var index = 0; index < notifications.newestDrugs.length; index++)
-              NotificationItem(
-                time: notifications.newestDrugs[index].consumingTime,
-                title: notifications.newestDrugs[index].drugName,
-                description: notifications.newestDrugs[index].drugName,
-              )
-          ],
-        )
-      ),
-    );
+                notifications.newestDrugsCounts) ==
+            0
+        ? Expanded(
+            child: Positioned(
+                right: MediaQuery.of(context).size.width * 0.4,
+                top: MediaQuery.of(context).size.height * 0.4,
+                child: Text("اعلانی موجود نیست")),
+          )
+        : Expanded(
+            child: Positioned(
+              right: MediaQuery.of(context).size.width * 0.15,
+              top: MediaQuery.of(context).size.height * 0.40,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: notifications.newestEventsCounts,
+                    itemBuilder: (BuildContext context, int index) =>
+                        NotificationItem(
+                          title: notifications.newestEvents[index].title,
+                          description:
+                              notifications.newestEvents[index].description,
+                          time: notifications.newestEvents[index].time,
+                        )),
+              ),
+            ),
+          );
   }
 }
 
@@ -157,69 +165,77 @@ class NotificationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Material(
-          color: IColors.grey,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16))),
-          child: Padding(
-            padding: EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Text(
-                    time == null ? "هم اکنون" : replaceFarsiNumber(time),
-                    textDirection: TextDirection.rtl,
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Material(
+            color: IColors.grey,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16))),
+            child: Padding(
+              padding: EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: Text(
+                      time == null ? "هم اکنون" : replaceFarsiNumber(normalizeDateAndTime(time)),
+                      textDirection: TextDirection.rtl,
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  textDirection: TextDirection.rtl,
-                  children: <Widget>[
-                    IconShadowWidget(
-                        Icon(
-                          Icons.brightness_1,
-                          size: 16,
-                          color: IColors.themeColor,
-                        ),
-                        showShadow: true,
-                        shadowColor: IColors.themeColor),
-                    SizedBox(width: 5),
-                    Text(
-                      title == null ? "اعلان جدید" : title,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(color: IColors.themeColor, fontSize: 16),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      description == null ? "" : description,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(color: IColors.darkGrey),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Row(
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    textDirection: TextDirection.rtl,
                     children: <Widget>[
+                      IconShadowWidget(
+                          Icon(
+                            Icons.brightness_1,
+                            size: 16,
+                            color: IColors.themeColor,
+                          ),
+                          showShadow: true,
+                          shadowColor: IColors.themeColor),
+                      SizedBox(width: 5),
                       Text(
-                        "اقدسیه",
+                        title == null ? "اعلان جدید" : title,
+                        textDirection: TextDirection.rtl,
+                        style:
+                            TextStyle(color: IColors.themeColor, fontSize: 16),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        description == null ? "" : description,
+                        textDirection: TextDirection.rtl,
                         style: TextStyle(color: IColors.darkGrey),
                       ),
-                      Icon(
-                        Icons.location_on,
-                        size: 16,
-                        color: IColors.darkGrey,
-                      )
                     ],
                   ),
-                )
-              ],
+                  SizedBox(height: 5),
+                  Visibility(
+                    visible: location != null,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            location != null ? location : "",
+                            style: TextStyle(color: IColors.darkGrey),
+                          ),
+                          Icon(
+                            Icons.location_on,
+                            size: 16,
+                            color: IColors.darkGrey,
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         )
