@@ -204,10 +204,12 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   }
 
   _patientDataWidget(VisitEntity entity) {
+    String visitType = entity.visitType == 0 ? "حضوری" : "مجازی";
+    String visitMethod = entity.visitMethod == 0 ? "متنی" : "تصویری";
     return Column(
       children: <Widget>[
         Text(
-            "درخواست ویزیت مجازی، ${entity.visitType == 0 ? "متنی" : "تصویری"}",
+          "درخواست ویزیت $visitType، $visitMethod",
             style: TextStyle(
                 fontSize: 12, fontWeight: FontWeight.bold, color: IColors.red),
             textAlign: TextAlign.center),
@@ -225,7 +227,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "زمان :‌ ${normalizeTime(entity.visitTime)}",
+              replaceFarsiNumber(normalizeDateAndTime(entity.visitTime)),
               style: TextStyle(fontSize: 12, color: IColors.green),
               textAlign: TextAlign.end,
             ),

@@ -20,6 +20,21 @@ enum VisitMethod { TEXT, VOICE, VIDEO }
 
 enum VisitDurationPlan { BASE, SUPPLEMENTARY, LONG }
 
+extension VisitDurationPlanExtension on VisitDurationPlan {
+  int get duration {
+    switch (this) {
+      case VisitDurationPlan.BASE:
+        return 30;
+      case VisitDurationPlan.SUPPLEMENTARY:
+        return 60;
+      case VisitDurationPlan.LONG:
+        return 90;
+      default:
+        return 30;
+    }
+  }
+}
+
 class VirtualVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
   final Function(String, dynamic) onPush;
@@ -96,7 +111,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
 
   Text _visitDurationTimeWidget() {
     return Text(
-        "ویزیت مجازی حداکثر ${replaceFarsiNumber((typeSelected[VISIT_DURATION_PLAN] * 30 + 10).toString())} دقیقه می‌باشد",
+        "ویزیت مجازی حداکثر ${replaceFarsiNumber((VisitDurationPlan.values[typeSelected[VISIT_DURATION_PLAN]].duration).toString())} دقیقه می‌باشد",
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
   }
 

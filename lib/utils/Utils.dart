@@ -46,14 +46,6 @@ String normalizeCredit(String credit) {
     return credit;
 }
 
-String normalizeTime(String visitTime) {
-  var date = visitTime.split("T")[0].split("-");
-  var jajaliDate =
-      Gregorian(int.parse(date[0]), int.parse(date[1]), int.parse(date[2]))
-          .toJalali();
-  return replaceFarsiNumber(
-      "${jajaliDate.year}/${jajaliDate.month}/${jajaliDate.day}");
-}
 
 String convertToGeorgianDate(String jalaliDate) {
   var array = jalaliDate.split("/");
