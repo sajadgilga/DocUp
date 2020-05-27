@@ -204,6 +204,8 @@ class NavigatorViewState extends State<NavigatorView> {
 //  }
 
   void push(contet, String direction, {detail}) {
+    if (detail == 'chat')
+      widget.navigatorKey.currentState.popUntil((route) => route.isFirst);
     _route(RouteSettings(name: direction), context, detail: detail);
     widget.navigatorKey.currentState
         .push(_route(RouteSettings(name: direction), context, detail: detail));
@@ -382,7 +384,7 @@ class NavigatorViewState extends State<NavigatorView> {
           ),
         ],
         child: BlocBuilder<PanelBloc, PanelState>(builder: (context, state) {
-          if (state is PanelsLoaded) {
+          if (state is PanelsLoaded || state is PanelLoading) {
             if (state.panels.length > 0) return _panelPages(context);
           }
           return PanelMenu(
@@ -432,24 +434,27 @@ class NavigatorViewState extends State<NavigatorView> {
             },
           ));
 
-  Widget _panelMenu(context) => MultiBlocProvider(
-          providers: [
-            BlocProvider<TabSwitchBloc>.value(
-              value: _tabSwitchBloc,
-            ),
-            BlocProvider<PanelSectionBloc>.value(
-              value: _panelSectionBloc,
-            ),
-            BlocProvider<SearchBloc>.value(value: _searchBloc),
-          ],
-          child: PanelMenu(
-            () {
-              _pop(context);
-            },
-            onPush: (direction) {
-              push(context, direction);
-            },
-          ));
+  Widget _panelMenu(context) {
+//    BlocProvider.of<PanelBloc>(context).add(GetMyPanels());
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<TabSwitchBloc>.value(
+            value: _tabSwitchBloc,
+          ),
+          BlocProvider<PanelSectionBloc>.value(
+            value: _panelSectionBloc,
+          ),
+          BlocProvider<SearchBloc>.value(value: _searchBloc),
+        ],
+        child: PanelMenu(
+          () {
+            _pop(context);
+          },
+          onPush: (direction) {
+            push(context, direction);
+          },
+        ));
+  }
 
   Widget _empty(context) {
     return InStructure();

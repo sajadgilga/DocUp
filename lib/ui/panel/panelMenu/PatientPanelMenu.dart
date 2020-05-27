@@ -143,24 +143,28 @@ class PatientPanelMenu extends StatelessWidget {
   List<PanelSubItem> _getPartners(context) {
     List<PanelSubItem> partners = [];
     var state = BlocProvider.of<PanelBloc>(context).state;
-    if (state is PanelsLoaded)
+    if (state is PanelsLoaded || state is PanelLoading)
       for (var panel in state.panels) {
-        if (panel.doctorId == null || panel.patientId == null) continue;
-        if (panel.status > -1) {
-          if (isPatient)
-            partners.add(PanelSubItem(
-                panel.doctor.user.name,
-                panel.doctor.id.toString(),
-                getColor(PatientPanelSection.DOCTOR_INTERFACE,
-                    id: panel.doctor.id, context: context),
-                panelId: panel.id));
-          else
-            partners.add(PanelSubItem(
-                panel.patient.user.name,
-                panel.patient.id.toString(),
-                getColor(PatientPanelSection.DOCTOR_INTERFACE,
-                    id: panel.patient.id, context: context),
-                panelId: panel.id));
+        try {
+          if (panel.doctorId == null || panel.patientId == null) continue;
+          if (panel.status > -1) {
+            if (isPatient)
+              partners.add(PanelSubItem(
+                  panel.doctor.user.name,
+                  panel.doctor.id.toString(),
+                  getColor(PatientPanelSection.DOCTOR_INTERFACE,
+                      id: panel.doctor.id, context: context),
+                  panelId: panel.id));
+            else
+              partners.add(PanelSubItem(
+                  panel.patient.user.name,
+                  panel.patient.id.toString(),
+                  getColor(PatientPanelSection.DOCTOR_INTERFACE,
+                      id: panel.patient.id, context: context),
+                  panelId: panel.id));
+          }
+        } catch(_) {
+          print("error in panel menu: probably some null thing in panel");
         }
       }
     return partners;

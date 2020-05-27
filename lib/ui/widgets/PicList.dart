@@ -11,6 +11,7 @@ import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:dashed_container/dashed_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_view/photo_view.dart';
 
 import 'Waiting.dart';
 
@@ -101,22 +102,29 @@ class _PicListState extends State<PicList> {
       pictures.add(Container(
         child: Column(
           children: <Widget>[
-            Container(
-              width: 150.0,
-              height: 100.0,
-              margin: EdgeInsets.only(left: 10, right: 10),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.cover, image: NetworkImage(pic.imageURL)),
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+            GestureDetector(
+                onTap: () {
+                  Navigator.of(context, rootNavigator: true)
+                      .push(MaterialPageRoute(builder: (_) {
+                    return DetailScreen(url: pic.imageURL,);
+                  }));
+                },
                 child: Container(
-                  color: Colors.white.withOpacity(.4),
-                ),
-              ),
-            ),
+                  width: 150.0,
+                  height: 100.0,
+                  margin: EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        fit: BoxFit.cover, image: NetworkImage(pic.imageURL)),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                    child: Container(
+                      color: Colors.white.withOpacity(.4),
+                    ),
+                  ),
+                )),
             Text(
               pic.title,
               style: TextStyle(
@@ -267,6 +275,29 @@ class _PicListState extends State<PicList> {
           _uploadPic(),
           _recentPics(),
         ],
+      ),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  final String url;
+
+  DetailScreen({Key key, this.url}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+        child: Center(
+            child: PhotoView(
+          imageProvider: NetworkImage(
+            url,
+          ),
+        )),
+        onTap: () {
+          Navigator.of(context, rootNavigator: true).maybePop();
+        },
       ),
     );
   }

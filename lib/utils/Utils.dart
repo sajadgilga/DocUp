@@ -171,8 +171,8 @@ void showMessageEmptyDialog(context, Function callback) {
   showOneButtonDialog(context, "پیام خالی ارسال نمی‌شود", "باشه", () {});
 }
 
-void showPicUploadedDialog(context, Function callback) {
-  showOneButtonDialog(context, "تصویر ارسال شد", "باشه", callback);
+void showPicUploadedDialog(context, text, Function callback) {
+  showOneButtonDialog(context, text, "باشه", callback);
 }
 
 void showAlertDialog(context, String text, Function callback) {

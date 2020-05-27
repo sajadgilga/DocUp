@@ -31,6 +31,14 @@ class SocketHelper {
           "ws://$url/ws/chat/?Authorization=JWT $token");
       _channel.stream.listen((event) {
         onReceive(event);
+      }, onDone: () async {
+        print('websocket got done');
+//        await Future.delayed(Duration(seconds: 2));
+        connect(url);
+      }, onError: (err) async{
+        print('websocket error');
+        await Future.delayed(Duration(seconds: 2));
+        connect(url);
       });
     } else
       print('no token set for websocket to connect');
@@ -54,7 +62,8 @@ class SocketHelper {
     _channel.sink.close(code, reason);
   }
 
-  void sendMessage({type='NEW_MESSAGE', panelId, message, msgType = 0, file}) {
+  void sendMessage(
+      {type = 'NEW_MESSAGE', panelId, message, msgType = 0, file}) {
     Map data = Map<String, dynamic>();
     data['request_type'] = type;
     data['panel_id'] = panelId;
