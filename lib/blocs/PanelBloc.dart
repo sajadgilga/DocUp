@@ -10,7 +10,10 @@ class PanelBloc extends Bloc<PanelEvent, PanelState> {
   get initialState => PanelUnloaded();
 
   Stream<PanelState> _get() async* {
-    yield PanelLoading();
+    if (state is PanelsLoaded)
+      yield PanelLoading(panels: (state as PanelsLoaded).panels);
+    else
+      yield PanelLoading(panels: []);
     try {
       final List<Panel> panels = await _repository.getAllPanelsOfMine();
       yield PanelsLoaded(panels: panels);
@@ -24,8 +27,7 @@ class PanelBloc extends Bloc<PanelEvent, PanelState> {
     if (event is GetMyPanels) {
       yield* _get();
     } else if (event is RefreshMyPanels) {
-    } else if (event is GetMyPartnerPanels) {
-    }
+    } else if (event is GetMyPartnerPanels) {}
   }
 }
 
@@ -40,7 +42,8 @@ class GetMyPartnerPanels extends PanelEvent {}
 
 // states
 abstract class PanelState extends Equatable {
-  PanelState();
+  List<Panel> panels;
+  PanelState({this.panels});
 
   @override
   List<Object> get props => [];
@@ -48,7 +51,14 @@ abstract class PanelState extends Equatable {
 
 class PanelUnloaded extends PanelState {}
 
-class PanelLoading extends PanelState {}
+class PanelLoading extends PanelState {
+  List<Panel> panels;
+
+  PanelLoading({@override this.panels});
+
+  @override
+  List<Object> get props => [panels];
+}
 
 class PanelEmpty extends PanelState {}
 

@@ -84,6 +84,7 @@ class _MainPageState extends State<MainPage> {
       if (_timer == null)
         _timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
           _entityBloc.add(EntityUpdate());
+          _panelBloc.add(GetMyPanels());
         });
     });
 

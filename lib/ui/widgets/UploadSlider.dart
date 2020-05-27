@@ -26,15 +26,21 @@ class UploadSliderState extends State<UploadSlider> {
   PictureEntity picture =
       PictureEntity(picture: null, title: '', description: '');
   TextEditingController _controller = TextEditingController();
+  AlertDialog _loading = getLoadingDialog();
 
   @override
   void initState() {
     BlocProvider.of<PictureBloc>(context).listen((data) {
       if (data is PictureUploaded) {
-        showPicUploadedDialog(context, () {
+        showPicUploadedDialog(context, "تصویر ارسال شد", () {
           BlocProvider.of<PictureBloc>(context)
               .add(PictureListGet(listId: widget.listId));
           Navigator.of(context).maybePop();
+          Navigator.of(context, rootNavigator: true).maybePop();
+        });
+      } else if (data is PictureError) {
+        showPicUploadedDialog(context, "مشکلی پیش آمد. دوباره تلاش کنید", () {
+          Navigator.of(context, rootNavigator: true).maybePop();
         });
       }
     });
@@ -56,7 +62,7 @@ class UploadSliderState extends State<UploadSlider> {
           fit: BoxFit.cover,
         ),
         description: '',
-        title: image.path.split('/').last,
+        title: picture.description,
         base64: base64Encode(image.readAsBytesSync()),
         imagePath: image.path);
     setState(() {
@@ -67,7 +73,7 @@ class UploadSliderState extends State<UploadSlider> {
 
   void _onDescriptionSubmit() {
     setState(() {
-      picture.description = _controller.text;
+      picture.title = _controller.text;
     });
     FocusScope.of(context).unfocus();
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -137,9 +143,15 @@ class UploadSliderState extends State<UploadSlider> {
       showAlertDialog(context, 'تصویری انتخاب نشده است', () {});
       return;
     }
-    picture.description = _controller.text;
+    if (_controller.text != '') picture.title = _controller.text;
+    if (BlocProvider.of<PictureBloc>(context).state is PictureUploading) return;
     BlocProvider.of<PictureBloc>(context)
         .add(PictureUpload(listId: widget.listId, picture: picture));
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return _loading;
+        });
   }
 
   Widget _submit() => GestureDetector(

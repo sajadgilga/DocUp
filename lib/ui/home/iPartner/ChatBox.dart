@@ -18,15 +18,8 @@ class ChatBox extends StatefulWidget {
 }
 
 class _ChatBoxState extends State<ChatBox> {
-  void _chatPage() {
-    widget.selectPage(0);
-  }
 
-  Widget _myMessages() => GestureDetector(
-      onTap: () {
-        _chatPage();
-      },
-      child: Container(
+  Widget _myMessages() => Container(
           margin: EdgeInsets.only(left: 20, right: 40),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -42,7 +35,7 @@ class _ChatBoxState extends State<ChatBox> {
                     fontWeight: FontWeight.w900,
                   ),
                 )
-              ])));
+              ]));
 
   Widget _myMessagesIcon() =>
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[

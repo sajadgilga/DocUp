@@ -143,7 +143,7 @@ class PatientPanelMenu extends StatelessWidget {
   List<PanelSubItem> _getPartners(context) {
     List<PanelSubItem> partners = [];
     var state = BlocProvider.of<PanelBloc>(context).state;
-    if (state is PanelsLoaded)
+    if (state is PanelsLoaded || state is PanelLoading)
       for (var panel in state.panels) {
         if (panel.doctorId == null || panel.patientId == null) continue;
         if (panel.status > -1) {

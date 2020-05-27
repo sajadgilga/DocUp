@@ -55,6 +55,10 @@ class IPartner extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(10)),
       color: Color.fromRGBO(255, 255, 255, .8));
 
+  void _chatPage() {
+    selectPage(0);
+  }
+
   Widget _body(context) {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (isEmpty)
@@ -70,13 +74,17 @@ class IPartner extends StatelessWidget {
         ),
       );
     return Expanded(
+        child: GestureDetector(
+      onTap: () {
+        _chatPage();
+      },
       child: IPartnerBody(
           selectPage: selectPage,
           partner: partner,
           onPush: onPush,
           globalOnPush: globalOnPush,
           color: color),
-    );
+    ));
   }
 
   @override
