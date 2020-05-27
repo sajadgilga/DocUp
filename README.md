@@ -1,6 +1,6 @@
-# DocUp
+# docup
 
-DocUp project
+docup project
 
 ## Getting Started
 

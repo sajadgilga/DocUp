@@ -1,10 +1,10 @@
 
 import 'dart:io';
 
-import 'package:DocUp/models/FCMEntity.dart';
-import 'package:DocUp/models/NewestNotificationResponse.dart';
-import 'package:DocUp/networking/ApiProvider.dart';
-import 'package:DocUp/utils/Device.dart';
+import 'package:docup/models/FCMEntity.dart';
+import 'package:docup/models/NewestNotificationResponse.dart';
+import 'package:docup/networking/ApiProvider.dart';
+import 'package:docup/utils/Device.dart';
 
 class NotificationRepository {
   ApiProvider _provider = ApiProvider();

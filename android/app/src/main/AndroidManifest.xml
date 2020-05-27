@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nilva.DocUp">
+    package="com.nilva.docup">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -21,7 +21,7 @@
 
     <application
         android:name=".Application"
-        android:label="DocUp"
+        android:label="docup"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -35,8 +35,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="DocUp"
-                    android:host="com.nilva.DocUp" />
+                    android:scheme="docup"
+                    android:host="com.nilva.docup" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

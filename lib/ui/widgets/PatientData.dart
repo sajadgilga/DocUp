@@ -1,5 +1,5 @@
-import 'package:DocUp/models/DoctorEntity.dart';
-import 'package:DocUp/models/PatientEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

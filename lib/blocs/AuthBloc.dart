@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:DocUp/models/AuthResponseEntity.dart';
-import 'package:DocUp/networking/Response.dart';
-import 'package:DocUp/repository/AuthRepository.dart';
-import 'package:DocUp/ui/start/RoleType.dart';
+import 'package:docup/models/AuthResponseEntity.dart';
+import 'package:docup/networking/Response.dart';
+import 'package:docup/repository/AuthRepository.dart';
+import 'package:docup/ui/start/RoleType.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthBloc {

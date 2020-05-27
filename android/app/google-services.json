@@ -1,16 +1,16 @@
 {
   "project_info": {
     "project_number": "828075851947",
-    "firebase_url": "https://DocUp-471dd.firebaseio.com",
-    "project_id": "DocUp-471dd",
-    "storage_bucket": "DocUp-471dd.appspot.com"
+    "firebase_url": "https://docup-471dd.firebaseio.com",
+    "project_id": "docup-471dd",
+    "storage_bucket": "docup-471dd.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:828075851947:android:f6181fc6a4a0a8a14937ee",
         "android_client_info": {
-          "package_name": "com.nilva.DocUp"
+          "package_name": "com.nilva.docup"
         }
       },
       "oauth_client": [

@@ -1,5 +1,5 @@
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/models/PatientEntity.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';

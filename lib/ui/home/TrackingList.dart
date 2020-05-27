@@ -1,7 +1,7 @@
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/constants/strings.dart';
-import 'package:DocUp/models/UserEntity.dart';
-import 'package:DocUp/ui/mainPage/NavigatorView.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
+import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 

@@ -1,8 +1,8 @@
-import 'package:DocUp/blocs/EntityBloc.dart';
-import 'package:DocUp/constants/assets.dart';
- import 'package:DocUp/models/DoctorEntity.dart';
-import 'package:DocUp/models/UserEntity.dart';
-import 'package:DocUp/ui/mainPage/NavigatorView.dart';
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/constants/assets.dart';
+ import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
@@ -23,27 +23,11 @@ class PartnerInfo extends StatelessWidget {
       );
 
   void _showDoctorDialogue(context) {
-//    showDialog(
-//        context: context,
-//        builder: (BuildContext context) {
-//          return AlertDialog(
-//            title: Text(
-//              "منتظر ما باشید",
-//              textAlign: TextAlign.center,
-//              style: TextStyle(
-//                  fontSize: 16, fontWeight: FontWeight.bold),
-//            ),
-//            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
-//                textAlign: TextAlign.right,
-//                style: TextStyle(fontSize: 12)),
-//          );
-//        });
-
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    if (entity.isPatient)
-      onPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
-    else if (entity.isDoctor)
-      onPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
+//    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+//    if (entity.isPatient)
+//      onPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
+//    else if (entity.isDoctor)
+//      onPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
   }
 
   Widget _image(context) => GestureDetector(

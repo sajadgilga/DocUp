@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:DocUp/blocs/EntityBloc.dart';
-import 'package:DocUp/blocs/MedicalTestBloc.dart';
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/models/MedicalTest.dart';
-import 'package:DocUp/ui/mainPage/NavigatorView.dart';
-import 'package:DocUp/ui/widgets/VerticalSpace.dart';
-import 'package:DocUp/ui/widgets/APICallError.dart';
-import 'package:DocUp/ui/widgets/APICallLoading.dart';
-import 'package:DocUp/ui/widgets/ActionButton.dart';
-import 'package:DocUp/ui/widgets/DocUpHeader.dart';
-import 'package:DocUp/utils/Utils.dart';
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/MedicalTestBloc.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/models/MedicalTest.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:docup/ui/widgets/APICallError.dart';
+import 'package:docup/ui/widgets/APICallLoading.dart';
+import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/docupHeader.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +58,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   _medicalTestWidget(MedicalTest test) => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          DocUpHeader(title: test.name),
+          docupHeader(title: test.name),
           ALittleVerticalSpace(),
           QuestionList(test.questions, answeringController),
           MediumVerticalSpace(),

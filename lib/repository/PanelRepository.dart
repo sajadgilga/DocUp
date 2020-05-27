@@ -1,5 +1,5 @@
-import 'package:DocUp/models/Panel.dart';
-import 'package:DocUp/networking/ApiProvider.dart';
+import 'package:docup/models/Panel.dart';
+import 'package:docup/networking/ApiProvider.dart';
 
 class PanelRepository {
   ApiProvider _provider = ApiProvider();

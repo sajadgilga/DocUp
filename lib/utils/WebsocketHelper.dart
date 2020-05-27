@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:DocUp/blocs/ChatMessageBloc.dart';
+import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 

@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:DocUp/blocs/PictureBloc.dart';
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/constants/strings.dart';
-import 'package:DocUp/models/Picture.dart';
-import 'package:DocUp/utils/Utils.dart';
+import 'package:docup/blocs/PictureBloc.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
+import 'package:docup/models/Picture.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

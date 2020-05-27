@@ -1,13 +1,13 @@
 import 'dart:ui';
 
-import 'package:DocUp/blocs/PictureBloc.dart';
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/constants/strings.dart';
-import 'package:DocUp/models/Picture.dart';
-import 'package:DocUp/models/UserEntity.dart';
-import 'package:DocUp/ui/mainPage/NavigatorView.dart';
-import 'package:DocUp/ui/widgets/APICallLoading.dart';
-import 'package:DocUp/utils/Utils.dart';
+import 'package:docup/blocs/PictureBloc.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
+import 'package:docup/models/Picture.dart';
+import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/APICallLoading.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:dashed_container/dashed_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

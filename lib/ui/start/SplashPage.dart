@@ -1,10 +1,10 @@
-import 'package:DocUp/blocs/EntityBloc.dart';
-import 'package:DocUp/constants/assets.dart';
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/ui/BasePage.dart';
-import 'package:DocUp/ui/mainPage/MainPage.dart';
-import 'package:DocUp/ui/start/OnBoardingPage.dart';
-import 'package:DocUp/ui/start/StartPage.dart';
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/constants/assets.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/ui/BasePage.dart';
+import 'package:docup/ui/mainPage/MainPage.dart';
+import 'package:docup/ui/start/OnBoardingPage.dart';
+import 'package:docup/ui/start/StartPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

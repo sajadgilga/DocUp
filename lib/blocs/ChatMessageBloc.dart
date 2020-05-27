@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/models/ChatMessage.dart';
-import 'package:DocUp/repository/ChatMessageRepository.dart';
-import 'package:DocUp/ui/start/RoleType.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/models/ChatMessage.dart';
+import 'package:docup/repository/ChatMessageRepository.dart';
+import 'package:docup/ui/start/RoleType.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
