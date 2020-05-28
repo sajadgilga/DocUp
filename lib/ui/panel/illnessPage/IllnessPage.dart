@@ -47,7 +47,7 @@ class IllnessPage extends StatelessWidget {
               PicList(
                 listId: entity.sectionId(Strings.cognitiveTests),
                 uploadAvailable: entity.isPatient,
-                picLabel: Strings.illnessInfoPicListLabel,
+                picLabel: entity.isPatient ? "تست های دریافتی" : "تست های ارسالی",
                 recentLabel: Strings.illnessInfoLastPicsLabel,
                 uploadLabel: "شما ۱ تست از سوی پزشک دارید",
                 asset: SvgPicture.asset(

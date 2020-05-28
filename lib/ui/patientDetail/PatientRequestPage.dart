@@ -204,12 +204,10 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   }
 
   _patientDataWidget(VisitEntity entity) {
-    String visitType = entity.visitType == 0 ? "حضوری" : "مجازی";
     String visitMethod = entity.visitMethod == 0 ? "متنی" : "تصویری";
     return Column(
       children: <Widget>[
-        Text(
-          "درخواست ویزیت $visitType، $visitMethod",
+        Text(entity.visitType == 0 ? "درخواست ویزیت حضوری" : "درخواست ویزیت مجازی، $visitMethod",
             style: TextStyle(
                 fontSize: 12, fontWeight: FontWeight.bold, color: IColors.red),
             textAlign: TextAlign.center),

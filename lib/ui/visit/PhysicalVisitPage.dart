@@ -246,8 +246,14 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
           0,
           convertToGeorgianDate(dateTextController.text) +
               "T" +
-              widget.doctorEntity.plan.startTime +
+              _getStartTime(timeIndexSelected) +
               "+04:30");
     }
+  }
+
+  _getStartTime(int timeIndexSelected) {
+    final array = widget.doctorEntity.plan.startTime.split(":");
+    int hour = int.parse(array[0]);
+    return "${hour + timeIndexSelected * 2}:00:00";
   }
 }
