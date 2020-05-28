@@ -10,7 +10,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   get initialState => SearchUnloaded();
 
   Stream<SearchState> _searchDoctor(event) async* {
-    yield SearchLoading();
+    yield SearchLoading(result: state.result);
     try {
       final SearchResult searchResult =
           await _repository.searchDoctor(event.text);
@@ -21,7 +21,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   Stream<SearchState> _searchPatient(SearchPatient event) async* {
-    yield SearchLoading();
+    yield SearchLoading(result: state.result);
     try {
       SearchResult searchResult;
       if (!event.isRequestOnly)
@@ -35,7 +35,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   Stream<SearchState> _searchCount(SearchCountGet event) async* {
-    yield SearchLoading();
+    yield SearchLoading(count: state.count, result: state.result);
     try {
       SearchResult searchResult;
       searchResult = await _repository.searchPatientRequests(event.text);
@@ -80,17 +80,23 @@ class SearchCountGet extends SearchEvent {
 }
 
 // states
-abstract class SearchState {}
+abstract class SearchState {
+  SearchResult result;
+  int count;
+
+  SearchState({this.result, this.count = 0});
+}
 
 class SearchError extends SearchState {}
 
 class SearchLoaded extends SearchState {
-  SearchResult result;
-  int count;
 
-  SearchLoaded({this.result, this.count});
+  SearchLoaded({result, count}) : super(result: result, count: count);
 }
 
-class SearchLoading extends SearchState {}
+class SearchLoading extends SearchState {
+
+  SearchLoading({result, count}) : super(result: result, count: count);
+}
 
 class SearchUnloaded extends SearchState {}

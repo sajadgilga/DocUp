@@ -74,31 +74,33 @@ class _PanelMenuState extends State<PanelMenu> {
 
   Widget _panelMenu() {
     return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
-      if (state is EntityError)
-        return Container(
-            constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height - 250),
-            child: Waiting());
-      if (state.entity == null) return Waiting();
-      if (state.entity.isPatient) {
-        return PatientPanelMenu(widget.onPush);
-      } else if (state.entity.isDoctor)
-        return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
-          builder: (context, panelState) {
-            var _bloc = BlocProvider.of<PanelSectionBloc>(context);
-            if (_bloc.state.section == null)
-              _bloc.add(PanelSectionSelect(section: PanelSection.DOCTOR));
+      return BlocBuilder<PanelBloc, PanelState>(builder: (pcontext, pstate) {
+        if (state is EntityError)
+          return Container(
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height - 250),
+              child: Waiting());
+        if (state.entity == null) return Waiting();
+        if (state.entity.isPatient) {
+          return PatientPanelMenu(widget.onPush);
+        } else if (state.entity.isDoctor)
+          return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
+            builder: (context, panelState) {
+              var _bloc = BlocProvider.of<PanelSectionBloc>(context);
+              if (_bloc.state.section == null)
+                _bloc.add(PanelSectionSelect(section: PanelSection.DOCTOR));
 
-            if (panelState.section == PanelSection.DOCTOR)
-              return DoctorPanelMenu(widget.onPush);
-            else
-              return PatientPanelMenu(
-                widget.onPush,
-                isPatient: false,
-              );
-          },
-        );
-      return PatientPanelMenu(widget.onPush); //TODO
+              if (panelState.section == PanelSection.DOCTOR)
+                return DoctorPanelMenu(widget.onPush);
+              else
+                return PatientPanelMenu(
+                  widget.onPush,
+                  isPatient: false,
+                );
+            },
+          );
+        return PatientPanelMenu(widget.onPush); //TODO
+      });
     });
   }
 
@@ -119,10 +121,11 @@ class _PanelMenuState extends State<PanelMenu> {
               onTap: () {
 //                _popMenu();
               },
-              child:*/ Container(
-                  constraints: BoxConstraints(maxHeight: 100),
-                  alignment: Alignment.topCenter,
-                  child: _header(context)),
+              child:*/
+          Container(
+              constraints: BoxConstraints(maxHeight: 100),
+              alignment: Alignment.topCenter,
+              child: _header(context)),
         ],
       ),
     );

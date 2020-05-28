@@ -182,7 +182,7 @@ class PanelMenuMainItem extends StatelessWidget {
 
   Widget _requestsCountCircle() {
     return BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
-      if (state is SearchLoaded)
+      if (state is SearchLoaded || state is SearchLoading)
         return Container(
             margin: EdgeInsets.only(right: 10, bottom: 15),
             child: Wrap(children: <Widget>[
@@ -190,7 +190,7 @@ class PanelMenuMainItem extends StatelessWidget {
                   padding: EdgeInsets.only(left: 5, right: 5),
                   child: Text(
                       replaceFarsiNumber(
-                          (state as SearchLoaded).count.toString()),
+                          state.count.toString()),
                       style: TextStyle(color: Colors.white, fontSize: 12)),
                   decoration: BoxDecoration(
                       color: IColors.themeColor,

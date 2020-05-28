@@ -90,8 +90,10 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             flex: 2,
             child: TextField(
-              controller: _controller,
 
+              controller: _controller,
+              maxLines: 4,
+              minLines: 1,
               onSubmitted: (text) {
                 _submitMsg();
               },

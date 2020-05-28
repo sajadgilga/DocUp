@@ -30,7 +30,8 @@ class SearchPage extends StatelessWidget {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
     if (_state.entity.isDoctor)
-      searchBloc.add(SearchPatient(text: _controller.text, isRequestOnly: isRequestPage));
+      searchBloc.add(
+          SearchPatient(text: _controller.text, isRequestOnly: isRequestPage));
     else if (_state.entity.isPatient)
       searchBloc.add(SearchDoctor(text: _controller.text));
 
@@ -42,10 +43,10 @@ class SearchPage extends StatelessWidget {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
     if (_state.entity.isDoctor)
-      searchBloc.add(SearchPatient(text: _controller.text, isRequestOnly: isRequestPage));
+      searchBloc.add(
+          SearchPatient(text: _controller.text, isRequestOnly: isRequestPage));
     else if (_state.entity.isPatient)
       searchBloc.add(SearchDoctor(text: _controller.text));
-
   }
 
   @override
@@ -132,10 +133,21 @@ class SearchPage extends StatelessWidget {
           return Container(
             child: Text('error!'),
           );
-        if (state is SearchLoading)
-          return Container(
-            child: Waiting(),
-          );
+        if (state is SearchLoading) {
+          if (state.result == null)
+            return Container(
+              child: Waiting(),
+            );
+          else
+            return ResultList(
+              onPush: onPush,
+              isDoctor: state.result.isDoctor,
+              results: (state.result.isDoctor
+                  ? state.result.doctor_results
+                  : state.result.patient_results),
+              isRequestsOnly: isRequestPage,
+            );
+        }
         return Container();
       },
     );
