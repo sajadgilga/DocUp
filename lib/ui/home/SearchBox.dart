@@ -1,6 +1,6 @@
-import 'package:DocUp/blocs/EntityBloc.dart';
-import 'package:DocUp/models/UserEntity.dart';
-import 'package:DocUp/ui/mainPage/NavigatorView.dart';
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

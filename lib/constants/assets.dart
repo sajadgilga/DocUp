@@ -1,9 +1,9 @@
-import 'package:DocUp/ui/start/RoleType.dart';
+import 'package:docup/ui/start/RoleType.dart';
 
 class Assets {
-  static final String DocUpPatientIcon = 'assets/DocUpHomePatient.svg';
-  static final String DocUpDoctorIcon = 'assets/DocUpHomeDoctor.svg';
-  static final String DocUpClinicIcon = '';
+  static final String docupPatientIcon = 'assets/docupHomePatient.svg';
+  static final String docupDoctorIcon = 'assets/docupHomeDoctor.svg';
+  static final String docupClinicIcon = '';
   static final String panelListIcon = 'assets/panelMenu.svg';
   static final String searchIcon = 'assets/search.svg';
   static final String onCallMedicalIcon = "assets/onCallIcon.svg";
@@ -19,19 +19,19 @@ class Assets {
   static final String logoCircle = 'assets/logoCircle.png';
   static final String logoTransparent = 'assets/logoTransparent.png';
 
-  static String DocUpIcon = DocUpPatientIcon;
+  static String docupIcon = docupPatientIcon;
 
   static void changeIcons(RoleType roleType) {
     switch (roleType) {
       case RoleType.PATIENT:
-        DocUpIcon = DocUpPatientIcon;
+        docupIcon = docupPatientIcon;
         break;
       case RoleType.CLINIC:
-        DocUpIcon = DocUpClinicIcon;
+        docupIcon = docupClinicIcon;
         break;
       case RoleType.DOCTOR:
-        DocUpIcon = DocUpDoctorIcon;
+        docupIcon = docupDoctorIcon;
     }
-    DocUpIcon = logoCircle;
+    docupIcon = logoCircle;
   }
 }

@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:DocUp/blocs/CreditBloc.dart';
-import 'package:DocUp/blocs/EntityBloc.dart';
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/models/UserEntity.dart';
-import 'package:DocUp/ui/widgets/ActionButton.dart';
-import 'package:DocUp/ui/widgets/Avatar.dart';
-import 'package:DocUp/ui/widgets/DocUpHeader.dart';
-import 'package:DocUp/utils/Utils.dart';
+import 'package:docup/blocs/CreditBloc.dart';
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/Avatar.dart';
+import 'package:docup/ui/widgets/docupHeader.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,7 +84,7 @@ class _AccountPageState extends State<AccountPage> with WidgetsBindingObserver {
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        DocUpHeader(title: "پروفایل من"),
+        docupHeader(title: "پروفایل من"),
         SizedBox(height: 10),
         _userInfoLabelWidget(),
         _userInfoWidget(),

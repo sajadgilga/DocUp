@@ -1,5 +1,5 @@
-import 'package:DocUp/ui/visit/calendar/utils/consts.dart';
-import 'package:DocUp/ui/visit/calendar/utils/date.dart';
+import 'package:docup/ui/visit/calendar/utils/consts.dart';
+import 'package:docup/ui/visit/calendar/utils/date.dart';
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 

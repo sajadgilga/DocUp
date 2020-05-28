@@ -1,9 +1,9 @@
-import 'package:DocUp/blocs/PanelBloc.dart';
+import 'package:docup/blocs/PanelBloc.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:DocUp/blocs/EntityBloc.dart';
-import 'package:DocUp/ui/start/OnBoardingPage.dart';
-import 'package:DocUp/ui/start/SplashPage.dart';
-import 'package:DocUp/ui/start/StartPage.dart';
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/ui/start/OnBoardingPage.dart';
+import 'package:docup/ui/start/SplashPage.dart';
+import 'package:docup/ui/start/StartPage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

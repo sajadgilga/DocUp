@@ -1,4 +1,4 @@
-import 'package:DocUp/constants/colors.dart';
+import 'package:docup/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class APICallError extends StatelessWidget {

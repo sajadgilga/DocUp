@@ -1,11 +1,11 @@
 
 import 'dart:async';
 
-import 'package:DocUp/models/AuthResponseEntity.dart';
-import 'package:DocUp/models/DoctorEntity.dart';
-import 'package:DocUp/models/PatientEntity.dart';
-import 'package:DocUp/networking/Response.dart';
-import 'package:DocUp/repository/DoctorRepository.dart';
+import 'package:docup/models/AuthResponseEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/networking/Response.dart';
+import 'package:docup/repository/DoctorRepository.dart';
 
 class DoctorBloc {
   DoctorRepository _repository;

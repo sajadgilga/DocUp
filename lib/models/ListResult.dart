@@ -1,4 +1,4 @@
-import 'package:DocUp/models/VisitResponseEntity.dart';
+import 'package:docup/models/VisitResponseEntity.dart';
 
 class ListResult {
   int count;

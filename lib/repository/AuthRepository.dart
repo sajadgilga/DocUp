@@ -1,5 +1,5 @@
-import 'package:DocUp/models/AuthResponseEntity.dart';
-import 'package:DocUp/networking/ApiProvider.dart';
+import 'package:docup/models/AuthResponseEntity.dart';
+import 'package:docup/networking/ApiProvider.dart';
 
 class AuthRepository {
   ApiProvider _provider = ApiProvider();

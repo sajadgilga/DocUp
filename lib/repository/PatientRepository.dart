@@ -1,7 +1,7 @@
-//import 'package:DocUp/models/UpdatePatientResponseEntity.dart';
-import 'package:DocUp/models/Medicine.dart';
-import 'package:DocUp/models/PatientEntity.dart';
-import 'package:DocUp/networking/ApiProvider.dart';
+//import 'package:docup/models/UpdatePatientResponseEntity.dart';
+import 'package:docup/models/Medicine.dart';
+import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/networking/ApiProvider.dart';
 
 class PatientRepository {
   ApiProvider _provider = ApiProvider();

@@ -1,10 +1,10 @@
-import 'package:DocUp/models/AuthResponseEntity.dart';
-import 'package:DocUp/models/DoctorEntity.dart';
-import 'package:DocUp/models/DoctorPlan.dart';
-import 'package:DocUp/models/ListResult.dart';
-import 'package:DocUp/models/PatientTracker.dart';
-import 'package:DocUp/models/VisitResponseEntity.dart';
-import 'package:DocUp/networking/ApiProvider.dart';
+import 'package:docup/models/AuthResponseEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorPlan.dart';
+import 'package:docup/models/ListResult.dart';
+import 'package:docup/models/PatientTracker.dart';
+import 'package:docup/models/VisitResponseEntity.dart';
+import 'package:docup/networking/ApiProvider.dart';
 
 class DoctorRepository {
   ApiProvider _provider = ApiProvider();

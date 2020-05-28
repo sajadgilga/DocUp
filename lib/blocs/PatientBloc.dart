@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:DocUp/models/PatientEntity.dart';
-import 'package:DocUp/networking/Response.dart';
-import 'package:DocUp/repository/PatientRepository.dart';
+import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/networking/Response.dart';
+import 'package:docup/repository/PatientRepository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 

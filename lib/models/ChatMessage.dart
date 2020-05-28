@@ -1,4 +1,4 @@
-import 'package:DocUp/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 
 import 'PatientEntity.dart';
 

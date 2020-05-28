@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:DocUp/models/AddTestEntity.dart';
-import 'package:DocUp/models/MedicalTest.dart';
-import 'package:DocUp/models/PayResponseEntity.dart';
-import 'package:DocUp/networking/Response.dart';
-import 'package:DocUp/repository/MedicalTestRepository.dart';
-import 'package:DocUp/repository/PaymentRepository.dart';
+import 'package:docup/models/AddTestEntity.dart';
+import 'package:docup/models/MedicalTest.dart';
+import 'package:docup/models/PayResponseEntity.dart';
+import 'package:docup/networking/Response.dart';
+import 'package:docup/repository/MedicalTestRepository.dart';
+import 'package:docup/repository/PaymentRepository.dart';
 import 'package:flutter/cupertino.dart';
 
 class MedicalTestBloc extends Bloc<MedicalTestEvent, MedicalTestState> {

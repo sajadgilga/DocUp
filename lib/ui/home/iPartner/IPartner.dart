@@ -1,11 +1,11 @@
-import 'package:DocUp/blocs/EntityBloc.dart';
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/constants/strings.dart';
-import 'package:DocUp/models/UserEntity.dart';
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:flutter/material.dart';
 
-import 'package:DocUp/ui/home/iPartner/IPartnerBody.dart';
-import 'package:DocUp/ui/widgets/DoctorSummary.dart';
+import 'package:docup/ui/home/iPartner/IPartnerBody.dart';
+import 'package:docup/ui/widgets/DoctorSummary.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IPartner extends StatelessWidget {

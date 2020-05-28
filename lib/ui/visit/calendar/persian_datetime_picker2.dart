@@ -1,6 +1,6 @@
 library persian_datetime_picker;
 
-import 'package:DocUp/ui/visit/calendar/utils/consts.dart';
+import 'package:docup/ui/visit/calendar/utils/consts.dart';
 import 'package:flutter/material.dart';
 import 'handle_picker2.dart';
 

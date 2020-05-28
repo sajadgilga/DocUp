@@ -1,5 +1,5 @@
-import 'package:DocUp/models/ChatMessage.dart';
-import 'package:DocUp/networking/ApiProvider.dart';
+import 'package:docup/models/ChatMessage.dart';
+import 'package:docup/networking/ApiProvider.dart';
 
 class ChatMessageRepository {
   ApiProvider _provider = ApiProvider();

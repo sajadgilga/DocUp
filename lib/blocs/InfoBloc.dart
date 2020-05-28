@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:DocUp/models/Panel.dart';
-import 'package:DocUp/repository/InfoRepository.dart';
+import 'package:docup/models/Panel.dart';
+import 'package:docup/repository/InfoRepository.dart';
 
 class InfoBloc extends Bloc<InfoEvent, InfoState> {
   InfoRepository _repository = InfoRepository();

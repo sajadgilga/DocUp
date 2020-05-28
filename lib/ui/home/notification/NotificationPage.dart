@@ -1,16 +1,16 @@
-import 'package:DocUp/blocs/NotificationBloc.dart';
-import 'package:DocUp/blocs/NotificationBlocV2.dart';
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/models/DoctorEntity.dart';
-import 'package:DocUp/models/NewestNotificationResponse.dart';
-import 'package:DocUp/networking/Response.dart';
-import 'package:DocUp/ui/customPainter/DrawerPainter.dart';
-import 'package:DocUp/ui/widgets/APICallError.dart';
-import 'package:DocUp/ui/widgets/APICallLoading.dart';
-import 'package:DocUp/ui/widgets/VerticalSpace.dart';
-import 'package:DocUp/utils/Utils.dart';
+import 'package:docup/blocs/NotificationBloc.dart';
+import 'package:docup/blocs/NotificationBlocV2.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/NewestNotificationResponse.dart';
+import 'package:docup/networking/Response.dart';
+import 'package:docup/ui/customPainter/DrawerPainter.dart';
+import 'package:docup/ui/widgets/APICallError.dart';
+import 'package:docup/ui/widgets/APICallLoading.dart';
+import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:docup/utils/Utils.dart';
 
-//import 'package:DocUp/ui/home/notification/DrawerPainter.dart';
+//import 'package:docup/ui/home/notification/DrawerPainter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icon_shadow/icon_shadow.dart';
@@ -30,8 +30,8 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   Widget _notificationCountCircle(int count) => Positioned(
-        left: MediaQuery.of(context).size.width * 0.55,
-        top: MediaQuery.of(context).size.height * 0.29,
+        right: 150,
+        top: 140,
         child: Container(
             alignment: Alignment.centerRight,
             child: Wrap(children: <Widget>[
@@ -93,8 +93,8 @@ class _NotificationPageState extends State<NotificationPage> {
               child: Stack(
                 children: <Widget>[
                   Positioned(
-                    left: MediaQuery.of(context).size.width * 0.6,
-                    top: MediaQuery.of(context).size.height * 0.3,
+                    right: 90,
+                    top: 150,
                     child: Text(
                       "اعلانات",
                       style: TextStyle(fontSize: 24),
@@ -124,16 +124,16 @@ class _NotificationPageState extends State<NotificationPage> {
         ? Expanded(
             child: Positioned(
                 right: MediaQuery.of(context).size.width * 0.4,
-                top: MediaQuery.of(context).size.height * 0.4,
+                top: 200,
                 child: Text("اعلانی موجود نیست")),
           )
         : Expanded(
             child: Positioned(
               right: MediaQuery.of(context).size.width * 0.15,
-              top: MediaQuery.of(context).size.height * 0.40,
+              top: 200,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.7,
                 child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,

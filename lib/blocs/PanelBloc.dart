@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:DocUp/models/Panel.dart';
-import 'package:DocUp/repository/PanelRepository.dart';
+import 'package:docup/models/Panel.dart';
+import 'package:docup/repository/PanelRepository.dart';
 import 'package:equatable/equatable.dart';
 
 class PanelBloc extends Bloc<PanelEvent, PanelState> {

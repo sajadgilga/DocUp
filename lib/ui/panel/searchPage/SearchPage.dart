@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:DocUp/blocs/EntityBloc.dart';
-import 'package:DocUp/blocs/SearchBloc.dart';
-import 'package:DocUp/blocs/VisitBloc.dart';
-import 'package:DocUp/constants/assets.dart';
-import 'package:DocUp/constants/colors.dart';
-import 'package:DocUp/constants/strings.dart';
-import 'package:DocUp/models/UserEntity.dart';
-import 'package:DocUp/ui/mainPage/NavigatorView.dart';
-import 'package:DocUp/ui/widgets/Waiting.dart';
-import 'package:DocUp/utils/Utils.dart';
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/SearchBloc.dart';
+import 'package:docup/blocs/VisitBloc.dart';
+import 'package:docup/constants/assets.dart';
+import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
+import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/Waiting.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,10 +54,10 @@ class SearchPage extends StatelessWidget {
     _controller?.dispose();
   }
 
-  Widget _DocUpIcon() => Container(
+  Widget _docupIcon() => Container(
         padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
-        child: Image.asset(Assets.DocUpIcon, width: 50),
-//        child: SvgPicture.asset(Assets.DocUpIcon, width: 50),
+        child: Image.asset(Assets.docupIcon, width: 50),
+//        child: SvgPicture.asset(Assets.docupIcon, width: 50),
         alignment: Alignment.centerRight,
       );
 
@@ -80,7 +80,7 @@ class SearchPage extends StatelessWidget {
   Widget _header(context) => Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[_backArrow(context), _DocUpIcon()],
+          children: <Widget>[_backArrow(context), _docupIcon()],
         ),
       );
 
