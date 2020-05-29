@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/blocs/CreditBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
-import 'package:docup/ui/widgets/docupHeader.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show PlatformException;
 
 
-class AccountPage extends StatefulWidget {
+class   AccountPage extends StatefulWidget {
   final ValueChanged<String> onPush;
   final String defaultCreditForCharge;
 
@@ -84,7 +84,7 @@ class _AccountPageState extends State<AccountPage> with WidgetsBindingObserver {
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        docupHeader(title: "پروفایل من"),
+        DocUpHeader(title: "پروفایل من"),
         SizedBox(height: 10),
         _userInfoLabelWidget(),
         _userInfoWidget(),

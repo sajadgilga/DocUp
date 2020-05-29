@@ -2,11 +2,11 @@ import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
 
-class docupHeader extends StatelessWidget {
+class DocUpHeader extends StatelessWidget {
 
   final String title;
 
-  docupHeader({Key key, this.title}) : super(key: key);
+  DocUpHeader({Key key, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

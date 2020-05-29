@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/blocs/MedicalTestBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/MedicalTest.dart';
@@ -10,7 +11,6 @@ import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/docupHeader.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +58,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   _medicalTestWidget(MedicalTest test) => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          docupHeader(title: test.name),
+          DocUpHeader(title: test.name),
           ALittleVerticalSpace(),
           QuestionList(test.questions, answeringController),
           MediumVerticalSpace(),
