@@ -46,8 +46,12 @@ String replaceFarsiNumber(String input) {
 }
 
 String normalizeDateAndTime(String str) {
+  String date = str.split("T")[0];
   String time = str.split("T")[1].split("+")[0];
-  final jalaliDate = Jalali.fromDateTime(getDateAndTimeFromWS(str));
+  final jalaliDate = Jalali.fromDateTime(DateTime(
+      int.parse(date.split("-")[0]),
+      int.parse(date.split("-")[1]),
+      int.parse(date.split("-")[2])));
   String finalDate = "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
   return "تاریخ: $finalDate زمان : $time ";
 }

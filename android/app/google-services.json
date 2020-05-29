@@ -1,35 +1,42 @@
 {
   "project_info": {
-    "project_number": "828075851947",
-    "firebase_url": "https://docup-471dd.firebaseio.com",
-    "project_id": "docup-471dd",
-    "storage_bucket": "docup-471dd.appspot.com"
+    "project_number": "41606048740",
+    "firebase_url": "https://doc-up-9d393.firebaseio.com",
+    "project_id": "doc-up-9d393",
+    "storage_bucket": "doc-up-9d393.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:828075851947:android:f6181fc6a4a0a8a14937ee",
+        "mobilesdk_app_id": "1:41606048740:android:add1d4a9e92b0a0ea0f5f1",
         "android_client_info": {
           "package_name": "com.nilva.docup"
         }
       },
       "oauth_client": [
         {
-          "client_id": "828075851947-msvlog3vi7ff9qa1m9tpjd48ut5q5asp.apps.googleusercontent.com",
+          "client_id": "41606048740-thunv3ud7gqojdrq2hujcq22ugjtkdid.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC6NNd_Mzu7f3Rmej9B7X-8zTVHyra6uEA"
+          "current_key": "AIzaSyCFhvZpqONloPqdRaeK3Pb5_64OyUSzZVI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "828075851947-msvlog3vi7ff9qa1m9tpjd48ut5q5asp.apps.googleusercontent.com",
+              "client_id": "41606048740-thunv3ud7gqojdrq2hujcq22ugjtkdid.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "41606048740-vvtbjv5bs0df5p6q6h2gn37s4djg2jvt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nilva.docup"
+              }
             }
           ]
         }

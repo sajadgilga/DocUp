@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:docup/networking/CustomException.dart';
+import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
@@ -87,13 +89,15 @@ class _MainPageState extends State<MainPage> {
           _panelBloc.add(GetMyPanels());
         });
     });
-
+    super.initState();
     // firebase initialization for notifications & push notifications
     try {
       _firebaseMessaging.getToken().then((String fcmToken) {
         assert(fcmToken != null);
         print("FCM " + fcmToken);
-        NotificationRepository().registerDevice(fcmToken);
+        try {
+          NotificationRepository().registerDevice(fcmToken);
+        } on BadRequestException{}
       });
 
       _firebaseMessaging.configure(
@@ -103,11 +107,11 @@ class _MainPageState extends State<MainPage> {
               message['notification']['title'],
               message['notification']['body']);
         },
-//      onBackgroundMessage: myBackgroundMessageHandler,
+        onBackgroundMessage: myBackgroundMessageHandler,
         onLaunch: (Map<String, dynamic> message) async {
           print("onLaunch: $message");
         },
-        onResume: (Map<String, dynamic> message) async {
+        onResume: ( Map<String, dynamic> message) async {
           print("onResume: $message");
         },
       );
@@ -125,7 +129,6 @@ class _MainPageState extends State<MainPage> {
     } on Exception {
       print("oh oh");
     }
-    super.initState();
   }
 
   Future _showNotificationWithDefaultSound(String title, String body) async {
