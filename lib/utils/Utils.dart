@@ -11,7 +11,6 @@ import 'package:shamsi_date/shamsi_date.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 
-
 enum WeekDay { SATURDAY, SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY }
 
 extension WeekDaysExtension on WeekDay {

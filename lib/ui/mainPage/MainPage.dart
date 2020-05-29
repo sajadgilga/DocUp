@@ -36,6 +36,7 @@ import 'package:docup/ui/mainPage/navigator_destination.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/colors.dart';
+import 'CallRepo.dart';
 import 'NavigatorView.dart';
 
 class MainPage extends StatefulWidget {
@@ -75,8 +76,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    // initialize socket helper for web socket messages
-    SocketHelper().init('185.252.30.163');
+
     // get user entity & panels, also periodically update entity's info
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
     _entityBloc.add(EntityGet());
@@ -90,6 +90,11 @@ class _MainPageState extends State<MainPage> {
         });
     });
     super.initState();
+
+    // initialize socket helper for web socket messages
+    SocketHelper().init('185.252.30.163');
+
+
     // firebase initialization for notifications & push notifications
     try {
       _firebaseMessaging.getToken().then((String fcmToken) {
@@ -149,34 +154,9 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future onSelectNotification(String payload) async {
-    joinVideoCall(payload);
+    joinVideoCall(context, payload);
   }
 
-  bool videoCallStarted = false;
-
-  Future<void> joinVideoCall(String channelName) async {
-    if (videoCallStarted) return;
-    videoCallStarted = true;
-//     await for camera and mic permissions before pushing video page
-    await _handleCameraAndMic();
-//     push video page with given channel name
-//
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CallPage(
-          channelName: channelName,
-        ),
-      ),
-    );
-  }
-
-
-  Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
-  }
 
   void _selectPage(int index) {
     if (_currentIndex == index) {

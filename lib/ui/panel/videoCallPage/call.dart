@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:docup/ui/mainPage/CallRepo.dart';
 import 'package:flutter/material.dart';
 import 'utils/settings.dart';
 
@@ -280,6 +281,7 @@ class _CallPageState extends State<CallPage> {
 
   void _onCallEnd(BuildContext context) {
     Navigator.pop(context);
+    isCallStarted = false;
   }
 
   void _onToggleMute() {
@@ -301,7 +303,7 @@ class _CallPageState extends State<CallPage> {
         child: Stack(
           children: <Widget>[
             _viewRows(),
-            _panel(),
+//            _panel(),
             _toolbar(),
           ],
         ),

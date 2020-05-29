@@ -127,29 +127,33 @@ class _VideoCallPageState extends State<VideoCallPage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text(
-              "در صورت تایید پزشک، امکان برقراری ارتباط از طریق تماس تصویری امکان پذیر است",
+            child: Text(widget.entity.isPatient ?
+              "در صورت تایید پزشک، امکان برقراری ارتباط از طریق تماس تصویری امکان پذیر است" :
+              "با شروع تماس تصویری از سمت بیمار نوتیفیکیش‌ی جهت ملحق شدن برای شما ارسال خواهد شد",
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
           ),
-          ActionButton(
-            color: IColors.themeColor,
-            icon: Icon(Icons.videocam),
-            title: "تماس تصویری",
-            callBack: () {
-              showLoadingDialog();
-              onJoin().then((value) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CallPage(
-                      channelName: value,
+          Visibility(
+            visible: widget.entity.isPatient,
+            child: ActionButton(
+              color: IColors.themeColor,
+              icon: Icon(Icons.videocam),
+              title: "تماس تصویری",
+              callBack: () {
+                showLoadingDialog();
+                onJoin().then((value) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CallPage(
+                        channelName: value,
+                      ),
                     ),
-                  ),
-                );
-              });
-            },
+                  );
+                });
+              },
+            ),
           )
         ],
       );
