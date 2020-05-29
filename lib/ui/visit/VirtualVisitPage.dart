@@ -210,8 +210,10 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
                   width: MediaQuery.of(context).size.width * 0.35,
                   child: TextField(
                       controller: dateTextController,
-                      onTap: () =>
-                          showDatePickerDialog(context, dateTextController)),
+                      onTap: () => showDatePickerDialog(
+                          context,
+                          widget.doctorEntity.plan.availableDays,
+                          dateTextController)),
                 ),
               ],
             )
@@ -289,14 +291,35 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
   }
 
   void sendVisitRequest() {
-    _bloc.visitRequest(
-        widget.doctorEntity.id,
-        1,
-        typeSelected[VISIT_METHOD],
-        typeSelected[VISIT_DURATION_PLAN],
+    DateTime doctorStartTime = getDateAndTimeFromWS(
         convertToGeorgianDate(dateTextController.text) +
             "T" +
-            timeTextController.text +
-            "+04:30");
+            widget.doctorEntity.plan.startTime);
+    DateTime doctorEndTime = getDateAndTimeFromWS(
+        convertToGeorgianDate(dateTextController.text) +
+            "T" +
+            widget.doctorEntity.plan.endTime);
+    DateTime selectedTime = getDateAndTimeFromJalali(
+        dateTextController.text, timeTextController.text);
+    if (selectedTime.isAfter(doctorStartTime) &&
+        selectedTime.isBefore(doctorEndTime)) {
+      _bloc.visitRequest(
+          widget.doctorEntity.id,
+          1,
+          typeSelected[VISIT_METHOD],
+          typeSelected[VISIT_DURATION_PLAN],
+          convertToGeorgianDate(dateTextController.text) +
+              "T" +
+              timeTextController.text +
+              "+04:30");
+    } else {
+      showOneButtonDialog(
+          context,
+          "زمان انتخاب شده خالی نیست. لطفا زمان دیگری را برای ویزیت انتخاب کنید " +
+              "\n" +
+              "پزشک ساعت ${replaceFarsiNumber(widget.doctorEntity.plan.startTime)} الی  ${replaceFarsiNumber(widget.doctorEntity.plan.endTime)} را تخصیص داده است ",
+          "متوجه شدم",
+          () {});
+    }
   }
 }

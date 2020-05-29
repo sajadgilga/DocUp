@@ -11,29 +11,6 @@ import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-enum WeekDay { SATURDAY, SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY }
-
-extension WeekDaysExtension on WeekDay {
-  String get name {
-    switch (this) {
-      case WeekDay.SATURDAY:
-        return "saturday";
-      case WeekDay.SUNDAY:
-        return "sunday";
-      case WeekDay.MONDAY:
-        return "monday";
-      case WeekDay.TUESDAY:
-        return "tuesday";
-      case WeekDay.WEDNESDAY:
-        return "wednesday";
-      case WeekDay.THURSDAY:
-        return "thursday";
-      case WeekDay.FRIDAY:
-        return "friday";
-    }
-  }
-}
-
 const VISIT_METHOD = "نوع مشاوره";
 const String TIME_SELECTION = "انتخاب ساعت";
 
@@ -126,7 +103,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
               type: "date",
               initial: getTomorrowInJalali(),
               min: getTodayInJalali(),
-              disable: _getDisableDays(),
+              disable: getDisableDays(widget.doctorEntity.plan.availableDays),
               onSelect: (date) {
                 dateTextController.text = date;
               },
@@ -134,15 +111,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
           ),
         ],
       );
-
-  _getDisableDays() {
-    List<String> disableDays = [];
-    final availableDays = widget.doctorEntity.plan.availableDays;
-    for (int i = 0; i < 7; i++) {
-      if (!availableDays.contains(i)) disableDays.add(WeekDay.values[i].name);
-    }
-    return disableDays;
-  }
 
   _getVisitTimes() {
     List<String> visitTimes = [];
@@ -238,7 +206,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
       showOneButtonDialog(
           context, "لطفا زمان رزرو ویزیت را وارد کنید", "باشه", () {});
     } else {
-      //TODO: fit start time
       _bloc.visitRequest(
           widget.doctorEntity.id,
           0,

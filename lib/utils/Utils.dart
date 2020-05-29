@@ -1,16 +1,39 @@
 import 'dart:typed_data';
-
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 
+
+enum WeekDay { SATURDAY, SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY }
+
+extension WeekDaysExtension on WeekDay {
+  String get name {
+    switch (this) {
+      case WeekDay.SATURDAY:
+        return "saturday";
+      case WeekDay.SUNDAY:
+        return "sunday";
+      case WeekDay.MONDAY:
+        return "monday";
+      case WeekDay.TUESDAY:
+        return "tuesday";
+      case WeekDay.WEDNESDAY:
+        return "wednesday";
+      case WeekDay.THURSDAY:
+        return "thursday";
+      case WeekDay.FRIDAY:
+        return "friday";
+    }
+  }
+}
 String replaceFarsiNumber(String input) {
   const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   const farsi = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -23,14 +46,37 @@ String replaceFarsiNumber(String input) {
 }
 
 String normalizeDateAndTime(String str) {
-  String date = str.split("T")[0];
   String time = str.split("T")[1].split("+")[0];
-  final jalaliDate = Jalali.fromDateTime(DateTime(
-          int.parse(date.split("-")[0]),
-          int.parse(date.split("-")[1]),
-          int.parse(date.split("-")[2])));
+  final jalaliDate = Jalali.fromDateTime(getDateAndTimeFromWS(str));
   String finalDate = "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
   return "تاریخ: $finalDate زمان : $time ";
+}
+
+DateTime getDateAndTimeFromWS(String str) {
+  String date = str.split("T")[0];
+  String time = str.split("T")[1];
+  final timeArray = time.split(":");
+  return DateTime(
+      int.parse(date.split("-")[0]),
+      int.parse(date.split("-")[1]),
+      int.parse(date.split("-")[2]),
+      int.parse(timeArray[0]),
+      int.parse(timeArray[1]),
+      int.parse(timeArray[2]));
+}
+
+DateTime getDateAndTimeFromJalali(String jalaiDateStr, String timeStr) {
+  var array = jalaiDateStr.split("/");
+  var georgianDate =
+      Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
+          .toGregorian();
+  var timeArray = timeStr.split(":");
+  return DateTime(
+      georgianDate.year,
+      georgianDate.month,
+      georgianDate.day,
+      int.parse(timeArray[0]),
+      int.parse(timeArray[1]));
 }
 
 bool validatePhoneNumber(String value) {
@@ -45,7 +91,6 @@ String normalizeCredit(String credit) {
   } else
     return credit;
 }
-
 
 String convertToGeorgianDate(String jalaliDate) {
   var array = jalaliDate.split("/");
@@ -62,7 +107,7 @@ AlertDialog getLoadingDialog() => AlertDialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
     content: Waiting());
 
-void showDatePickerDialog(context, TextEditingController controller) {
+void showDatePickerDialog(context, List<int> availableDays, TextEditingController controller) {
   showDialog(
     context: context,
     builder: (BuildContext _) {
@@ -71,12 +116,22 @@ void showDatePickerDialog(context, TextEditingController controller) {
         type: "date",
         initial: getTodayInJalali(),
         min: getTodayInJalali(),
+        disable: getDisableDays(availableDays),
         onSelect: (date) {
           controller.text = date;
         },
       );
     },
   );
+}
+
+
+getDisableDays(List<int> availableDays) {
+  List<String> disableDays = [];
+  for (int i = 0; i < 7; i++) {
+    if (!availableDays.contains(i)) disableDays.add(WeekDay.values[i].name);
+  }
+  return disableDays;
 }
 
 String getTodayInJalali() {
