@@ -1,3 +1,4 @@
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/assets.dart';
@@ -70,12 +71,13 @@ class _PanelState extends State<Panel> {
       ));
 
   Widget _tabs() {
+    var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
     return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
       builder: (context, state) {
         if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE)
           return Tabs(
               firstTab: Strings.panelIllnessInfoLabel,
-              secondTab: Strings.panelChatLabel,
+              secondTab: (_entity.isPatient? Strings.panelChatLabel: Strings.panelDoctorChatLabel),
               thirdTab: Strings.panelVideoCallLabel);
         else if (state.patientSection == PatientPanelSection.HEALTH_FILE)
           return Tabs(

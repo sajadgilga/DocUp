@@ -70,6 +70,7 @@ class Strings {
 
   static final String panelIllnessInfoLabel = 'اطلاعات بیماری';
   static final String panelChatLabel = 'چت با پزشک';
+  static final String panelDoctorChatLabel = 'چت با بیمار';
   static final String panelVideoCallLabel = 'تماس تصویری';
 
   static final String physicalReservationLabel = 'رزرو ویزیت حضوری';
