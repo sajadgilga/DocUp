@@ -77,6 +77,10 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
 
+    // initialize socket helper for web socket messages
+    SocketHelper().init('185.252.30.163');
+
+
     // get user entity & panels, also periodically update entity's info
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
     _entityBloc.add(EntityGet());
@@ -84,17 +88,12 @@ class _MainPageState extends State<MainPage> {
     _panelBloc.add(GetMyPanels());
     _entityBloc.listen((data) {
       if (_timer == null)
-        _timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+        _timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
           _entityBloc.add(EntityUpdate());
           _panelBloc.add(GetMyPanels());
         });
     });
     super.initState();
-
-    // initialize socket helper for web socket messages
-    SocketHelper().init('185.252.30.163');
-
-
     // firebase initialization for notifications & push notifications
     try {
       _firebaseMessaging.getToken().then((String fcmToken) {
@@ -103,6 +102,9 @@ class _MainPageState extends State<MainPage> {
         try {
           NotificationRepository().registerDevice(fcmToken);
         } on BadRequestException{}
+        catch(_) {
+          print('register device failed fcm');
+        }
       });
 
       _firebaseMessaging.configure(
