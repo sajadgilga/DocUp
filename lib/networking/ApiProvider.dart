@@ -40,10 +40,11 @@ class ApiProvider {
     return responseJson;
   }
 
-  Future<dynamic> postWithBaseUrl(String baseUrl, String url, {Map body, bool withToken = true}) async {
+  Future<dynamic> postWithBaseUrl(String baseUrl, String url,
+      {Map body, bool withToken = true}) async {
     var responseJson;
     try {
-      final headers = await   getHeaders(withToken: withToken);
+      final headers = await getHeaders(withToken: withToken);
       final response = await http.post(baseUrl + url,
           body: jsonEncode(body), headers: headers);
       responseJson = _response(httpResponse: response);

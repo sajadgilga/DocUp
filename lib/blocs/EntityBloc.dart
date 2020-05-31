@@ -172,37 +172,18 @@ abstract class EntityState extends Equatable {
 }
 
 class EntityLoading extends EntityState {
-  final Entity entity;
-
-  EntityLoading({@required this.entity});
-
-  @override
-  List<Object> get props => [entity];
+  EntityLoading({entity}): super(entity: entity);
 }
 
 class EntityPartnerLoading extends EntityState {
-  final Entity entity;
-
-  EntityPartnerLoading({@required this.entity});
-
-  @override
-  List<Object> get props => [entity];
+  EntityPartnerLoading({entity}): super(entity: entity);
 }
 
 class EntityLoaded extends EntityState {
-  final Entity entity;
-
-  EntityLoaded({@required this.entity});
-
-  @override
-  List<Object> get props => [entity];
+  EntityLoaded({entity}): super(entity: entity);
 }
 
 class EntityError extends EntityState {
-  final Entity entity;
+  EntityError({entity}): super(entity: entity);
 
-  EntityError({@required this.entity});
-
-  @override
-  List<Object> get props => [entity];
 }

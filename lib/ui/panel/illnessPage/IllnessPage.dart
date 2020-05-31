@@ -115,7 +115,6 @@ class IllnessPage extends StatelessWidget {
       ),
       body: BlocBuilder<EntityBloc, EntityState>(
         builder: (context, state) {
-          if (state is EntityLoaded) {
             if (state.entity.panel.status == 0 ||
                 state.entity.panel.status == 1) if (entity.isPatient)
               return Stack(children: <Widget>[
@@ -140,11 +139,6 @@ class IllnessPage extends StatelessWidget {
               ]);
             else
               return _IllnessPage(times);
-          }
-          return Container(
-              constraints:
-                  BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-              child: APICallLoading());
         },
       ),
     );

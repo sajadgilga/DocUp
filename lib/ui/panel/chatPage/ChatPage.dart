@@ -90,7 +90,6 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             flex: 2,
             child: TextField(
-
               controller: _controller,
               maxLines: 4,
               minLines: 1,
@@ -152,71 +151,65 @@ class _ChatPageState extends State<ChatPage> {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
         try {
-          if (state is EntityLoaded || state is EntityLoading) {
-            if (state.entity.panel.status == 0 ||
-                state.entity.panel.status == 1) {
-              if (state.entity.isPatient)
-                return Stack(children: <Widget>[
-                  _ChatPage(),
-                  PanelAlert(
-                    label: Strings.requestSentLabel,
-                    buttonLabel: Strings.waitingForApproval,
-                    btnColor: IColors.disabledButton,
-                  )
-                ]);
-              else
-                return Stack(children: <Widget>[
-                  _ChatPage(),
-                  PanelAlert(
-                    label: Strings.requestSentLabelDoctorSide,
-                    buttonLabel: Strings.waitingForApprovalDoctorSide,
-                    callback: () {
-                      widget.onPush(NavigatorRoutes.patientDialogue,
-                          state.entity.partnerEntity);
-                    },
-                  )
-                ]);
-            } else if (state.entity.panel.status == 3 ||
-                state.entity.panel.status == 2)
-//            return _ChatPage();
+          if (state.entity.panel.status == 0 ||
+              state.entity.panel.status == 1) {
+            if (state.entity.isPatient)
               return Stack(children: <Widget>[
                 _ChatPage(),
                 PanelAlert(
-                  label: Strings.notRequestTimeDoctorSide,
-                  buttonLabel: Strings.waitLabel,
+                  label: Strings.requestSentLabel,
+                  buttonLabel: Strings.waitingForApproval,
                   btnColor: IColors.disabledButton,
-                ) //TODO: change to timer
+                )
               ]);
-            else if (state.entity.panel.status == 6 ||
-                state.entity.panel.status == 7) {
-              if (state.entity.isPatient)
-                return Stack(children: <Widget>[
-                  _ChatPage(),
-                  PanelAlert(
-                    label: Strings.noAvailableVirtualVisit,
-                    buttonLabel: Strings.reserveVirtualVisit,
-                    callback: () {
-                      widget.onPush(NavigatorRoutes.doctorDialogue,
-                          state.entity.partnerEntity);
-                    },
-                  )
-                ]);
-              else
-                return Stack(children: <Widget>[
-                  _ChatPage(),
-                  PanelAlert(
-                    label: Strings.noAvailableVirtualVisit,
-                    buttonLabel: Strings.reserveVirtualVisitDoctorSide,
-                    btnColor: IColors.disabledButton,
-                  )
-                ]);
-            } else
-              return _ChatPage();
-          }
-          return Container(
-              constraints:
-                  BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-              child: Waiting());
+            else
+              return Stack(children: <Widget>[
+                _ChatPage(),
+                PanelAlert(
+                  label: Strings.requestSentLabelDoctorSide,
+                  buttonLabel: Strings.waitingForApprovalDoctorSide,
+                  callback: () {
+                    widget.onPush(NavigatorRoutes.patientDialogue,
+                        state.entity.partnerEntity);
+                  },
+                )
+              ]);
+          } else if (state.entity.panel.status == 3 ||
+              state.entity.panel.status == 2)
+//            return _ChatPage();
+            return Stack(children: <Widget>[
+              _ChatPage(),
+              PanelAlert(
+                label: Strings.notRequestTimeDoctorSide,
+                buttonLabel: Strings.waitLabel,
+                btnColor: IColors.disabledButton,
+              ) //TODO: change to timer
+            ]);
+          else if (state.entity.panel.status == 6 ||
+              state.entity.panel.status == 7) {
+            if (state.entity.isPatient)
+              return Stack(children: <Widget>[
+                _ChatPage(),
+                PanelAlert(
+                  label: Strings.noAvailableVirtualVisit,
+                  buttonLabel: Strings.reserveVirtualVisit,
+                  callback: () {
+                    widget.onPush(NavigatorRoutes.doctorDialogue,
+                        state.entity.partnerEntity);
+                  },
+                )
+              ]);
+            else
+              return Stack(children: <Widget>[
+                _ChatPage(),
+                PanelAlert(
+                  label: Strings.noAvailableVirtualVisit,
+                  buttonLabel: Strings.reserveVirtualVisitDoctorSide,
+                  btnColor: IColors.disabledButton,
+                )
+              ]);
+          } else
+            return _ChatPage();
         } catch (_) {
           return Container();
         }

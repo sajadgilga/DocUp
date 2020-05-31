@@ -56,7 +56,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
-        if (state is EntityLoaded) {
           if (state.entity.panel.status == 0 ||
               state.entity.panel.status == 1) if (state.entity.isPatient)
             return Stack(children: <Widget>[
@@ -114,11 +113,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
             ]);
           else
             return _VideoCallPage();
-        }
-        return Container(
-            constraints:
-                BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-            child: Expanded(flex: 2, child: Waiting()));
       },
     );
   }

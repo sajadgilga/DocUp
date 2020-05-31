@@ -100,7 +100,9 @@ class _MainPageState extends State<MainPage> {
         print("FCM " + fcmToken);
         try {
           NotificationRepository().registerDevice(fcmToken);
-        } on BadRequestException{}
+        } on BadRequestException{
+          print('kooooooft');
+        }
         catch(_) {
           print('register device failed fcm');
         }
@@ -132,7 +134,7 @@ class _MainPageState extends State<MainPage> {
       flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
       flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: onSelectNotification);
-    } on Exception {
+    } catch(_) {
       print("oh oh");
     }
     super.initState();
