@@ -89,7 +89,9 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         child: Column(children: <Widget>[
           DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
           ALittleVerticalSpace(),
-          _visitTypeWidget(VISIT_METHOD, ["متنی", "تصویری"]),
+          _visitTypeWidget(VISIT_METHOD, [
+            "متنی و تصویری" /*"صوتی", "تصویری"*/
+          ], size: 1),
           ALittleVerticalSpace(),
           _visitTypeWidget(VISIT_DURATION_PLAN, ["پایه", "تکمیلی", "طولانی"]),
           ALittleVerticalSpace(),
@@ -115,7 +117,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
   }
 
-  _visitTypeWidget(String title, List<String> items) => Column(
+  _visitTypeWidget(String title, List<String> items, {size = 0}) => Column(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -138,7 +140,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
                 Padding(
                   padding: const EdgeInsets.only(right: 4.0, left: 4.0),
                   child: ActionButton(
-                    width: 120,
+                    width: (size == 0 ? 120 : 150),
                     color: typeSelected[title] == index
                         ? IColors.themeColor
                         : Colors.grey,
