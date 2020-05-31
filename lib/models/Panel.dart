@@ -14,7 +14,9 @@ class PanelResponseEntity {
     previous = json['previous'];
     panels = [];
     if (json['results'].length != 0)
-      json['results'].forEach((panel) => panels.add(Panel.fromJson(panel)));
+      json['results'].forEach((panel) {
+        if (panel != null) panels.add(Panel.fromJson(panel));
+      });
   }
 }
 

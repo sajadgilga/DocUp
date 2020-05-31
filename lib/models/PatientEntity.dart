@@ -27,6 +27,8 @@ class PatientEntity extends UserEntity {
       panels = [];
       if (json['panels'].length != 0)
         json['panels'].forEach((panel) {
+          if (panel == null)
+            return;
           panels.add(Panel.fromJson(panel));
           panelMap[panels.last.id] = panels.last;
         });
