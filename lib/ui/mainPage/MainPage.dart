@@ -93,7 +93,6 @@ class _MainPageState extends State<MainPage> {
           _panelBloc.add(GetMyPanels());
         });
     });
-    super.initState();
     // firebase initialization for notifications & push notifications
     try {
       _firebaseMessaging.getToken().then((String fcmToken) {
@@ -136,6 +135,8 @@ class _MainPageState extends State<MainPage> {
     } on Exception {
       print("oh oh");
     }
+    super.initState();
+
   }
 
   Future _showNotificationWithDefaultSound(String title, String body) async {

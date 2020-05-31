@@ -116,16 +116,15 @@ class DoctorPanelMenu extends StatelessWidget {
   List<PanelSubItem> _getPartners(context) {
     List<PanelSubItem> partners = [];
     var state = BlocProvider.of<PanelBloc>(context).state;
-    if (state is PanelsLoaded || state is PanelLoading)
-      for (var panel in state.panels) {
-        if (panel.status > 1)
-          partners.add(PanelSubItem(
-              panel.patient.user.name,
-              panel.patient.id.toString(),
-              getColor(DoctorPanelSection.DOCTOR_INTERFACE,
-                  id: panel.patient.id, context: context),
-              panelId: panel.id));
-      }
+    for (var panel in state.panels) {
+      if (panel.status > 1)
+        partners.add(PanelSubItem(
+            panel.patient.user.name,
+            panel.patient.id.toString(),
+            getColor(DoctorPanelSection.DOCTOR_INTERFACE,
+                id: panel.patient.id, context: context),
+            panelId: panel.id));
+    }
     return partners;
   }
 
