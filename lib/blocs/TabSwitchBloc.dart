@@ -35,13 +35,14 @@ abstract class PanelTabState {
   String text;
   int index;
 
-  PanelTabState({this.subtabs, this.index = 1, this.text}) {
+  PanelTabState({this.subtabs, this.index = 0, this.text}) {
     if (text == null) text = subtabs[index].text;
   }
 }
 
 class FirstTab extends PanelTabState {
-  FirstTab({List<SubTab> subtabs = const <SubTab>[], int index, String text})
+  FirstTab(
+      {List<SubTab> subtabs = const <SubTab>[], int index = 0, String text})
       : super(subtabs: subtabs, index: index, text: text);
 
   bool operator ==(other) {
@@ -50,7 +51,7 @@ class FirstTab extends PanelTabState {
 }
 
 class SecondTab extends PanelTabState {
-  SecondTab({List<SubTab> subtabs = const <SubTab>[], int index, String text})
+  SecondTab({List<SubTab> subtabs = const <SubTab>[], int index = 0, String text})
       : super(subtabs: subtabs, index: index, text: text);
 
   bool operator ==(other) {
@@ -59,7 +60,7 @@ class SecondTab extends PanelTabState {
 }
 
 class ThirdTab extends PanelTabState {
-  ThirdTab({List<SubTab> subtabs = const <SubTab>[], int index, String text})
+  ThirdTab({List<SubTab> subtabs = const <SubTab>[], int index = 0, String text})
       : super(subtabs: subtabs, index: index, text: text);
 
   bool operator ==(other) {
@@ -74,12 +75,12 @@ Map<String, PanelTabState> tabs = {
   "call": ThirdTab(subtabs: [
     SubTab(id: 'video', text: 'تصویری'),
     SubTab(id: 'voice', text: 'صوتی')
-  ], index: 1),
+  ], index: 0),
   //
   'calendar': FirstTab(subtabs: [
     SubTab(id: 'calendar', text: 'تقویم'),
     SubTab(id: 'time', text: 'ساعت')
-  ], index: 1),
+  ], index: 0),
   'events': SecondTab(text: Strings.panelEventPageLabel),
   'reminders': ThirdTab(text: Strings.panelReminderPageLabel),
   //

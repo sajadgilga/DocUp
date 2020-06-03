@@ -16,6 +16,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/AccountPage.dart';
 import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
+import 'package:docup/ui/panel/medicinePage/MedicinePage.dart';
 import 'package:docup/ui/visit/PhysicalVisitPage.dart';
 import 'package:docup/ui/visit/VirtualVisitPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
@@ -289,25 +290,31 @@ class NavigatorViewState extends State<NavigatorView> {
               onPush: (direction, entity) {
                 push(context, direction, detail: entity);
               },
-              pages: <Widget>[
-                IllnessPage(
-                  entity: entity,
-                  onPush: (direction, entity) {
-                    push(context, direction, detail: entity);
-                  },
-                ),
-                ChatPage(
-                  entity: entity,
-                  onPush: (direction, entity) {
-                    push(context, direction, detail: entity);
-                  },
-                ),
-                VideoCallPage(
-                  entity: entity,
-                  onPush: (direction, entity) {
-                    push(context, direction, detail: entity);
-                  },
-                )
+              pages: [
+                [
+                  IllnessPage(
+                    entity: entity,
+                    onPush: (direction, entity) {
+                      push(context, direction, detail: entity);
+                    },
+                  )
+                ],
+                [
+                  ChatPage(
+                    entity: entity,
+                    onPush: (direction, entity) {
+                      push(context, direction, detail: entity);
+                    },
+                  )
+                ],
+                [
+                  VideoCallPage(
+                    entity: entity,
+                    onPush: (direction, entity) {
+                      push(context, direction, detail: entity);
+                    },
+                  )
+                ]
               ],
             );
           } else if (state.patientSection == PatientPanelSection.HEALTH_FILE) {
@@ -317,40 +324,95 @@ class NavigatorViewState extends State<NavigatorView> {
                   onPush: (direction, entity) {
                     push(context, direction, detail: entity);
                   },
-                  pages: <Widget>[
-                    InfoPage(
-                      uploadAvailable: entity.isPatient,
-                      entity: entity,
-                      onPush: (direction, entity) {
-                        push(context, direction, detail: entity);
-                      },
-                      pageName: Strings.documents,
-                      picListLabel: Strings.panelDocumentsPicLabel,
-                      lastPicsLabel: Strings.panelDocumentsPicListLabel,
-                      uploadLabel: Strings.panelDocumentsPicUploadLabel,
-                    ),
-                    InfoPage(
-                      uploadAvailable: entity.isDoctor,
-                      entity: entity,
-                      onPush: (direction, entity) {
-                        push(context, direction, detail: entity);
-                      },
-                      pageName: Strings.prescriptions,
-                      picListLabel: Strings.panelPrescriptionsPicLabel,
-                      lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
-                      uploadLabel: Strings.panelPrescriptionsUploadLabel,
-                    ),
-                    InfoPage(
-                      uploadAvailable: entity.isPatient,
-                      entity: entity,
-                      onPush: (direction, entity) {
-                        push(context, direction, detail: entity);
-                      },
-                      pageName: Strings.testResults,
-                      picListLabel: Strings.panelTestResultsPicLabel,
-                      lastPicsLabel: Strings.panelTestResultsPicListLabel,
-                      uploadLabel: Strings.panelTestResultsPicUploadLabel,
-                    ),
+                  pages: [
+                    [
+                      InfoPage(
+                        uploadAvailable: entity.isPatient,
+                        entity: entity,
+                        onPush: (direction, entity) {
+                          push(context, direction, detail: entity);
+                        },
+                        pageName: Strings.documents,
+                        picListLabel: Strings.panelDocumentsPicLabel,
+                        lastPicsLabel: Strings.panelDocumentsPicListLabel,
+                        uploadLabel: Strings.panelDocumentsPicUploadLabel,
+                      )
+                    ],
+                    [
+                      InfoPage(
+                        uploadAvailable: entity.isDoctor,
+                        entity: entity,
+                        onPush: (direction, entity) {
+                          push(context, direction, detail: entity);
+                        },
+                        pageName: Strings.prescriptions,
+                        picListLabel: Strings.panelPrescriptionsPicLabel,
+                        lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
+                        uploadLabel: Strings.panelPrescriptionsUploadLabel,
+                      )
+                    ],
+                    [
+                      InfoPage(
+                        uploadAvailable: entity.isPatient,
+                        entity: entity,
+                        onPush: (direction, entity) {
+                          push(context, direction, detail: entity);
+                        },
+                        pageName: Strings.testResults,
+                        picListLabel: Strings.panelTestResultsPicLabel,
+                        lastPicsLabel: Strings.panelTestResultsPicListLabel,
+                        uploadLabel: Strings.panelTestResultsPicUploadLabel,
+                      )
+                    ],
+                  ],
+                ));
+          } else if (state.patientSection == PatientPanelSection.HEALTH_CALENDAR) {
+            return BlocProvider.value(
+                value: _pictureBloc,
+                child: Panel(
+                  onPush: (direction, entity) {
+                    push(context, direction, detail: entity);
+                  },
+                  pages: [
+                    [
+                      MedicinePage(
+//                        uploadAvailable: entity.isPatient,
+//                        entity: entity,
+//                        onPush: (direction, entity) {
+//                          push(context, direction, detail: entity);
+//                        },
+//                        pageName: Strings.documents,
+//                        picListLabel: Strings.panelDocumentsPicLabel,
+//                        lastPicsLabel: Strings.panelDocumentsPicListLabel,
+//                        uploadLabel: Strings.panelDocumentsPicUploadLabel,
+                      )
+                    ],
+                    [
+                      InfoPage(
+                        uploadAvailable: entity.isDoctor,
+                        entity: entity,
+                        onPush: (direction, entity) {
+                          push(context, direction, detail: entity);
+                        },
+                        pageName: Strings.prescriptions,
+                        picListLabel: Strings.panelPrescriptionsPicLabel,
+                        lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
+                        uploadLabel: Strings.panelPrescriptionsUploadLabel,
+                      )
+                    ],
+                    [
+                      InfoPage(
+                        uploadAvailable: entity.isPatient,
+                        entity: entity,
+                        onPush: (direction, entity) {
+                          push(context, direction, detail: entity);
+                        },
+                        pageName: Strings.testResults,
+                        picListLabel: Strings.panelTestResultsPicLabel,
+                        lastPicsLabel: Strings.panelTestResultsPicListLabel,
+                        uploadLabel: Strings.panelTestResultsPicUploadLabel,
+                      )
+                    ],
                   ],
                 ));
           }

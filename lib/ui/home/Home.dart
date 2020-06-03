@@ -4,13 +4,11 @@ import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/blocs/PatientTrackerBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 import 'package:docup/ui/widgets/Header.dart';
-import 'package:docup/ui/home/ReminderList.dart';
+import 'package:docup/ui/widgets/medicines/ReminderList.dart';
 import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/home/notification/Notification.dart';
 

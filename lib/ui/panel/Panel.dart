@@ -26,7 +26,9 @@ class Panel extends StatefulWidget {
   DoctorEntity doctor;
   final Function(String, UserEntity) onPush;
   PatientEntity patient;
-  List<Widget> pages;
+  List<List<Widget>> pages;
+
+//  List<Widget> pages;
 
   Panel({Key key, this.patient, this.doctor, this.pages, @required this.onPush})
       : super(key: key);
@@ -43,9 +45,15 @@ class _PanelState extends State<Panel> {
   _PanelState({this.patient}) : super();
 
   Widget children(PanelTabState state) {
-    if (state is FirstTab) return widget.pages[0];
-    if (state is SecondTab) return widget.pages[1];
-    if (state is ThirdTab) return widget.pages[2];
+    List<Widget> _widget;
+    if (state is FirstTab) _widget = widget.pages[0];
+    if (state is SecondTab) _widget = widget.pages[1];
+    if (state is ThirdTab) _widget = widget.pages[2];
+    if (_widget == null || _widget.length == 0)
+      return Center(
+        child: Text('مشکل در بارگزاری صفحه'),
+      );
+    return _widget[(_widget.length > state.index ? state.index : 0)];
   }
 
 //

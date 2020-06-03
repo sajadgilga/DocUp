@@ -1,7 +1,7 @@
 import 'package:docup/models/Medicine.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/MedicineReminder.dart';
+import 'MedicineReminder.dart';
 
 class ReminderList extends StatelessWidget {
   final List<Medicine> medicines;
