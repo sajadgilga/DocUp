@@ -68,8 +68,11 @@ class Strings {
   static final String panelTestResultsPicUploadLabel = 'ارسال آزمایش';
   static final String panelTestResultsPicListLabel = 'نتایج آزمایش‌های پیشین';
 
+  static final String panelEventPageLabel = 'رویدادها';
+  static final String panelReminderPageLabel = 'داروها';
+
   static final String panelIllnessInfoLabel = 'اطلاعات بیماری';
-  static final String panelChatLabel = 'چت با پزشک';
+  static final String panelChatLabel = 'چت';
   static final String panelDoctorChatLabel = 'چت با بیمار';
   static final String panelVideoCallLabel = 'تماس تصویری';
 

@@ -16,7 +16,6 @@ import 'package:docup/ui/panel/panelMenu/PanelMenuItem.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
-import 'package:docup/ui/customPainter/DrawerPainter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

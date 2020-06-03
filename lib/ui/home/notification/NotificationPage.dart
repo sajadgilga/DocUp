@@ -4,11 +4,11 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/NewestNotificationResponse.dart';
 import 'package:docup/networking/Response.dart';
-import 'package:docup/ui/customPainter/DrawerPainter.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
+import 'package:docup/utils/customPainter/DrawerPainter.dart';
 
 //import 'package:docup/ui/home/notification/DrawerPainter.dart';
 import 'package:flutter/material.dart';

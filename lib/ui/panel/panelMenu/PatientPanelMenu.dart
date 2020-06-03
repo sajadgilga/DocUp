@@ -15,7 +15,6 @@ import 'package:docup/ui/panel/panelMenu/PanelMenuItem.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
-import 'package:docup/ui/customPainter/DrawerPainter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PatientPanelMenu extends StatelessWidget {
@@ -73,20 +72,22 @@ class PatientPanelMenu extends StatelessWidget {
             Strings.panelReminderSubLabel,
             'reminders',
             getColor(PatientPanelSection.HEALTH_CALENDAR,
-                panelTabState: PanelTabState.FirstTab, context: context),
-            panelTabState: PanelTabState.FirstTab),
+                panelTabState: tabs['reminders'], context: context),
+            panelTabState: tabs['reminders']),
+//  panelTabState: PanelTabState.FirstTab, context: context),
+//            panelTabState: PanelTabState.FirstTab),
         PanelSubItem(
             Strings.panelCalendarSubLabel,
             'calendar',
             getColor(PatientPanelSection.HEALTH_CALENDAR,
-                panelTabState: PanelTabState.SecondTab, context: context),
-            panelTabState: PanelTabState.SecondTab),
+                panelTabState: tabs['calendar'], context: context),
+            panelTabState: tabs['calendar']),
         PanelSubItem(
             Strings.panelEventsSubLabel,
             'events',
             getColor(PatientPanelSection.HEALTH_CALENDAR,
-                panelTabState: PanelTabState.ThirdTab, context: context),
-            panelTabState: PanelTabState.ThirdTab),
+                panelTabState: tabs['events'], context: context),
+            panelTabState: tabs['events']),
       ],
       patientSection: PatientPanelSection.HEALTH_CALENDAR,
       label: Strings.panelHealthScheduleLabel,
@@ -101,20 +102,26 @@ class PatientPanelMenu extends StatelessWidget {
             Strings.panelDocumentSubLabel,
             'documents',
             getColor(PatientPanelSection.HEALTH_FILE,
-                panelTabState: PanelTabState.FirstTab, context: context),
-            panelTabState: PanelTabState.FirstTab),
+                panelTabState: tabs['documents'], context: context),
+            panelTabState: tabs['documents']),
+//  panelTabState: PanelTabState.FirstTab, context: context),
+//            panelTabState: PanelTabState.FirstTab),
         PanelSubItem(
             Strings.panelMedicinesSubLabel,
             'medicines',
             getColor(PatientPanelSection.HEALTH_FILE,
-                panelTabState: PanelTabState.SecondTab, context: context),
-            panelTabState: PanelTabState.SecondTab),
+                panelTabState: tabs['medicines'], context: context),
+            panelTabState: tabs['medicines']),
+//  panelTabState: PanelTabState.FirstTab, context: context),
+//            panelTabState: PanelTabState.FirstTab),
         PanelSubItem(
             Strings.panelResultsSubLabel,
             'results',
             getColor(PatientPanelSection.HEALTH_FILE,
-                panelTabState: PanelTabState.ThirdTab, context: context),
-            panelTabState: PanelTabState.ThirdTab),
+                panelTabState: tabs['results'], context: context),
+            panelTabState: tabs['results']),
+//  panelTabState: PanelTabState.FirstTab, context: context),
+//            panelTabState: PanelTabState.FirstTab),
       ],
       label: Strings.panelHealthFileLabel,
       isActive: isActive,

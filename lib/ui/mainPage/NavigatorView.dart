@@ -366,7 +366,8 @@ class NavigatorViewState extends State<NavigatorView> {
         case "chat":
           _panelSectionBloc.add(PanelSectionSelect(
               patientSection: PatientPanelSection.DOCTOR_INTERFACE));
-          _tabSwitchBloc.add(PanelTabState.SecondTab);
+          _tabSwitchBloc.add(tabs['chat']);
+//          _tabSwitchBloc.add(PanelTabState.SecondTab);
           break;
         default:
           break;

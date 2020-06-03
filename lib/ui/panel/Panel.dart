@@ -4,7 +4,7 @@ import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
- import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
@@ -20,7 +20,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'illnessPage/IllnessPage.dart';
 
-enum PanelTabState { FirstTab, SecondTab, ThirdTab }
+//enum PanelTabState { FirstTab, SecondTab, ThirdTab }
 
 class Panel extends StatefulWidget {
   DoctorEntity doctor;
@@ -42,11 +42,18 @@ class _PanelState extends State<Panel> {
 
   _PanelState({this.patient}) : super();
 
-  Map<PanelTabState, Widget> children() => {
-        PanelTabState.FirstTab: widget.pages[0],
-        PanelTabState.SecondTab: widget.pages[1],
-        PanelTabState.ThirdTab: widget.pages[2],
-      };
+  Widget children(PanelTabState state) {
+    if (state is FirstTab) return widget.pages[0];
+    if (state is SecondTab) return widget.pages[1];
+    if (state is ThirdTab) return widget.pages[2];
+  }
+
+//
+//  Map<PanelTabState, Widget> children() => {
+//        PanelTabState.FirstTab: widget.pages[0],
+//        PanelTabState.SecondTab: widget.pages[1],
+//        PanelTabState.ThirdTab: widget.pages[2],
+//      };
 
   void _showSearchPage() {
     widget.onPush(NavigatorRoutes.searchView, null);
@@ -76,16 +83,29 @@ class _PanelState extends State<Panel> {
       builder: (context, state) {
         if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE)
           return Tabs(
-              firstTab: Strings.panelIllnessInfoLabel,
-              secondTab: (_entity.isPatient? Strings.panelChatLabel: Strings.panelDoctorChatLabel),
-              thirdTab: Strings.panelVideoCallLabel);
+              firstTab: tabs['info'],
+              secondTab: tabs['chat'],
+              thirdTab: tabs['call']
+//
+//              firstTab: Strings.panelIllnessInfoLabel,
+//              secondTab: (_entity.isPatient
+//                  ? Strings.panelChatLabel
+//                  : Strings.panelDoctorChatLabel),
+//              thirdTab: Strings.panelVideoCallLabel
+              );
         else if (state.patientSection == PatientPanelSection.HEALTH_FILE)
           return Tabs(
-            firstTab: Strings.panelDocumentsPicLabel,
-            secondTab: Strings.panelPrescriptionsPicLabel,
-            thirdTab: Strings.panelTestResultsPicLabel,
+            firstTab: tabs['documents'],
+            secondTab: tabs['medicines'],
+            thirdTab: tabs['results'],
+//            firstTab: Strings.panelDocumentsPicLabel,
+//            secondTab: Strings.panelPrescriptionsPicLabel,
+//            thirdTab: Strings.panelTestResultsPicLabel,
           );
-        return Tabs(firstTab: '', secondTab: '', thirdTab: '');
+        return Tabs(
+            firstTab: tabs['calendar'],
+            secondTab: tabs['events'],
+            thirdTab: tabs['reminders']);
       },
     );
   }
@@ -99,10 +119,13 @@ class _PanelState extends State<Panel> {
         children: <Widget>[
           _header(),
           _tabs(),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           BlocBuilder<TabSwitchBloc, PanelTabState>(
             builder: (context, state) =>
-                Expanded(flex: 2, child: children()[state]),
+                Expanded(flex: 2, child: children(state)),
+//                Expanded(flex: 2, child: children()[state]),
           )
         ],
       ),
@@ -110,10 +133,75 @@ class _PanelState extends State<Panel> {
   }
 }
 
+class Tab extends StatefulWidget {
+  final String text;
+  final Color color;
+  final Color backgroundColor;
+  final bool hasSublist;
+  final List<String> elements;
+  final PanelTabState tabState;
+
+  Tab(
+      {Key key,
+      this.text,
+      this.color,
+      this.backgroundColor,
+      this.tabState,
+      this.hasSublist = false,
+      this.elements})
+      : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return TabState();
+  }
+}
+
+class TabState extends State<Tab> {
+  int _index;
+
+  @override
+  void initState() {
+    _index = 1;
+    super.initState();
+  }
+
+  void _switchTab(PanelTabState state, context) {
+    BlocProvider.of<TabSwitchBloc>(context).add(state);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      onPressed: () {
+        _switchTab(widget.tabState, context);
+      },
+      color: widget.backgroundColor,
+      child: Container(
+          constraints:
+              BoxConstraints(minWidth: MediaQuery.of(context).size.width * .15),
+          padding: EdgeInsets.only(top: 10, bottom: 10),
+          alignment: Alignment.center,
+          child: Text(
+            widget.text,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: widget.color, fontSize: 10),
+          )),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      elevation: 5,
+    );
+  }
+}
+
 class Tabs extends StatefulWidget {
-  String firstTab;
-  String secondTab;
-  String thirdTab;
+  PanelTabState firstTab;
+  PanelTabState secondTab;
+  PanelTabState thirdTab;
+
+//  String firstTab;
+//  String secondTab;
+//  String thirdTab;
 
   Tabs({Key key, this.firstTab, this.secondTab, this.thirdTab})
       : super(key: key);
@@ -125,16 +213,16 @@ class Tabs extends StatefulWidget {
 }
 
 class TabsState extends State<Tabs> {
-  void _switchTab(PanelTabState state, context) {
-    BlocProvider.of<TabSwitchBloc>(context).add(state);
-  }
-
   Color _buttonBackground(bool isActive) {
     return isActive ? IColors.themeColor : Colors.white;
   }
 
   Color _buttonTextColor(bool isActive) {
     return isActive ? Colors.white : Colors.grey;
+  }
+
+  void _switchTab(PanelTabState state, context) {
+    BlocProvider.of<TabSwitchBloc>(context).add(state);
   }
 
   Widget _button({PanelTabState tabState, state, text, context}) {
@@ -148,11 +236,19 @@ class TabsState extends State<Tabs> {
               BoxConstraints(minWidth: MediaQuery.of(context).size.width * .15),
           padding: EdgeInsets.only(top: 10, bottom: 10),
           alignment: Alignment.center,
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: _buttonTextColor(state == tabState), fontSize: 10),
+          child: Row(
+            children: <Widget>[
+              (tabState.subtabs.length > 0
+                  ? Icon(Icons.arrow_drop_down)
+                  : Container()),
+              Text(
+                tabState.text,
+//            text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: _buttonTextColor(state == tabState), fontSize: 10),
+              )
+            ],
           )),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -162,7 +258,7 @@ class TabsState extends State<Tabs> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return BlocBuilder<TabSwitchBloc, PanelTabState>(builder: (context, state) {
       return Stack(
         children: <Widget>[
@@ -181,19 +277,25 @@ class TabsState extends State<Tabs> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   _button(
-                      tabState: PanelTabState.ThirdTab,
+                      tabState: widget.thirdTab,
+//                      tabState: ThirdTab(),
+//                      tabState: PanelTabState.ThirdTab,
                       state: state,
-                      text: widget.thirdTab,
+//                      text: widget.thirdTab,
                       context: context),
                   _button(
-                      tabState: PanelTabState.SecondTab,
+                      tabState: widget.secondTab,
+//                      tabState: SecondTab(),
+//                      tabState: PanelTabState.SecondTab,
                       state: state,
-                      text: widget.secondTab,
+//                      text: widget.secondTab,
                       context: context),
                   _button(
-                      tabState: PanelTabState.FirstTab,
+                      tabState: widget.firstTab,
+//                      tabState: FirstTab(),
+//                      tabState: PanelTabState.FirstTab,
                       state: state,
-                      text: widget.firstTab,
+//                      text: widget.firstTab,
                       context: context),
                 ],
               )),

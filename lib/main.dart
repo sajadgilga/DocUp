@@ -22,12 +22,7 @@ class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> globalNavigator =
       GlobalKey<NavigatorState>();
 
-//  Widget _startPage = MainPage();
-//  Widget _startPage = StartPage();
   Widget _startPage = SplashPage();
-//  final PanelBloc _panelBloc = PanelBloc();
-
-//  Widget _startPage = OnBoardingPage();
 
   @override
   Widget build(BuildContext context) {
