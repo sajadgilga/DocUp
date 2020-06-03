@@ -173,7 +173,7 @@ class _StartPageState extends State<StartPage> {
             }
             break;
           case StartType.LOGIN:
-            if(resend) {
+            if(resend != null && resend) {
               _authBloc.signUp(currentUserName, currentRoleType);
             } else {
               _authBloc.verify(currentUserName, _verificationController.text,
