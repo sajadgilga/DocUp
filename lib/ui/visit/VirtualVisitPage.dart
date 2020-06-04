@@ -90,7 +90,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
           DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
           ALittleVerticalSpace(),
           _visitTypeWidget(VISIT_METHOD, [
-            "متنی و تصویری" /*"صوتی", "تصویری"*/
+            "متنی", /*"صوتی", */"تصویری"
           ], size: 1),
           ALittleVerticalSpace(),
           _visitTypeWidget(VISIT_DURATION_PLAN, ["پایه", "تکمیلی", "طولانی"]),

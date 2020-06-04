@@ -31,8 +31,15 @@ class PatientRepository {
     return medicines;
   }
 
-  Future<List<Medicine>> getDrugs({doctorId}) async {
-    final response = await _provider.get("api/drugs/", utf8Support: true);
+  Future<List<Medicine>> getDrugs({doctorId, isWithDate, date}) async {
+    String url = "api/drugs/";
+    if (doctorId != null) url += '$doctorId/';
+    final response = await _provider.get(url, utf8Support: true);
+    return _medicineList(response['results']);
+  }
+
+  Future<dynamic> addDrug(Medicine medicine) async {
+    final response = await _provider.post('api/drugs/', body: medicine.toJson());
     return _medicineList(response['results']);
   }
 }

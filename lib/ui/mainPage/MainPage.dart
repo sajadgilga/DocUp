@@ -94,49 +94,52 @@ class _MainPageState extends State<MainPage> {
         });
     });
     // firebase initialization for notifications & push notifications
-    try {
-      _firebaseMessaging.getToken().then((String fcmToken) {
-        assert(fcmToken != null);
-        print("FCM " + fcmToken);
-        try {
-          NotificationRepository().registerDevice(fcmToken);
-        } on BadRequestException{
-          print('kooooooft');
-        }
-        catch(_) {
-          print('register device failed fcm');
-        }
-      });
-
-      _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
-          await _showNotificationWithDefaultSound(
-              message['notification']['title'],
-              message['notification']['body']);
-        },
-        onBackgroundMessage: myBackgroundMessageHandler,
-        onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
-        },
-        onResume: ( Map<String, dynamic> message) async {
-          print("onResume: $message");
-        },
-      );
-
-      var initializationSettingsAndroid =
-      new AndroidInitializationSettings('mipmap/ic_launcher');
-      var initializationSettingsIOS = new IOSInitializationSettings();
-
-      var initializationSettings = new InitializationSettings(
-          initializationSettingsAndroid, initializationSettingsIOS);
-
-      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-      flutterLocalNotificationsPlugin.initialize(initializationSettings,
-          onSelectNotification: onSelectNotification);
-    } catch(_) {
-      print("oh oh");
-    }
+//    try {
+//      _firebaseMessaging.getToken().then((String fcmToken) {
+//        if (fcmToken == null) {
+//          super.initState();
+//          return;
+//        }
+//        print("FCM " + fcmToken);
+//        try {
+//          NotificationRepository().registerDevice(fcmToken);
+//        } on BadRequestException{
+//          print('kooooooft');
+//        }
+//        catch(_) {
+//          print('register device failed fcm');
+//        }
+//      });
+//
+//      _firebaseMessaging.configure(
+//        onMessage: (Map<String, dynamic> message) async {
+//          print("onMessage: $message");
+//          await _showNotificationWithDefaultSound(
+//              message['notification']['title'],
+//              message['notification']['body']);
+//        },
+//        onBackgroundMessage: myBackgroundMessageHandler,
+//        onLaunch: (Map<String, dynamic> message) async {
+//          print("onLaunch: $message");
+//        },
+//        onResume: ( Map<String, dynamic> message) async {
+//          print("onResume: $message");
+//        },
+//      );
+//
+//      var initializationSettingsAndroid =
+//      new AndroidInitializationSettings('mipmap/ic_launcher');
+//      var initializationSettingsIOS = new IOSInitializationSettings();
+//
+//      var initializationSettings = new InitializationSettings(
+//          initializationSettingsAndroid, initializationSettingsIOS);
+//
+//      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+//      flutterLocalNotificationsPlugin.initialize(initializationSettings,
+//          onSelectNotification: onSelectNotification);
+//    } catch(_) {
+//      print("oh oh");
+//    }
     super.initState();
 
   }

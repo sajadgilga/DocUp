@@ -366,7 +366,8 @@ class NavigatorViewState extends State<NavigatorView> {
                     ],
                   ],
                 ));
-          } else if (state.patientSection == PatientPanelSection.HEALTH_CALENDAR) {
+          } else if (state.patientSection ==
+              PatientPanelSection.HEALTH_CALENDAR) {
             return BlocProvider.value(
                 value: _pictureBloc,
                 child: Panel(
@@ -376,6 +377,10 @@ class NavigatorViewState extends State<NavigatorView> {
                   pages: [
                     [
                       MedicinePage(
+                        entity: entity,
+                        onPush: (direction, entity) {
+                          push(context, direction, detail: entity);
+                        },
 //                        uploadAvailable: entity.isPatient,
 //                        entity: entity,
 //                        onPush: (direction, entity) {
