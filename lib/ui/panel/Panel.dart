@@ -3,32 +3,25 @@ import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/widgets/Header.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:docup/ui/panel/chatPage/ChatPage.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
-import 'illnessPage/IllnessPage.dart';
-
-//enum PanelTabState { FirstTab, SecondTab, ThirdTab }
 
 class Panel extends StatefulWidget {
   DoctorEntity doctor;
   final Function(String, UserEntity) onPush;
   PatientEntity patient;
   List<List<Widget>> pages;
-
-//  List<Widget> pages;
 
   Panel({Key key, this.patient, this.doctor, this.pages, @required this.onPush})
       : super(key: key);
@@ -56,13 +49,6 @@ class _PanelState extends State<Panel> {
     return _widget[(_widget.length > state.index ? state.index : 0)];
   }
 
-//
-//  Map<PanelTabState, Widget> children() => {
-//        PanelTabState.FirstTab: widget.pages[0],
-//        PanelTabState.SecondTab: widget.pages[1],
-//        PanelTabState.ThirdTab: widget.pages[2],
-//      };
-
   void _showSearchPage() {
     widget.onPush(NavigatorRoutes.searchView, null);
   }
@@ -71,7 +57,7 @@ class _PanelState extends State<Panel> {
           child: Row(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(top: 15, left: 15),
+            padding: EdgeInsets.only(left: 15),
             child: GestureDetector(
               onTap: () {
                 _showSearchPage();
@@ -93,22 +79,12 @@ class _PanelState extends State<Panel> {
           return Tabs(
               firstTab: tabs['info'],
               secondTab: tabs['chat'],
-              thirdTab: tabs['call']
-//
-//              firstTab: Strings.panelIllnessInfoLabel,
-//              secondTab: (_entity.isPatient
-//                  ? Strings.panelChatLabel
-//                  : Strings.panelDoctorChatLabel),
-//              thirdTab: Strings.panelVideoCallLabel
-              );
+              thirdTab: tabs['call']);
         else if (state.patientSection == PatientPanelSection.HEALTH_FILE)
           return Tabs(
             firstTab: tabs['documents'],
             secondTab: tabs['medicines'],
             thirdTab: tabs['results'],
-//            firstTab: Strings.panelDocumentsPicLabel,
-//            secondTab: Strings.panelPrescriptionsPicLabel,
-//            thirdTab: Strings.panelTestResultsPicLabel,
           );
         return Tabs(
             firstTab: tabs['calendar'],
@@ -120,23 +96,34 @@ class _PanelState extends State<Panel> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-      child: Column(
-        children: <Widget>[
-          _header(),
-          _tabs(),
-          SizedBox(
-            height: 10,
-          ),
-          BlocBuilder<TabSwitchBloc, PanelTabState>(
-            builder: (context, state) =>
-                Expanded(flex: 2, child: children(state)),
+    return Stack(
+      children: <Widget>[
+        Container(
+            constraints:
+                BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+            child: Column(children: <Widget>[
+              _header(),
+              SizedBox(
+                height: 40,
+              ),
+              BlocBuilder<TabSwitchBloc, PanelTabState>(
+                builder: (context, state) =>
+                    Expanded(flex: 2, child: children(state)),
 //                Expanded(flex: 2, child: children()[state]),
-          )
-        ],
-      ),
+              ),
+            ])),
+        Container(
+          margin: EdgeInsets.only(top: 80),
+          child: Divider(
+            thickness: 1,
+            color: Colors.grey,
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 70),
+          child: _tabs(),
+        )
+      ],
     );
   }
 }
@@ -148,6 +135,7 @@ class Tab extends StatefulWidget {
   final bool hasSublist;
   final List<String> elements;
   final PanelTabState tabState;
+  final bool isOn;
 
   Tab(
       {Key key,
@@ -156,6 +144,7 @@ class Tab extends StatefulWidget {
       this.backgroundColor,
       this.tabState,
       this.hasSublist = false,
+      this.isOn = false,
       this.elements})
       : super(key: key);
 
@@ -167,38 +156,136 @@ class Tab extends StatefulWidget {
 
 class TabState extends State<Tab> {
   int _index;
+  bool _isDropped = false;
 
   @override
   void initState() {
     _index = 1;
+    _isDropped = false;
     super.initState();
   }
 
+  @override
+  didUpdateWidget(old) {
+    if (!widget.isOn) _isDropped = false;
+  }
+
+  bool _hasSubTab() {
+    return widget.tabState.subtabs != null &&
+        widget.tabState.subtabs.length != 0;
+  }
+
   void _switchTab(PanelTabState state, context) {
-    BlocProvider.of<TabSwitchBloc>(context).add(state);
+    if (_hasSubTab()) {
+      setState(() {
+        _isDropped = !_isDropped;
+      });
+    }
+    if (!widget.isOn) BlocProvider.of<TabSwitchBloc>(context).add(state);
+  }
+
+  void _switchSubTab(idx) {
+    widget.tabState.index = idx;
+    BlocProvider.of<TabSwitchBloc>(context).add(widget.tabState);
+    setState(() {
+      _isDropped = false;
+    });
+  }
+
+  Widget _icon(subTab, idx) {
+    return GestureDetector(
+      onTap: () {
+        _switchSubTab(idx);
+      },
+      child: Icon(
+        subTab.widget,
+        size: 40,
+        color:
+            (widget.tabState.index == idx ? IColors.themeColor : Colors.grey),
+      ),
+    );
+  }
+
+  Widget _dropDown() {
+    if (!_hasSubTab() || !_isDropped) return Container();
+    List<Widget> _widgets = [];
+    for (int i = 0; i < widget.tabState.subtabs.length; i++) {
+      var s = widget.tabState.subtabs[i];
+      _widgets.add((s.widget == null ? Container() : _icon(s, i)));
+      if (i < widget.tabState.subtabs.length - 1)
+        _widgets.add(Container(
+            child: Divider(
+          height: 25,
+          indent: 3,
+          thickness: 2,
+          color: Colors.grey,
+        )));
+    }
+    return Container(
+      padding: EdgeInsets.only(top: 25),
+      constraints: BoxConstraints.expand(width: 120, height: 100),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: Offset(0, 1), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: _widgets,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      onPressed: () {
-        _switchTab(widget.tabState, context);
-      },
-      color: widget.backgroundColor,
-      child: Container(
-          constraints:
-              BoxConstraints(minWidth: MediaQuery.of(context).size.width * .15),
-          padding: EdgeInsets.only(top: 10, bottom: 10),
-          alignment: Alignment.center,
-          child: Text(
-            widget.text,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: widget.color, fontSize: 10),
-          )),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      elevation: 5,
-    );
+    return Stack(children: <Widget>[
+      _dropDown(),
+      GestureDetector(
+        onTap: () {
+          _switchTab(widget.tabState, context);
+        },
+        child: Container(
+            constraints: BoxConstraints.expand(width: 120, height: 35),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              color: widget.backgroundColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 10,
+                  offset: Offset(0, 1), // changes position of shadow
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                (widget.tabState.subtabs.length > 0
+                    ? Icon(
+                        (_isDropped
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down),
+                        color: widget.color,
+                      )
+                    : Container()),
+                Text(
+                  widget.tabState.text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: widget.color, fontSize: 10),
+                )
+              ],
+            )),
+      )
+    ]);
   }
 }
 
@@ -206,10 +293,6 @@ class Tabs extends StatefulWidget {
   PanelTabState firstTab;
   PanelTabState secondTab;
   PanelTabState thirdTab;
-
-//  String firstTab;
-//  String secondTab;
-//  String thirdTab;
 
   Tabs({Key key, this.firstTab, this.secondTab, this.thirdTab})
       : super(key: key);
@@ -268,47 +351,54 @@ class TabsState extends State<Tabs> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return BlocBuilder<TabSwitchBloc, PanelTabState>(builder: (context, state) {
-      return Stack(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(top: 15),
-            alignment: Alignment.bottomCenter,
-            child: Divider(
-              thickness: 1,
-              color: Colors.grey,
-            ),
-          ),
+      return
+//        Stack(
+//        children: <Widget>[
+//          Container(
+//            padding: EdgeInsets.only(top: 15),
+//            alignment: Alignment.bottomCenter,
+//            child: Divider(
+//              thickness: 1,
+//              color: Colors.grey,
+//            ),
+//          ),
           Container(
               padding: EdgeInsets.only(right: 20, left: 20),
               alignment: Alignment.topCenter,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  _button(
+                  Tab(
+                      isOn: state.isSame(widget.thirdTab),
                       tabState: widget.thirdTab,
-//                      tabState: ThirdTab(),
-//                      tabState: PanelTabState.ThirdTab,
-                      state: state,
-//                      text: widget.thirdTab,
-                      context: context),
-                  _button(
+                      backgroundColor:
+                          _buttonBackground(state.isSame(widget.thirdTab)),
+                      color: _buttonTextColor(state.isSame(widget.thirdTab))),
+                  Tab(
+                      isOn: state.isSame(widget.secondTab),
                       tabState: widget.secondTab,
-//                      tabState: SecondTab(),
-//                      tabState: PanelTabState.SecondTab,
-                      state: state,
-//                      text: widget.secondTab,
-                      context: context),
-                  _button(
+                      backgroundColor:
+                          _buttonBackground(state.isSame(widget.secondTab)),
+                      color: _buttonTextColor(state.isSame(widget.secondTab))),
+                  Tab(
+                      isOn: state.isSame(widget.firstTab),
                       tabState: widget.firstTab,
-//                      tabState: FirstTab(),
-//                      tabState: PanelTabState.FirstTab,
-                      state: state,
-//                      text: widget.firstTab,
-                      context: context),
+                      backgroundColor:
+                          _buttonBackground(state.isSame(widget.firstTab)),
+                      color: _buttonTextColor(state.isSame(widget.firstTab))),
+//                  _button(
+//                      tabState: widget.secondTab,
+//                      state: state,
+//                      context: context),
+//                  _button(
+//                      tabState: widget.firstTab,
+//                      state: state,
+//                      context: context),
                 ],
-              )),
-        ],
-      );
+              ));
+//        ],
+//      );
     });
   }
 }

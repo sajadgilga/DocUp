@@ -2,8 +2,9 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/MedicineBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
-import 'package:docup/ui/panel/medicinePage/CreateMedicinePage.dart';
+import 'package:docup/ui/panel/healthFile/medicinePage/CreateMedicinePage.dart';
+import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
+import 'package:docup/ui/widgets/FloatingButton.dart';
 import 'package:docup/ui/widgets/medicines/ReminderList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -89,32 +90,14 @@ class _MedicinePageState extends State<MedicinePage> {
     var _isPatient =
         BlocProvider.of<EntityBloc>(context).state.entity.isPatient;
     if (_isPatient || _currentPage != _MedicinePage.MAIN) return Container();
-    return Container(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          FloatingActionButton(
-            backgroundColor: IColors.themeColor,
-            child: Icon(
-              Icons.add,
-              size: 30,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              setState(() {
-                _currentPage = _MedicinePage.CREATION;
-              });
-            },
-          ),
-          Container(
-              padding: EdgeInsets.only(top: 10),
-              child: Text(
-                'داروی جدید',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
-              ))
-        ],
-      ),
+    return FloatingButton(
+      label: 'داروی جدید',
+      callback: () {
+        setState(() {
+          _currentPage = _MedicinePage.CREATION;
+        });
+      },
+      icon: Icons.add,
     );
   }
 

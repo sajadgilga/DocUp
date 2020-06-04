@@ -19,7 +19,6 @@ import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
-import 'package:docup/ui/panel/videoCallPage/call.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

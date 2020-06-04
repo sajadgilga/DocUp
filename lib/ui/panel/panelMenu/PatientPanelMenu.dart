@@ -69,25 +69,23 @@ class PatientPanelMenu extends StatelessWidget {
       onPush,
       subItems: [
         PanelSubItem(
-            Strings.panelReminderSubLabel,
-            'reminders',
-            getColor(PatientPanelSection.HEALTH_CALENDAR,
-                panelTabState: tabs['reminders'], context: context),
-            panelTabState: tabs['reminders']),
-//  panelTabState: PanelTabState.FirstTab, context: context),
-//            panelTabState: PanelTabState.FirstTab),
-        PanelSubItem(
             Strings.panelCalendarSubLabel,
             'calendar',
             getColor(PatientPanelSection.HEALTH_CALENDAR,
                 panelTabState: tabs['calendar'], context: context),
             panelTabState: tabs['calendar']),
-        PanelSubItem(
+          PanelSubItem(
             Strings.panelEventsSubLabel,
             'events',
             getColor(PatientPanelSection.HEALTH_CALENDAR,
                 panelTabState: tabs['events'], context: context),
             panelTabState: tabs['events']),
+        PanelSubItem(
+            Strings.panelReminderSubLabel,
+            'reminders',
+            getColor(PatientPanelSection.HEALTH_CALENDAR,
+                panelTabState: tabs['reminders'], context: context),
+            panelTabState: tabs['reminders']),
       ],
       patientSection: PatientPanelSection.HEALTH_CALENDAR,
       label: Strings.panelHealthScheduleLabel,

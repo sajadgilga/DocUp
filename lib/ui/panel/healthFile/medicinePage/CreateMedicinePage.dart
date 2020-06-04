@@ -4,7 +4,6 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Medicine.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,10 +33,11 @@ class _CreateMedicinePageState extends State<CreateMedicinePage> {
   final TextEditingController _periodController = TextEditingController();
   final List<FocusNode> nodes = [FocusNode(), FocusNode()];
   final AlertDialog _loading = getLoadingDialog();
+  final CreateMedicineBloc _createMedicineBloc = CreateMedicineBloc();
 
   @override
   initState() {
-    BlocProvider.of<CreateMedicineBloc>(context).listen((data) {
+    _createMedicineBloc.listen((data) {
       if (data == MedicineCreationStates.SENT) {
         showPicUploadedDialog(context, "دارو با موفقیت ذخیره شد", () {
           Navigator.of(context, rootNavigator: true).maybePop();
@@ -51,6 +51,12 @@ class _CreateMedicinePageState extends State<CreateMedicinePage> {
       }
     });
     super.initState();
+  }
+
+  @override
+  dispose() {
+    _createMedicineBloc.close();
+    super.dispose();
   }
 
   Widget _drugNameField(context) => TextField(
@@ -109,9 +115,8 @@ class _CreateMedicinePageState extends State<CreateMedicinePage> {
 
     int patientId = BlocProvider.of<EntityBloc>(context).state.entity.pId;
 
-    if (BlocProvider.of<CreateMedicineBloc>(context).state ==
-        MedicineCreationStates.SENDING) return;
-    BlocProvider.of<CreateMedicineBloc>(context).add(MedicineCreate(
+    if (_createMedicineBloc.state == MedicineCreationStates.SENDING) return;
+    _createMedicineBloc.add(MedicineCreate(
         medicine: Medicine(drugName: name, usage: count, patient: patientId)));
     showDialog(
         context: context,

@@ -16,18 +16,19 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/AccountPage.dart';
 import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
-import 'package:docup/ui/panel/medicinePage/MedicinePage.dart';
+import 'package:docup/ui/panel/healthDocument/infoPage/InfoPage.dart';
+import 'package:docup/ui/panel/healthFile/eventPage/EventPage.dart';
+import 'package:docup/ui/panel/healthFile/medicinePage/MedicinePage.dart';
+import 'package:docup/ui/panel/partnerContact/chatPage/ChatPage.dart';
+import 'package:docup/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
+import 'package:docup/ui/panel/partnerContact/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/visit/PhysicalVisitPage.dart';
 import 'package:docup/ui/visit/VirtualVisitPage.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
-import 'package:docup/ui/panel/chatPage/ChatPage.dart';
-import 'package:docup/ui/panel/infoPage/InfoPage.dart';
-import 'package:docup/ui/panel/illnessPage/IllnessPage.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
-import 'package:docup/ui/panel/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/patientDetail/PatientRequestPage.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:docup/utils/Utils.dart';
@@ -376,46 +377,33 @@ class NavigatorViewState extends State<NavigatorView> {
                   },
                   pages: [
                     [
+                      EventPage(
+                        entity: entity,
+                        onPush: (direction, entity) {
+                          push(context, direction, detail: entity);
+                        },
+                      ),
                       MedicinePage(
                         entity: entity,
                         onPush: (direction, entity) {
                           push(context, direction, detail: entity);
                         },
-//                        uploadAvailable: entity.isPatient,
-//                        entity: entity,
-//                        onPush: (direction, entity) {
-//                          push(context, direction, detail: entity);
-//                        },
-//                        pageName: Strings.documents,
-//                        picListLabel: Strings.panelDocumentsPicLabel,
-//                        lastPicsLabel: Strings.panelDocumentsPicListLabel,
-//                        uploadLabel: Strings.panelDocumentsPicUploadLabel,
                       )
                     ],
                     [
-                      InfoPage(
-                        uploadAvailable: entity.isDoctor,
+                      EventPage(
                         entity: entity,
                         onPush: (direction, entity) {
                           push(context, direction, detail: entity);
                         },
-                        pageName: Strings.prescriptions,
-                        picListLabel: Strings.panelPrescriptionsPicLabel,
-                        lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
-                        uploadLabel: Strings.panelPrescriptionsUploadLabel,
                       )
                     ],
                     [
-                      InfoPage(
-                        uploadAvailable: entity.isPatient,
+                      MedicinePage(
                         entity: entity,
                         onPush: (direction, entity) {
                           push(context, direction, detail: entity);
                         },
-                        pageName: Strings.testResults,
-                        picListLabel: Strings.panelTestResultsPicLabel,
-                        lastPicsLabel: Strings.panelTestResultsPicListLabel,
-                        uploadLabel: Strings.panelTestResultsPicUploadLabel,
                       )
                     ],
                   ],

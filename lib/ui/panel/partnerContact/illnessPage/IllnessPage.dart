@@ -9,7 +9,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
-import 'package:docup/ui/panel/chatPage/PartnerInfo.dart';
+import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/VisitBox.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
