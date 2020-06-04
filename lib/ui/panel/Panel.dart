@@ -37,11 +37,22 @@ class _PanelState extends State<Panel> {
 
   _PanelState({this.patient}) : super();
 
+  @override
+  initState() {
+    BlocProvider.of<TabSwitchBloc>(context).listen((data) {
+      setState(() {
+
+      });
+    });
+    super.initState();
+  }
+
   Widget children(PanelTabState state) {
     List<Widget> _widget;
     if (state is FirstTab) _widget = widget.pages[0];
-    if (state is SecondTab) _widget = widget.pages[1];
-    if (state is ThirdTab) _widget = widget.pages[2];
+    else if (state is SecondTab) _widget = widget.pages[1];
+    else if (state is ThirdTab) _widget = widget.pages[2];
+    else return Container();
     if (_widget == null || _widget.length == 0)
       return Center(
         child: Text('مشکل در بارگزاری صفحه'),

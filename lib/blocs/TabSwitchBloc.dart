@@ -20,7 +20,13 @@ class TabSwitchBloc extends Bloc<PanelTabState, PanelTabState> {
 
   @override
   Stream<PanelTabState> mapEventToState(PanelTabState event) async* {
-    yield event;
+    if (event is FirstTab)
+      yield FirstTab(subtabs: event.subtabs, index: event.index, text: event.text);
+    else if (event is SecondTab)
+      yield SecondTab(subtabs: event.subtabs, index: event.index, text: event.text);
+    else if (event is ThirdTab)
+      yield ThirdTab(subtabs: event.subtabs, index: event.index, text: event.text);
+//    yield event;
   }
 }
 
@@ -32,7 +38,7 @@ class SubTab {
   SubTab({this.text, this.id, this.widget});
 }
 
-abstract class PanelTabState {
+abstract class PanelTabState extends Object {
   List<SubTab> subtabs;
   String text;
   int index;
@@ -44,6 +50,14 @@ abstract class PanelTabState {
   PanelTabState({this.subtabs, this.index = 0, this.text}) {
     if (text == null) text = subtabs[index].text;
   }
+}
+
+class LoadingTab extends PanelTabState {
+
+  bool isSame(PanelTabState other) {
+    return false;
+  }
+
 }
 
 class FirstTab extends PanelTabState {
@@ -58,6 +72,8 @@ class FirstTab extends PanelTabState {
   bool operator ==(other) {
     return (other is FirstTab && other.index == index);
   }
+
+
 }
 
 class SecondTab extends PanelTabState {
