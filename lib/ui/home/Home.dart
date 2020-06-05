@@ -77,12 +77,9 @@ class _HomeState extends State<Home> {
     return BlocBuilder<MedicineBloc, MedicineState>(
         bloc: _medicineBloc,
         builder: (context, state) {
-          if (state is MedicineLoaded)
-            return ReminderList(
-              medicines: state.medicines,
-            );
-          else
-            return ReminderList();
+          return ReminderList(
+            medicines: state.medicines,
+          );
         });
   }
 

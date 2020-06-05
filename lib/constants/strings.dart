@@ -1,6 +1,7 @@
 class Strings {
   static const String appTitle = 'Flutter Demo';
 
+//
   static const String registerHeaderMessage = ": ثبت نام در داک آپ به عنوان";
   static const String signInHeaderMessage = ": ورود در داک آپ به عنوان";
   static const String yourDoctorMessage = "پزشک همراه شما";
@@ -29,6 +30,7 @@ class Strings {
   static final String searchBoxHint = 'جستجو';
   static final String docupIntroHomePart1 = 'داک‌ آپ،';
 
+//
   static final String docupIntroHomePart2 = 'پل ارتباطی بین پزشک و بیمار';
   static final String medicineReminder = 'یادآوری داروها';
   static final String doctorTrackingLabel = 'مراجعین من';
@@ -179,4 +181,9 @@ class Strings {
   static final String enterVisitTimeMessage = "لطفا زمان ویزیت را وارد کنید";
   static final String offlineDoctorMessage =
       " پزشک آنلاین نیست لطفا زمانی را برای ویزیت مشخص کنید";
+  //
+  static final String drugNameTextFieldHint = 'نام دارو';
+  static final String countTextFieldHint = 'تعداد';
+  static final String periodTextFieldHint = 'هر چند ساعت';
+  static final String submitDrugLabel = 'ارسال برای بیمار';
 }

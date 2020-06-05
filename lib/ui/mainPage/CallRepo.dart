@@ -1,4 +1,4 @@
-import 'package:docup/ui/panel/videoCallPage/call.dart';
+import 'package:docup/ui/panel/partnerContact/videoCallPage/call.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';

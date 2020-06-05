@@ -101,6 +101,7 @@ class PartnerInfo extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(top: 20, left: 30, right: 30, bottom: 10),
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+      color: Colors.white70,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[

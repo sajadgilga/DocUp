@@ -13,7 +13,7 @@ class DocUpHeader extends StatelessWidget {
     return Column(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(top: 20, right: 20),
+          padding: EdgeInsets.only(top: 10, right: 20),
           child: Container(
               width: 40, child: Image.asset(Assets.logoTransparent)),
           alignment: Alignment.centerRight,
