@@ -5,17 +5,8 @@ import 'package:docup/networking/CustomException.dart';
 import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
-import 'package:docup/blocs/PanelSectionBloc.dart';
-import 'package:docup/blocs/PatientBloc.dart';
-import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/assets.dart';
-import 'package:docup/main.dart';
-import 'package:docup/models/AgoraChannelEntity.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/Panel.dart';
-import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/panel/Panel.dart';
@@ -27,13 +18,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:jaguar_jwt/jaguar_jwt.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
 import 'package:docup/ui/mainPage/navigator_destination.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/colors.dart';
 import 'CallRepo.dart';
 import 'NavigatorView.dart';
@@ -73,6 +61,8 @@ class _MainPageState extends State<MainPage> {
     4: GlobalKey<NavigatorState>(),
   };
 
+
+
   @override
   void initState() {
 
@@ -92,55 +82,55 @@ class _MainPageState extends State<MainPage> {
           _panelBloc.add(GetMyPanels());
         });
     });
-    // firebase initialization for notifications & push notifications
-//    try {
-//      _firebaseMessaging.getToken().then((String fcmToken) {
-//        if (fcmToken == null) {
-//          super.initState();
-//          return;
-//        }
-//        print("FCM " + fcmToken);
-//        try {
-//          NotificationRepository().registerDevice(fcmToken);
-//        } on BadRequestException{
-//          print('kooooooft');
-//        }
-//        catch(_) {
-//          print('register device failed fcm');
-//        }
-//      });
-//
-//      _firebaseMessaging.configure(
-//        onMessage: (Map<String, dynamic> message) async {
-//          print("onMessage: $message");
-//          await _showNotificationWithDefaultSound(
-//              message['notification']['title'],
-//              message['notification']['body']);
-//        },
-//        onBackgroundMessage: myBackgroundMessageHandler,
-//        onLaunch: (Map<String, dynamic> message) async {
-//          print("onLaunch: $message");
-//        },
-//        onResume: ( Map<String, dynamic> message) async {
-//          print("onResume: $message");
-//        },
-//      );
-//
-//      var initializationSettingsAndroid =
-//      new AndroidInitializationSettings('mipmap/ic_launcher');
-//      var initializationSettingsIOS = new IOSInitializationSettings();
-//
-//      var initializationSettings = new InitializationSettings(
-//          initializationSettingsAndroid, initializationSettingsIOS);
-//
-//      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-//      flutterLocalNotificationsPlugin.initialize(initializationSettings,
-//          onSelectNotification: onSelectNotification);
-//    } catch(_) {
-//      print("oh oh");
-//    }
+//     _enableFCM();
     super.initState();
 
+  }
+
+  Future _enableFCM() async {
+    try {
+      _firebaseMessaging.getToken().then((String fcmToken) {
+        assert(fcmToken != null);
+        print("FCM " + fcmToken);
+        try {
+          NotificationRepository().registerDevice(fcmToken);
+        } on BadRequestException{
+          print('kooooooft');
+        }
+        catch(_) {
+          print('register device failed fcm');
+        }
+      });
+
+      _firebaseMessaging.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print("onMessage: $message");
+          await _showNotificationWithDefaultSound(
+              message['notification']['title'],
+              message['notification']['body']);
+        },
+        onBackgroundMessage: myBackgroundMessageHandler,
+        onLaunch: (Map<String, dynamic> message) async {
+          print("onLaunch: $message");
+        },
+        onResume: ( Map<String, dynamic> message) async {
+          print("onResume: $message");
+        },
+      );
+
+      var initializationSettingsAndroid =
+      new AndroidInitializationSettings('mipmap/ic_launcher');
+      var initializationSettingsIOS = new IOSInitializationSettings();
+
+      var initializationSettings = new InitializationSettings(
+          initializationSettingsAndroid, initializationSettingsIOS);
+
+      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+      flutterLocalNotificationsPlugin.initialize(initializationSettings,
+          onSelectNotification: onSelectNotification);
+    } catch(_) {
+      print("oh oh");
+    }
   }
 
   Future _showNotificationWithDefaultSound(String title, String body) async {
