@@ -17,19 +17,19 @@ extension WeekDaysExtension on WeekDay {
   String get name {
     switch (this) {
       case WeekDay.SATURDAY:
-        return "saturday";
+        return "شنبه";
       case WeekDay.SUNDAY:
-        return "sunday";
+        return "یکشنبه";
       case WeekDay.MONDAY:
-        return "monday";
+        return "دوشنبه";
       case WeekDay.TUESDAY:
-        return "tuesday";
+        return "سه شنبه";
       case WeekDay.WEDNESDAY:
-        return "wednesday";
+        return "چهارشنبه";
       case WeekDay.THURSDAY:
-        return "thursday";
+        return "پنجشنبه";
       case WeekDay.FRIDAY:
-        return "friday";
+        return "جمعه";
     }
   }
 }

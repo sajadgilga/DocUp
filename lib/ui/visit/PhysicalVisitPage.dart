@@ -11,8 +11,7 @@ import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-const VISIT_METHOD = "نوع مشاوره";
-const String TIME_SELECTION = "انتخاب ساعت";
+import 'VisitUtils.dart';
 
 class PhysicalVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;

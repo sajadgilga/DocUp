@@ -13,27 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-const VISIT_METHOD = "نوع مشاوره";
-const VISIT_DURATION_PLAN = "مدت زمان مشاوره";
-
-enum VisitMethod { TEXT, VOICE, VIDEO }
-
-enum VisitDurationPlan { BASE, SUPPLEMENTARY, LONG }
-
-extension VisitDurationPlanExtension on VisitDurationPlan {
-  int get duration {
-    switch (this) {
-      case VisitDurationPlan.BASE:
-        return 30;
-      case VisitDurationPlan.SUPPLEMENTARY:
-        return 60;
-      case VisitDurationPlan.LONG:
-        return 90;
-      default:
-        return 30;
-    }
-  }
-}
+import 'VisitUtils.dart';
 
 class VirtualVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;

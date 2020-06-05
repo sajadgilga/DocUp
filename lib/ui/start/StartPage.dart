@@ -173,7 +173,7 @@ class _StartPageState extends State<StartPage> {
             }
             break;
           case StartType.LOGIN:
-            if(resend != null && resend) {
+            if (resend != null && resend) {
               _authBloc.signUp(currentUserName, currentRoleType);
             } else {
               _authBloc.verify(currentUserName, _verificationController.text,
@@ -267,30 +267,30 @@ class _StartPageState extends State<StartPage> {
     super.dispose();
   }
 
-  _timerWidget() =>
-      startType == StartType.LOGIN
-          ? Padding(
-        padding: EdgeInsets.only(right: 40),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Visibility(visible: !resendCodeEnabled,
-                child: BlocProvider(
-                    create: (context) => _timerBloc, child: Timer())),
-            GestureDetector(
-              onTap: () => submit(resend: true),
-              child: Text(" ارسال مجدد کد ",
-                  style: TextStyle(
-                      color: IColors.themeColor,
-                      fontWeight: FontWeight.bold,
-                      decoration: resendCodeEnabled
-                          ? TextDecoration.underline
-                          : TextDecoration.none)),
-            ),
-          ],
-        ),
-      )
-          : SizedBox.shrink();
+  _timerWidget() => startType == StartType.LOGIN
+      ? Padding(
+          padding: EdgeInsets.only(right: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Visibility(
+                  visible: !resendCodeEnabled,
+                  child: BlocProvider(
+                      create: (context) => _timerBloc, child: Timer())),
+              GestureDetector(
+                onTap: () => submit(resend: true),
+                child: Text(" ارسال مجدد کد ",
+                    style: TextStyle(
+                        color: IColors.themeColor,
+                        fontWeight: FontWeight.bold,
+                        decoration: resendCodeEnabled
+                            ? TextDecoration.underline
+                            : TextDecoration.none)),
+              ),
+            ],
+          ),
+        )
+      : SizedBox.shrink();
 
   _actionWidget() {
     switch (startType) {
@@ -306,36 +306,32 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
-  _loginActionWidget() =>
-      Padding(
-          padding: EdgeInsets.only(left: 40.0, right: 40.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              ActionButton(
-                color: isContinueEnable
-                    ? IColors.themeColor
-                    : Colors.grey,
-                title: Strings.continueAction,
-                callBack: submit,
-              ),
-              GestureDetector(
-                onTap: back,
-                child: Container(
-                    decoration: BoxDecoration(
-                        color: IColors.themeColor,
-                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Icon(Icons.arrow_forward_ios,
-                          size: 18, color: Colors.white),
-                    )),
-              ),
-            ],
-          ));
+  _loginActionWidget() => Padding(
+      padding: EdgeInsets.only(left: 40.0, right: 40.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          ActionButton(
+            color: isContinueEnable ? IColors.themeColor : Colors.grey,
+            title: Strings.continueAction,
+            callBack: submit,
+          ),
+          GestureDetector(
+            onTap: back,
+            child: Container(
+                decoration: BoxDecoration(
+                    color: IColors.themeColor,
+                    borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Icon(Icons.arrow_forward_ios,
+                      size: 18, color: Colors.white),
+                )),
+          ),
+        ],
+      ));
 
-  _signUpActionWidget() =>
-      ActionButton(
+  _signUpActionWidget() => ActionButton(
         color: IColors.themeColor,
         title: Strings.verifyAction,
         icon: Icon(
@@ -346,8 +342,7 @@ class _StartPageState extends State<StartPage> {
         callBack: submit,
       );
 
-  _registerActionWidget() =>
-      ActionButton(
+  _registerActionWidget() => ActionButton(
         color: IColors.themeColor,
         title: Strings.registerAction,
         icon: Icon(
@@ -358,8 +353,7 @@ class _StartPageState extends State<StartPage> {
         callBack: submit,
       );
 
-  _signInActionWidget() =>
-      ActionButton(
+  _signInActionWidget() => ActionButton(
         color: IColors.themeColor,
         title: Strings.enterAction,
         icon: Icon(
@@ -370,16 +364,14 @@ class _StartPageState extends State<StartPage> {
         callBack: submit,
       );
 
-  _headerWidget() =>
-      Text(
+  _headerWidget() => Text(
         startType == StartType.SIGN_IN
             ? Strings.signInHeaderMessage
             : Strings.registerHeaderMessage,
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       );
 
-  _optionsWidget() =>
-      Row(
+  _optionsWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Visibility(
@@ -388,7 +380,7 @@ class _StartPageState extends State<StartPage> {
               child: GestureDetector(
                 onTap: () => switchRole(RoleType.DOCTOR),
                 child:
-                OptionButton(RoleType.DOCTOR, stream: _controller.stream),
+                    OptionButton(RoleType.DOCTOR, stream: _controller.stream),
               )),
           SizedBox(width: 10),
           Visibility(
@@ -402,15 +394,13 @@ class _StartPageState extends State<StartPage> {
         ],
       );
 
-  _messageWidget() =>
-      Text(
+  _messageWidget() => Text(
         getMessageText(),
         style: TextStyle(fontSize: 13),
         textAlign: TextAlign.center,
       );
 
-  _titleWidget() =>
-      Visibility(
+  _titleWidget() => Visibility(
         maintainSize: true,
         maintainAnimation: true,
         maintainState: true,
@@ -424,11 +414,10 @@ class _StartPageState extends State<StartPage> {
         ),
       );
 
-  _enterWidget() =>
-      Visibility(
+  _enterWidget() => Visibility(
         visible: startType == StartType.SIGN_UP,
         child:
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           GestureDetector(
             onTap: () {
               setState(() {
@@ -448,10 +437,9 @@ class _StartPageState extends State<StartPage> {
         ]),
       );
 
-  _inputFieldsWidget() =>
-      Padding(
-          padding: EdgeInsets.only(left: 40.0, right: 40.0),
-          child: Container(child: _inputFieldsInnerWidget()));
+  _inputFieldsWidget() => Padding(
+      padding: EdgeInsets.only(left: 40.0, right: 40.0),
+      child: Container(child: _inputFieldsInnerWidget()));
 
   _isVerificationCodeValid(String validationCode) => validationCode.length == 6;
 
@@ -462,37 +450,38 @@ class _StartPageState extends State<StartPage> {
       case StartType.SIGN_UP:
         return currentRoleType == RoleType.PATIENT
             ? InputField(
-          inputHint: Strings.usernameInputHint,
-          controller: _usernameController,
-          textInputType: TextInputType.phone,
-          validationCallback: (text) => validatePhoneNumber(text),
-          errorMessage: "شماره همراه معتبر نیست",
-        )
+                inputHint: Strings.usernameInputHint,
+                controller: _usernameController,
+                textInputType: TextInputType.phone,
+                validationCallback: (text) => validatePhoneNumber(text),
+                errorMessage: "شماره همراه معتبر نیست",
+              )
             : Column(
-          children: <Widget>[
-            InputField(
-              inputHint: Strings.doctorIdInputHint,
-              textInputType: TextInputType.number,
-              needToHideKeyboard: false,
-              validationCallback: (text) => text.length >= 4,
-              errorMessage: "شماره نظام پزشکی معتبر نیست",
-              controller: _doctorIdController,
-            ),
-            InputField(
-              inputHint: Strings.usernameInputHint,
-              textInputType: TextInputType.phone,
-              validationCallback: (text) => validatePhoneNumber(text),
-              controller: _usernameController,
-              errorMessage: "شماره همراه معتبر نیست",
-            )
-          ],
-        );
+                children: <Widget>[
+                  InputField(
+                    inputHint: Strings.doctorIdInputHint,
+                    textInputType: TextInputType.number,
+                    needToHideKeyboard: false,
+                    validationCallback: (text) => text.length >= 4,
+                    errorMessage: "شماره نظام پزشکی معتبر نیست",
+                    controller: _doctorIdController,
+                  ),
+                  InputField(
+                    inputHint: Strings.usernameInputHint,
+                    textInputType: TextInputType.phone,
+                    validationCallback: (text) => validatePhoneNumber(text),
+                    controller: _usernameController,
+                    errorMessage: "شماره همراه معتبر نیست",
+                  )
+                ],
+              );
       case StartType.LOGIN:
         return InputField(
             inputHint: Strings.verificationHint,
             controller: _verificationController,
             textInputType: TextInputType.number,
-            validationCallback: (text) => _isVerificationCodeValid(text) || resendCodeEnabled,
+            validationCallback: (text) =>
+                _isVerificationCodeValid(text) || resendCodeEnabled,
             errorMessage: "کدفعالسازی ۶رقمی است",
             onChanged: (text) {
               setState(() {

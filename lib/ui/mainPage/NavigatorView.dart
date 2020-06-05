@@ -13,7 +13,9 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/account/AccountPage.dart';
+import 'package:docup/ui/account/DoctorProfilePage.dart';
+import 'package:docup/ui/account/PatientProfilePage.dart';
+import 'package:docup/ui/account/VisitConfPage.dart';
 import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:docup/ui/panel/medicinePage/MedicinePage.dart';
@@ -52,6 +54,8 @@ class NavigatorRoutes {
   static const String physicalVisitPage = '/physicalVisitPage';
   static const String uploadPicDialogue = '/uploadPicDialogue';
   static const String cognitiveTest = '/cognitiveTest';
+
+  static const String visitConfig = '/visitConfig';
 }
 
 class NavigatorView extends StatefulWidget {
@@ -60,12 +64,11 @@ class NavigatorView extends StatefulWidget {
   Function(String, dynamic) pushOnBase;
   Function(int) selectPage;
 
-  NavigatorView(
-      {Key key,
-      this.index,
-      this.navigatorKey,
-      this.pushOnBase,
-      this.selectPage})
+  NavigatorView({Key key,
+    this.index,
+    this.navigatorKey,
+    this.pushOnBase,
+    this.selectPage})
       : super(key: key);
 
   @override
@@ -87,7 +90,8 @@ class NavigatorViewState extends State<NavigatorView> {
     switch (widget.index) {
       case -1:
         return {
-          NavigatorRoutes.root: (context) => MainPage(
+          NavigatorRoutes.root: (context) =>
+              MainPage(
                 pushOnBase: (direction, entity) {
                   push(context, direction, detail: entity);
                 },
@@ -99,17 +103,20 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.cognitiveTest: (context) =>
               _cognitiveTest(context, detail),
-          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
-              value: _pictureBloc,
-              child: UploadSlider(
-                listId: detail,
-              )),
+          NavigatorRoutes.uploadPicDialogue: (context) =>
+              BlocProvider.value(
+                  value: _pictureBloc,
+                  child: UploadSlider(
+                    listId: detail,
+                  )),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
               _virtualVisitPage(context, detail),
+          NavigatorRoutes.visitConfig: (context) =>
+              _visitConf(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
               _physicalVisitPage(context, detail)
         };
@@ -130,6 +137,8 @@ class NavigatorViewState extends State<NavigatorView> {
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
               _virtualVisitPage(context, detail),
+          NavigatorRoutes.visitConfig: (context) =>
+              _visitConf(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
               _physicalVisitPage(context, detail)
         };
@@ -154,11 +163,12 @@ class NavigatorViewState extends State<NavigatorView> {
               _patientDetailPage(context, detail),
           NavigatorRoutes.cognitiveTest: (context) =>
               _cognitiveTest(context, detail),
-          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
-              value: _pictureBloc,
-              child: UploadSlider(
-                listId: detail,
-              )),
+          NavigatorRoutes.uploadPicDialogue: (context) =>
+              BlocProvider.value(
+                  value: _pictureBloc,
+                  child: UploadSlider(
+                    listId: detail,
+                  )),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
@@ -166,6 +176,8 @@ class NavigatorViewState extends State<NavigatorView> {
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
               _virtualVisitPage(context, detail),
+          NavigatorRoutes.visitConfig: (context) =>
+              _visitConf(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
               _physicalVisitPage(context, detail)
         };
@@ -178,6 +190,8 @@ class NavigatorViewState extends State<NavigatorView> {
         return {
           NavigatorRoutes.root: (context) => _account(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.visitConfig: (context) =>
+              _visitConf(context, detail),
         };
       default:
         return {
@@ -237,7 +251,10 @@ class NavigatorViewState extends State<NavigatorView> {
   }
 
   Widget _home(context) {
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    var entity = BlocProvider
+        .of<EntityBloc>(context)
+        .state
+        .entity;
     if (entity.isDoctor) {
       return MultiBlocProvider(
           providers: [
@@ -263,14 +280,30 @@ class NavigatorViewState extends State<NavigatorView> {
     }
   }
 
-  Widget _account(context, {defaultCreditForCharge}) => AccountPage(
+  Widget _account(context, {defaultCreditForCharge}) {
+    var entity = BlocProvider
+        .of<EntityBloc>(context)
+        .state
+        .entity;
+    if (entity.isDoctor) {
+      return DoctorProfilePage(
+        onPush: (direction, entity) {
+          push(context, direction, detail: entity);
+        },
+
+      );
+    } else {
+      return PatientProfilePage(
         defaultCreditForCharge: defaultCreditForCharge,
         onPush: (direction) {
           push(context, direction);
         },
       );
+    }
+  }
 
-  Widget _cognitiveTest(context, UserEntity entity) => MedicalTestPage(
+  Widget _cognitiveTest(context, UserEntity entity) =>
+      MedicalTestPage(
         onPush: (direction, entity) {
           push(context, direction, detail: entity);
         },
@@ -282,100 +315,104 @@ class NavigatorViewState extends State<NavigatorView> {
 //    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     return BlocBuilder<EntityBloc, EntityState>(
         builder: (context, entityState) {
-      return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
-        builder: (context, state) {
-          var entity = entityState.entity;
-          if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE) {
-            return Panel(
-              onPush: (direction, entity) {
-                push(context, direction, detail: entity);
-              },
-              pages: [
-                [
-                  IllnessPage(
-                    entity: entity,
-                    onPush: (direction, entity) {
-                      push(context, direction, detail: entity);
-                    },
-                  )
-                ],
-                [
-                  ChatPage(
-                    entity: entity,
-                    onPush: (direction, entity) {
-                      push(context, direction, detail: entity);
-                    },
-                  )
-                ],
-                [
-                  VideoCallPage(
-                    entity: entity,
-                    onPush: (direction, entity) {
-                      push(context, direction, detail: entity);
-                    },
-                  )
-                ]
-              ],
-            );
-          } else if (state.patientSection == PatientPanelSection.HEALTH_FILE) {
-            return BlocProvider.value(
-                value: _pictureBloc,
-                child: Panel(
+          return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
+            builder: (context, state) {
+              var entity = entityState.entity;
+              if (state.patientSection ==
+                  PatientPanelSection.DOCTOR_INTERFACE) {
+                return Panel(
                   onPush: (direction, entity) {
                     push(context, direction, detail: entity);
                   },
                   pages: [
                     [
-                      InfoPage(
-                        uploadAvailable: entity.isPatient,
+                      IllnessPage(
                         entity: entity,
                         onPush: (direction, entity) {
                           push(context, direction, detail: entity);
                         },
-                        pageName: Strings.documents,
-                        picListLabel: Strings.panelDocumentsPicLabel,
-                        lastPicsLabel: Strings.panelDocumentsPicListLabel,
-                        uploadLabel: Strings.panelDocumentsPicUploadLabel,
                       )
                     ],
                     [
-                      InfoPage(
-                        uploadAvailable: entity.isDoctor,
+                      ChatPage(
                         entity: entity,
                         onPush: (direction, entity) {
                           push(context, direction, detail: entity);
                         },
-                        pageName: Strings.prescriptions,
-                        picListLabel: Strings.panelPrescriptionsPicLabel,
-                        lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
-                        uploadLabel: Strings.panelPrescriptionsUploadLabel,
                       )
                     ],
                     [
-                      InfoPage(
-                        uploadAvailable: entity.isPatient,
+                      VideoCallPage(
                         entity: entity,
                         onPush: (direction, entity) {
                           push(context, direction, detail: entity);
                         },
-                        pageName: Strings.testResults,
-                        picListLabel: Strings.panelTestResultsPicLabel,
-                        lastPicsLabel: Strings.panelTestResultsPicListLabel,
-                        uploadLabel: Strings.panelTestResultsPicUploadLabel,
                       )
-                    ],
+                    ]
                   ],
-                ));
-          } else if (state.patientSection == PatientPanelSection.HEALTH_CALENDAR) {
-            return BlocProvider.value(
-                value: _pictureBloc,
-                child: Panel(
-                  onPush: (direction, entity) {
-                    push(context, direction, detail: entity);
-                  },
-                  pages: [
-                    [
-                      MedicinePage(
+                );
+              } else
+              if (state.patientSection == PatientPanelSection.HEALTH_FILE) {
+                return BlocProvider.value(
+                    value: _pictureBloc,
+                    child: Panel(
+                      onPush: (direction, entity) {
+                        push(context, direction, detail: entity);
+                      },
+                      pages: [
+                        [
+                          InfoPage(
+                            uploadAvailable: entity.isPatient,
+                            entity: entity,
+                            onPush: (direction, entity) {
+                              push(context, direction, detail: entity);
+                            },
+                            pageName: Strings.documents,
+                            picListLabel: Strings.panelDocumentsPicLabel,
+                            lastPicsLabel: Strings.panelDocumentsPicListLabel,
+                            uploadLabel: Strings.panelDocumentsPicUploadLabel,
+                          )
+                        ],
+                        [
+                          InfoPage(
+                            uploadAvailable: entity.isDoctor,
+                            entity: entity,
+                            onPush: (direction, entity) {
+                              push(context, direction, detail: entity);
+                            },
+                            pageName: Strings.prescriptions,
+                            picListLabel: Strings.panelPrescriptionsPicLabel,
+                            lastPicsLabel: Strings
+                                .panelPrescriptionsPicListLabel,
+                            uploadLabel: Strings.panelPrescriptionsUploadLabel,
+                          )
+                        ],
+                        [
+                          InfoPage(
+                            uploadAvailable: entity.isPatient,
+                            entity: entity,
+                            onPush: (direction, entity) {
+                              push(context, direction, detail: entity);
+                            },
+                            pageName: Strings.testResults,
+                            picListLabel: Strings.panelTestResultsPicLabel,
+                            lastPicsLabel: Strings.panelTestResultsPicListLabel,
+                            uploadLabel: Strings.panelTestResultsPicUploadLabel,
+                          )
+                        ],
+                      ],
+                    ));
+              } else
+              if (state.patientSection == PatientPanelSection.HEALTH_CALENDAR) {
+                return BlocProvider.value(
+                    value: _pictureBloc,
+                    child: Panel(
+                      onPush: (direction, entity) {
+                        push(context, direction, detail: entity);
+                      },
+                      pages: [
+                        [
+                          MedicinePage(
 //                        uploadAvailable: entity.isPatient,
 //                        entity: entity,
 //                        onPush: (direction, entity) {
@@ -385,41 +422,42 @@ class NavigatorViewState extends State<NavigatorView> {
 //                        picListLabel: Strings.panelDocumentsPicLabel,
 //                        lastPicsLabel: Strings.panelDocumentsPicListLabel,
 //                        uploadLabel: Strings.panelDocumentsPicUploadLabel,
-                      )
-                    ],
-                    [
-                      InfoPage(
-                        uploadAvailable: entity.isDoctor,
-                        entity: entity,
-                        onPush: (direction, entity) {
-                          push(context, direction, detail: entity);
-                        },
-                        pageName: Strings.prescriptions,
-                        picListLabel: Strings.panelPrescriptionsPicLabel,
-                        lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
-                        uploadLabel: Strings.panelPrescriptionsUploadLabel,
-                      )
-                    ],
-                    [
-                      InfoPage(
-                        uploadAvailable: entity.isPatient,
-                        entity: entity,
-                        onPush: (direction, entity) {
-                          push(context, direction, detail: entity);
-                        },
-                        pageName: Strings.testResults,
-                        picListLabel: Strings.panelTestResultsPicLabel,
-                        lastPicsLabel: Strings.panelTestResultsPicListLabel,
-                        uploadLabel: Strings.panelTestResultsPicUploadLabel,
-                      )
-                    ],
-                  ],
-                ));
-          }
-          return Panel(); //TODO
-        },
-      );
-    });
+                          )
+                        ],
+                        [
+                          InfoPage(
+                            uploadAvailable: entity.isDoctor,
+                            entity: entity,
+                            onPush: (direction, entity) {
+                              push(context, direction, detail: entity);
+                            },
+                            pageName: Strings.prescriptions,
+                            picListLabel: Strings.panelPrescriptionsPicLabel,
+                            lastPicsLabel: Strings
+                                .panelPrescriptionsPicListLabel,
+                            uploadLabel: Strings.panelPrescriptionsUploadLabel,
+                          )
+                        ],
+                        [
+                          InfoPage(
+                            uploadAvailable: entity.isPatient,
+                            entity: entity,
+                            onPush: (direction, entity) {
+                              push(context, direction, detail: entity);
+                            },
+                            pageName: Strings.testResults,
+                            picListLabel: Strings.panelTestResultsPicLabel,
+                            lastPicsLabel: Strings.panelTestResultsPicListLabel,
+                            uploadLabel: Strings.panelTestResultsPicUploadLabel,
+                          )
+                        ],
+                      ],
+                    ));
+              }
+              return Panel(); //TODO
+            },
+          );
+        });
   }
 
   Widget _panel(context, {incomplete, detail}) {
@@ -451,7 +489,7 @@ class NavigatorViewState extends State<NavigatorView> {
             if (state.panels.length > 0) return _panelPages(context);
           }
           return PanelMenu(
-            () {
+                () {
               _pop(context);
             },
             onPush: (direction) {
@@ -485,7 +523,8 @@ class NavigatorViewState extends State<NavigatorView> {
         ));
   }
 
-  Widget _searchPage(context, {isRequests = false}) => MultiBlocProvider(
+  Widget _searchPage(context, {isRequests = false}) =>
+      MultiBlocProvider(
           providers: [
             BlocProvider<SearchBloc>.value(value: _searchBloc),
 //            BlocProvider<VisitBloc>.value(value: _visitBloc),
@@ -510,7 +549,7 @@ class NavigatorViewState extends State<NavigatorView> {
           BlocProvider<SearchBloc>.value(value: _searchBloc),
         ],
         child: PanelMenu(
-          () {
+              () {
             _pop(context);
           },
           onPush: (direction) {
@@ -525,6 +564,15 @@ class NavigatorViewState extends State<NavigatorView> {
 
   _virtualVisitPage(BuildContext context, entity) {
     return VirtualVisitPage(
+      doctorEntity: (entity as DoctorEntity),
+      onPush: (direction, entity) {
+        push(context, direction);
+      },
+    );
+  }
+
+  _visitConf(BuildContext context, entity) {
+    return VisitConfPage(
       doctorEntity: (entity as DoctorEntity),
       onPush: (direction, entity) {
         push(context, direction);

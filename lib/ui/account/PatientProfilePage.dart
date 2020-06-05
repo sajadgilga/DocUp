@@ -4,31 +4,30 @@ import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/blocs/CreditBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show PlatformException;
 
-
-class   AccountPage extends StatefulWidget {
+class PatientProfilePage extends StatefulWidget {
   final ValueChanged<String> onPush;
   final String defaultCreditForCharge;
 
-  AccountPage({Key key, @required this.onPush, this.defaultCreditForCharge})
+  PatientProfilePage(
+      {Key key, @required this.onPush, this.defaultCreditForCharge})
       : super(key: key);
 
   @override
-  _AccountPageState createState() => _AccountPageState();
+  _PatientProfilePageState createState() => _PatientProfilePageState();
 }
 
-class _AccountPageState extends State<AccountPage> with WidgetsBindingObserver {
+class _PatientProfilePageState extends State<PatientProfilePage>
+    with WidgetsBindingObserver {
   CreditBloc _creditBloc = CreditBloc();
 
   AlertDialog _loadingDialog = getLoadingDialog();
@@ -69,14 +68,12 @@ class _AccountPageState extends State<AccountPage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed) {
       _amountTextController.text = "";
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -265,26 +262,25 @@ class _AccountPageState extends State<AccountPage> with WidgetsBindingObserver {
             textAlign: TextAlign.right),
       );
 
-
   StreamSubscription _sub;
 
   Future<Null> initUniLinks() async {
     try {
       _sub = getUriLinksStream().listen((Uri link) {
         final query = link.queryParameters;
-        if(query["success"] == "false"){
-         showOneButtonDialog(context, "پرداخت با خطا مواجه شد", "متوجه شدم", (){});
+        if (query["success"] == "false") {
+          showOneButtonDialog(
+              context, "پرداخت با خطا مواجه شد", "متوجه شدم", () {});
         } else {
           _amountTextController.text = query["credit"];
-          showOneButtonDialog(context, "شارژ حساب کاربری با موفقیت انجام شد", "متوجه شدم", (){});
+          showOneButtonDialog(context, "شارژ حساب کاربری با موفقیت انجام شد",
+              "متوجه شدم", () {});
         }
-        }, onError: (err) {
+      }, onError: (err) {
         print("link error $err");
       });
     } on PlatformException {
       print("link error");
     }
   }
-
-
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:docup/models/AuthResponseEntity.dart';
+import 'package:docup/networking/CustomException.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/AuthRepository.dart';
 import 'package:docup/ui/start/RoleType.dart';
