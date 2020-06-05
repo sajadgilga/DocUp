@@ -15,6 +15,7 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/DoctorProfilePage.dart';
 import 'package:docup/ui/account/PatientProfilePage.dart';
+import 'package:docup/ui/account/ProfileMenuPage.dart';
 import 'package:docup/ui/account/VisitConfPage.dart';
 import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
@@ -57,6 +58,7 @@ class NavigatorRoutes {
   static const String cognitiveTest = '/cognitiveTest';
 
   static const String visitConfig = '/visitConfig';
+  static const String profileMenuPage = '/profileMenuPage';
 }
 
 class NavigatorView extends StatefulWidget {
@@ -118,6 +120,8 @@ class NavigatorViewState extends State<NavigatorView> {
               _virtualVisitPage(context, detail),
           NavigatorRoutes.visitConfig: (context) =>
               _visitConf(context, detail),
+          NavigatorRoutes.profileMenuPage: (context) =>
+              _profileMenuPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
               _physicalVisitPage(context, detail)
         };
@@ -140,6 +144,8 @@ class NavigatorViewState extends State<NavigatorView> {
               _virtualVisitPage(context, detail),
           NavigatorRoutes.visitConfig: (context) =>
               _visitConf(context, detail),
+          NavigatorRoutes.profileMenuPage: (context) =>
+              _profileMenuPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
               _physicalVisitPage(context, detail)
         };
@@ -179,6 +185,8 @@ class NavigatorViewState extends State<NavigatorView> {
               _virtualVisitPage(context, detail),
           NavigatorRoutes.visitConfig: (context) =>
               _visitConf(context, detail),
+          NavigatorRoutes.profileMenuPage: (context) =>
+              _profileMenuPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
               _physicalVisitPage(context, detail)
         };
@@ -193,6 +201,8 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.visitConfig: (context) =>
               _visitConf(context, detail),
+          NavigatorRoutes.profileMenuPage: (context) =>
+              _profileMenuPage(context, detail),
         };
       default:
         return {
@@ -561,6 +571,16 @@ class NavigatorViewState extends State<NavigatorView> {
 
   _visitConf(BuildContext context, entity) {
     return VisitConfPage(
+      doctorEntity: (entity as DoctorEntity),
+      onPush: (direction, entity) {
+        push(context, direction);
+      },
+    );
+  }
+
+
+  _profileMenuPage(BuildContext context, entity) {
+    return ProfileMenuPage(
       doctorEntity: (entity as DoctorEntity),
       onPush: (direction, entity) {
         push(context, direction);

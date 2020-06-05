@@ -8,16 +8,18 @@ import 'VerticalSpace.dart';
 class LabelAndListWidget extends StatefulWidget {
   final String title;
   final List<String> items;
-  final int selectedIndex;
+  final Set<int> selectedIndex;
   final Function(String, int) callback;
   final bool smallSize;
+  final bool showTitle;
 
   LabelAndListWidget(
       {this.title,
       this.items,
       this.selectedIndex,
       this.callback,
-      this.smallSize});
+      this.smallSize,
+      this.showTitle = true});
 
   @override
   _LabelAndListWidgetState createState() => _LabelAndListWidgetState();
@@ -33,7 +35,7 @@ class _LabelAndListWidgetState extends State<LabelAndListWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              widget.title == null ? Container() : _labelWidget(),
+              !widget.showTitle ? Container() : _labelWidget(),
             ],
           ),
         ),
@@ -58,7 +60,7 @@ class _LabelAndListWidgetState extends State<LabelAndListWidget> {
                       width: widget.smallSize != null && widget.smallSize
                           ? 120
                           : 160,
-                      color: widget.selectedIndex == index
+                      color: widget.selectedIndex != null && widget.selectedIndex.contains(index)
                           ? IColors.themeColor
                           : Colors.grey,
                       title: widget.items[index],

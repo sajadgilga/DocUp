@@ -72,7 +72,15 @@ class _StartPageState extends State<StartPage> {
           Navigator.of(context).pop();
           _loadingEnable = false;
         }
-        showErrorSnackBar(response.message);
+        if(response.message.startsWith("Invalid")) {
+          showOneButtonDialog(context, "شما قبلا در داکآپ ثبت نام کرده اید. لطفا به همراه رمز عبور خود وارد اپلیکیشن شوید", "ورود", (){
+            setState(() {
+              startType = StartType.SIGN_IN;
+            });
+          });
+        } else {
+          showErrorSnackBar(response.message);
+        }
         return false;
       default:
         if (_loadingEnable) {

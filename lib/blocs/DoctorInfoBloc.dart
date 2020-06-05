@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/networking/Response.dart';
@@ -13,6 +14,10 @@ class DoctorInfoBloc {
   StreamController _visitRequestController;
   StreamController _getVisitController;
   StreamController _responseVisitController;
+  StreamController _doctorUpdateController;
+
+  StreamSink<Response<DoctorPlan>> get doctorPlanSink =>
+      _doctorUpdateController.sink;
 
   StreamSink<Response<DoctorEntity>> get doctorInfoSink =>
       _getDoctorController.sink;
@@ -25,6 +30,9 @@ class DoctorInfoBloc {
 
   StreamSink<Response<VisitEntity>> get responseVisitSink =>
       _responseVisitController.sink;
+
+  Stream<Response<DoctorPlan>> get doctorPlanStream =>
+      _doctorUpdateController.stream;
 
   Stream<Response<DoctorEntity>> get doctorInfoStream =>
       _getDoctorController.stream;
@@ -43,6 +51,7 @@ class DoctorInfoBloc {
     _visitRequestController = StreamController<Response<VisitEntity>>();
     _getVisitController = StreamController<Response<VisitEntity>>();
     _responseVisitController = StreamController<Response<VisitEntity>>();
+    _doctorUpdateController = StreamController<Response<DoctorPlan>>();
     _repository = DoctorRepository();
   }
 
@@ -54,6 +63,18 @@ class DoctorInfoBloc {
       doctorInfoSink.add(Response.completed(doctorEntity));
     } catch (e) {
       doctorInfoSink.add(Response.error(e.toString()));
+      print(e);
+    }
+  }
+
+  updateDoctor(int doctorId, DoctorPlan plan) async {
+    doctorPlanSink.add(Response.loading(''));
+    try {
+      plan.id = doctorId;
+      DoctorPlan doctorPlan = await _repository.updatePlan(plan);
+      doctorPlanSink.add(Response.completed(doctorPlan));
+    } catch (e) {
+      doctorPlanSink.add(Response.error(e.toString()));
       print(e);
     }
   }
@@ -104,5 +125,6 @@ class DoctorInfoBloc {
     _visitRequestController?.close();
     _getVisitController?.close();
     _responseVisitController?.close();
+    _doctorUpdateController?.close();
   }
 }

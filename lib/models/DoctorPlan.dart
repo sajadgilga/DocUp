@@ -1,4 +1,5 @@
 class DoctorPlan {
+  int id;
   List<int> visitType;
   List<int> visitMethod;
   List<int> visitDurationPlan;
@@ -9,7 +10,7 @@ class DoctorPlan {
   String endTime;
 
   DoctorPlan(
-      {this.visitType,
+      {this.id, this.visitType,
         this.visitMethod,
         this.visitDurationPlan,
         this.availableDays,
@@ -19,6 +20,9 @@ class DoctorPlan {
         this.endTime});
 
   DoctorPlan.fromJson(Map<String, dynamic> json) {
+    if(json.containsKey('id')) {
+      id = json['id'];
+    }
     visitType = json['visit_type'].cast<int>();
     visitMethod = json['visit_method'].cast<int>();
     visitDurationPlan = json['visit_duration_plan'].cast<int>();
@@ -31,6 +35,7 @@ class DoctorPlan {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['visit_type'] = this.visitType;
     data['visit_method'] = this.visitMethod;
     data['visit_duration_plan'] = this.visitDurationPlan;

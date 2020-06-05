@@ -82,7 +82,7 @@ class _MainPageState extends State<MainPage> {
           _panelBloc.add(GetMyPanels());
         });
     });
-//     _enableFCM();
+     _enableFCM();
     super.initState();
 
   }

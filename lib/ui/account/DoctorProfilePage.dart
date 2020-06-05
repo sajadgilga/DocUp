@@ -44,8 +44,13 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   DocUpHeader(),
-                  ALittleVerticalSpace(),
-                  DoctorCreditWidget(),
+                  MediumVerticalSpace(),
+                  GestureDetector(
+                      onTap: () => widget.onPush(
+                          NavigatorRoutes.profileMenuPage, doctorEntity),
+                      child: DoctorCreditWidget(
+                        credit: doctorEntity.user.credit,
+                      )),
                   Avatar(user: doctorEntity.user),
                   ALittleVerticalSpace(),
                   DoctorData(
@@ -60,7 +65,8 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                   ActionButton(
                     color: IColors.themeColor,
                     title: "اطلاعات ویزیت مجازی و حضوری",
-                    callBack: () => widget.onPush(NavigatorRoutes.visitConfig, doctorEntity),
+                    callBack: () => widget.onPush(
+                        NavigatorRoutes.visitConfig, doctorEntity),
                   )
                 ],
               ));

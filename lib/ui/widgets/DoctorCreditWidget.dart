@@ -1,6 +1,12 @@
+import 'package:docup/constants/colors.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class DoctorCreditWidget extends StatefulWidget{
+  final String credit;
+  DoctorCreditWidget({this.credit});
+
   @override
   _DoctorCreditWidgetState createState() => _DoctorCreditWidgetState();
 
@@ -9,13 +15,35 @@ class DoctorCreditWidget extends StatefulWidget{
 class _DoctorCreditWidgetState extends State<DoctorCreditWidget>{
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.8,
-      height: 50,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20))
+    return Center(
+      child: Container(
+        alignment: Alignment.center,
+        width: MediaQuery.of(context).size.width * 0.6,
+        height: 60,
+        decoration: BoxDecoration(
+          color: IColors.themeColor,
+          borderRadius: BorderRadius.all(Radius.circular(20))
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              height: 60,
+              width: MediaQuery.of(context).size.width * 0.3,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(20))
+              ),
+              child: Text("برداشت"),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 24.0),
+              child: Text("اعتبار حساب" + "\n" + replaceFarsiNumber(widget.credit), style: TextStyle(color: Colors.white),),
+            ),
+          ],
+        ),
       ),
-      child: Text("اعتبار حساب"),
     );
   }
 

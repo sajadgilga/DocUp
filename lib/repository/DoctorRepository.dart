@@ -38,6 +38,12 @@ class DoctorRepository {
     return DoctorPlan.fromJson(response);
   }
 
+    Future<DoctorPlan> updatePlan(DoctorPlan plan) async {
+    final response = await _provider
+        .patch("api/doctor-plan/", body: plan.toJson());
+    return DoctorPlan.fromJson(response);
+  }
+
 
   Future<VisitEntity> responseVisit(
       int patientId, VisitEntity visitEntity, {isVisitAcceptance= false}) async {
