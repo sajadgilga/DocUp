@@ -140,7 +140,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
   _priceWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text("ریال", style: TextStyle(fontSize: 16)),
+          Text("تومان", style: TextStyle(fontSize: 16)),
           SizedBox(width: 5),
           Text(replaceFarsiNumber(_calculateVisitCost()),
               style: TextStyle(color: IColors.themeColor, fontSize: 18)),
