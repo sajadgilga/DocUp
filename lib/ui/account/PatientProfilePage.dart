@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/blocs/CreditBloc.dart';
@@ -6,10 +7,12 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
+import 'package:docup/ui/widgets/InputDoneView.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show PlatformException;
@@ -57,8 +60,38 @@ class _PatientProfilePageState extends State<PatientProfilePage>
       }
     });
     _amountTextController.text = widget.defaultCreditForCharge;
+    if (Platform.isIOS) {
+      KeyboardVisibilityNotification().addNewListener(onShow: () {
+        showOverlay(context);
+      }, onHide: () {
+        removeOverlay();
+      });
+    }
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  OverlayEntry overlayEntry;
+
+  showOverlay(BuildContext context) {
+    if (overlayEntry != null) return;
+    OverlayState overlayState = Overlay.of(context);
+    overlayEntry = OverlayEntry(builder: (context) {
+      return Positioned(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          right: 0.0,
+          left: 0.0,
+          child: InputDoneView());
+    });
+
+    overlayState.insert(overlayEntry);
+  }
+
+  removeOverlay() {
+    if (overlayEntry != null) {
+      overlayEntry.remove();
+      overlayEntry = null;
+    }
   }
 
   @override
@@ -182,7 +215,6 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                 width: MediaQuery.of(context).size.width * 0.4,
                 child: TextField(
                   controller: _amountTextController,
-                  keyboardType: TextInputType.number,
                   decoration: new InputDecoration(
                       border: new OutlineInputBorder(
                         borderRadius: const BorderRadius.all(

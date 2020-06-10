@@ -69,9 +69,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         child: Column(children: <Widget>[
           DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
           ALittleVerticalSpace(),
-          _visitTypeWidget(VISIT_METHOD, [
-            "متنی", /*"صوتی", */"تصویری"
-          ], size: 1),
+          _visitTypeWidget(VISIT_METHOD, ["متنی", /*"صوتی", */ "تصویری"],
+              size: 1),
           ALittleVerticalSpace(),
           _visitTypeWidget(VISIT_DURATION_PLAN, ["پایه", "تکمیلی", "طولانی"]),
           ALittleVerticalSpace(),
@@ -247,9 +246,11 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
 
   _submitWidget() => ActionButton(
         color: policyChecked ? IColors.themeColor : Colors.grey,
-        title: _isDoctorOnline() ? "ویزیت مجازی هم‌اکنون" : "ویزیت مجازی",
+        title: _nowVisitCondition() ? "ویزیت مجازی هم‌اکنون" : "ویزیت مجازی",
         callBack: _submit,
       );
+
+  _nowVisitCondition() => _isDoctorOnline() && !visitTimeChecked;
 
   _isDoctorOnline() => widget.doctorEntity.user.online == 1;
 
@@ -264,12 +265,24 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
       }
     } else {
       if (_isDoctorOnline()) {
-        sendVisitRequest();
+        sendNowVisitRequest();
       } else {
         showOneButtonDialog(
             context, Strings.offlineDoctorMessage, Strings.okAction, () {});
       }
     }
+  }
+
+  void sendNowVisitRequest() {
+    _bloc.visitRequest(
+        widget.doctorEntity.id,
+        1,
+        typeSelected[VISIT_METHOD],
+        typeSelected[VISIT_DURATION_PLAN],
+        convertToGeorgianDate(getTodayInJalali()) +
+            "T" +
+            "${DateTime.now().hour}:${DateTime.now().minute}" +
+            "+04:30");
   }
 
   void sendVisitRequest() {
