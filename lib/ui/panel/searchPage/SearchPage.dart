@@ -66,7 +66,7 @@ class SearchPage extends StatelessWidget {
     return (Platform.isIOS
         ? GestureDetector(
             onTap: () {
-              Navigator.maybePop(context);
+              Navigator.pop(context);
             },
             child: Container(
                 margin: EdgeInsets.only(left: 40),

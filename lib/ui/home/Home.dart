@@ -196,7 +196,7 @@ class _HomeState extends State<Home> {
                                   newNotificationCount: 0,
                                 );
                             }),
-                        OnCallMedicalHeaderIcon()
+//                        OnCallMedicalHeaderIcon()
                       ]))),
               Container(
                 height: 20,

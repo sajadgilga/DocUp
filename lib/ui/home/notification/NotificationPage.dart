@@ -93,6 +93,16 @@ class _NotificationPageState extends State<NotificationPage> {
               child: Stack(
                 children: <Widget>[
                   Positioned(
+                    right: 70,
+                    top: 100,
+                    child: GestureDetector(
+                        onTap: () { Navigator.pop(context);},
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.grey,
+                        )),
+                  ),
+                  Positioned(
                     right: 90,
                     top: 150,
                     child: Text(
@@ -179,7 +189,9 @@ class NotificationItem extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0),
                     child: Text(
-                      time == null ? "هم اکنون" : replaceFarsiNumber(normalizeDateAndTime(time)),
+                      time == null
+                          ? "هم اکنون"
+                          : replaceFarsiNumber(normalizeDateAndTime(time)),
                       textDirection: TextDirection.rtl,
                       style:
                           TextStyle(fontSize: 12, fontWeight: FontWeight.bold),

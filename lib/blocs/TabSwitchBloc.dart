@@ -106,11 +106,11 @@ class ThirdTab extends PanelTabState {
 Map<String, PanelTabState> tabs = {
   "info": FirstTab(text: Strings.panelIllnessInfoLabel),
   "chat": SecondTab(text: Strings.panelChatLabel),
-//  "call": ThirdTab(text: Strings.panelVideoCallLabel),
-  "call": ThirdTab(subtabs: [
-    SubTab(id: 'video', text: 'تصویری'),
-    SubTab(id: 'voice', text: 'صوتی')
-  ], index: 0),
+  "call": ThirdTab(text: Strings.panelVideoCallLabel),
+//  "call": ThirdTab(subtabs: [
+//    SubTab(id: 'video', text: 'تصویری'),
+//    SubTab(id: 'voice', text: 'صوتی')
+//  ], index: 0),
   //
   'calendar': FirstTab(subtabs: [
     SubTab(id: 'calendar', text: 'تقویم', widget: Icons.calendar_today),
