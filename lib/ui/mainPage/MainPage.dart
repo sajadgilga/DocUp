@@ -77,7 +77,7 @@ class _MainPageState extends State<MainPage> {
             _panelBloc.add(GetMyPanels());
           });
       });
-      _enableFCM();
+//      _enableFCM();
 //      setState(() {
 //        _isFCMConfiged = true;
 //      });
@@ -139,7 +139,6 @@ class _MainPageState extends State<MainPage> {
       flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
       flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: onSelectNotification);
-//      _isFCMConfiged = true;
     } catch (_) {
       print("oh oh");
       _isFCMConfiged = true;

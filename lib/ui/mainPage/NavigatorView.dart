@@ -9,11 +9,13 @@ import 'package:docup/blocs/PatientTrackerBloc.dart';
 import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
+import 'package:docup/blocs/visit_time/visit_time_bloc.dart';
 import 'package:docup/blocs/VisitBloc.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/account/DoctorProfilePage.dart';
 import 'package:docup/ui/account/PatientProfilePage.dart';
 import 'package:docup/ui/account/ProfileMenuPage.dart';
@@ -91,6 +93,7 @@ class NavigatorViewState extends State<NavigatorView> {
   final PictureBloc _pictureBloc = PictureBloc();
   final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
   final NotificationBloc _notificationBloc = NotificationBloc();
+  final VisitTimeBloc _visitTimeBloc = VisitTimeBloc();
 
   @override
   dispose() {
@@ -102,6 +105,7 @@ class NavigatorViewState extends State<NavigatorView> {
     _pictureBloc.close();
     _trackerBloc.close();
     _notificationBloc.close();
+    _visitTimeBloc.close();
     super.dispose();
   }
 
@@ -470,6 +474,8 @@ class NavigatorViewState extends State<NavigatorView> {
   }
 
   Widget _panel(context, {incomplete, detail}) {
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    _visitTimeBloc.add(VisitTimeGet(partnerId: entity.pId));
     if (detail != null)
       switch (detail) {
         case "chat":
@@ -491,6 +497,9 @@ class NavigatorViewState extends State<NavigatorView> {
           ),
           BlocProvider<ChatMessageBloc>.value(
             value: _chatMessageBloc,
+          ),
+          BlocProvider<VisitTimeBloc>.value(
+            value: _visitTimeBloc,
           ),
         ],
         child: BlocBuilder<PanelBloc, PanelState>(builder: (context, state) {
@@ -555,6 +564,9 @@ class NavigatorViewState extends State<NavigatorView> {
             value: _panelSectionBloc,
           ),
           BlocProvider<SearchBloc>.value(value: _searchBloc),
+          BlocProvider<VisitTimeBloc>.value(
+            value: _visitTimeBloc,
+          ),
         ],
         child: PanelMenu(
           () {
