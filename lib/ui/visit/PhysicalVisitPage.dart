@@ -3,6 +3,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/networking/Response.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
@@ -43,7 +44,16 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
         showOneButtonDialog(context, Strings.physicalVisitRequestedMessage,
             "در انتظار تایید پزشک", () => Navigator.pop(context), color: Colors.black54);
       } else if (data.status == Status.ERROR) {
-        toast(context, data.message);
+        if (data.message.startsWith("Invalid")) {
+          showOneButtonDialog(
+              context,
+              Strings.notEnoughCreditMessage,
+              Strings.addCreditAction,
+                  () => widget.onPush(
+                  NavigatorRoutes.account, "10000"));
+        } else {
+          toast(context, data.message);
+        }
       }
     });
     super.initState();

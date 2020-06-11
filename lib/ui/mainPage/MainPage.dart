@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:docup/networking/CustomException.dart';
 import 'package:docup/services/FirebaseService.dart';
@@ -86,6 +87,32 @@ class _MainPageState extends State<MainPage> {
 
   Future _enableFCM() async {
     try {
+
+      _firebaseMessaging.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print("onMessage: $message");
+          await _showNotificationWithDefaultSound(
+              message['notification']['title'],
+              message['notification']['body']);
+        },
+        onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
+        onLaunch: (Map<String, dynamic> message) async {
+          print("onLaunch: $message");
+        },
+        onResume: ( Map<String, dynamic> message) async {
+          print("onResume: $message");
+        },
+      );
+
+
+      _firebaseMessaging.requestNotificationPermissions(
+          const IosNotificationSettings(
+              sound: true, badge: true, alert: true, provisional: true));
+      _firebaseMessaging.onIosSettingsRegistered
+          .listen((IosNotificationSettings settings) {
+        print("Settings registered: $settings");
+      });
+
       _firebaseMessaging.getToken().then((String fcmToken) {
         assert(fcmToken != null);
         print("FCM " + fcmToken);
@@ -99,21 +126,7 @@ class _MainPageState extends State<MainPage> {
         }
       });
 
-      _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
-          await _showNotificationWithDefaultSound(
-              message['notification']['title'],
-              message['notification']['body']);
-        },
-        onBackgroundMessage: myBackgroundMessageHandler,
-        onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
-        },
-        onResume: ( Map<String, dynamic> message) async {
-          print("onResume: $message");
-        },
-      );
+
 
       var initializationSettingsAndroid =
       new AndroidInitializationSettings('mipmap/ic_launcher');

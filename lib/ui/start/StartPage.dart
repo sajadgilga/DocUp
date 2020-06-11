@@ -72,12 +72,14 @@ class _StartPageState extends State<StartPage> {
           Navigator.of(context).pop();
           _loadingEnable = false;
         }
-        if(response.message.startsWith("Invalid")) {
+        if(response.message.startsWith("Invalid") && startType == StartType.SIGN_UP) {
           showOneButtonDialog(context, "شما قبلا در داکآپ ثبت نام کرده اید. لطفا به همراه رمز عبور خود وارد اپلیکیشن شوید", "ورود", (){
             setState(() {
               startType = StartType.SIGN_IN;
             });
           });
+        } else if(response.message.startsWith("Invalid") && startType == StartType.SIGN_IN) {
+          showErrorSnackBar("رمز عبور وارد شده اشتباه می باشد");
         } else {
           showErrorSnackBar(response.message);
         }

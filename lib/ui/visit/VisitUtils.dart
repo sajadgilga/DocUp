@@ -2,7 +2,7 @@ const VISIT_METHOD = "نوع مشاوره";
 const VISIT_DURATION_PLAN = "مدت زمان مشاوره";
 const String TIME_SELECTION = "انتخاب ساعت";
 
-enum VisitMethod { TEXT, VOICE, VIDEO }
+enum VisitMethod { TEXT, VIDEO, VOICE }
 
 extension VisitMethodExtension on VisitMethod {
   String get title {

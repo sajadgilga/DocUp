@@ -45,7 +45,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         showOneButtonDialog(context, Strings.visitRequestedMessage,
             Strings.understandAction, () => Navigator.pop(context));
       } else if (data.status == Status.ERROR) {
-        if (data.message.startsWith("Unauthorised")) {
+        if (data.message.startsWith("Invalid")) {
           showOneButtonDialog(
               context,
               Strings.notEnoughCreditMessage,
@@ -152,7 +152,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
     int cost = 0;
     if (typeSelected[VISIT_METHOD] == VisitMethod.TEXT.index) {
       cost = widget.doctorEntity.plan.baseTextPrice;
-    } else if (typeSelected[VISIT_METHOD] == VisitMethod.VIDEO.index - 1) {
+    } else if (typeSelected[VISIT_METHOD] == VisitMethod.VIDEO.index) {
       cost = widget.doctorEntity.plan.baseVideoPrice;
     }
     cost *= (typeSelected[VISIT_DURATION_PLAN] + 1);
