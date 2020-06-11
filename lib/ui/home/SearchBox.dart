@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../constants/strings.dart';
 import '../../constants/colors.dart';
-class SearchBox extends StatefulWidget {
 
+class SearchBox extends StatefulWidget {
   Function(String, UserEntity) onPush;
   bool isPatient;
 
@@ -19,6 +19,7 @@ class SearchBox extends StatefulWidget {
     return _SearchBoxState();
   }
 }
+
 class _SearchBoxState extends State<SearchBox> {
   String searchTag;
   TextEditingController _controller;
@@ -40,17 +41,13 @@ class _SearchBoxState extends State<SearchBox> {
     return (width > 550 ? width * .6 : (width > 400 ? width * .5 : width * .4));
   }
 
-  void _changeTag() {
+  void _changeTag() {}
 
-  }
-
-  void _showTags() {
-
-  }
+  void _showTags() {}
 
   void _search(context) {
     FocusScope.of(context).unfocus();
-    SystemChrome.setEnabledSystemUIOverlays ([SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     widget.onPush(NavigatorRoutes.searchView, null);
   }
 
@@ -75,8 +72,9 @@ class _SearchBoxState extends State<SearchBox> {
       decoration: BoxDecoration(
           color: Color.fromRGBO(247, 247, 247, .9),
           borderRadius: BorderRadius.all(Radius.circular(80))),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
-          Widget>[
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
             Container(
               constraints: BoxConstraints(),
               child: SizedBox(
@@ -93,7 +91,9 @@ class _SearchBoxState extends State<SearchBox> {
                     textAlign: TextAlign.end,
                     textDirection: TextDirection.ltr,
                     decoration: InputDecoration(
-                        hintText: Strings.searchBoxHint,
+                        hintText: (widget.isPatient
+                            ? Strings.PatientSearchBoxHint
+                            : Strings.DoctorSearchBoxHint),
                         prefixIcon: Icon(
                           Icons.search,
                           size: 30,
@@ -102,21 +102,21 @@ class _SearchBoxState extends State<SearchBox> {
                         fillColor: IColors.themeColor),
                   )),
             ),
-        GestureDetector(onTap: () {
-
-        }, child: Row(
-          children: <Widget>[
-            _filterText(),
-            Container(
-              child: Icon(
-                Icons.filter_list,
-                size: 20,
-              ),
-              margin: EdgeInsets.only(left: 5),
-            ),
-          ],
-        ))
-      ]),
+            GestureDetector(
+                onTap: () {},
+                child: Row(
+                  children: <Widget>[
+                    _filterText(),
+                    Container(
+                      child: Icon(
+                        Icons.filter_list,
+                        size: 20,
+                      ),
+                      margin: EdgeInsets.only(left: 5),
+                    ),
+                  ],
+                ))
+          ]),
 //      ),child: Row(
 //        mainAxisAlignment: MainAxisAlignment.center,
 //        children: <Widget>[
