@@ -23,8 +23,8 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    checkToken();
     super.initState();
+    checkToken();
   }
 
   Future<void> checkToken() async {

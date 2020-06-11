@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/PatientTrackerBloc.dart';
@@ -67,11 +68,12 @@ class NavigatorView extends StatefulWidget {
   Function(String, dynamic) pushOnBase;
   Function(int) selectPage;
 
-  NavigatorView({Key key,
-    this.index,
-    this.navigatorKey,
-    this.pushOnBase,
-    this.selectPage})
+  NavigatorView(
+      {Key key,
+      this.index,
+      this.navigatorKey,
+      this.pushOnBase,
+      this.selectPage})
       : super(key: key);
 
   @override
@@ -88,13 +90,26 @@ class NavigatorViewState extends State<NavigatorView> {
   final VisitBloc _visitBloc = VisitBloc();
   final PictureBloc _pictureBloc = PictureBloc();
   final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
+  final NotificationBloc _notificationBloc = NotificationBloc();
+
+  @override
+  dispose() {
+    _tabSwitchBloc.close();
+    _panelSectionBloc.close();
+    _chatMessageBloc.close();
+    _searchBloc.close();
+    _visitBloc.close();
+    _pictureBloc.close();
+    _trackerBloc.close();
+    _notificationBloc.close();
+    super.dispose();
+  }
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context, {detail}) {
     switch (widget.index) {
       case -1:
         return {
-          NavigatorRoutes.root: (context) =>
-              MainPage(
+          NavigatorRoutes.root: (context) => MainPage(
                 pushOnBase: (direction, entity) {
                   push(context, direction, detail: entity);
                 },
@@ -106,20 +121,18 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.cognitiveTest: (context) =>
               _cognitiveTest(context, detail),
-          NavigatorRoutes.uploadPicDialogue: (context) =>
-              BlocProvider.value(
-                  value: _pictureBloc,
-                  child: UploadSlider(
-                    listId: detail,
-                  )),
+          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
+              value: _pictureBloc,
+              child: UploadSlider(
+                listId: detail,
+              )),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
               _virtualVisitPage(context, detail),
-          NavigatorRoutes.visitConfig: (context) =>
-              _visitConf(context, detail),
+          NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
           NavigatorRoutes.profileMenuPage: (context) =>
               _profileMenuPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
@@ -142,8 +155,7 @@ class NavigatorViewState extends State<NavigatorView> {
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
               _virtualVisitPage(context, detail),
-          NavigatorRoutes.visitConfig: (context) =>
-              _visitConf(context, detail),
+          NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
           NavigatorRoutes.profileMenuPage: (context) =>
               _profileMenuPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
@@ -170,12 +182,11 @@ class NavigatorViewState extends State<NavigatorView> {
               _patientDetailPage(context, detail),
           NavigatorRoutes.cognitiveTest: (context) =>
               _cognitiveTest(context, detail),
-          NavigatorRoutes.uploadPicDialogue: (context) =>
-              BlocProvider.value(
-                  value: _pictureBloc,
-                  child: UploadSlider(
-                    listId: detail,
-                  )),
+          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
+              value: _pictureBloc,
+              child: UploadSlider(
+                listId: detail,
+              )),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
@@ -183,8 +194,7 @@ class NavigatorViewState extends State<NavigatorView> {
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
               _virtualVisitPage(context, detail),
-          NavigatorRoutes.visitConfig: (context) =>
-              _visitConf(context, detail),
+          NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
           NavigatorRoutes.profileMenuPage: (context) =>
               _profileMenuPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
@@ -199,8 +209,7 @@ class NavigatorViewState extends State<NavigatorView> {
         return {
           NavigatorRoutes.root: (context) => _account(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-          NavigatorRoutes.visitConfig: (context) =>
-              _visitConf(context, detail),
+          NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
           NavigatorRoutes.profileMenuPage: (context) =>
               _profileMenuPage(context, detail),
         };
@@ -262,15 +271,16 @@ class NavigatorViewState extends State<NavigatorView> {
   }
 
   Widget _home(context) {
-    var entity = BlocProvider
-        .of<EntityBloc>(context)
-        .state
-        .entity;
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    _notificationBloc.add(GetNewestNotifications());
     if (entity.isDoctor) {
       return MultiBlocProvider(
           providers: [
             BlocProvider<PatientTrackerBloc>.value(
               value: _trackerBloc,
+            ),
+            BlocProvider<NotificationBloc>.value(
+              value: _notificationBloc,
             )
           ],
           child: Home(
@@ -281,27 +291,29 @@ class NavigatorViewState extends State<NavigatorView> {
             globalOnPush: widget.pushOnBase,
           ));
     } else if (entity.isPatient) {
-      return Home(
-        selectPage: widget.selectPage,
-        onPush: (direction, entity) {
-          push(context, direction, detail: entity);
-        },
-        globalOnPush: widget.pushOnBase,
-      );
+      return MultiBlocProvider(
+          providers: [
+            BlocProvider<NotificationBloc>.value(
+              value: _notificationBloc,
+            )
+          ],
+          child: Home(
+            selectPage: widget.selectPage,
+            onPush: (direction, entity) {
+              push(context, direction, detail: entity);
+            },
+            globalOnPush: widget.pushOnBase,
+          ));
     }
   }
 
   Widget _account(context, {defaultCreditForCharge}) {
-    var entity = BlocProvider
-        .of<EntityBloc>(context)
-        .state
-        .entity;
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isDoctor) {
       return DoctorProfilePage(
         onPush: (direction, entity) {
           push(context, direction, detail: entity);
         },
-
       );
     } else {
       return PatientProfilePage(
@@ -313,8 +325,7 @@ class NavigatorViewState extends State<NavigatorView> {
     }
   }
 
-  Widget _cognitiveTest(context, UserEntity entity) =>
-      MedicalTestPage(
+  Widget _cognitiveTest(context, UserEntity entity) => MedicalTestPage(
         onPush: (direction, entity) {
           push(context, direction, detail: entity);
         },
@@ -487,7 +498,7 @@ class NavigatorViewState extends State<NavigatorView> {
             if (state.panels.length > 0) return _panelPages(context);
           }
           return PanelMenu(
-                () {
+            () {
               _pop(context);
             },
             onPush: (direction) {
@@ -521,8 +532,7 @@ class NavigatorViewState extends State<NavigatorView> {
         ));
   }
 
-  Widget _searchPage(context, {isRequests = false}) =>
-      MultiBlocProvider(
+  Widget _searchPage(context, {isRequests = false}) => MultiBlocProvider(
           providers: [
             BlocProvider<SearchBloc>.value(value: _searchBloc),
 //            BlocProvider<VisitBloc>.value(value: _visitBloc),
@@ -547,7 +557,7 @@ class NavigatorViewState extends State<NavigatorView> {
           BlocProvider<SearchBloc>.value(value: _searchBloc),
         ],
         child: PanelMenu(
-              () {
+          () {
             _pop(context);
           },
           onPush: (direction) {
@@ -577,7 +587,6 @@ class NavigatorViewState extends State<NavigatorView> {
       },
     );
   }
-
 
   _profileMenuPage(BuildContext context, entity) {
     return ProfileMenuPage(

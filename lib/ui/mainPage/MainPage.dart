@@ -39,6 +39,7 @@ class _MainPageState extends State<MainPage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  bool _isFCMConfiged = false;
 
   ProgressDialog _progressDialogue;
   Map<int, GlobalKey<NavigatorViewState>> _children = {
@@ -59,35 +60,33 @@ class _MainPageState extends State<MainPage> {
     4: GlobalKey<NavigatorState>(),
   };
 
-
-
   @override
   void initState() {
-
     // initialize socket helper for web socket messages
     SocketHelper().init('185.252.30.163');
-
-
-    // get user entity & panels, also periodically update entity's info
-    final _entityBloc = BlocProvider.of<EntityBloc>(context);
-    _entityBloc.add(EntityGet());
-    var _panelBloc = BlocProvider.of<PanelBloc>(context);
-    _panelBloc.add(GetMyPanels());
-    _entityBloc.listen((data) {
-      if (_timer == null)
-        _timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
-          _entityBloc.add(EntityUpdate());
-          _panelBloc.add(GetMyPanels());
-        });
-    });
-     _enableFCM();
+    if (!_isFCMConfiged) {
+      // get user entity & panels, also periodically update entity's info
+      final _entityBloc = BlocProvider.of<EntityBloc>(context);
+      _entityBloc.add(EntityGet());
+      var _panelBloc = BlocProvider.of<PanelBloc>(context);
+      _panelBloc.add(GetMyPanels());
+      _entityBloc.listen((data) {
+        if (_timer == null)
+          _timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
+            _entityBloc.add(EntityUpdate());
+            _panelBloc.add(GetMyPanels());
+          });
+      });
+      _enableFCM();
+//      setState(() {
+//        _isFCMConfiged = true;
+//      });
+    }
     super.initState();
-
   }
 
   Future _enableFCM() async {
     try {
-
       _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
           print("onMessage: $message");
@@ -99,37 +98,39 @@ class _MainPageState extends State<MainPage> {
         onLaunch: (Map<String, dynamic> message) async {
           print("onLaunch: $message");
         },
-        onResume: ( Map<String, dynamic> message) async {
+        onResume: (Map<String, dynamic> message) async {
           print("onResume: $message");
         },
       );
 
-
-      _firebaseMessaging.requestNotificationPermissions(
-          const IosNotificationSettings(
-              sound: true, badge: true, alert: true, provisional: true));
-      _firebaseMessaging.onIosSettingsRegistered
-          .listen((IosNotificationSettings settings) {
-        print("Settings registered: $settings");
-      });
+      if (Platform.isIOS) {
+        _firebaseMessaging.requestNotificationPermissions(
+            const IosNotificationSettings(
+                sound: true, badge: true, alert: true, provisional: true));
+        _firebaseMessaging.onIosSettingsRegistered
+            .listen((IosNotificationSettings settings) {
+          print("Settings registered: $settings");
+        });
+      }
 
       _firebaseMessaging.getToken().then((String fcmToken) {
         assert(fcmToken != null);
         print("FCM " + fcmToken);
         try {
           NotificationRepository().registerDevice(fcmToken);
-        } on BadRequestException{
+        } on BadRequestException {
           print('kooooooft');
-        }
-        catch(_) {
+          _isFCMConfiged = true;
+          return;
+        } catch (_) {
           print('register device failed fcm');
+          _isFCMConfiged = true;
+          return;
         }
       });
 
-
-
       var initializationSettingsAndroid =
-      new AndroidInitializationSettings('mipmap/ic_launcher');
+          new AndroidInitializationSettings('mipmap/ic_launcher');
       var initializationSettingsIOS = new IOSInitializationSettings();
 
       var initializationSettings = new InitializationSettings(
@@ -138,8 +139,11 @@ class _MainPageState extends State<MainPage> {
       flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
       flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: onSelectNotification);
-    } catch(_) {
+//      _isFCMConfiged = true;
+    } catch (_) {
       print("oh oh");
+      _isFCMConfiged = true;
+      return;
     }
   }
 
@@ -163,7 +167,6 @@ class _MainPageState extends State<MainPage> {
   Future onSelectNotification(String payload) async {
     joinVideoCall(context, payload);
   }
-
 
   void _selectPage(int index) {
     if (_currentIndex == index) {

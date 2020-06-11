@@ -142,8 +142,8 @@ class _NotificationPageState extends State<NotificationPage> {
               right: MediaQuery.of(context).size.width * 0.15,
               top: 200,
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.7,
+                width: MediaQuery.of(context).size.width * 0.85,
+                height: MediaQuery.of(context).size.height * 0.7 - 80,
                 child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,

@@ -40,12 +40,18 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    _notificationBloc.add(GetNewestNotifications());
+//    _notificationBloc.add(GetNewestNotifications());
     _medicineBloc.add(MedicineGet());
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isDoctor)
       BlocProvider.of<PatientTrackerBloc>(context).add(TrackerGet());
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(Home oldWidget) {
+//    _notificationBloc.add(GetNewestNotifications());
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -185,17 +191,18 @@ class _HomeState extends State<Home> {
                       },
                       child: Row(children: <Widget>[
                         BlocBuilder<NotificationBloc, NotificationState>(
-                            bloc: _notificationBloc,
+//                            bloc: _notificationBloc,
                             builder: (context, state) {
-                              if (state is NotificationsLoaded)
-                                return HomeNotification(
-                                    newNotificationCount:
-                                        state.notifications.newestEventsCounts);
-                              else
-                                return HomeNotification(
-                                  newNotificationCount: 0,
-                                );
-                            }),
+                          if (state.notifications != null &&
+                              state.notifications.newestEventsCounts != null)
+                            return HomeNotification(
+                                newNotificationCount:
+                                    state.notifications.newestEventsCounts);
+                          else
+                            return HomeNotification(
+                              newNotificationCount: 0,
+                            );
+                        }),
 //                        OnCallMedicalHeaderIcon()
                       ]))),
               Container(

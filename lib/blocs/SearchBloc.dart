@@ -41,7 +41,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       searchResult = await _repository.searchPatientRequests(event.text);
       yield SearchLoaded(result: searchResult, count: searchResult.count);
     } catch (e) {
-      yield SearchError();
+      yield SearchError(count: state.count, result: state.result);
     }
   }
 
@@ -87,16 +87,16 @@ abstract class SearchState {
   SearchState({this.result, this.count = 0});
 }
 
-class SearchError extends SearchState {}
+class SearchError extends SearchState {
+  SearchError({result, count = 0}) : super(result: result, count: count);
+}
 
 class SearchLoaded extends SearchState {
-
-  SearchLoaded({result, count}) : super(result: result, count: count);
+  SearchLoaded({result, count = 0}) : super(result: result, count: count);
 }
 
 class SearchLoading extends SearchState {
-
-  SearchLoading({result, count}) : super(result: result, count: count);
+  SearchLoading({result, count = 0}) : super(result: result, count: count);
 }
 
 class SearchUnloaded extends SearchState {}
