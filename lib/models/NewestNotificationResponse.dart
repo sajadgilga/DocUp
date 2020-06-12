@@ -10,10 +10,12 @@ class NewestNotificationResponse {
   NewestNotificationResponse.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('newest_events_counts'))
       newestEventsCounts = json['newest_events_counts'];
-    else newestEventsCounts = 0;
+    else
+      newestEventsCounts = 0;
     if (json.containsKey('newest_drugs_counts'))
       newestDrugsCounts = json['newest_drugs_counts'];
-    else newestDrugsCounts = 0;
+    else
+      newestDrugsCounts = 0;
     newestDrugs = [];
     if (json.containsKey('newest_drugs')) if (json['newest_drugs'] != null)
       json['newest_drugs']
@@ -22,5 +24,6 @@ class NewestNotificationResponse {
     if (json['newest_events'] != null)
       json['newest_events']
           .forEach((event) => newestEvents.add(Notification.fromJson(event)));
+    newestEvents = newestEvents.reversed.toList();
   }
 }

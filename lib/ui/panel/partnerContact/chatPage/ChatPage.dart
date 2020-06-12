@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/visit_time/visit_time_bloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/ChatMessage.dart';
@@ -175,17 +176,32 @@ class _ChatPageState extends State<ChatPage> {
                 )
               ]);
           } else if (state.entity.panel.status == 3 ||
-              state.entity.panel.status == 2)
+              state.entity.panel.status == 2) {
 //            return _ChatPage();
-            return Stack(children: <Widget>[
-              _ChatPage(),
-              PanelAlert(
-                label: Strings.notRequestTimeDoctorSide,
-                buttonLabel: Strings.waitLabel,
-                btnColor: IColors.disabledButton,
-              ) //TODO: change to timer
-            ]);
-          else if (state.entity.panel.status == 6 ||
+            return BlocBuilder<VisitTimeBloc, VisitTimeState>(
+              builder: (context, _visitTimeState) {
+                String _visitTime;
+                if (_visitTimeState is VisitTimeLoadedState)
+                  _visitTime = replaceFarsiNumber(normalizeDateAndTime(
+                      _visitTimeState
+                          .visit
+                          .visitTime));
+                return Stack(children: <Widget>[
+                  _ChatPage(),
+                  PanelAlert(
+                    label: 'ویزیت شما '
+                        '\n'
+                        '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
+                        '\n'
+                        'است' /* Strings.notRequestTimeDoctorSide*/,
+                    buttonLabel: Strings.waitLabel,
+                    btnColor: IColors.disabledButton,
+                    size: AlertSize.LG,
+                  ) //TODO: change to timer
+                ]);
+              },
+            );
+          } else if (state.entity.panel.status == 6 ||
               state.entity.panel.status == 7) {
             if (state.entity.isPatient)
               return Stack(children: <Widget>[

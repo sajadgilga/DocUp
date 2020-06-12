@@ -10,13 +10,13 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   get initialState => NotificationUnloaded();
 
   Stream<NotificationState> _get() async* {
-    yield NotificationLoading();
+    yield NotificationLoading(notifications: state.notifications);
     try {
       final NewestNotificationResponse notifications =
           await _repository.getNewestNotifications();
       yield NotificationsLoaded(notifications: notifications);
     } catch (e) {
-      yield NotificationError();
+      yield NotificationError(notifications: state.notifications);
     }
   }
 
@@ -35,23 +35,26 @@ class GetNewestNotifications extends NotificationEvent {}
 
 // states
 abstract class NotificationState extends Equatable {
-  NotificationState();
-
-  @override
-  List<Object> get props => [];
-}
-
-class NotificationUnloaded extends NotificationState {}
-
-class NotificationLoading extends NotificationState {}
-
-class NotificationsLoaded extends NotificationState {
   final NewestNotificationResponse notifications;
 
-  NotificationsLoaded({@override this.notifications});
+  NotificationState({this.notifications});
 
   @override
   List<Object> get props => [notifications];
 }
 
-class NotificationError extends NotificationState {}
+class NotificationUnloaded extends NotificationState {
+  NotificationUnloaded({notifications}) : super(notifications: notifications);
+}
+
+class NotificationLoading extends NotificationState {
+  NotificationLoading({notifications}) : super(notifications: notifications);
+}
+
+class NotificationsLoaded extends NotificationState {
+  NotificationsLoaded({notifications}) : super(notifications: notifications);
+}
+
+class NotificationError extends NotificationState {
+  NotificationError({notifications}) : super(notifications: notifications);
+}

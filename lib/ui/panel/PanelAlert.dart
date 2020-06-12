@@ -1,13 +1,47 @@
 import 'package:docup/constants/colors.dart';
 import 'package:flutter/material.dart';
 
+enum AlertSize { SM, MD, LG }
+
+extension AlertSizeExtension on AlertSize {
+  double get width {
+    switch (this) {
+      case AlertSize.LG:
+        return 320;
+      case AlertSize.MD:
+        return 280;
+      case AlertSize.SM:
+        return 150;
+    }
+    return 280;
+  }
+
+  double get height {
+    switch (this) {
+      case AlertSize.LG:
+        return 300;
+      case AlertSize.MD:
+        return 280;
+      case AlertSize.SM:
+        return 150;
+    }
+    return 280;
+  }
+}
+
 class PanelAlert extends StatelessWidget {
   final String label;
   final String buttonLabel;
   final Function callback;
   final Color btnColor;
+  final AlertSize size;
 
-  PanelAlert({this.label, this.buttonLabel, this.callback, this.btnColor});
+  PanelAlert(
+      {this.label,
+      this.buttonLabel,
+      this.callback,
+      this.btnColor,
+      this.size = AlertSize.MD});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +60,8 @@ class PanelAlert extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white),
-              constraints: BoxConstraints(maxHeight: 280, maxWidth: 280),
+              constraints:
+                  BoxConstraints(maxHeight: size.height, maxWidth: size.width),
               padding:
                   EdgeInsets.only(top: 80, bottom: 40, right: 40, left: 40),
               child: Column(
@@ -47,7 +82,9 @@ class PanelAlert extends StatelessWidget {
                             top: 10, bottom: 10, right: 25, left: 25),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(25)),
-                            color: (btnColor != null? btnColor:IColors.themeColor)),
+                            color: (btnColor != null
+                                ? btnColor
+                                : IColors.themeColor)),
                         child: Text(
                           buttonLabel,
                           textAlign: TextAlign.center,

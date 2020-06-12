@@ -15,40 +15,44 @@ class VisitEntity {
   int visitDurationPlan;
   String visitTime;
 
-  VisitEntity({this.id,
-    this.createdDate,
-    this.modifiedDate,
-    this.enabled,
-    this.doctorMessage,
-    this.title,
-    this.patientMessage,
-    this.status,
-    this.doctor,
-    this.patient,
-    this.panel,
-    this.visitType,
-    this.visitMethod,
-    this.visitDurationPlan,
-    this.visitTime});
+  VisitEntity(
+      {this.id,
+      this.createdDate,
+      this.modifiedDate,
+      this.enabled,
+      this.doctorMessage,
+      this.title,
+      this.patientMessage,
+      this.status,
+      this.doctor,
+      this.patient,
+      this.panel,
+      this.visitType,
+      this.visitMethod,
+      this.visitDurationPlan,
+      this.visitTime});
 
   VisitEntity.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    createdDate = json['created_date'];
-    modifiedDate = json['modified_date'];
-    enabled = json['enabled'];
-    doctorMessage = json['doctor_message'];
-    title = json['title'];
-    patientMessage = json['patient_message'];
-    status = json['status'];
-    doctor = json['doctor'];
-    patient = json['patient'];
-    panel = json['panel'];
-    visitType = json['visit_type'];
-    visitMethod = json['visit_method'];
-    visitDurationPlan = json['visit_duration_plan'];
-    visitTime = json['request_visit_time'];
+    if (json.containsKey('id')) id = json['id'];
+    if (json.containsKey('created_date')) createdDate = json['created_date'];
+    if (json.containsKey('modified_date')) modifiedDate = json['modified_date'];
+    if (json.containsKey('enabled')) enabled = json['enabled'];
+    if (json.containsKey('doctor_message'))
+      doctorMessage = json['doctor_message'];
+    if (json.containsKey('title')) title = json['title'];
+    if (json.containsKey('patient_message'))
+      patientMessage = json['patient_message'];
+    if (json.containsKey('status')) status = json['status'];
+    if (json.containsKey('doctor')) doctor = json['doctor'];
+    if (json.containsKey('patient')) patient = json['patient'];
+    if (json.containsKey('panel')) panel = json['panel'];
+    if (json.containsKey('visit_type')) visitType = json['visit_type'];
+    if (json.containsKey('visit_method')) visitMethod = json['visit_method'];
+    if (json.containsKey('visit_duration_plan'))
+      visitDurationPlan = json['visit_duration_plan'];
+    if (json.containsKey('request_visit_time'))
+      visitTime = json['request_visit_time'];
   }
-
 
   Map<String, dynamic> toJson({bool isAcceptance = false}) {
     final Map<String, dynamic> data = new Map<String, dynamic>();

@@ -1,5 +1,6 @@
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/VideoCallBloc.dart';
+import 'package:docup/blocs/visit_time/visit_time_bloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/AgoraChannelEntity.dart';
@@ -56,63 +57,77 @@ class _VideoCallPageState extends State<VideoCallPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
-          if (state.entity.panel.status == 0 ||
-              state.entity.panel.status == 1) if (state.entity.isPatient)
-            return Stack(children: <Widget>[
-              _VideoCallPage(),
-              PanelAlert(
-                label: Strings.requestSentLabel,
-                buttonLabel: Strings.waitingForApproval,
-                btnColor: IColors.disabledButton,
-              )
-            ]);
-          else
-            return Stack(children: <Widget>[
-              _VideoCallPage(),
-              PanelAlert(
-                label: Strings.requestSentLabelDoctorSide,
-                buttonLabel: Strings.waitingForApprovalDoctorSide,
-                callback: () {
-                  widget.onPush(NavigatorRoutes.patientDialogue,
-                      state.entity.partnerEntity);
-                },
-              )
-            ]);
-          else if (state.entity.panel.status == 3 ||
-              state.entity.panel.status == 2)
-            return Stack(children: <Widget>[
-              _VideoCallPage(),
-              PanelAlert(
-                label: Strings.notRequestTimeDoctorSide,
-                buttonLabel: Strings.waitLabel,
-                btnColor: IColors.disabledButton,
-              )
-            ]);
+        if (state.entity.panel.status == 0 ||
+            state.entity.panel.status == 1) if (state.entity.isPatient)
+          return Stack(children: <Widget>[
+            _VideoCallPage(),
+            PanelAlert(
+              label: Strings.requestSentLabel,
+              buttonLabel: Strings.waitingForApproval,
+              btnColor: IColors.disabledButton,
+            )
+          ]);
+        else
+          return Stack(children: <Widget>[
+            _VideoCallPage(),
+            PanelAlert(
+              label: Strings.requestSentLabelDoctorSide,
+              buttonLabel: Strings.waitingForApprovalDoctorSide,
+              callback: () {
+                widget.onPush(NavigatorRoutes.patientDialogue,
+                    state.entity.partnerEntity);
+              },
+            )
+          ]);
+        else if (state.entity.panel.status == 3 ||
+            state.entity.panel.status == 2) {
+          return BlocBuilder<VisitTimeBloc, VisitTimeState>(
+            builder: (context, _visitTimeState) {
+              String _visitTime;
+              if (_visitTimeState is VisitTimeLoadedState)
+                _visitTime = replaceFarsiNumber(
+                    normalizeDateAndTime(_visitTimeState.visit.visitTime));
+              return Stack(children: <Widget>[
+                _VideoCallPage(),
+                PanelAlert(
+                  label: 'ویزیت شما '
+                      '\n'
+                      '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
+                      '\n'
+                      'است' /* Strings.notRequestTimeDoctorSide*/,
+                  buttonLabel: Strings.waitLabel,
+                  btnColor: IColors.disabledButton,
+                  size: AlertSize.LG,
+                ) //TODO: change to timer
+              ]);
+            },
+          );
+        }
 //            return _VideoCallPage();
-          else if (state.entity.panel.status == 6 ||
-              state.entity.panel.status == 7) if (state.entity.isPatient)
-            return Stack(children: <Widget>[
-              _VideoCallPage(),
-              PanelAlert(
-                label: Strings.noAvailableVirtualVisit,
-                buttonLabel: Strings.reserveVirtualVisit,
-                callback: () {
-                  widget.onPush(NavigatorRoutes.doctorDialogue,
-                      state.entity.partnerEntity);
-                },
-              )
-            ]);
-          else
-            return Stack(children: <Widget>[
-              _VideoCallPage(),
-              PanelAlert(
-                label: Strings.noAvailableVirtualVisit,
-                buttonLabel: Strings.reserveVirtualVisitDoctorSide,
-                btnColor: IColors.disabledButton,
-              )
-            ]);
-          else
-            return _VideoCallPage();
+        else if (state.entity.panel.status == 6 ||
+            state.entity.panel.status == 7) if (state.entity.isPatient)
+          return Stack(children: <Widget>[
+            _VideoCallPage(),
+            PanelAlert(
+              label: Strings.noAvailableVirtualVisit,
+              buttonLabel: Strings.reserveVirtualVisit,
+              callback: () {
+                widget.onPush(
+                    NavigatorRoutes.doctorDialogue, state.entity.partnerEntity);
+              },
+            )
+          ]);
+        else
+          return Stack(children: <Widget>[
+            _VideoCallPage(),
+            PanelAlert(
+              label: Strings.noAvailableVirtualVisit,
+              buttonLabel: Strings.reserveVirtualVisitDoctorSide,
+              btnColor: IColors.disabledButton,
+            )
+          ]);
+        else
+          return _VideoCallPage();
       },
     );
   }
@@ -121,9 +136,10 @@ class _VideoCallPageState extends State<VideoCallPage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text(widget.entity.isPatient ?
-              "در صورت تایید پزشک، امکان برقراری ارتباط از طریق تماس تصویری امکان پذیر است" :
-              "با شروع تماس تصویری از سمت بیمار نوتیفیکیش‌ی جهت ملحق شدن برای شما ارسال خواهد شد",
+            child: Text(
+              widget.entity.isPatient
+                  ? "در صورت تایید پزشک، امکان برقراری ارتباط از طریق تماس تصویری امکان پذیر است"
+                  : "با شروع تماس تصویری از سمت بیمار نوتیفیکیش‌ی جهت ملحق شدن برای شما ارسال خواهد شد",
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),

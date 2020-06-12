@@ -251,7 +251,8 @@ class _SearchResultPatientItem extends StatelessWidget {
 //                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
 //          );
 //        });
-    onPush(NavigatorRoutes.patientDialogue, entity);
+    if (entity.status == 0 || entity.status == 1)
+      onPush(NavigatorRoutes.patientDialogue, entity);
   }
 
   Widget _image(context) => Container(

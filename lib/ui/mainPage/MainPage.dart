@@ -39,6 +39,7 @@ class _MainPageState extends State<MainPage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  bool _isFCMConfiged = false;
 
   ProgressDialog _progressDialogue;
   Map<int, GlobalKey<NavigatorViewState>> _children = {
@@ -63,20 +64,24 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // initialize socket helper for web socket messages
     SocketHelper().init('185.252.30.163');
-
-    // get user entity & panels, also periodically update entity's info
-    final _entityBloc = BlocProvider.of<EntityBloc>(context);
-    _entityBloc.add(EntityGet());
-    var _panelBloc = BlocProvider.of<PanelBloc>(context);
-    _panelBloc.add(GetMyPanels());
-    _entityBloc.listen((data) {
-      if (_timer == null)
-        _timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
-          _entityBloc.add(EntityUpdate());
-          _panelBloc.add(GetMyPanels());
-        });
-    });
-    _enableFCM();
+    if (!_isFCMConfiged) {
+      // get user entity & panels, also periodically update entity's info
+      final _entityBloc = BlocProvider.of<EntityBloc>(context);
+      _entityBloc.add(EntityGet());
+      var _panelBloc = BlocProvider.of<PanelBloc>(context);
+      _panelBloc.add(GetMyPanels());
+      _entityBloc.listen((data) {
+        if (_timer == null)
+          _timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
+            _entityBloc.add(EntityUpdate());
+            _panelBloc.add(GetMyPanels());
+          });
+      });
+      _enableFCM();
+//      setState(() {
+//        _isFCMConfiged = true;
+//      });
+    }
     super.initState();
   }
 
@@ -98,13 +103,15 @@ class _MainPageState extends State<MainPage> {
         },
       );
 
-      _firebaseMessaging.requestNotificationPermissions(
-          const IosNotificationSettings(
-              sound: true, badge: true, alert: true, provisional: true));
-      _firebaseMessaging.onIosSettingsRegistered
-          .listen((IosNotificationSettings settings) {
-        print("Settings registered: $settings");
-      });
+      if (Platform.isIOS) {
+        _firebaseMessaging.requestNotificationPermissions(
+            const IosNotificationSettings(
+                sound: true, badge: true, alert: true, provisional: true));
+        _firebaseMessaging.onIosSettingsRegistered
+            .listen((IosNotificationSettings settings) {
+          print("Settings registered: $settings");
+        });
+      }
 
       _firebaseMessaging.getToken().then((String fcmToken) {
         assert(fcmToken != null);
@@ -113,8 +120,12 @@ class _MainPageState extends State<MainPage> {
           NotificationRepository().registerDevice(fcmToken);
         } on BadRequestException {
           print('kooooooft');
+          _isFCMConfiged = true;
+          return;
         } catch (_) {
           print('register device failed fcm');
+          _isFCMConfiged = true;
+          return;
         }
       });
 
@@ -130,6 +141,8 @@ class _MainPageState extends State<MainPage> {
           onSelectNotification: onSelectNotification);
     } catch (_) {
       print("oh oh");
+      _isFCMConfiged = true;
+      return;
     }
   }
 

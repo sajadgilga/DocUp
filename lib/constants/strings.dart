@@ -28,6 +28,8 @@ class Strings {
   static const String enterAction = "ورود";
   static const String accountQuestion = "حساب کاربری دارید؟";
   static final String searchBoxHint = 'جستجو';
+  static final String PatientSearchBoxHint = 'جستجوی پزشک';
+  static final String DoctorSearchBoxHint =  'جستجوی بیماران شما';
   static final String docupIntroHomePart1 = 'داک‌ آپ،';
 
 //
