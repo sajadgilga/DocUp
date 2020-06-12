@@ -76,7 +76,7 @@ class _MainPageState extends State<MainPage> {
             _panelBloc.add(GetMyPanels());
           });
       });
-//      _enableFCM();
+      _enableFCM();
 //      setState(() {
 //        _isFCMConfiged = true;
 //      });
@@ -90,7 +90,7 @@ class _MainPageState extends State<MainPage> {
           print("onMessage: $message");
           await _showNotificationWithDefaultSound(
               message['notification']['title'],
-              message['notification']['title']);
+              message['notification']['body']);
         },
         onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
         onLaunch: (Map<String, dynamic> message) async {
