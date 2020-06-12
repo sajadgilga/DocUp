@@ -23,6 +23,7 @@ class IColors {
   static const Color darkBlue = Color.fromRGBO(44, 62, 80, 1);
   static const Color background = Color.fromRGBO(242, 242, 242, 1);
   static const Color doctorChatBubble = Color.fromRGBO(242, 242, 242, 1);
+  static const Color whiteTransparent = Color.fromRGBO(242, 242, 242, .9);
   static const Color disabledButton = Colors.black54;
   static Color themeColor = blue;
   static Color selfChatBubble = themeColor;

@@ -29,6 +29,7 @@ class Strings {
   static const String accountQuestion = "حساب کاربری دارید؟";
   static final String searchBoxHint = 'جستجو';
   static final String PatientSearchBoxHint = 'جستجوی پزشک';
+  static final String PatientSearchBoxTooltip = 'برای جستجو و اتصال به پزشک، کلیک کنید';
   static final String DoctorSearchBoxHint =  'جستجوی بیماران شما';
   static final String docupIntroHomePart1 = 'داک‌ آپ،';
 

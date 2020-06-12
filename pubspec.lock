@@ -166,7 +166,7 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.3"
+    version: "1.4.4+1"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
@@ -211,7 +211,7 @@ packages:
       name: google_maps_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.27+2"
+    version: "0.5.28+1"
   google_maps_flutter_platform_interface:
     dependency: transitive
     description:
@@ -485,6 +485,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2+7"
+  simple_tooltip:
+    dependency: "direct main"
+    description:
+      name: simple_tooltip
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.10"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -618,4 +625,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.6.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.16.3 <2.0.0"

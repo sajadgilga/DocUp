@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_tooltip/simple_tooltip.dart';
 import '../../constants/strings.dart';
 import '../../constants/colors.dart';
 
@@ -23,6 +27,7 @@ class SearchBox extends StatefulWidget {
 class _SearchBoxState extends State<SearchBox> {
   String searchTag;
   TextEditingController _controller;
+  bool _tooltip = false;
 
   @override
   void dispose() {
@@ -34,7 +39,21 @@ class _SearchBoxState extends State<SearchBox> {
   @override
   void initState() {
     searchTag = (widget.isPatient ? 'تخصص' : 'درحال درمان');
+    _setToolTip();
     super.initState();
+  }
+
+  void _setToolTip() async {
+    var _prefs = await SharedPreferences.getInstance();
+    if (!_prefs.containsKey('tooltip_shown')) {
+      _tooltip = widget.isPatient;
+      Timer(Duration(seconds: 10), () {
+        setState(() {
+          _tooltip = false;
+        });
+      });
+      _prefs.setBool("tooltip_shown", true);
+    }
   }
 
   double _getSearchBoxWidth(width) {
@@ -62,61 +81,77 @@ class _SearchBoxState extends State<SearchBox> {
   @override
   Widget build(BuildContext context) {
     FocusScope.of(context).unfocus();
-    return Container(
-      width: MediaQuery.of(context).size.width * .85,
-      padding: EdgeInsets.only(
-          top: 5,
-          bottom: 20,
-          left: MediaQuery.of(context).size.width * .07,
-          right: MediaQuery.of(context).size.width * .04),
-      decoration: BoxDecoration(
-          color: Color.fromRGBO(247, 247, 247, .9),
-          borderRadius: BorderRadius.all(Radius.circular(80))),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(
-              constraints: BoxConstraints(),
-              child: SizedBox(
-                  width: _getSearchBoxWidth(MediaQuery.of(context).size.width),
-                  height: 50,
-                  child: TextField(
-                    controller: _controller,
+    return SimpleTooltip(
+        hideOnTooltipTap: true,
+        show: _tooltip,
+        tooltipDirection: TooltipDirection.down,
+        backgroundColor: IColors.whiteTransparent,
+        borderColor: IColors.themeColor,
+        content: Text(
+          Strings.PatientSearchBoxTooltip,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: 12,
+            decoration: TextDecoration.none,
+          ),
+        ),
+        child: Container(
+          width: MediaQuery.of(context).size.width * .85,
+          padding: EdgeInsets.only(
+              top: 5,
+              bottom: 20,
+              left: MediaQuery.of(context).size.width * .07,
+              right: MediaQuery.of(context).size.width * .04),
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(247, 247, 247, .9),
+              borderRadius: BorderRadius.all(Radius.circular(80))),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  constraints: BoxConstraints(),
+                  child: SizedBox(
+                      width:
+                          _getSearchBoxWidth(MediaQuery.of(context).size.width),
+                      height: 50,
+                      child: TextField(
+                        controller: _controller,
 //                    onSubmitted: (text) {
 //                      _search();
 //                    },
-                    onTap: () {
-                      _search(context);
-                    },
-                    textAlign: TextAlign.end,
-                    textDirection: TextDirection.ltr,
-                    decoration: InputDecoration(
-                        hintText: (widget.isPatient
-                            ? Strings.PatientSearchBoxHint
-                            : Strings.DoctorSearchBoxHint),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          size: 30,
+                        onTap: () {
+                          _search(context);
+                        },
+                        textAlign: TextAlign.end,
+                        textDirection: TextDirection.ltr,
+                        decoration: InputDecoration(
+                            hintText: (widget.isPatient
+                                ? Strings.PatientSearchBoxHint
+                                : Strings.DoctorSearchBoxHint),
+                            prefixIcon: Icon(
+                              Icons.search,
+                              size: 30,
+                            ),
+                            focusColor: IColors.themeColor,
+                            fillColor: IColors.themeColor),
+                      )),
+                ),
+                GestureDetector(
+                    onTap: () {},
+                    child: Row(
+                      children: <Widget>[
+                        _filterText(),
+                        Container(
+                          child: Icon(
+                            Icons.filter_list,
+                            size: 20,
+                          ),
+                          margin: EdgeInsets.only(left: 5),
                         ),
-                        focusColor: IColors.themeColor,
-                        fillColor: IColors.themeColor),
-                  )),
-            ),
-            GestureDetector(
-                onTap: () {},
-                child: Row(
-                  children: <Widget>[
-                    _filterText(),
-                    Container(
-                      child: Icon(
-                        Icons.filter_list,
-                        size: 20,
-                      ),
-                      margin: EdgeInsets.only(left: 5),
-                    ),
-                  ],
-                ))
-          ]),
+                      ],
+                    ))
+              ]),
 //      ),child: Row(
 //        mainAxisAlignment: MainAxisAlignment.center,
 //        children: <Widget>[
@@ -129,6 +164,6 @@ class _SearchBoxState extends State<SearchBox> {
 //          Icon(Icons.filter_list)
 //        ],
 //      ),
-    );
+        ));
   }
 }
