@@ -59,14 +59,10 @@ class _MainPageState extends State<MainPage> {
     4: GlobalKey<NavigatorState>(),
   };
 
-
-
   @override
   void initState() {
-
     // initialize socket helper for web socket messages
     SocketHelper().init('185.252.30.163');
-
 
     // get user entity & panels, also periodically update entity's info
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
@@ -80,14 +76,12 @@ class _MainPageState extends State<MainPage> {
           _panelBloc.add(GetMyPanels());
         });
     });
-     _enableFCM();
+    _enableFCM();
     super.initState();
-
   }
 
   Future _enableFCM() async {
     try {
-
       _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
           print("onMessage: $message");
@@ -99,11 +93,10 @@ class _MainPageState extends State<MainPage> {
         onLaunch: (Map<String, dynamic> message) async {
           print("onLaunch: $message");
         },
-        onResume: ( Map<String, dynamic> message) async {
+        onResume: (Map<String, dynamic> message) async {
           print("onResume: $message");
         },
       );
-
 
       _firebaseMessaging.requestNotificationPermissions(
           const IosNotificationSettings(
@@ -118,18 +111,15 @@ class _MainPageState extends State<MainPage> {
         print("FCM " + fcmToken);
         try {
           NotificationRepository().registerDevice(fcmToken);
-        } on BadRequestException{
+        } on BadRequestException {
           print('kooooooft');
-        }
-        catch(_) {
+        } catch (_) {
           print('register device failed fcm');
         }
       });
 
-
-
       var initializationSettingsAndroid =
-      new AndroidInitializationSettings('mipmap/ic_launcher');
+          new AndroidInitializationSettings('mipmap/ic_launcher');
       var initializationSettingsIOS = new IOSInitializationSettings();
 
       var initializationSettings = new InitializationSettings(
@@ -138,13 +128,12 @@ class _MainPageState extends State<MainPage> {
       flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
       flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: onSelectNotification);
-    } catch(_) {
+    } catch (_) {
       print("oh oh");
     }
   }
 
   Future _showNotificationWithDefaultSound(String title, String body) async {
-    var jsonBody = json.decode(body);
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'channel_id', 'channel_name', 'channel_description',
         importance: Importance.Max, priority: Priority.High);
@@ -156,14 +145,19 @@ class _MainPageState extends State<MainPage> {
       title,
       title,
       platformChannelSpecifics,
-      payload: jsonBody['payload'],
+      payload: body,
     );
   }
 
-  Future onSelectNotification(String payload) async {
-    joinVideoCall(context, payload);
-  }
+  Future onSelectNotification(String body) async {
+    var jsonBody = json.decode(body);
 
+    int type = jsonBody['type'];
+    String payload = jsonBody['payload'];
+    if (type == 1) {
+      joinVideoCall(context, payload);
+    }
+  }
 
   void _selectPage(int index) {
     if (_currentIndex == index) {

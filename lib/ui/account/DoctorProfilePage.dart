@@ -65,8 +65,9 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                   ActionButton(
                     color: IColors.themeColor,
                     title: "اطلاعات ویزیت مجازی و حضوری",
-                    callBack: () => widget.onPush(
-                        NavigatorRoutes.visitConfig, doctorEntity),
+                    callBack: () => showNextVersionDialog(context),
+//                    callBack: () => widget.onPush(
+//                        NavigatorRoutes.visitConfig, doctorEntity),
                   )
                 ],
               ));
