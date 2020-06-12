@@ -64,7 +64,6 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // initialize socket helper for web socket messages
     SocketHelper().init('185.252.30.163');
-    if (!_isFCMConfiged) {
       // get user entity & panels, also periodically update entity's info
       final _entityBloc = BlocProvider.of<EntityBloc>(context);
       _entityBloc.add(EntityGet());
@@ -81,7 +80,6 @@ class _MainPageState extends State<MainPage> {
 //      setState(() {
 //        _isFCMConfiged = true;
 //      });
-    }
     super.initState();
   }
 
@@ -92,7 +90,7 @@ class _MainPageState extends State<MainPage> {
           print("onMessage: $message");
           await _showNotificationWithDefaultSound(
               message['notification']['title'],
-              message['notification']['body']);
+              message['notification']['title']);
         },
         onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
         onLaunch: (Map<String, dynamic> message) async {

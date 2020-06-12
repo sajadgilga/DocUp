@@ -64,7 +64,8 @@ class PanelMenuMainItem extends StatelessWidget {
   }
 
   void _selectItem({item, context}) {
-    if ((!isPatient && doctorSection != DoctorPanelSection.DOCTOR_INTERFACE)) {
+    if ((!isPatient && doctorSection != DoctorPanelSection.DOCTOR_INTERFACE) ||
+        (isPatient && patientSection == PatientPanelSection.HEALTH_CALENDAR)) {
       showNextVersionDialog(context);
       return;
     }
