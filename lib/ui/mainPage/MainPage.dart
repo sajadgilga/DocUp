@@ -147,7 +147,6 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future _showNotificationWithDefaultSound(String title, String body) async {
-    var jsonBody = json.decode(body);
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'channel_id', 'channel_name', 'channel_description',
         importance: Importance.Max, priority: Priority.High);
@@ -159,12 +158,18 @@ class _MainPageState extends State<MainPage> {
       title,
       title,
       platformChannelSpecifics,
-      payload: jsonBody['payload'],
+      payload: body,
     );
   }
 
-  Future onSelectNotification(String payload) async {
-    joinVideoCall(context, payload);
+  Future onSelectNotification(String body) async {
+    var jsonBody = json.decode(body);
+
+    int type = jsonBody['type'];
+    String payload = jsonBody['payload'];
+    if (type == 1) {
+      joinVideoCall(context, payload);
+    }
   }
 
   void _selectPage(int index) {

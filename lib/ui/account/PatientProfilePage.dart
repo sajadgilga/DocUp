@@ -167,7 +167,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                " ${state is EntityLoaded && state.entity != null && state.entity.mEntity != null ? replaceFarsiNumber(normalizeCredit(state.entity.mEntity.user.credit)) : "0"} تومان ",
+                " ${state is EntityLoaded && state.entity != null && state.entity.mEntity != null ? replaceFarsiNumber(normalizeCredit(state.entity.mEntity.user.credit)) : "0"} ریال ",
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white, fontSize: 18),
                 textDirection: TextDirection.rtl,
