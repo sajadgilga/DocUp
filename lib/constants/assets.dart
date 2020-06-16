@@ -18,6 +18,9 @@ class Assets {
   static final String logoRectangle = 'assets/logoRec.png';
   static final String logoCircle = 'assets/logoCircle.png';
   static final String logoTransparent = 'assets/logoTransparent.png';
+  static final String profileIcon = 'assets/profileIcon.svg';
+  static final String servicesIcon = 'assets/servicesIcon.svg';
+  static final String panelIcon = 'assets/panelIcon.svg';
 
   static String docupIcon = docupPatientIcon;
 

@@ -1,6 +1,9 @@
 class Strings {
   static const String appTitle = 'Flutter Demo';
-
+  static const String bottomNavigationHomeTitle = 'خانه';
+  static const String bottomNavigationPanelTitle = 'پنل کاربری';
+  static const String bottomNavigationServicesTitle = 'خدمات';
+  static const String bottomNavigationProfileTitle = 'پروفایل';
 //
   static const String registerHeaderMessage = ": ثبت نام در داک آپ به عنوان";
   static const String signInHeaderMessage = ": ورود در داک آپ به عنوان";

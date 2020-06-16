@@ -13,8 +13,10 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class UploadSlider extends StatefulWidget {
   int listId;
+  final Widget body;
 
-  UploadSlider({Key key, @required this.listId}) : super(key: key);
+  UploadSlider({Key key, @required this.listId, this.body})
+      : super(key: key);
 
   @override
   UploadSliderState createState() {
@@ -81,6 +83,7 @@ class UploadSliderState extends State<UploadSlider> {
 
   Widget _pictureHolder(width, height) {
     return Container(
+      margin: EdgeInsets.only(top: 40, bottom: 40),
       constraints: BoxConstraints.expand(
         width: width,
         height: (height * .3 < 200 ? height * .3 : 200),
@@ -191,9 +194,17 @@ class UploadSliderState extends State<UploadSlider> {
         ],
       ));
 
+  Widget _body() {
+    if (widget.body == null)
+      return Container();
+    return widget.body;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SlidingUpPanel(
+      body: _body(),
+      maxHeight: MediaQuery.of(context).size.height,
       panel: _panel(MediaQuery.of(context).size.width,
           MediaQuery.of(context).size.height),
       defaultPanelState: PanelState.OPEN,

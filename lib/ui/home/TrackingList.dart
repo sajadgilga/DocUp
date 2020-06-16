@@ -2,6 +2,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -38,22 +39,22 @@ class TrackingList extends StatelessWidget {
                   },
                   child: TrackingBlock(
                     label: Strings.patientTrackingVisitPendingLabel,
-                    percent: visitPending / all,
+                    value: visitPending,
                     color: IColors.trackingVisitPending,
                     backgroundColor: Colors.white,
-                    borderColor: IColors.trackingVisitPending,
+                    borderColor: Colors.white,
                   )),
               TrackingBlock(
                 label: Strings.patientTrackingCuringLabel,
-                percent: curing / all,
-                color: IColors.trackingCuring,
+                value: curing,
+                color: IColors.virtualVisit,
                 backgroundColor: Colors.white,
-                borderColor: IColors.trackingCuring,
+                borderColor: Colors.white,
               ),
               TrackingBlock(
                 label: Strings.patientTrackingCuredLabel,
-                percent: cured / all,
-                color: IColors.trackingCured,
+                value: cured,
+                color: IColors.physicalVisit,
                 backgroundColor: Colors.white,
                 borderColor: Colors.white,
               )
@@ -65,7 +66,7 @@ class TrackingList extends StatelessWidget {
 
 class TrackingBlock extends StatelessWidget {
   final String label;
-  final double percent;
+  final int value;
   final Color color;
   final Color borderColor;
   final Color backgroundColor;
@@ -73,7 +74,7 @@ class TrackingBlock extends StatelessWidget {
   TrackingBlock(
       {Key key,
       this.label,
-      this.percent,
+      this.value,
       this.color,
       this.borderColor,
       this.backgroundColor})
@@ -88,9 +89,9 @@ class TrackingBlock extends StatelessWidget {
         progressColor: color,
         lineWidth: 7.0,
         animation: true,
-        percent: percent,
+        percent: 1,
         center: new Text(
-          "${(percent * 100).ceil()}%",
+          "${replaceFarsiNumber(value.toString())}",
           style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 9.0),
         ),
       ),

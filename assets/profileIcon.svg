@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="27" height="21" viewBox="0 0 27 21">
+  <g id="Group_40" data-name="Group 40" transform="translate(-0.205 0.273)">
+    <g id="Rectangle_16" data-name="Rectangle 16" transform="translate(0.205 -0.273)" fill="none" stroke="#b3bcc9" stroke-width="1.5">
+      <rect width="27" height="21" rx="6" stroke="none"/>
+      <rect x="0.75" y="0.75" width="25.5" height="19.5" rx="5.25" fill="none"/>
+    </g>
+    <g id="Group_39" data-name="Group 39" transform="translate(5.58 5.979)">
+      <g id="Group_38" data-name="Group 38" transform="translate(0 0)">
+        <g id="Ellipse_2" data-name="Ellipse 2" transform="translate(0.444)" fill="none" stroke="#b3bcc9" stroke-width="1.5">
+          <circle cx="2.79" cy="2.79" r="2.79" stroke="none"/>
+          <circle cx="2.79" cy="2.79" r="2.04" fill="none"/>
+        </g>
+        <g id="Group_37" data-name="Group 37" transform="translate(0 5.207)">
+          <path id="Path_4" data-name="Path 4" d="M-3568.464-2083.79a3.343,3.343,0,0,0-3.536-3.352" transform="translate(3574.953 2087.143)" fill="none" stroke="#b3bcc9" stroke-width="1.5"/>
+          <path id="Path_5" data-name="Path 5" d="M-3572-2083.79a3.343,3.343,0,0,1,3.536-3.352" transform="translate(3572 2087.143)" fill="none" stroke="#b3bcc9" stroke-width="1.5"/>
+        </g>
+      </g>
+      <path id="Path_6" data-name="Path 6" d="M-3561.5-2033h7.285" transform="translate(3570.953 2035.816)" fill="none" stroke="#b3bcc9" stroke-linecap="round" stroke-width="1.5"/>
+      <path id="Path_7" data-name="Path 7" d="M-3561.5-2033h7.285" transform="translate(3570.953 2040.173)" fill="none" stroke="#b3bcc9" stroke-linecap="round" stroke-width="1.5"/>
+    </g>
+  </g>
+</svg>

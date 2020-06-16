@@ -19,7 +19,8 @@ const Map<int, Color> swatch = {
 class IColors {
   static const Color red = Color.fromRGBO(254, 95, 85, 1);
   static const Color blue = Color.fromRGBO(50, 200, 240, 1);
-  static const Color green = Color.fromRGBO(74, 157, 134, 1);
+  static const Color green = Color.fromRGBO(19, 205, 157, 1);
+  static const Color black = Color.fromRGBO(55, 63, 80, 1);
   static const Color darkBlue = Color.fromRGBO(44, 62, 80, 1);
   static const Color background = Color.fromRGBO(242, 242, 242, 1);
   static const Color doctorChatBubble = Color.fromRGBO(242, 242, 242, 1);
@@ -36,8 +37,8 @@ class IColors {
   static const Color activePanelMenu = Colors.black54;
 
   static const Color trackingVisitPending = Color.fromRGBO(242, 51, 51, 1);
-  static const Color trackingCuring = Colors.black;
-  static const Color trackingCured = Color.fromRGBO(38, 163, 10, 1);
+  static const Color physicalVisit = black;
+  static const Color virtualVisit = green;
 
   static const Color visitRequest = Color.fromRGBO(254, 95, 85, 1);
   static const Color virtualVisitRequest = Color.fromRGBO(254, 95, 85, 1);

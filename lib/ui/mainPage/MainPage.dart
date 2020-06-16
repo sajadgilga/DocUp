@@ -64,19 +64,19 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // initialize socket helper for web socket messages
     SocketHelper().init('185.252.30.163');
-      // get user entity & panels, also periodically update entity's info
-      final _entityBloc = BlocProvider.of<EntityBloc>(context);
-      _entityBloc.add(EntityGet());
-      var _panelBloc = BlocProvider.of<PanelBloc>(context);
-      _panelBloc.add(GetMyPanels());
-      _entityBloc.listen((data) {
-        if (_timer == null)
-          _timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
-            _entityBloc.add(EntityUpdate());
-            _panelBloc.add(GetMyPanels());
-          });
-      });
-      _enableFCM();
+    // get user entity & panels, also periodically update entity's info
+    final _entityBloc = BlocProvider.of<EntityBloc>(context);
+    _entityBloc.add(EntityGet());
+    var _panelBloc = BlocProvider.of<PanelBloc>(context);
+    _panelBloc.add(GetMyPanels());
+    _entityBloc.listen((data) {
+      if (_timer == null)
+        _timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
+          _entityBloc.add(EntityUpdate());
+          _panelBloc.add(GetMyPanels());
+        });
+    });
+//      _enableFCM();
 //      setState(() {
 //        _isFCMConfiged = true;
 //      });
@@ -170,6 +170,30 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    _progressDialogue =
+        ProgressDialog(context, type: ProgressDialogType.Normal);
+    _progressDialogue.style(message: "لطفا منتظر بمانید");
+
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
+    return WillPopScope(
+        child: BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+      return _mainPage();
+    }), onWillPop: () async {
+      final isFirstRouteInCurrentRoute =
+          !await _navigatorKeys[_currentIndex].currentState.maybePop();
+      if (isFirstRouteInCurrentRoute) {
+        if (_currentIndex != 0) {
+          _selectPage(0);
+          return false;
+        }
+      }
+      return isFirstRouteInCurrentRoute;
+    });
+  }
+
   void _selectPage(int index) {
     if (_currentIndex == index) {
       _navigatorKeys[index].currentState.popUntil((route) => route.isFirst);
@@ -180,54 +204,54 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  Color _getBottomNavigationColor(destination,
+      {primary, secondary = Colors.transparent}) {
+    if (primary == null) primary = IColors.themeColor;
+    return _currentIndex == destination.index ? primary : secondary;
+  }
+
   List<BottomNavigationBarItem> _bottomNavigationItems(Entity entity) {
-    if (entity != null && entity.mEntity != null && entity.avatar != null)
-      navigator_destinations[4].img = Image.network(entity.avatar);
     return navigator_destinations
         .map<BottomNavigationBarItem>((Destination destination) {
       return BottomNavigationBarItem(
-          icon: Stack(
-            children: <Widget>[
-              Align(
-                  alignment: Alignment.center,
-                  child: (destination.isProfile
-                      ? Container(
-                          width: 50,
-                          child: ClipPolygon(
-                              sides: 6,
-                              rotate: 90,
-                              boxShadows: [
-                                PolygonBoxShadow(
-                                    color: Colors.black, elevation: 1.0),
-                                PolygonBoxShadow(
-                                    color: Colors.grey, elevation: 2.0)
-                              ],
-                              child: (destination.img != null
-                                  ? destination.img
-                                  : Image.asset(Assets.emptyAvatar))),
-                        )
-                      : (destination.hasImage
+          icon: Container(
+              constraints: BoxConstraints.expand(
+                  width: MediaQuery.of(context).size.width / 4, height: 40),
+              child: Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Container(
+                      alignment: Alignment.center,
+                      child: (destination.hasImage
                           ? SvgPicture.asset(
                               destination.image,
-                              color: (_currentIndex == 1
-                                  ? IColors.themeColor
-                                  : Colors.grey),
+                              color: _getBottomNavigationColor(destination,
+                                  secondary: Colors.grey),
                               width: 25,
                             )
                           : Icon(
                               destination.icon,
                               size: 30,
-                            )))),
-//              Align(alignment: Alignment(0, -1), child: Container(
-//                decoration:
-//                    BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-//                width: 10,
-//                height: 10,
-//              ))
-            ],
-          ),
+                            ))),
+                  Align(
+                      alignment: Alignment(0, -1.65),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _getBottomNavigationColor(destination),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: _getBottomNavigationColor(destination),
+                                  offset: Offset(1, 3),
+                                  blurRadius: 10)
+                            ]),
+                        width: 10,
+                        height: 10,
+                      ))
+                ],
+              )),
           title: Text(
-            '',
+            destination.title,
           ),
           backgroundColor: Colors.white);
     }).toList();
@@ -252,8 +276,8 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _chatPage(int section) {
-    _selectPage(2);
-    _children[2].currentState.push(null, NavigatorRoutes.panel, detail: 'chat');
+    _selectPage(1);
+    _children[1].currentState.push(null, NavigatorRoutes.panel, detail: 'chat');
   }
 
   Widget _buildOffstageNavigator(int index) {
@@ -286,32 +310,8 @@ class _MainPageState extends State<MainPage> {
             _buildOffstageNavigator(1),
             _buildOffstageNavigator(2),
             _buildOffstageNavigator(3),
-            _buildOffstageNavigator(4),
+//            _buildOffstageNavigator(4),
           ],
         ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _progressDialogue =
-        ProgressDialog(context, type: ProgressDialogType.Normal);
-    _progressDialogue.style(message: "لطفا منتظر بمانید");
-
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-
-    return WillPopScope(
-        child: BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
-      return _mainPage();
-    }), onWillPop: () async {
-      final isFirstRouteInCurrentRoute =
-          !await _navigatorKeys[_currentIndex].currentState.maybePop();
-      if (isFirstRouteInCurrentRoute) {
-        if (_currentIndex != 0) {
-          _selectPage(0);
-          return false;
-        }
-      }
-      return isFirstRouteInCurrentRoute;
-    });
   }
 }

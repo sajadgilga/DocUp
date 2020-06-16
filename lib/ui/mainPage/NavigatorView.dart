@@ -165,17 +165,17 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.physicalVisitPage: (context) =>
               _physicalVisitPage(context, detail)
         };
+//      case 1:
+//        return {
+//          NavigatorRoutes.root: (context) => _empty(context),
+////          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+//          NavigatorRoutes.doctorDialogue: (context) =>
+//              _doctorDetailPage(context, detail),
+//          NavigatorRoutes.patientDialogue: (context) =>
+//              _patientDetailPage(context, detail),
+//          NavigatorRoutes.searchView: (context) => _searchPage(context),
+//        };
       case 1:
-        return {
-          NavigatorRoutes.root: (context) => _empty(context),
-//          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-          NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, detail),
-          NavigatorRoutes.patientDialogue: (context) =>
-              _patientDetailPage(context, detail),
-          NavigatorRoutes.searchView: (context) => _searchPage(context),
-        };
-      case 2:
         return {
           NavigatorRoutes.root: (context) => _panelMenu(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
@@ -204,12 +204,12 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.physicalVisitPage: (context) =>
               _physicalVisitPage(context, detail)
         };
-      case 3:
+      case 2:
         return {
           NavigatorRoutes.root: (context) => _empty(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
         };
-      case 4:
+      case 3:
         return {
           NavigatorRoutes.root: (context) => _account(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
