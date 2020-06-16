@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,8 @@ class SocketHelper {
   String token;
   IOWebSocketChannel _channel;
   StreamController _broadcastStreamer = StreamController.broadcast();
+  final int _maxRetryTimeout = 32;
+  int _retryCount = 0;
 
   factory SocketHelper() {
     return _helper;
@@ -30,14 +33,17 @@ class SocketHelper {
       _channel = IOWebSocketChannel.connect(
           "ws://$url/ws/chat/?Authorization=JWT $token");
       _channel.stream.listen((event) {
+        _retryCount = 0;
         onReceive(event);
       }, onDone: () async {
         print('websocket got done');
-//        await Future.delayed(Duration(seconds: 2));
+        final _retryTimeout = min(_maxRetryTimeout, 2 ^ (_retryCount++));
+        await Future.delayed(Duration(seconds: _retryTimeout));
         connect(url);
-      }, onError: (err) async{
+      }, onError: (err) async {
         print('websocket error');
-        await Future.delayed(Duration(seconds: 2));
+        final _retryTimeout = min(_maxRetryTimeout, 2 ^ (_retryCount++));
+        await Future.delayed(Duration(seconds: _retryTimeout));
         connect(url);
       });
     } else
@@ -71,6 +77,14 @@ class SocketHelper {
     data['type'] = msgType;
     data['file'] = file;
     data['isMe'] = '';
+    _channel.sink.add(jsonEncode(data));
+  }
+
+  void checkMessageAsSeen({type = 'SEND_SEEN', panelId, msgId}) {
+    Map data = Map<String, dynamic>();
+    data['request_type'] = type;
+    data['panel_id'] = panelId;
+    data['message_id'] = msgId;
     _channel.sink.add(jsonEncode(data));
   }
 

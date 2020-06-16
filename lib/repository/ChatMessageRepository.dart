@@ -20,7 +20,7 @@ class ChatMessageRepository {
           utf8Support: true);
     else
       response = await _provider.get(
-          'api/chat/messages/$panel/$messageId/$up/$down/$size',
+          'api/chat/messages/$panel/?message_id=$messageId&up=$up&down=$down&size=$size',
           utf8Support: true);
     return _getList(response, isPatient);
   }

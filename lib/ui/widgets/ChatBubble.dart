@@ -106,14 +106,25 @@ class _ChatBubbleState extends State<ChatBubble> {
           )),
     ];
     if (widget.isMe) {
-      dateAndStatus.add(Container(
-          padding: EdgeInsets.only(left: 5, top: 5),
-          child: SvgPicture.asset(
-            'assets/whatsapp.svg',
-            color: Colors.green,
-            width: 10,
-            height: 10,
-          ))); //TODO
+      if (widget.message.isRead)
+        dateAndStatus.add(Container(
+            padding: EdgeInsets.only(left: 5, top: 5),
+            child: SvgPicture.asset(
+              'assets/whatsapp.svg',
+              color: Colors.green,
+              width: 10,
+              height: 10,
+            )));
+      else
+        dateAndStatus.add(Container(
+            padding: EdgeInsets.only(left: 5, top: 5),
+            child: SvgPicture.asset(
+              'assets/whatsapp.svg',
+              color: Colors.red,
+              width: 10,
+              height: 10,
+            )));
+
     }
 
     return Container(
