@@ -37,7 +37,7 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  final TimerBloc _timerBloc = TimerBloc(ticker: Ticker());
+  TimerBloc _timerBloc = TimerBloc(ticker: Ticker());
   final AuthBloc _authBloc = AuthBloc();
   final PatientBloc _patientBloc = PatientBloc();
   final DoctorBloc _doctorBloc = DoctorBloc();
@@ -80,8 +80,11 @@ class _StartPageState extends State<StartPage> {
           });
         } else if(response.message.startsWith("Invalid") && startType == StartType.SIGN_IN) {
           showErrorSnackBar("رمز عبور وارد شده اشتباه می باشد");
+        } else if(response.message.startsWith("Invalid") && startType == StartType.LOGIN) {
+          showErrorSnackBar("کد تایید وارد شده اشتباه می باشد");
         } else {
           showErrorSnackBar(response.message);
+
         }
         return false;
       default:
@@ -112,15 +115,18 @@ class _StartPageState extends State<StartPage> {
 
   bool resendCodeEnabled = false;
 
+
+  void resetTimer(){
+    _timerBloc = TimerBloc(ticker: Ticker());
+    _timerBloc.add(Start(duration: 60));
+    listenToTime();
+  }
+
   @override
   void initState() {
     switchRole(currentRoleType);
     checkToken();
-    _timerBloc.listen((time) {
-      setState(() {
-        resendCodeEnabled = time.duration == 0;
-      });
-    });
+    listenToTime();
     _authBloc.signUpStream.listen((data) {
       if (handle(data)) {
         currentUserName = _usernameController.text;
@@ -163,6 +169,14 @@ class _StartPageState extends State<StartPage> {
     super.initState();
   }
 
+  void listenToTime() {
+    _timerBloc.listen((time) {
+      setState(() {
+        resendCodeEnabled = time.duration == 0;
+      });
+    });
+  }
+
   void switchRole(RoleType roleType) {
     _controller.add(roleType);
     BlocProvider.of<EntityBloc>(context).add(EntityChangeType(type: roleType));
@@ -185,6 +199,7 @@ class _StartPageState extends State<StartPage> {
           case StartType.LOGIN:
             if (resend != null && resend) {
               _authBloc.signUp(currentUserName, currentRoleType);
+              resetTimer();
             } else {
               _authBloc.verify(currentUserName, _verificationController.text,
                   currentRoleType == RoleType.PATIENT);
@@ -209,12 +224,11 @@ class _StartPageState extends State<StartPage> {
   }
 
   void back() {
-    _timerBloc.add(Reset());
-    _timerBloc.add(Start(duration: 60));
     _verificationController.text = "";
     setState(() {
       startType = StartType.SIGN_UP;
     });
+    resetTimer();
   }
 
   @override
@@ -289,7 +303,7 @@ class _StartPageState extends State<StartPage> {
                       create: (context) => _timerBloc, child: Timer())),
               GestureDetector(
                 onTap: () => submit(resend: true),
-                child: Text(" ارسال مجدد کد ",
+                child: Text(" ارسال مجدد کد",
                     style: TextStyle(
                         color: IColors.themeColor,
                         fontWeight: FontWeight.bold,
@@ -504,7 +518,8 @@ class _StartPageState extends State<StartPage> {
             InputField(
               inputHint: Strings.nameInputHint,
               controller: _fullNameController,
-              validationCallback: (text) => true,
+              validationCallback: (text) => text.isNotEmpty,
+              errorMessage: 'نام خود را وارد کنید',
               needToHideKeyboard: false,
             ),
             InputField(
