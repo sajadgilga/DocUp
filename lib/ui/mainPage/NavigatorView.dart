@@ -109,7 +109,8 @@ class NavigatorViewState extends State<NavigatorView> {
     super.dispose();
   }
 
-  Map<String, WidgetBuilder> _routeBuilders(BuildContext context, {detail}) {
+  Map<String, WidgetBuilder> _routeBuilders(BuildContext context,
+      {detail, widgetArg}) {
     switch (widget.index) {
       case -1:
         return {
@@ -127,9 +128,7 @@ class NavigatorViewState extends State<NavigatorView> {
               _cognitiveTest(context, detail),
           NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
-              child: UploadSlider(
-                listId: detail,
-              )),
+              child: UploadSlider(listId: detail, body: widgetArg)),
           NavigatorRoutes.requestsView: (context) =>
               _searchPage(context, isRequests: true),
           NavigatorRoutes.account: (context) =>
@@ -190,6 +189,7 @@ class NavigatorViewState extends State<NavigatorView> {
               value: _pictureBloc,
               child: UploadSlider(
                 listId: detail,
+                body: widgetArg,
               )),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
@@ -242,12 +242,14 @@ class NavigatorViewState extends State<NavigatorView> {
 //    }
 //  }
 
-  void push(contet, String direction, {detail}) {
+  void push(contet, String direction, {detail, widgetArg}) {
     if (detail == 'chat')
       widget.navigatorKey.currentState.popUntil((route) => route.isFirst);
-    _route(RouteSettings(name: direction), context, detail: detail);
-    widget.navigatorKey.currentState
-        .push(_route(RouteSettings(name: direction), context, detail: detail));
+    _route(RouteSettings(name: direction), context,
+        detail: detail, widgetArg: widgetArg);
+    widget.navigatorKey.currentState.push(_route(
+        RouteSettings(name: direction), context,
+        detail: detail, widgetArg: widgetArg));
   }
 
   void _pop(BuildContext context) {
@@ -255,8 +257,9 @@ class NavigatorViewState extends State<NavigatorView> {
   }
 
   Route<dynamic> _route(RouteSettings settings, BuildContext context,
-      {detail}) {
-    var routeBuilders = _routeBuilders(context, detail: detail);
+      {detail, widgetArg}) {
+    var routeBuilders =
+        _routeBuilders(context, detail: detail, widgetArg: widgetArg);
     return MaterialPageRoute(
         settings: settings,
         builder: (BuildContext context) {
@@ -388,8 +391,8 @@ class NavigatorViewState extends State<NavigatorView> {
                       InfoPage(
                         uploadAvailable: entity.isPatient,
                         entity: entity,
-                        onPush: (direction, entity) {
-                          push(context, direction, detail: entity);
+                        onPush: (direction, entity, widgetArg) {
+                          push(context, direction, detail: entity, widgetArg: widgetArg);
                         },
                         pageName: Strings.documents,
                         picListLabel: Strings.panelDocumentsPicLabel,
@@ -401,8 +404,8 @@ class NavigatorViewState extends State<NavigatorView> {
                       InfoPage(
                         uploadAvailable: entity.isDoctor,
                         entity: entity,
-                        onPush: (direction, entity) {
-                          push(context, direction, detail: entity);
+                        onPush: (direction, entity, widgetArg) {
+                          push(context, direction, detail: entity, widgetArg: widgetArg);
                         },
                         pageName: Strings.prescriptions,
                         picListLabel: Strings.panelPrescriptionsPicLabel,
@@ -414,8 +417,8 @@ class NavigatorViewState extends State<NavigatorView> {
                       InfoPage(
                         uploadAvailable: entity.isPatient,
                         entity: entity,
-                        onPush: (direction, entity) {
-                          push(context, direction, detail: entity);
+                        onPush: (direction, entity, widgetArg) {
+                          push(context, direction, detail: entity, widgetArg: widgetArg);
                         },
                         pageName: Strings.testResults,
                         picListLabel: Strings.panelTestResultsPicLabel,

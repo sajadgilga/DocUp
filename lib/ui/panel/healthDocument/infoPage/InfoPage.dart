@@ -16,7 +16,7 @@ import 'package:docup/ui/widgets/PicList.dart';
 
 class InfoPage extends StatelessWidget {
   final Entity entity;
-  final Function(String, dynamic) onPush;
+  final Function(String, dynamic, Widget) onPush;
   final String picListLabel;
   final String lastPicsLabel;
   final String uploadLabel;
@@ -34,18 +34,14 @@ class InfoPage extends StatelessWidget {
       @required this.onPush})
       : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    BlocProvider.of<PictureBloc>(context)
-        .add(PictureListGet(listId: entity.sectionId(pageName)));
-
+  Widget _fakeWidget() {
     return SingleChildScrollView(
         child: Container(
       child: Column(
         children: <Widget>[
           PartnerInfo(
             entity: entity,
-            onPush: onPush,
+            onPush: (route, detail) {},
           ),
           PicList(
             listId: entity.sectionId(pageName),
@@ -59,9 +55,46 @@ class InfoPage extends StatelessWidget {
               width: 35,
               color: IColors.themeColor,
             ),
-            tapCallback: () => {
-              onPush(
-                  NavigatorRoutes.uploadPicDialogue, entity.sectionId(pageName))
+            tapCallback: () {},
+          )
+        ],
+      ),
+    ));
+  }
+
+  void _tapUpload() {
+    onPush(NavigatorRoutes.uploadPicDialogue, entity.sectionId(pageName), _fakeWidget());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    BlocProvider.of<PictureBloc>(context)
+        .add(PictureListGet(listId: entity.sectionId(pageName)));
+
+    return SingleChildScrollView(
+        child: Container(
+      child: Column(
+        children: <Widget>[
+          PartnerInfo(
+            entity: entity,
+            onPush: (route, detail) {
+              onPush(route, detail, null);
+            },
+          ),
+          PicList(
+            listId: entity.sectionId(pageName),
+            uploadAvailable: uploadAvailable,
+            picLabel: picListLabel,
+            recentLabel: lastPicsLabel,
+            uploadLabel: uploadLabel,
+            asset: SvgPicture.asset(
+              "assets/cloud.svg",
+              height: 35,
+              width: 35,
+              color: IColors.themeColor,
+            ),
+            tapCallback: () {
+              _tapUpload();
             },
           )
         ],
