@@ -1,23 +1,15 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:docup/blocs/DoctorInfoBloc.dart';
-import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/networking/Response.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/visit/VisitUtils.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
-import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
-import 'package:docup/blocs/CreditBloc.dart';
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/Avatar.dart';
-import 'package:docup/ui/widgets/MapWidget.dart';
 import 'package:docup/ui/widgets/PriceWidget.dart';
 import 'package:docup/ui/widgets/TimeSelectorHeaderWidget.dart';
 import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
@@ -26,11 +18,7 @@ import 'package:docup/ui/widgets/LabelAndListWidget.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:uni_links/uni_links.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/services.dart' show PlatformException;
+import 'package:rxdart/rxdart.dart';
 
 class VisitConfPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
@@ -60,9 +48,13 @@ class _VisitConfPageState extends State<VisitConfPage> {
     _bloc.doctorPlanStream.listen((data) {
       if (data.status == Status.COMPLETED) {
         toast(context, "تغییرات با موفقیت ثبت شد");
+        Navigator.pop(context);
       } else if (data.status == Status.ERROR) {
         toast(context, data.message);
       }
+    });
+    controller.stream.listen((event) {
+      typeSelected["ساعت‌های برگزاری"] = event;
     });
     super.initState();
   }
@@ -81,7 +73,7 @@ class _VisitConfPageState extends State<VisitConfPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(!isLoaded) {
+    if (!isLoaded) {
       _bloc.getDoctor(widget.doctorEntity.id);
     }
     return Scaffold(
@@ -117,13 +109,14 @@ class _VisitConfPageState extends State<VisitConfPage> {
   bool isLoaded = false;
 
   GestureDetector _rootWidget(DoctorEntity doctorEntity) {
-    if(!isLoaded) {
+    if (!isLoaded) {
       typeSelected["انواع مشاوره ها"].addAll(doctorEntity.plan.visitMethod);
-      typeSelected["انواع زمان مشاوره"].addAll(doctorEntity.plan.visitType);
-      typeSelected["ساعت‌های برگزاری"].addAll(
-          _getVisitTimes(doctorEntity.plan));
+      typeSelected["انواع زمان مشاوره"]
+          .addAll(doctorEntity.plan.visitDurationPlan);
+      typeSelected["ساعت‌های برگزاری"]
+          .addAll(_getVisitTimes(doctorEntity.plan));
       typeSelected["روزهای برگزاری"].addAll(doctorEntity.plan.availableDays);
-      typeSelected["وقت ویزیت"].addAll(doctorEntity.plan.visitDurationPlan);
+      typeSelected["وقت ویزیت"].addAll(doctorEntity.plan.visitType);
     }
     isLoaded = true;
 
@@ -201,7 +194,6 @@ class _VisitConfPageState extends State<VisitConfPage> {
             }),
             _timeAndDateSelectorWidget(),
             MediumVerticalSpace(),
-//          _repeatableForSelectedDaysWidget(),
             ALittleVerticalSpace(),
             ActionButton(
               title: "ثبت اطلاعات برای بررسی",
@@ -224,6 +216,7 @@ class _VisitConfPageState extends State<VisitConfPage> {
   }
 
   bool timeIsSelected = true;
+  StreamController<Set<int>> controller = BehaviorSubject();
 
   Widget _timeAndDateSelectorWidget() {
     if (timeIsSelected) {
@@ -231,9 +224,8 @@ class _VisitConfPageState extends State<VisitConfPage> {
         children: <Widget>[
           TimeSelectorWidget(
               tappedOffset: tappedOffset,
-              callback: (number) {
-                print("TESTTTTT ->>>>> $number");
-              }),
+              controller: controller,
+              initTimes: Set.from(typeSelected["ساعت‌های برگزاری"])),
           MediumVerticalSpace(),
           _helpWidget(context),
         ],
@@ -262,38 +254,17 @@ class _VisitConfPageState extends State<VisitConfPage> {
     final hours = typeSelected["ساعت‌های برگزاری"].toList();
     hours.sort();
 
-    final timeList = typeSelected["وقت ویزیت"].toList();
-    timeList.removeWhere((element) => element >= 2);
-
     _bloc.updateDoctor(
-      widget.doctorEntity.id,
+        widget.doctorEntity.id,
         DoctorPlan(
-          visitMethod: typeSelected["انواع مشاوره ها"].toList(),
-          visitType: timeList,
-          visitDurationPlan: typeSelected["انواع زمان مشاوره"].toList(),
-          availableDays: typeSelected["روزهای برگزاری"].toList(),
-          startTime: "${hours[0]}:00:00",
-          endTime: "${hours[hours.length - 1]}:00:00",
-          baseTextPrice: plan.baseTextPrice,
-          baseVideoPrice: plan.baseVideoPrice
-        ));
-  }
-
-  Row _repeatableForSelectedDaysWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        Text("تکرار برای بقیه روز های انتخاب شده"),
-        Checkbox(
-          value: repeatableForSelectedDays,
-          onChanged: (value) {
-            setState(() {
-              repeatableForSelectedDays = value;
-            });
-          },
-        ),
-      ],
-    );
+            visitMethod: typeSelected["انواع مشاوره ها"].toList(),
+            visitType: typeSelected["وقت ویزیت"].toList(),
+            visitDurationPlan: typeSelected["انواع زمان مشاوره"].toList(),
+            availableDays: typeSelected["روزهای برگزاری"].toList(),
+            startTime: "${hours[0]}:00:00",
+            endTime: "${hours[hours.length - 1]}:00:00",
+            baseTextPrice: plan.baseTextPrice,
+            baseVideoPrice: plan.baseVideoPrice));
   }
 
   bool repeatableForSelectedDays = false;
@@ -315,5 +286,11 @@ class _VisitConfPageState extends State<VisitConfPage> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    controller.close();
+    super.dispose();
   }
 }

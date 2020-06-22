@@ -1,21 +1,32 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:docup/constants/colors.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 class TimeSelectorWidget extends StatefulWidget {
   Offset tappedOffset;
-  final Function(int) callback;
+  StreamController<Set<int>> controller = BehaviorSubject();
+  final Set<int> initTimes;
 
-  TimeSelectorWidget({this.tappedOffset, this.callback});
+  TimeSelectorWidget({this.tappedOffset, this.controller, this.initTimes});
 
   @override
   _TimeSelectorWidgetState createState() => _TimeSelectorWidgetState();
 }
 
 class _TimeSelectorWidgetState extends State<TimeSelectorWidget> {
+  Set<int> selectedNumbers = Set.of([]);
+
+  @override
+  void initState() {
+    selectedNumbers = widget.initTimes;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,7 +35,17 @@ class _TimeSelectorWidgetState extends State<TimeSelectorWidget> {
         painter: TimerSelectorPaint(
             context: context,
             tappedOffset: widget.tappedOffset,
-            callback: widget.callback),
+            selectedNumbers: selectedNumbers,
+            callback: (number) {
+              setState(() {
+                if (selectedNumbers.contains(number)) {
+                  selectedNumbers.remove(number);
+                } else {
+                  selectedNumbers.add(number);
+                }
+                widget.controller.add(selectedNumbers);
+              });
+            }),
       ),
     );
   }
@@ -34,24 +55,27 @@ class TimerSelectorPaint extends CustomPainter {
   final Offset tappedOffset;
   final BuildContext context;
   final Function(int) callback;
-  Set<int> selectedNumbers = Set.identity();
+  final Set<int> selectedNumbers;
 
-  TimerSelectorPaint({this.context, this.tappedOffset, this.callback});
+  TimerSelectorPaint(
+      {this.context, this.selectedNumbers, this.tappedOffset, this.callback});
 
   final Map<int, Offset> numbers = {
-    1: Offset(40, -69.282),
-    2: Offset(69.282, -40),
-    3: Offset(80, 0),
-    4: Offset(69.282, 40),
-    5: Offset(40, 69.282),
-    6: Offset(0, 80),
-    7: Offset(-40, 69.282),
-    8: Offset(-69.282, 40),
-    9: Offset(-80, 0),
-    10: Offset(-69.282, -40),
-    11: Offset(-40, -69.282),
+    13: Offset(40, -69.282),
+    14: Offset(69.282, -40),
+    15: Offset(80, 0),
+    16: Offset(69.282, 40),
+    17: Offset(40, 69.282),
+    18: Offset(0, 80),
+    19: Offset(-40, 69.282),
+    20: Offset(-69.282, 40),
+    21: Offset(-80, 0),
+    22: Offset(-69.282, -40),
+    23: Offset(-40, -69.282),
     12: Offset(0, -80)
   };
+
+  int selectedNumber = -1;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -71,6 +95,9 @@ class TimerSelectorPaint extends CustomPainter {
     numbers.forEach((key, value) {
       paintNumber(canvas, key, value, localOffset);
     });
+    if (selectedNumber != -1) {
+      callback(selectedNumber);
+    }
   }
 
   void paintNumber(
@@ -91,15 +118,18 @@ class TimerSelectorPaint extends CustomPainter {
     textPainter.layout();
     textPainter.paint(canvas, Offset(position.dx, position.dy + 100));
 
-    if (selectedNumbers.contains(number) ||
+    if (selectedNumbers.contains(number) &&
         isPointInside(position, localOffset)) {
-      callback(number);
-      selectedNumbers.add(number);
+    } else if (selectedNumbers.contains(number) ||
+        isPointInside(position, localOffset)) {
       Paint paint = Paint();
       paint.color = Colors.black;
       paint.style = PaintingStyle.stroke;
       paint.strokeWidth = 2;
       canvas.drawCircle(Offset(position.dx + 8, position.dy + 112), 20, paint);
+    }
+    if (isPointInside(position, localOffset)) {
+      selectedNumber = number;
     }
   }
 
