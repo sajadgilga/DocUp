@@ -15,8 +15,7 @@ class UploadSlider extends StatefulWidget {
   int listId;
   final Widget body;
 
-  UploadSlider({Key key, @required this.listId, this.body})
-      : super(key: key);
+  UploadSlider({Key key, @required this.listId, this.body}) : super(key: key);
 
   @override
   UploadSliderState createState() {
@@ -185,24 +184,41 @@ class UploadSliderState extends State<UploadSlider> {
         children: <Widget>[_description(), _submit()],
       ));
 
+  Widget _close() => GestureDetector(
+        child: Container(
+          alignment: Alignment.centerRight,
+          margin: EdgeInsets.only(right: 20, top: 20),
+          child: Icon(
+            Icons.close,
+            size: 30,
+            color: IColors.black,
+          ),
+        ),
+        onTap: () {
+          Navigator.of(context).maybePop();
+        },
+      );
+
   Widget _panel(width, height) => Container(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          _close(),
           _pictureHolder(width, height),
           _listDescriptionSubmit(height)
         ],
       ));
 
   Widget _body() {
-    if (widget.body == null)
-      return Container();
+    if (widget.body == null) return Container();
     return widget.body;
   }
 
   @override
   Widget build(BuildContext context) {
     return SlidingUpPanel(
+      backdropEnabled: true,
+      backdropOpacity: .5,
       body: _body(),
       maxHeight: MediaQuery.of(context).size.height,
       panel: _panel(MediaQuery.of(context).size.width,
