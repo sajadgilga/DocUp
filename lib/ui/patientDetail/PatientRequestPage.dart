@@ -46,7 +46,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
         _updateSearch();
         Navigator.pop(context);
       } else if (data.status == Status.ERROR) {
-        toast(context, data.message);
+        toast(context, data.error.toString());
       }
     });
     super.initState();
@@ -64,7 +64,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
             if (snapshot.hasData) {
               switch (snapshot.data.status) {
                 case Status.LOADING:
-                  return APICallLoading(loadingMessage: snapshot.data.message);
+                  return APICallLoading(loadingMessage: snapshot.data.error.toString());
                   break;
                 case Status.COMPLETED:
                   return Center(child: _headerWidget(snapshot.data.data));

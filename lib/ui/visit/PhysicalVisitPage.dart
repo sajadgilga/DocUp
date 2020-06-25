@@ -44,7 +44,8 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
         showOneButtonDialog(context, Strings.physicalVisitRequestedMessage,
             "در انتظار تایید پزشک", () => Navigator.pop(context), color: Colors.black54);
       } else if (data.status == Status.ERROR) {
-        if (data.message.startsWith("Invalid")) {
+        //TODO
+        if (data.error.toString().startsWith("Invalid")) {
           showOneButtonDialog(
               context,
               Strings.notEnoughCreditMessage,
@@ -52,7 +53,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
                   () => widget.onPush(
                   NavigatorRoutes.account, "10000"));
         } else {
-          toast(context, data.message);
+          toast(context, data.error.toString());
         }
       }
     });

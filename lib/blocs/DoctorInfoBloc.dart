@@ -56,55 +56,55 @@ class DoctorInfoBloc {
   }
 
   getDoctor(int doctorId) async {
-    doctorInfoSink.add(Response.loading(''));
+    doctorInfoSink.add(Response.loading());
     try {
       DoctorEntity doctorEntity = await _repository.getDoctor(doctorId);
       doctorEntity.plan = await _repository.getDoctorPlan(doctorId);
       doctorInfoSink.add(Response.completed(doctorEntity));
     } catch (e) {
-      doctorInfoSink.add(Response.error(e.toString()));
+      doctorInfoSink.add(Response.error(e));
       print(e);
     }
   }
 
   updateDoctor(int doctorId, DoctorPlan plan) async {
-    doctorPlanSink.add(Response.loading(''));
+    doctorPlanSink.add(Response.loading());
     try {
       plan.id = doctorId;
       DoctorPlan doctorPlan = await _repository.updatePlan(plan);
       doctorPlanSink.add(Response.completed(doctorPlan));
     } catch (e) {
-      doctorPlanSink.add(Response.error(e.toString()));
+      doctorPlanSink.add(Response.error(e));
       print(e);
     }
   }
 
   visitRequest(int doctorId, int visitType, int visitMethod, int durationPlan,
       String visitTime) async {
-    visitRequestSink.add(Response.loading(''));
+    visitRequestSink.add(Response.loading());
     try {
       VisitEntity response = await _repository.visitRequest(
           doctorId, visitType, visitMethod, durationPlan, visitTime);
       visitRequestSink.add(Response.completed(response));
     } catch (e) {
-      visitRequestSink.add(Response.error(e.toString()));
+      visitRequestSink.add(Response.error(e));
       print(e);
     }
   }
 
   getVisit(int patientId) async {
-    getVisitSink.add(Response.loading(''));
+    getVisitSink.add(Response.loading());
     try {
       VisitEntity response = await _repository.getVisit(patientId);
       getVisitSink.add(Response.completed(response));
     } catch (e) {
-      getVisitSink.add(Response.error(e.toString()));
+      getVisitSink.add(Response.error(e));
       print(e);
     }
   }
 
   responseVisit(VisitEntity entity, bool status) async {
-    responseVisitSink.add(Response.loading(''));
+    responseVisitSink.add(Response.loading());
     try {
       VisitEntity response = await _repository.responseVisit(
           entity.id,
@@ -115,7 +115,7 @@ class DoctorInfoBloc {
           isVisitAcceptance: true);
       responseVisitSink.add(Response.completed(response));
     } catch (e) {
-      responseVisitSink.add(Response.error(e.toString()));
+      responseVisitSink.add(Response.error(e));
       print(e);
     }
   }

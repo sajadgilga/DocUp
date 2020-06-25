@@ -25,3 +25,14 @@ class UnauthorisedException extends CustomException {
 class InvalidInputException extends CustomException {
   InvalidInputException([String message]) : super(message, "Invalid Input: ");
 }
+
+class ApiException implements Exception {
+  final code;
+  final message;
+
+  ApiException([this.code, this.message]);
+
+  String toString() {
+    return message;
+  }
+}

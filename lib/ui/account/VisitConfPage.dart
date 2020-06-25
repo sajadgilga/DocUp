@@ -50,7 +50,7 @@ class _VisitConfPageState extends State<VisitConfPage> {
         toast(context, "تغییرات با موفقیت ثبت شد");
         Navigator.pop(context);
       } else if (data.status == Status.ERROR) {
-        toast(context, data.message);
+        toast(context, data.error.toString());
       }
     });
     controller.stream.listen((event) {
@@ -85,14 +85,14 @@ class _VisitConfPageState extends State<VisitConfPage> {
             if (snapshot.hasData) {
               switch (snapshot.data.status) {
                 case Status.LOADING:
-                  return APICallLoading(loadingMessage: snapshot.data.message);
+                  return APICallLoading(loadingMessage: snapshot.data.error.toString());
                   break;
                 case Status.COMPLETED:
                   return Center(child: _rootWidget(snapshot.data.data));
                   break;
                 case Status.ERROR:
                   return APICallError(
-                    errorMessage: snapshot.data.message,
+                    errorMessage: snapshot.data.error.toString(),
                     onRetryPressed: () =>
                         _bloc.getDoctor(widget.doctorEntity.id),
                   );

@@ -24,13 +24,13 @@ class DoctorBloc {
     _repository = DoctorRepository();
   }
 
-  update(String name, String password) async {
-    doctorSink.add(Response.loading('loading'));
+  update(String name) async {
+    doctorSink.add(Response.loading());
     try {
-      DoctorEntity _response = await _repository.update(DoctorEntity(user: User(firstName: name, password: password)));
+      DoctorEntity _response = await _repository.update(DoctorEntity(user: User(firstName: name)));
       doctorSink.add(Response.completed(_response));
     } catch (e) {
-      doctorSink.add(Response.error(e.toString()));
+      doctorSink.add(Response.error(e));
       print(e);
     }
   }

@@ -45,7 +45,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         showOneButtonDialog(context, Strings.visitRequestedMessage,
             Strings.understandAction, () => Navigator.pop(context));
       } else if (data.status == Status.ERROR) {
-        if (data.message.startsWith("Invalid")) {
+        //Todo
+        if (data.error.toString().startsWith("Invalid")) {
           showOneButtonDialog(
               context,
               Strings.notEnoughCreditMessage,
@@ -53,7 +54,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
               () => widget.onPush(
                   NavigatorRoutes.account, _calculateVisitCost()));
         } else {
-          toast(context, data.message);
+          toast(context, data.error.toString());
         }
       }
     });
@@ -286,35 +287,21 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
   }
 
   void sendVisitRequest() {
-    DateTime doctorStartTime = getDateAndTimeFromWS(
+    _bloc.visitRequest(
+        widget.doctorEntity.id,
+        1,
+        typeSelected[VISIT_METHOD],
+        typeSelected[VISIT_DURATION_PLAN],
         convertToGeorgianDate(dateTextController.text) +
             "T" +
-            widget.doctorEntity.plan.startTime);
-    DateTime doctorEndTime = getDateAndTimeFromWS(
-        convertToGeorgianDate(dateTextController.text) +
-            "T" +
-            widget.doctorEntity.plan.endTime);
-    DateTime selectedTime = getDateAndTimeFromJalali(
-        dateTextController.text, timeTextController.text);
-    if (selectedTime.isAfter(doctorStartTime) &&
-        selectedTime.isBefore(doctorEndTime)) {
-      _bloc.visitRequest(
-          widget.doctorEntity.id,
-          1,
-          typeSelected[VISIT_METHOD],
-          typeSelected[VISIT_DURATION_PLAN],
-          convertToGeorgianDate(dateTextController.text) +
-              "T" +
-              timeTextController.text +
-              "+04:30");
-    } else {
-      showOneButtonDialog(
-          context,
-          "زمان انتخاب شده خالی نیست. لطفا زمان دیگری را برای ویزیت انتخاب کنید " +
-              "\n" +
-              "پزشک ساعت ${replaceFarsiNumber(widget.doctorEntity.plan.startTime)} الی  ${replaceFarsiNumber(widget.doctorEntity.plan.endTime)} را تخصیص داده است ",
-          "متوجه شدم",
-          () {});
-    }
+            timeTextController.text +
+            "+04:30");
+//      showOneButtonDialog(
+//          context,
+//          "زمان انتخاب شده خالی نیست. لطفا زمان دیگری را برای ویزیت انتخاب کنید " +
+//              "\n" +
+//              "پزشک ساعت ${replaceFarsiNumber(widget.doctorEntity.plan.startTime)} الی  ${replaceFarsiNumber(widget.doctorEntity.plan.endTime)} را تخصیص داده است ",
+//          "متوجه شدم",
+//          () {});
   }
 }

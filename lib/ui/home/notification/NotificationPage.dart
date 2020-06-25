@@ -62,14 +62,14 @@ class _NotificationPageState extends State<NotificationPage> {
           if (snapshot.hasData) {
             switch (snapshot.data.status) {
               case Status.LOADING:
-                return APICallLoading(loadingMessage: snapshot.data.message);
+                return APICallLoading(loadingMessage: snapshot.data.error.toString());
                 break;
               case Status.COMPLETED:
                 return _widget(context, snapshot.data.data);
                 break;
               case Status.ERROR:
                 return APICallError(
-                  errorMessage: snapshot.data.message,
+                  errorMessage: snapshot.data.error.toString(),
                   onRetryPressed: () => _notificationBloc.get(),
                 );
                 break;

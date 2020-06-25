@@ -9,80 +9,82 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthBloc {
   AuthRepository _repository;
-  StreamController _signUpController;
+  StreamController _loginController;
   StreamController _verifyController;
-  StreamController _signInController;
 
-  StreamSink<Response<SignUpResponseEntity>> get signUpSink =>
-      _signUpController.sink;
+  StreamSink<Response<LoginResponseEntity>> get loginSink =>
+      _loginController.sink;
 
   StreamSink<Response<VerifyResponseEntity>> get verifySink =>
       _verifyController.sink;
 
-  StreamSink<Response<VerifyResponseEntity>> get signInSink =>
-      _signInController.sink;
-
-  Stream<Response<SignUpResponseEntity>> get signUpStream =>
-      _signUpController.stream;
+  Stream<Response<LoginResponseEntity>> get loginStream =>
+      _loginController.stream;
 
   Stream<Response<VerifyResponseEntity>> get verifyStream =>
       _verifyController.stream;
 
-  Stream<Response<VerifyResponseEntity>> get signInStream =>
-      _signInController.stream;
-
   AuthBloc() {
-    _signUpController = StreamController<Response<SignUpResponseEntity>>();
+    _loginController = StreamController<Response<LoginResponseEntity>>();
     _verifyController = StreamController<Response<VerifyResponseEntity>>();
-    _signInController = StreamController<Response<VerifyResponseEntity>>();
     _repository = AuthRepository();
   }
 
-  signUp(String username, RoleType roleType) async {
-    signUpSink.add(Response.loading('loading'));
+  login(RoleType roleType) async {
+    loginSink.add(Response.loading());
     try {
-      SignUpResponseEntity response =
-          await _repository.signUp(username, roleType.index);
-      signUpSink.add(Response.completed(response));
+      String username = await getUserName();
+      LoginResponseEntity response =
+          await _repository.login(username, roleType.index);
+      loginSink.add(Response.completed(response));
     } catch (e) {
-      signUpSink.add(Response.error(e.toString()));
+      loginSink.add(Response.error(e));
       print(e);
     }
   }
 
-  verify(String username, String password, bool isPatient) async {
-    verifySink.add(Response.loading('loading'));
+  loginWithUserName(String username, RoleType roleType) async {
+    loginSink.add(Response.loading());
     try {
+      LoginResponseEntity response =
+      await _repository.login(username, roleType.index);
+
+      loginSink.add(Response.completed(response));
+    } catch (e) {
+      loginSink.add(Response.error(e));
+      print(e);
+    }
+  }
+
+  verify(String password, bool isPatient) async {
+    verifySink.add(Response.loading());
+    try {
+      String username = await getUserName();
       VerifyResponseEntity response =
           await _repository.verify(username, password);
+      saveUserName(username);
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.token);
       prefs.setBool('isPatient', isPatient);
       verifySink.add(Response.completed(response));
     } catch (e) {
-      verifySink.add(Response.error(e.toString()));
+      verifySink.add(Response.error(e));
       print(e);
     }
   }
 
-  signIn(String username, String password, bool isPatient) async {
-    signInSink.add(Response.loading('loading'));
-    try {
-      VerifyResponseEntity response =
-          await _repository.signIn(username, password);
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('token', response.token);
-      prefs.setBool('isPatient', isPatient);
-      signInSink.add(Response.completed(response));
-    } catch (e) {
-      signInSink.add(Response.error(e.toString()));
-      print(e);
-    }
+  saveUserName(String userName) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', userName);
+  }
+
+  getUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
   }
 
   dispose() {
-    _signUpController?.close();
+    _loginController?.close();
     _verifyController?.close();
-    _signInController?.close();
   }
 }

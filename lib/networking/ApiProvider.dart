@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
-  final String _baseUrl = "http://185.252.30.163/";
+  final String _baseUrl = "http://185.252.30.163:8001/";
 
   Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {
     var responseJson;
@@ -50,8 +50,6 @@ class ApiProvider {
       responseJson = _response(httpResponse: response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
-    } catch (_) {
-      throw BadRequestException();
     }
     return responseJson;
   }
@@ -97,6 +95,8 @@ class ApiProvider {
       response = httpResponse;
     else
       response = dioResponse;
+    print(
+        "API RESPONSE -->>>> code:${response.statusCode} - ${response.body.toString()}");
     switch (response.statusCode) {
       case 200:
       case 201:
@@ -108,18 +108,8 @@ class ApiProvider {
         }
         print(responseJson);
         return responseJson;
-      case 400:
-        throw BadRequestException(response.body.toString());
-      case 401:
-
-      case 403:
-        throw UnauthorisedException(response.body.toString());
-      case 500:
-
       default:
-        print("${response.statusCode} Error ->>> ${response.body.toString()}");
-        throw FetchDataException(
-            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+        throw ApiException(response.statusCode, response.body.toString());
     }
   }
 }

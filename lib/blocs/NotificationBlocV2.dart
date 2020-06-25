@@ -23,12 +23,12 @@ class NotificationBlocV2 {
   }
 
   get() async {
-    sink.add(Response.loading(''));
+    sink.add(Response.loading());
     try {
       NewestNotificationResponse _response = await _repository.getNewestNotifications();
       sink.add(Response.completed(_response));
     } catch (e) {
-      sink.add(Response.error(e.toString()));
+      sink.add(Response.error(e));
       print(e);
     }
   }

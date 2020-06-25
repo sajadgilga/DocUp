@@ -6,7 +6,6 @@ import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/BasePage.dart';
-import 'package:docup/ui/mainPage/MainPage.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/blocs/timer/TimerEvent.dart';
 import 'package:docup/ui/widgets/InputField.dart';
@@ -18,14 +17,13 @@ import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../blocs/timer/TimerBloc.dart';
 import '../../blocs/timer/Tricker.dart';
 
-enum StartType { SIGN_UP, LOGIN, REGISTER, SIGN_IN }
+enum StartType { SIGN_UP, LOGIN, REGISTER }
 
 class StartPage extends StatefulWidget {
   StartPage({Key key, this.title}) : super(key: key);
@@ -47,14 +45,11 @@ class _StartPageState extends State<StartPage> {
   final _doctorIdController = TextEditingController();
   final _verificationController = TextEditingController();
   final _fullNameController = TextEditingController();
-  final _passwordController = TextEditingController();
 
   RoleType currentRoleType = RoleType.PATIENT;
   StartType startType = StartType.SIGN_UP;
   AlertDialog _loadingDialog = getLoadingDialog();
   bool _loadingEnable;
-
-  String currentUserName;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
@@ -72,20 +67,7 @@ class _StartPageState extends State<StartPage> {
           Navigator.of(context).pop();
           _loadingEnable = false;
         }
-        if(response.message.startsWith("Invalid") && startType == StartType.SIGN_UP) {
-          showOneButtonDialog(context, "شما قبلا در داکآپ ثبت نام کرده اید. لطفا به همراه رمز عبور خود وارد اپلیکیشن شوید", "ورود", (){
-            setState(() {
-              startType = StartType.SIGN_IN;
-            });
-          });
-        } else if(response.message.startsWith("Invalid") && startType == StartType.SIGN_IN) {
-          showErrorSnackBar("رمز عبور وارد شده اشتباه می باشد");
-        } else if(response.message.startsWith("Invalid") && startType == StartType.LOGIN) {
-          showErrorSnackBar("کد تایید وارد شده اشتباه می باشد");
-        } else {
-          showErrorSnackBar(response.message);
-
-        }
+        showErrorSnackBar(response.error.toString());
         return false;
       default:
         if (_loadingEnable) {
@@ -115,8 +97,7 @@ class _StartPageState extends State<StartPage> {
 
   bool resendCodeEnabled = false;
 
-
-  void resetTimer(){
+  void resetTimer() {
     _timerBloc = TimerBloc(ticker: Ticker());
     _timerBloc.add(Start(duration: 60));
     listenToTime();
@@ -127,10 +108,8 @@ class _StartPageState extends State<StartPage> {
     switchRole(currentRoleType);
     checkToken();
     listenToTime();
-    _authBloc.signUpStream.listen((data) {
+    _authBloc.loginStream.listen((data) {
       if (handle(data)) {
-        currentUserName = _usernameController.text;
-        _usernameController.clear();
         setState(() {
           startType = StartType.LOGIN;
         });
@@ -143,13 +122,6 @@ class _StartPageState extends State<StartPage> {
         setState(() {
           startType = StartType.REGISTER;
         });
-      }
-    });
-
-    _authBloc.signInStream.listen((data) {
-      if (handle(data)) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => BasePage()));
       }
     });
 
@@ -193,30 +165,24 @@ class _StartPageState extends State<StartPage> {
             if (currentRoleType == RoleType.DOCTOR) {
               showNextVersionDialog(context);
             } else {
-              _authBloc.signUp(_usernameController.text, currentRoleType);
+              _authBloc.loginWithUserName(_usernameController.text, currentRoleType);
             }
             break;
           case StartType.LOGIN:
             if (resend != null && resend) {
-              _authBloc.signUp(currentUserName, currentRoleType);
+              _authBloc.login(currentRoleType);
               resetTimer();
             } else {
-              _authBloc.verify(currentUserName, _verificationController.text,
+              _authBloc.verify(_verificationController.text,
                   currentRoleType == RoleType.PATIENT);
             }
             break;
           case StartType.REGISTER:
             if (currentRoleType == RoleType.PATIENT) {
-              _patientBloc.update(
-                  _fullNameController.text, _passwordController.text);
+              _patientBloc.update(_fullNameController.text);
             } else if (currentRoleType == RoleType.DOCTOR) {
-              _doctorBloc.update(
-                  _fullNameController.text, _passwordController.text);
+              _doctorBloc.update(_fullNameController.text);
             }
-            break;
-          case StartType.SIGN_IN:
-            _authBloc.signIn(_usernameController.text, _passwordController.text,
-                currentRoleType == RoleType.PATIENT);
             break;
         }
       });
@@ -235,7 +201,7 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (startType == StartType.LOGIN || startType == StartType.SIGN_IN) {
+        if (startType == StartType.LOGIN) {
           setState(() {
             startType = StartType.SIGN_UP;
           });
@@ -266,8 +232,6 @@ class _StartPageState extends State<StartPage> {
                 _timerWidget(),
                 SizedBox(height: 50),
                 _actionWidget(),
-                SizedBox(height: 20),
-                _enterWidget(),
                 SizedBox(height: 20)
               ],
             ),
@@ -284,7 +248,6 @@ class _StartPageState extends State<StartPage> {
     _doctorIdController.dispose();
     _verificationController.dispose();
     _fullNameController.dispose();
-    _passwordController.dispose();
     _authBloc.dispose();
     _patientBloc.dispose();
     _doctorBloc.dispose();
@@ -324,9 +287,6 @@ class _StartPageState extends State<StartPage> {
         return _loginActionWidget();
       case StartType.REGISTER:
         return _registerActionWidget();
-      case StartType.SIGN_IN:
-        return _signInActionWidget();
-        break;
     }
   }
 
@@ -377,21 +337,8 @@ class _StartPageState extends State<StartPage> {
         callBack: submit,
       );
 
-  _signInActionWidget() => ActionButton(
-        color: IColors.themeColor,
-        title: Strings.enterAction,
-        icon: Icon(
-          Icons.arrow_back_ios,
-          size: 18,
-        ),
-        rtl: false,
-        callBack: submit,
-      );
-
   _headerWidget() => Text(
-        startType == StartType.SIGN_IN
-            ? Strings.signInHeaderMessage
-            : Strings.registerHeaderMessage,
+        Strings.registerHeaderMessage,
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       );
 
@@ -436,29 +383,6 @@ class _StartPageState extends State<StartPage> {
               fontSize: 16,
               fontWeight: FontWeight.bold),
         ),
-      );
-
-  _enterWidget() => Visibility(
-        visible: startType == StartType.SIGN_UP,
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                startType = StartType.SIGN_IN;
-              });
-            },
-            child: Text(Strings.enterAction,
-                style: TextStyle(
-                    fontSize: 13,
-                    color: IColors.themeColor,
-                    decoration: TextDecoration.underline)),
-          ),
-          SizedBox(
-            width: 10.0,
-          ),
-          Text(Strings.accountQuestion, style: TextStyle(fontSize: 13)),
-        ]),
       );
 
   _inputFieldsWidget() => Padding(
@@ -521,34 +445,6 @@ class _StartPageState extends State<StartPage> {
               validationCallback: (text) => text.isNotEmpty,
               errorMessage: 'نام خود را وارد کنید',
               needToHideKeyboard: false,
-            ),
-            InputField(
-              inputHint: Strings.passInputHint,
-              validationCallback: (text) => text.length >= 4,
-              errorMessage: "رمز عبور بایستی حداقل ۴ کاراکتری باشد",
-              obscureText: true,
-              needToHideKeyboard: false,
-              controller: _passwordController,
-            )
-          ],
-        );
-      case StartType.SIGN_IN:
-        return Column(
-          children: <Widget>[
-            InputField(
-              inputHint: Strings.usernameInputHint,
-              textInputType: TextInputType.phone,
-              validationCallback: (text) => validatePhoneNumber(text),
-              controller: _usernameController,
-              errorMessage: "شماره همراه معتبر نیست",
-            ),
-            InputField(
-              inputHint: Strings.passInputHint,
-              validationCallback: (text) => text.length >= 4,
-              errorMessage: "رمز عبور بایستی حداقل ۴ کاراکتری باشد",
-              obscureText: true,
-              needToHideKeyboard: false,
-              controller: _passwordController,
             )
           ],
         );

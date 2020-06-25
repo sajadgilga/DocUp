@@ -20,14 +20,14 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     _repository = PatientRepository();
   }
 
-  update(String fullName, String password) async {
-    dataSink.add(Response.loading('loading'));
+  update(String fullName) async {
+    dataSink.add(Response.loading());
     try {
       PatientEntity patient = await _repository
-          .update(PatientEntity(user: User(firstName: fullName, password: password)));
+          .update(PatientEntity(user: User(firstName: fullName)));
       dataSink.add(Response.completed(patient));
     } catch (e) {
-      dataSink.add(Response.error(e.toString()));
+      dataSink.add(Response.error(e));
       print(e);
     }
   }
@@ -40,14 +40,6 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     } catch (e) {
       yield PatientError();
     }
-//    dataSink.add(Response.loading('loading'));
-//    try {
-//      Patient patient = await _repository.get();
-//      dataSink.add(Response.completed(patient));
-//    } catch (e) {
-//      dataSink.add(Response.error(e.toString()));
-//      print(e);
-//    }
   }
 
   dispose() => _controller?.close();

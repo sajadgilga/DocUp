@@ -1,5 +1,4 @@
 import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/VideoCallBloc.dart';
 import 'package:docup/blocs/visit_time/visit_time_bloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';

@@ -17,9 +17,9 @@ class AuthRepository {
     return VerifyResponseEntity.fromJson(response);
   }
 
-  Future<VerifyResponseEntity> signIn(String username, String password) async {
-    final response = await _provider.post("api/auth/sign-in/",
-        body: {"username": username, "password": password}, withToken: false);
-    return VerifyResponseEntity.fromJson(response);
+  Future<LoginResponseEntity> login(String username, int userType) async {
+    final response = await _provider.post("api/auth/log-in/",
+        body: {"username": username, "user_type": userType}, withToken: false);
+    return LoginResponseEntity.fromJson(response);
   }
 }
