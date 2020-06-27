@@ -295,12 +295,5 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
             "T" +
             timeTextController.text +
             "+04:30");
-//      showOneButtonDialog(
-//          context,
-//          "زمان انتخاب شده خالی نیست. لطفا زمان دیگری را برای ویزیت انتخاب کنید " +
-//              "\n" +
-//              "پزشک ساعت ${replaceFarsiNumber(widget.doctorEntity.plan.startTime)} الی  ${replaceFarsiNumber(widget.doctorEntity.plan.endTime)} را تخصیص داده است ",
-//          "متوجه شدم",
-//          () {});
   }
 }
