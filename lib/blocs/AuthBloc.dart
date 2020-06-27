@@ -44,16 +44,8 @@ class AuthBloc {
   }
 
   loginWithUserName(String username, RoleType roleType) async {
-    loginSink.add(Response.loading());
-    try {
-      LoginResponseEntity response =
-      await _repository.login(username, roleType.index);
-
-      loginSink.add(Response.completed(response));
-    } catch (e) {
-      loginSink.add(Response.error(e));
-      print(e);
-    }
+    saveUserName(username);
+    login(roleType);
   }
 
   verify(String password, bool isPatient) async {

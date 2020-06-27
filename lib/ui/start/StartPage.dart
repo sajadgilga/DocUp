@@ -162,11 +162,8 @@ class _StartPageState extends State<StartPage> {
       setState(() {
         switch (startType) {
           case StartType.SIGN_UP:
-            if (currentRoleType == RoleType.DOCTOR) {
-              showNextVersionDialog(context);
-            } else {
-              _authBloc.loginWithUserName(_usernameController.text, currentRoleType);
-            }
+            _authBloc.loginWithUserName(
+                _usernameController.text, currentRoleType);
             break;
           case StartType.LOGIN:
             if (resend != null && resend) {
@@ -396,33 +393,13 @@ class _StartPageState extends State<StartPage> {
   _inputFieldsInnerWidget() {
     switch (startType) {
       case StartType.SIGN_UP:
-        return currentRoleType == RoleType.PATIENT
-            ? InputField(
-                inputHint: Strings.usernameInputHint,
-                controller: _usernameController,
-                textInputType: TextInputType.phone,
-                validationCallback: (text) => validatePhoneNumber(text),
-                errorMessage: "شماره همراه معتبر نیست",
-              )
-            : Column(
-                children: <Widget>[
-                  InputField(
-                    inputHint: Strings.doctorIdInputHint,
-                    textInputType: TextInputType.number,
-                    needToHideKeyboard: false,
-                    validationCallback: (text) => text.length >= 4,
-                    errorMessage: "شماره نظام پزشکی معتبر نیست",
-                    controller: _doctorIdController,
-                  ),
-                  InputField(
-                    inputHint: Strings.usernameInputHint,
-                    textInputType: TextInputType.phone,
-                    validationCallback: (text) => validatePhoneNumber(text),
-                    controller: _usernameController,
-                    errorMessage: "شماره همراه معتبر نیست",
-                  )
-                ],
-              );
+        return InputField(
+          inputHint: Strings.usernameInputHint,
+          controller: _usernameController,
+          textInputType: TextInputType.phone,
+          validationCallback: (text) => validatePhoneNumber(text),
+          errorMessage: "شماره همراه معتبر نیست",
+        );
       case StartType.LOGIN:
         return InputField(
             inputHint: Strings.verificationHint,
