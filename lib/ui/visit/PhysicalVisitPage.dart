@@ -42,16 +42,15 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
     _bloc.visitRequestStream.listen((data) {
       if (data.status == Status.COMPLETED) {
         showOneButtonDialog(context, Strings.physicalVisitRequestedMessage,
-            "در انتظار تایید پزشک", () => Navigator.pop(context), color: Colors.black54);
+            "در انتظار تایید پزشک", () => Navigator.pop(context),
+            color: Colors.black54);
       } else if (data.status == Status.ERROR) {
-        //TODO
-        if (data.error.toString().startsWith("Invalid")) {
+        if (data.error.getCode() == 602) {
           showOneButtonDialog(
               context,
               Strings.notEnoughCreditMessage,
               Strings.addCreditAction,
-                  () => widget.onPush(
-                  NavigatorRoutes.account, "10000"));
+              () => widget.onPush(NavigatorRoutes.account, "10000"));
         } else {
           toast(context, data.error.toString());
         }
@@ -65,10 +64,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
       child: Container(
         margin: EdgeInsets.only(top: 50),
         constraints:
-        BoxConstraints(maxWidth: MediaQuery
-            .of(context)
-            .size
-            .width),
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
         child: Column(children: <Widget>[
           DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
           ALittleVerticalSpace(),
@@ -78,11 +74,10 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               ActionButton(
-                width: 120,
-                color: IColors.themeColor,
-                title: "حضوری",
-                callBack: () {}
-              ),
+                  width: 120,
+                  color: IColors.themeColor,
+                  title: "حضوری",
+                  callBack: () {}),
             ],
           ),
           ALittleVerticalSpace(),
@@ -101,8 +96,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
     );
   }
 
-  _calendarWidget() =>
-      Column(
+  _calendarWidget() => Column(
         children: <Widget>[
           _labelWidget("زمان برگزاری"),
           ALittleVerticalSpace(),
@@ -133,19 +127,16 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
       final to = (i + 2).toString();
       visitTimes.add(replaceFarsiNumber("از " + from + " تا " + to));
     }
-    return visitTimes
-        .toList();
+    return visitTimes.toList();
   }
 
-  _submitWidget() =>
-      ActionButton(
+  _submitWidget() => ActionButton(
         color: policyChecked ? IColors.themeColor : Colors.grey,
         title: "رزرو نوبت",
         callBack: _sendVisitRequest,
       );
 
-  _acceptPolicyWidget() =>
-      Row(
+  _acceptPolicyWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Text(
@@ -165,8 +156,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
         ],
       );
 
-  _timesWidget(String title, List<String> items) =>
-      Container(
+  _timesWidget(String title, List<String> items) => Container(
         height: 50,
         child: ListView(
           reverse: true,
@@ -174,30 +164,30 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
           children: <Widget>[
             for (var index = 0; index < items.length; index++)
               Wrap(
-                children: <Widget>[Padding(
-                  padding: const EdgeInsets.only(right: 4.0, left: 4.0),
-                  child: ActionButton(
-                    width: 120,
-                    color: typeSelected[title] == items[index]
-                        ? IColors.themeColor
-                        : Colors.grey,
-                    title: items[index],
-                    callBack: () {
-                      setState(() {
-                        timeIndexSelected = index;
-                        typeSelected[title] = items[index];
-                      });
-                    },
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0, left: 4.0),
+                    child: ActionButton(
+                      width: 120,
+                      color: typeSelected[title] == items[index]
+                          ? IColors.themeColor
+                          : Colors.grey,
+                      title: items[index],
+                      callBack: () {
+                        setState(() {
+                          timeIndexSelected = index;
+                          typeSelected[title] = items[index];
+                        });
+                      },
+                    ),
                   ),
-                ),],
+                ],
               ),
           ],
         ),
       );
 
-
-  _labelWidget(String title) =>
-      Padding(
+  _labelWidget(String title) => Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
