@@ -61,7 +61,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             if (snapshot.hasData) {
               switch (snapshot.data.status) {
                 case Status.LOADING:
-                  return APICallLoading(loadingMessage: snapshot.data.error.toString());
+                  return APICallLoading();
                   break;
                 case Status.COMPLETED:
                   return Center(child: _doctorInfoWidget(snapshot.data.data));

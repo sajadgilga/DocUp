@@ -41,21 +41,21 @@ class ApiProvider {
   }
 
   Future<dynamic> postWithBaseUrl(String baseUrl, String url,
-      {Map body, bool withToken = true}) async {
+      {Map body, bool withToken = true, bool utf8Support = false}) async {
     var responseJson;
     try {
       final headers = await getHeaders(withToken: withToken);
       final response = await http.post(baseUrl + url,
           body: jsonEncode(body), headers: headers);
-      responseJson = _response(httpResponse: response);
+      responseJson = _response(httpResponse: response, utf8Support: utf8Support);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
   }
 
-  Future<dynamic> post(String url, {Map body, bool withToken = true}) async {
-    return postWithBaseUrl(_baseUrl, url, body: body, withToken: withToken);
+  Future<dynamic> post(String url, {Map body, bool withToken = true, bool utf8Support = false}) async {
+    return postWithBaseUrl(_baseUrl, url, body: body, withToken: withToken, utf8Support: utf8Support);
   }
 
   getHeaders({bool withToken = true}) async {
@@ -100,16 +100,22 @@ class ApiProvider {
     switch (response.statusCode) {
       case 200:
       case 201:
-        var responseJson;
-        if (utf8Support) {
-          responseJson = json.decode(utf8.decode(response.bodyBytes));
-        } else {
-          responseJson = json.decode(response.body.toString());
-        }
+        var responseJson = decodeResponse(utf8Support, response);
         print(responseJson);
         return responseJson;
+      case 403:
+        var responseJson = decodeResponse(utf8Support, response);
+        throw ApiException(responseJson['error_code'], responseJson['detail']);
       default:
         throw ApiException(response.statusCode, response.body.toString());
+    }
+  }
+
+  decodeResponse(bool utf8Support, response) {
+    if (utf8Support) {
+      return json.decode(utf8.decode(response.bodyBytes));
+    } else {
+      return json.decode(response.body.toString());
     }
   }
 }

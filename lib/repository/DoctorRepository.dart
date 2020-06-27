@@ -61,7 +61,7 @@ class DoctorRepository {
       "visit_method": visitMethod,
       "visit_duration_plan": durationPlan,
       "request_visit_time": visitTime
-    });
+    }, utf8Support: true);
     return VisitEntity.fromJson(response);
   }
 

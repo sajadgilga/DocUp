@@ -27,11 +27,14 @@ class InvalidInputException extends CustomException {
 }
 
 class ApiException implements Exception {
-  final code;
+  final _code;
   final message;
 
-  ApiException([this.code, this.message]);
+  ApiException([this._code, this.message]);
 
+  getCode(){
+    return int.parse(this._code);
+  }
   String toString() {
     return message;
   }

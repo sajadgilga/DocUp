@@ -85,7 +85,7 @@ class _VisitConfPageState extends State<VisitConfPage> {
             if (snapshot.hasData) {
               switch (snapshot.data.status) {
                 case Status.LOADING:
-                  return APICallLoading(loadingMessage: snapshot.data.error.toString());
+                  return APICallLoading();
                   break;
                 case Status.COMPLETED:
                   return Center(child: _rootWidget(snapshot.data.data));

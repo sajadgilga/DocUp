@@ -64,7 +64,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
             if (snapshot.hasData) {
               switch (snapshot.data.status) {
                 case Status.LOADING:
-                  return APICallLoading(loadingMessage: snapshot.data.error.toString());
+                  return APICallLoading();
                   break;
                 case Status.COMPLETED:
                   return Center(child: _headerWidget(snapshot.data.data));

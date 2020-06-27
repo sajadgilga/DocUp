@@ -45,8 +45,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         showOneButtonDialog(context, Strings.visitRequestedMessage,
             Strings.understandAction, () => Navigator.pop(context));
       } else if (data.status == Status.ERROR) {
-        //Todo
-        if (data.error.toString().startsWith("Invalid")) {
+        if (data.error.getCode() == 602) {
           showOneButtonDialog(
               context,
               Strings.notEnoughCreditMessage,
