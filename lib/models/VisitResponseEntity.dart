@@ -53,11 +53,21 @@ class VisitEntity {
 //    patient = json['patient'];
 
     if (json.containsKey('doctor')) {
-      doctorEntity = DoctorEntity.fromJson(json['doctor']);
-//      doctor = doctorEntity.username;
+      try {
+        doctorEntity = DoctorEntity.fromJson(json['doctor']);
+        doctor = doctorEntity.id;
+      } catch(_) {
+        doctor = json['doctor'];
+      }
     }
-      if (json.containsKey('patient'))
-      patientEntity = PatientEntity.fromJson(json['patient']);
+      if (json.containsKey('patient')) {
+        try {
+          patientEntity = PatientEntity.fromJson(json['patient']);
+          patient = patientEntity.id;
+        } catch(_) {
+          patient = json['patient'];
+        }
+      }
 
     if (json.containsKey('panel')) panel = json['panel'];
     if (json.containsKey('visit_type')) visitType = json['visit_type'];

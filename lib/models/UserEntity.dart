@@ -7,10 +7,11 @@ import 'PatientEntity.dart';
 abstract class UserEntity {
   User user;
   int id;
+  int vid; //TODO: have to be removed later
   List<Panel> panels;
   Map<int, Panel> panelMap = {};
 
-  UserEntity({this.user, this.id, this.panels});
+  UserEntity({this.user, this.id, this.panels, this.vid});
 }
 
 class Entity {

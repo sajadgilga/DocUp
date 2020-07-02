@@ -5,7 +5,7 @@ class PatientEntity extends UserEntity {
   PanelSection documents;
   int status;
 
-  PatientEntity({this.documents, user, id, panels}): super(user:user, id: id, panels: panels);
+  PatientEntity({this.documents, user, id, panels, vid}): super(user:user, id: id, panels: panels, vid: vid);
 
   PatientEntity.fromJson(Map<String, dynamic> json) {
     try {

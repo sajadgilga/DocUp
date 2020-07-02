@@ -95,7 +95,7 @@ class DoctorInfoBloc {
   getVisit(int patientId) async {
     getVisitSink.add(Response.loading());
     try {
-      VisitEntity response = await _repository.getVisit(patientId);
+      VisitEntity response = await _repository.getVisitById(patientId);
       getVisitSink.add(Response.completed(response));
     } catch (e) {
       getVisitSink.add(Response.error(e));

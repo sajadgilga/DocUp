@@ -125,6 +125,7 @@ class _VisitResultListState extends State<VisitResultList> {
         ),
       );
     return ListView(
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       children: results,
     );
@@ -338,7 +339,9 @@ class _SearchResultPatientItem extends StatelessWidget {
 //          );
 //        });
     PatientEntity pEntity = PatientEntity(
-        user: entity.patientEntity.user, id: entity.patientEntity.id);
+        user: entity.patientEntity.user,
+        id: entity.patientEntity.id,
+        vid: entity.id);
     onPush(NavigatorRoutes.patientDialogue, pEntity);
   }
 

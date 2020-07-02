@@ -32,6 +32,12 @@ class DoctorRepository {
     return VisitEntity.fromJson(response);
   }
 
+  Future<VisitEntity> getVisitById(int visitId) async {
+    final response = await _provider
+        .get("api/visits/" + visitId.toString() + "/", utf8Support: true);
+    return VisitEntity.fromJson(response);
+  }
+
   Future<DoctorPlan> getDoctorPlan(int doctorId) async {
     final response = await _provider
         .get("api/doctor-plan/" + doctorId.toString());

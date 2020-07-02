@@ -19,10 +19,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PatientRequestPage extends StatefulWidget {
-//  final PatientEntity patientEntity;
-  final VisitEntity visitEntity;
+  final PatientEntity patientEntity;
 
-  PatientRequestPage({Key key, this.patientEntity, this.visitEntity}) : super(key: key);
+  PatientRequestPage({Key key, this.patientEntity}) : super(key: key);
 
   @override
   _PatientRequestPageState createState() => _PatientRequestPageState();
@@ -55,10 +54,10 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    _bloc.getVisit(widget.patientEntity.id);
+    _bloc.getVisit(widget.patientEntity.vid);
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () => _bloc.getVisit(widget.patientEntity.id),
+        onRefresh: () => _bloc.getVisit(widget.patientEntity.vid),
         child: StreamBuilder<Response<VisitEntity>>(
           stream: _bloc.getVisitStream,
           builder: (context, snapshot) {
@@ -74,7 +73,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   return APICallError(
                     errorMessage: Strings.notFoundRequest,
                     onRetryPressed: () =>
-                        _bloc.getVisit(widget.patientEntity.id),
+                        _bloc.getVisit(widget.patientEntity.vid),
                   );
                   break;
               }
