@@ -117,7 +117,7 @@ class _CreateMedicinePageState extends State<CreateMedicinePage> {
 
     if (_createMedicineBloc.state == MedicineCreationStates.SENDING) return;
     _createMedicineBloc.add(MedicineCreate(
-        medicine: Medicine(drugName: name, usage: count, patient: patientId)));
+        medicine: Medicine(drugName: name, usage: count, patient: patientId, usagePeriod: int.parse(period), numbers: int.parse(count))));
     showDialog(
         context: context,
         builder: (BuildContext context) {

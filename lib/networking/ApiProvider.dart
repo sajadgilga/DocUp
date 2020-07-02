@@ -7,13 +7,14 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
-  final String _baseUrl = "http://185.252.30.163:8001/";
+  static const String URL_IP = "185.252.30.163:8001";
+  final String _BASE_URL = "http://${URL_IP}/";
 
   Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {
     var responseJson;
     try {
       final headers = await getHeaders();
-      final response = await http.get(_baseUrl + url, headers: headers);
+      final response = await http.get(_BASE_URL + url, headers: headers);
       responseJson =
           _response(httpResponse: response, utf8Support: utf8Support);
     } on SocketException {
@@ -32,7 +33,7 @@ class ApiProvider {
         headers.addAll({HttpHeaders.authorizationHeader: "JWT " + token});
       }
       final response = await Dio()
-          .post(_baseUrl + url, data: data, options: Options(headers: headers));
+          .post(_BASE_URL + url, data: data, options: Options(headers: headers));
       responseJson = _response(dioResponse: response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -55,7 +56,7 @@ class ApiProvider {
   }
 
   Future<dynamic> post(String url, {Map body, bool withToken = true, bool utf8Support = false}) async {
-    return postWithBaseUrl(_baseUrl, url, body: body, withToken: withToken, utf8Support: utf8Support);
+    return postWithBaseUrl(_BASE_URL, url, body: body, withToken: withToken, utf8Support: utf8Support);
   }
 
   getHeaders({bool withToken = true}) async {
@@ -77,7 +78,7 @@ class ApiProvider {
     var responseJson;
     try {
       final headers = await getHeaders();
-      final response = await http.patch(_baseUrl + url,
+      final response = await http.patch(_BASE_URL + url,
           body: jsonEncode(body), headers: headers);
       responseJson = _response(httpResponse: response);
     } on SocketException {

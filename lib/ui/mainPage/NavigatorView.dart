@@ -36,6 +36,7 @@ import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
 import 'package:docup/ui/patientDetail/PatientRequestPage.dart';
+import 'package:docup/ui/visitRequests/VisitRequestsPage.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -130,7 +131,7 @@ class NavigatorViewState extends State<NavigatorView> {
               value: _pictureBloc,
               child: UploadSlider(listId: detail, body: widgetArg)),
           NavigatorRoutes.requestsView: (context) =>
-              _searchPage(context, isRequests: true),
+              _visitRequestPage(context),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
@@ -153,7 +154,7 @@ class NavigatorViewState extends State<NavigatorView> {
               _patientDetailPage(context, detail),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
-              _searchPage(context, isRequests: true),
+              _visitRequestPage(context),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
@@ -193,7 +194,7 @@ class NavigatorViewState extends State<NavigatorView> {
               )),
           NavigatorRoutes.searchView: (context) => _searchPage(context),
           NavigatorRoutes.requestsView: (context) =>
-              _searchPage(context, isRequests: true),
+              _visitRequestPage(context),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
@@ -392,7 +393,8 @@ class NavigatorViewState extends State<NavigatorView> {
                         uploadAvailable: entity.isPatient,
                         entity: entity,
                         onPush: (direction, entity, widgetArg) {
-                          push(context, direction, detail: entity, widgetArg: widgetArg);
+                          push(context, direction,
+                              detail: entity, widgetArg: widgetArg);
                         },
                         pageName: Strings.documents,
                         picListLabel: Strings.panelDocumentsPicLabel,
@@ -405,7 +407,8 @@ class NavigatorViewState extends State<NavigatorView> {
                         uploadAvailable: entity.isDoctor,
                         entity: entity,
                         onPush: (direction, entity, widgetArg) {
-                          push(context, direction, detail: entity, widgetArg: widgetArg);
+                          push(context, direction,
+                              detail: entity, widgetArg: widgetArg);
                         },
                         pageName: Strings.prescriptions,
                         picListLabel: Strings.panelPrescriptionsPicLabel,
@@ -418,7 +421,8 @@ class NavigatorViewState extends State<NavigatorView> {
                         uploadAvailable: entity.isPatient,
                         entity: entity,
                         onPush: (direction, entity, widgetArg) {
-                          push(context, direction, detail: entity, widgetArg: widgetArg);
+                          push(context, direction,
+                              detail: entity, widgetArg: widgetArg);
                         },
                         pageName: Strings.testResults,
                         picListLabel: Strings.panelTestResultsPicLabel,
@@ -551,6 +555,17 @@ class NavigatorViewState extends State<NavigatorView> {
           ],
           child: SearchPage(
             isRequestPage: isRequests,
+            onPush: (direction, entity) {
+              push(context, direction, detail: entity);
+            },
+          ));
+
+  Widget _visitRequestPage(context) => MultiBlocProvider(
+          providers: [
+            BlocProvider<SearchBloc>.value(value: _searchBloc),
+//            BlocProvider<VisitBloc>.value(value: _visitBloc),
+          ],
+          child: VisitRequestsPage(
             onPush: (direction, entity) {
               push(context, direction, detail: entity);
             },

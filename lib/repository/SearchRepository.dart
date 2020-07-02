@@ -17,14 +17,15 @@ class SearchRepository {
   }
 
   Future<SearchResult> searchPatientRequests(searchParam) async {
-    final response =
-        await _provider.get('api/search/patients-list?query=$searchParam&status=0,1');
-    return SearchResult.fromJson(response, false);
+    final response = await _provider
+        .get('api/visits/');
+//        .get('api/search/patients-list?query=$searchParam&status=0,1');
+    return SearchResult.fromJson(response, false, isVisit: true);
   }
 
   Future<SearchResult> searchCount(param) async {
-    final response =
-    await _provider.get('api/search/patients-list?query=$param&status=0,1&page=0');
+    final response = await _provider
+        .get('api/search/patients-list?query=$param&status=0,1&page=0');
     return SearchResult.fromJson(response, false);
   }
 }

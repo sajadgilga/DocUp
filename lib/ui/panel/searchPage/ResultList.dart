@@ -6,6 +6,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,10 +20,7 @@ class ResultList extends StatefulWidget {
   bool isRequestsOnly;
 
   ResultList(
-      {this.onPush,
-      @required this.results,
-      this.isDoctor,
-      this.isRequestsOnly = false});
+      {this.onPush, this.results, this.isDoctor, this.isRequestsOnly = false});
 
   @override
   _ResultListState createState() => _ResultListState();
@@ -55,18 +53,17 @@ class _ResultListState extends State<ResultList> {
   @override
   Widget build(BuildContext context) {
     List<Widget> results = [];
-
     for (var result in widget.results) {
       if (widget.isDoctor)
         results.add(_SearchResultDoctorItem(
           onPush: widget.onPush,
           entity: result,
         ));
-      else if (!widget.isDoctor)
-        results.add(_SearchResultPatientItem(
-          onPush: widget.onPush,
-          entity: result,
-        ));
+//      else if (!widget.isDoctor)
+//        results.add(_SearchResultPatientItem(
+//          onPush: widget.onPush,
+//          entity: result,
+//        ));
     }
     return Container(
       constraints:
@@ -88,6 +85,91 @@ class _ResultListState extends State<ResultList> {
               textAlign: TextAlign.right,
             ),
           ),
+          _list(results)
+        ],
+      ),
+    );
+  }
+}
+
+class VisitResultList extends StatefulWidget {
+  final Function(String, UserEntity) onPush;
+  final String text;
+  List<VisitEntity> visitResults;
+  bool isDoctor;
+  bool isRequestsOnly;
+
+  VisitResultList(
+      {this.onPush,
+      this.visitResults,
+      this.isDoctor,
+      this.text,
+      this.isRequestsOnly = false});
+
+  @override
+  _VisitResultListState createState() => _VisitResultListState();
+}
+
+class _VisitResultListState extends State<VisitResultList> {
+  Widget _list(List<Widget> results) {
+    if (results.length == 0)
+      return Center(
+        child: Text(
+          (widget.isDoctor
+              ? Strings.emptySearch
+              : (widget.isRequestsOnly
+                  ? Strings.emptyRequestsDoctorSide
+                  : Strings.emptySearchDoctorSide)),
+          style: TextStyle(fontSize: 10),
+          textAlign: TextAlign.center,
+        ),
+      );
+    return ListView(
+      shrinkWrap: true,
+      children: results,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> results = [];
+
+    for (var result in widget.visitResults) {
+      results.add(_SearchResultPatientItem(
+        onPush: widget.onPush,
+        entity: result,
+      ));
+    }
+    return Container(
+      margin: EdgeInsets.only(right: 20, left: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Divider(
+            thickness: 1,
+            color: IColors.darkGrey,
+            height: 0,
+          ),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+//            constraints: BoxConstraints(maxWidth: 60),
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                decoration: BoxDecoration(
+                    color: IColors.themeColor,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
+                child: Text(
+                  widget.text,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              )),
           _list(results)
         ],
       ),
@@ -231,8 +313,12 @@ class _SearchResultDoctorItem extends StatelessWidget {
 }
 
 class _SearchResultPatientItem extends StatelessWidget {
-  final PatientEntity entity;
+//  final PatientEntity entity;
+  final VisitEntity entity;
   final Function(String, UserEntity) onPush;
+  final Map<int, String> visitTypes = {0: 'حضوری', 1: 'مجازی'};
+  final Map<int, String> visitMethods = {0: 'متنی', 1: 'صوتی', 2: 'تصویری'};
+  final Map<int, String> visitPlans = {0: 'حضوری', 1: 'مجازی'};
 
   _SearchResultPatientItem({Key key, this.entity, this.onPush})
       : super(key: key);
@@ -251,8 +337,9 @@ class _SearchResultPatientItem extends StatelessWidget {
 //                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
 //          );
 //        });
-    if (entity.status == 0 || entity.status == 1)
-      onPush(NavigatorRoutes.patientDialogue, entity);
+    PatientEntity pEntity = PatientEntity(
+        user: entity.patientEntity.user, id: entity.patientEntity.id);
+    onPush(NavigatorRoutes.patientDialogue, pEntity);
   }
 
   Widget _image(context) => Container(
@@ -261,10 +348,19 @@ class _SearchResultPatientItem extends StatelessWidget {
           child: ClipPolygon(
             sides: 6,
             rotate: 90,
-            child: (entity.user.avatar != null
-                ? Image.network(entity.user.avatar)
+            child: (entity.patientEntity.user.avatar != null
+                ? Image.network(entity.patientEntity.user.avatar)
                 : Image.asset(Assets.emptyAvatar)),
           )));
+
+  String _statusString(type, method) {
+    var str = 'ویزیت '
+        '${visitTypes[type]}';
+    if (type == 1)
+      str += ' '
+          '${visitMethods[method]}';
+    return str;
+  }
 
   Widget _status() {
     return Container(
@@ -273,9 +369,9 @@ class _SearchResultPatientItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Text(
-            PatientStatus.values[entity.status].text,
+            _statusString(entity.visitType, entity.visitMethod),
             style: TextStyle(
-                color: PatientStatus.values[entity.status].color,
+                color: IColors.themeColor,
                 fontSize: 8,
                 fontWeight: FontWeight.bold),
             textAlign: TextAlign.right,
@@ -289,9 +385,10 @@ class _SearchResultPatientItem extends StatelessWidget {
   Widget _info() {
     String utfName;
     try {
-      utfName = utf8.decode(entity.user.name.toString().codeUnits);
+      utfName =
+          utf8.decode(entity.patientEntity.user.name.toString().codeUnits);
     } catch (_) {
-      utfName = entity.user.name;
+      utfName = entity.patientEntity.user.name;
     }
     return Container(
       margin: EdgeInsets.only(right: 15),
@@ -311,12 +408,15 @@ class _SearchResultPatientItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (entity.user == null) return Container();
+    if (entity.patientEntity == null) return Container();
     return GestureDetector(
         onTap: () => _showDoctorDialogue(context),
         child: Container(
-          color: Color.fromRGBO(0, 0, 0, 0),
-          margin: EdgeInsets.only(top: 10, bottom: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: Colors.white,
+          ),
+          margin: EdgeInsets.only(top: 10, bottom: 10, left: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[_info(), _image(context)],

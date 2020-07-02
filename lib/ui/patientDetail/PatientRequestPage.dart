@@ -19,9 +19,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PatientRequestPage extends StatefulWidget {
-  final PatientEntity patientEntity;
+//  final PatientEntity patientEntity;
+  final VisitEntity visitEntity;
 
-  PatientRequestPage({Key key, this.patientEntity}) : super(key: key);
+  PatientRequestPage({Key key, this.patientEntity, this.visitEntity}) : super(key: key);
 
   @override
   _PatientRequestPageState createState() => _PatientRequestPageState();

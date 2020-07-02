@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:docup/networking/ApiProvider.dart';
 import 'package:docup/networking/CustomException.dart';
 import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/blocs/EntityBloc.dart';
@@ -63,7 +64,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     // initialize socket helper for web socket messages
-    SocketHelper().init('185.252.30.163');
+    SocketHelper().init(ApiProvider.URL_IP);
     // get user entity & panels, also periodically update entity's info
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
     _entityBloc.add(EntityGet());

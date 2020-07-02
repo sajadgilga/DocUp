@@ -1,3 +1,7 @@
+import 'package:docup/models/DoctorEntity.dart';
+
+import 'PatientEntity.dart';
+
 class VisitEntity {
   int id;
   String createdDate;
@@ -9,6 +13,8 @@ class VisitEntity {
   int status;
   int doctor;
   int patient;
+  DoctorEntity doctorEntity;
+  PatientEntity patientEntity;
   int panel;
   int visitType;
   int visitMethod;
@@ -43,8 +49,16 @@ class VisitEntity {
     if (json.containsKey('patient_message'))
       patientMessage = json['patient_message'];
     if (json.containsKey('status')) status = json['status'];
-    if (json.containsKey('doctor')) doctor = json['doctor'];
-    if (json.containsKey('patient')) patient = json['patient'];
+
+//    patient = json['patient'];
+
+    if (json.containsKey('doctor')) {
+      doctorEntity = DoctorEntity.fromJson(json['doctor']);
+//      doctor = doctorEntity.username;
+    }
+      if (json.containsKey('patient'))
+      patientEntity = PatientEntity.fromJson(json['patient']);
+
     if (json.containsKey('panel')) panel = json['panel'];
     if (json.containsKey('visit_type')) visitType = json['visit_type'];
     if (json.containsKey('visit_method')) visitMethod = json['visit_method'];
