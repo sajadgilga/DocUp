@@ -77,71 +77,71 @@ class _MainPageState extends State<MainPage> {
           _panelBloc.add(GetMyPanels());
         });
     });
-//      _enableFCM();
-//      setState(() {
-//        _isFCMConfiged = true;
-//      });
+    _enableFCM();
     super.initState();
   }
 
   Future _enableFCM() async {
-    try {
-      _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
-          await _showNotificationWithDefaultSound(
-              message['notification']['title'],
-              message['notification']['body']);
-        },
-        onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
-        onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
-        },
-        onResume: (Map<String, dynamic> message) async {
-          print("onResume: $message");
-        },
-      );
+    if (!_isFCMConfiged) {
+      try {
+        _firebaseMessaging.configure(
+          onMessage: (Map<String, dynamic> message) async {
+            print("onMessage: $message");
+            await _showNotificationWithDefaultSound(
+                message['notification']['title'],
+                message['notification']['body']);
+          },
+          onBackgroundMessage:
+              Platform.isIOS ? null : myBackgroundMessageHandler,
+          onLaunch: (Map<String, dynamic> message) async {
+            print("onLaunch: $message");
+          },
+          onResume: (Map<String, dynamic> message) async {
+            print("onResume: $message");
+          },
+        );
 
-      if (Platform.isIOS) {
-        _firebaseMessaging.requestNotificationPermissions(
-            const IosNotificationSettings(
-                sound: true, badge: true, alert: true, provisional: true));
-        _firebaseMessaging.onIosSettingsRegistered
-            .listen((IosNotificationSettings settings) {
-          print("Settings registered: $settings");
-        });
-      }
-
-      _firebaseMessaging.getToken().then((String fcmToken) {
-        assert(fcmToken != null);
-        print("FCM " + fcmToken);
-        try {
-          NotificationRepository().registerDevice(fcmToken);
-        } on BadRequestException {
-          print('kooooooft');
-          _isFCMConfiged = true;
-          return;
-        } catch (_) {
-          print('register device failed fcm');
-          _isFCMConfiged = true;
-          return;
+        if (Platform.isIOS) {
+          _firebaseMessaging.requestNotificationPermissions(
+              const IosNotificationSettings(
+                  sound: true, badge: true, alert: true, provisional: true));
+          _firebaseMessaging.onIosSettingsRegistered
+              .listen((IosNotificationSettings settings) {
+            print("Settings registered: $settings");
+          });
         }
-      });
 
-      var initializationSettingsAndroid =
-          new AndroidInitializationSettings('mipmap/ic_launcher');
-      var initializationSettingsIOS = new IOSInitializationSettings();
+        _firebaseMessaging.getToken().then((String fcmToken) {
+          assert(fcmToken != null);
+          print("FCM " + fcmToken);
+          try {
+            NotificationRepository().registerDevice(fcmToken);
+          } on BadRequestException {
+            print('kooooooft');
+            _isFCMConfiged = true;
+            return;
+          } catch (_) {
+            print('register device failed fcm');
+            _isFCMConfiged = true;
+            return;
+          }
+        });
 
-      var initializationSettings = new InitializationSettings(
-          initializationSettingsAndroid, initializationSettingsIOS);
+        var initializationSettingsAndroid =
+            new AndroidInitializationSettings('mipmap/ic_launcher');
+        var initializationSettingsIOS = new IOSInitializationSettings();
 
-      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-      flutterLocalNotificationsPlugin.initialize(initializationSettings,
-          onSelectNotification: onSelectNotification);
-    } catch (_) {
-      print("oh oh");
-      _isFCMConfiged = true;
-      return;
+        var initializationSettings = new InitializationSettings(
+            initializationSettingsAndroid, initializationSettingsIOS);
+
+        flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+        flutterLocalNotificationsPlugin.initialize(initializationSettings,
+            onSelectNotification: onSelectNotification);
+      } catch (_) {
+        print("oh oh");
+        _isFCMConfiged = true;
+        return;
+      }
     }
   }
 
