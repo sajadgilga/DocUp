@@ -55,11 +55,15 @@ class DoctorInfoBloc {
     _repository = DoctorRepository();
   }
 
-  getDoctor(int doctorId) async {
+  getDoctor(int doctorId, bool isDoctor) async {
     doctorInfoSink.add(Response.loading());
     try {
       DoctorEntity doctorEntity = await _repository.getDoctor(doctorId);
-      doctorEntity.plan = await _repository.getDoctorPlan(doctorId);
+      if(isDoctor) {
+        doctorEntity.plan = await _repository.getDoctorPlan();
+      } else {
+        doctorEntity.plan = await _repository.getDoctorPlanById(doctorId);
+      }
       doctorInfoSink.add(Response.completed(doctorEntity));
     } catch (e) {
       doctorInfoSink.add(Response.error(e));

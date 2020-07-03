@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
   static const String URL_IP = "185.252.30.163:8001";
-  final String _BASE_URL = "http://${URL_IP}/";
+  final String _BASE_URL = "http://$URL_IP/";
 
   Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {
     var responseJson;

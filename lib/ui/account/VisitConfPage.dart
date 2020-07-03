@@ -54,6 +54,7 @@ class _VisitConfPageState extends State<VisitConfPage> {
       }
     });
     controller.stream.listen((event) {
+      print("set times from listener $event");
       typeSelected["ساعت‌های برگزاری"] = event;
     });
     super.initState();
@@ -61,24 +62,37 @@ class _VisitConfPageState extends State<VisitConfPage> {
 
   _getVisitTimes(DoctorPlan plan) {
     List<int> visitTimes = [];
-    final startTime = plan.startTime;
-    final endTime = plan.endTime;
-    final startHour = int.parse(startTime.split(":")[0]);
-    final endHour = int.parse(endTime.split(":")[0]);
-    for (int i = startHour; i <= endHour; i++) {
-      visitTimes.add(i);
+    for (WorkTimes workTime in plan.workTimes) {
+      final startHour = int.parse(workTime.startTime.split(":")[0]);
+      final endHour = int.parse(workTime.endTime.split(":")[0]);
+      for (int i = startHour; i <= endHour; i++) {
+        visitTimes.add(i);
+      }
     }
     return visitTimes.toList();
+  }
+
+  _getWorkTimes() {
+    List<WorkTimes> workTimes = [];
+    final hours = typeSelected["ساعت‌های برگزاری"].toList();
+    hours.sort();
+    for (int hour in hours) {
+      workTimes.add(WorkTimes(
+        startTime: "$hour:00:00",
+        endTime: "$hour:59:59",
+      ));
+    }
+    return workTimes;
   }
 
   @override
   Widget build(BuildContext context) {
     if (!isLoaded) {
-      _bloc.getDoctor(widget.doctorEntity.id);
+      _bloc.getDoctor(widget.doctorEntity.id, true);
     }
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () => _bloc.getDoctor(widget.doctorEntity.id),
+        onRefresh: () => _bloc.getDoctor(widget.doctorEntity.id, true),
         child: StreamBuilder<Response<DoctorEntity>>(
           stream: _bloc.doctorInfoStream,
           builder: (context, snapshot) {
@@ -94,7 +108,7 @@ class _VisitConfPageState extends State<VisitConfPage> {
                   return APICallError(
                     errorMessage: snapshot.data.error.toString(),
                     onRetryPressed: () =>
-                        _bloc.getDoctor(widget.doctorEntity.id),
+                        _bloc.getDoctor(widget.doctorEntity.id, true),
                   );
                   break;
               }
@@ -110,11 +124,16 @@ class _VisitConfPageState extends State<VisitConfPage> {
 
   GestureDetector _rootWidget(DoctorEntity doctorEntity) {
     if (!isLoaded) {
+      print("--->>>>>> ${doctorEntity.plan.workTimes}");
       typeSelected["انواع مشاوره ها"].addAll(doctorEntity.plan.visitMethod);
       typeSelected["انواع زمان مشاوره"]
           .addAll(doctorEntity.plan.visitDurationPlan);
-      typeSelected["ساعت‌های برگزاری"]
-          .addAll(_getVisitTimes(doctorEntity.plan));
+      if (doctorEntity.plan.workTimes != null &&
+          doctorEntity.plan.workTimes.isNotEmpty) {
+        print("set times from root ${_getVisitTimes(doctorEntity.plan)}");
+        typeSelected["ساعت‌های برگزاری"]
+            .addAll(_getVisitTimes(doctorEntity.plan));
+      }
       typeSelected["روزهای برگزاری"].addAll(doctorEntity.plan.availableDays);
       typeSelected["وقت ویزیت"].addAll(doctorEntity.plan.visitType);
     }
@@ -251,9 +270,6 @@ class _VisitConfPageState extends State<VisitConfPage> {
   }
 
   void submit(DoctorPlan plan) {
-    final hours = typeSelected["ساعت‌های برگزاری"].toList();
-    hours.sort();
-
     _bloc.updateDoctor(
         widget.doctorEntity.id,
         DoctorPlan(
@@ -261,10 +277,12 @@ class _VisitConfPageState extends State<VisitConfPage> {
             visitType: typeSelected["وقت ویزیت"].toList(),
             visitDurationPlan: typeSelected["انواع زمان مشاوره"].toList(),
             availableDays: typeSelected["روزهای برگزاری"].toList(),
-            startTime: "${hours[0]}:00:00",
-            endTime: "${hours[hours.length - 1]}:00:00",
+            workTimes: _getWorkTimes(),
+            enabled: true,
             baseTextPrice: plan.baseTextPrice,
-            baseVideoPrice: plan.baseVideoPrice));
+            baseVideoPrice: plan.baseVideoPrice,
+            basePhysicalVisitPrice: plan.basePhysicalVisitPrice,
+            baseVoicePrice: plan.baseVoicePrice));
   }
 
   bool repeatableForSelectedDays = false;

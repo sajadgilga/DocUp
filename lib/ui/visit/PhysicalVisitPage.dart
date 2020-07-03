@@ -2,6 +2,7 @@ import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
@@ -117,15 +118,12 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
       );
 
   _getVisitTimes() {
+    if(widget.doctorEntity.plan.workTimes == null) return List<String>.empty();
     List<String> visitTimes = [];
-    final startTime = widget.doctorEntity.plan.startTime;
-    final endTime = widget.doctorEntity.plan.endTime;
-    final startHour = int.parse(startTime.split(":")[0]);
-    final endHour = int.parse(endTime.split(":")[0]);
-    for (int i = startHour; i <= endHour; i += 2) {
-      final from = i.toString();
-      final to = (i + 2).toString();
-      visitTimes.add(replaceFarsiNumber("از " + from + " تا " + to));
+    for (WorkTimes workTime in widget.doctorEntity.plan.workTimes) {
+      final startHour = workTime.startTime.split(":")[0];
+      final endHour = workTime.endTime.split(":")[0];
+      visitTimes.add(replaceFarsiNumber("از " + startHour + " تا " + endHour));
     }
     return visitTimes.toList();
   }
@@ -219,8 +217,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
   }
 
   _getStartTime(int timeIndexSelected) {
-    final array = widget.doctorEntity.plan.startTime.split(":");
-    int hour = int.parse(array[0]);
-    return "${hour + timeIndexSelected * 2}:00:00";
+    return widget.doctorEntity.plan.workTimes[timeIndexSelected].startTime;
   }
 }

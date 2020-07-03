@@ -40,10 +40,10 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    _bloc.getDoctor(widget.doctorEntity.id);
+    _bloc.getDoctor(widget.doctorEntity.id, false);
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () => _bloc.getDoctor(widget.doctorEntity.id),
+        onRefresh: () => _bloc.getDoctor(widget.doctorEntity.id, false),
         child: StreamBuilder<Response<DoctorEntity>>(
           stream: _bloc.doctorInfoStream,
           builder: (context, snapshot) {
@@ -59,7 +59,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   return APICallError(
                     errorMessage: snapshot.data.error.toString(),
                     onRetryPressed: () =>
-                        _bloc.getDoctor(widget.doctorEntity.id),
+                        _bloc.getDoctor(widget.doctorEntity.id, false),
                   );
                   break;
               }
