@@ -1,23 +1,21 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapWidget extends StatefulWidget {
-  final double latitude;
-  final double longitude;
+  final Clinic clinic;
 
-  MapWidget({this.latitude, this.longitude});
+  MapWidget({this.clinic});
 
   @override
   _MapWidgetState createState() => _MapWidgetState();
-
 }
 
 class _MapWidgetState extends State<MapWidget> {
-
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();
@@ -25,30 +23,21 @@ class _MapWidgetState extends State<MapWidget> {
 
   void setCustomMapPin() async {
     final Uint8List markerIcon =
-    await getBytesFromAsset('assets/location.png', 60);
+        await getBytesFromAsset('assets/location.png', 60);
     pinLocationIcon = BitmapDescriptor.fromBytes(markerIcon);
   }
-
 
   @override
   Widget build(BuildContext context) {
     _markers.add(Marker(
         markerId: MarkerId("defaultMarker"),
-        position: widget.latitude != null &&
-            widget.longitude != null
-            ? LatLng(
-            widget.latitude,
-            widget.longitude)
-            : defaultPinLocation,
+        position: getPosition(),
         icon: pinLocationIcon));
 
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(20)),
       child: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * 0.8,
+        width: MediaQuery.of(context).size.width * 0.8,
         height: 100,
         child: GoogleMap(
           myLocationEnabled: true,
@@ -57,12 +46,7 @@ class _MapWidgetState extends State<MapWidget> {
             _controller.complete(controller);
           },
           initialCameraPosition: CameraPosition(
-            target: widget.latitude != null &&
-                widget.longitude != null
-                ? LatLng(
-                widget.latitude,
-                widget.longitude)
-                : defaultPinLocation,
+            target: getPosition(),
             zoom: 12.0,
           ),
         ),
@@ -70,5 +54,11 @@ class _MapWidgetState extends State<MapWidget> {
     );
   }
 
-
+  LatLng getPosition() {
+    return widget.clinic != null &&
+            widget.clinic.latitude != null &&
+            widget.clinic.longitude != null
+        ? LatLng(widget.clinic.latitude, widget.clinic.longitude)
+        : defaultPinLocation;
+  }
 }

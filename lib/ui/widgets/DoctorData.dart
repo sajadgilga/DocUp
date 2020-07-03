@@ -6,9 +6,7 @@ class DoctorData extends StatelessWidget {
   final DoctorEntity doctorEntity;
   final double width;
 
-  const DoctorData({
-    Key key, this.doctorEntity, this.width
-  }) : super(key: key);
+  const DoctorData({Key key, this.doctorEntity, this.width}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,41 +15,50 @@ class DoctorData extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Text(
-              "دکتر ${doctorEntity.user.firstName} ${doctorEntity.user.lastName}",
+              "دکتر ${doctorEntity.user.firstName} ${doctorEntity.user.lastName != null ? doctorEntity.user.lastName : ""}",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center),
           SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text("کلینیک ${doctorEntity.clinic.clinicName}",
-                  style: TextStyle(fontSize: 14, color: Colors.grey)),
-              Image.asset("assets/location.png"),
-              SizedBox(width: 5),
-              Flexible(
-                child: Text("${doctorEntity.expert}",
+          Visibility(
+            visible: doctorEntity.clinic != null && doctorEntity.clinic.clinicName != null,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                    " کلینیک ${doctorEntity.clinic != null ? doctorEntity.clinic.clinicName : ""}",
+                    style: TextStyle(fontSize: 14, color: Colors.grey)),
+                Image.asset("assets/location.png"),
+                SizedBox(width: 5),
+                Flexible(
+                  child: Text(
+                    "${doctorEntity.expert}",
                     style: TextStyle(
                       fontSize: 14,
                     ),
-                overflow: TextOverflow.ellipsis,),
-              ),
-            ],
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "کد نظام پزشکی :‌ ${doctorEntity.councilCode}",
-                style: TextStyle(fontSize: 12),
-                textAlign: TextAlign.end,
-              ),
-              SizedBox(width: 10),
-              Icon(
-                Icons.info_outline,
-                color: Colors.black,
-              )
-            ],
+          Visibility(
+            visible: doctorEntity.councilCode != null,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "کد نظام پزشکی :‌ ${doctorEntity.councilCode}",
+                  style: TextStyle(fontSize: 12),
+                  textAlign: TextAlign.end,
+                ),
+                SizedBox(width: 10),
+                Icon(
+                  Icons.info_outline,
+                  color: Colors.black,
+                )
+              ],
+            ),
           ),
         ],
       ),

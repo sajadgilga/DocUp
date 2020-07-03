@@ -49,8 +49,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                       doctorEntity: doctorEntity),
                   MediumVerticalSpace(),
                   MapWidget(
-                    latitude: doctorEntity.clinic.latitude,
-                    longitude: doctorEntity.clinic.longitude,
+                    clinic: doctorEntity.clinic,
                   ),
                   ALittleVerticalSpace(),
                   ActionButton(

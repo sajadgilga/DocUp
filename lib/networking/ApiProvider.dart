@@ -108,7 +108,7 @@ class ApiProvider {
         var responseJson = decodeResponse(utf8Support, response);
         throw ApiException(responseJson['error_code'], responseJson['detail']);
       default:
-        throw ApiException(response.statusCode, response.body.toString());
+        throw ApiException(response.statusCode, "مشکلی در برقراری ارتباط وجود دارد");
     }
   }
 
