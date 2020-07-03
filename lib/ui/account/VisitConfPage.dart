@@ -182,7 +182,7 @@ class _VisitConfPageState extends State<VisitConfPage> {
             LabelAndListWidget(
               smallSize: true,
               title: "وقت ویزیت",
-              items: ["مجازی", "حضوری"],
+              items: ["حضوری", "مجازی"],
               selectedIndex: typeSelected["وقت ویزیت"],
               callback: labelAndListCallback,
             ),
