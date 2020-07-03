@@ -11,6 +11,7 @@ import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
+import 'package:docup/ui/widgets/MapWidget.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,22 +32,10 @@ class DoctorDetailPage extends StatefulWidget {
 class _DoctorDetailPageState extends State<DoctorDetailPage> {
   DoctorInfoBloc _bloc;
 
-  BitmapDescriptor pinLocationIcon;
-  Set<Marker> _markers = {};
-  Completer<GoogleMapController> _controller = Completer();
-  LatLng defaultPinLocation = LatLng(35.715298, 51.404343);
-
   @override
   void initState() {
     _bloc = DoctorInfoBloc();
-    setCustomMapPin();
     super.initState();
-  }
-
-  void setCustomMapPin() async {
-    final Uint8List markerIcon =
-        await getBytesFromAsset('assets/location.png', 60);
-    pinLocationIcon = BitmapDescriptor.fromBytes(markerIcon);
   }
 
   @override
@@ -83,14 +72,6 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
   }
 
   _doctorInfoWidget(DoctorEntity doctorEntity) {
-    _markers.add(Marker(
-        markerId: MarkerId("defaultMarker"),
-        position: doctorEntity.clinic.latitude != null &&
-                doctorEntity.clinic.longitude != null
-            ? LatLng(
-                doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
-            : defaultPinLocation,
-        icon: pinLocationIcon));
     return Column(
       children: <Widget>[
         SizedBox(height: 50),
@@ -100,7 +81,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             width: MediaQuery.of(context).size.width,
             doctorEntity: doctorEntity),
         SizedBox(height: 20),
-        _doctorMapWidget(doctorEntity),
+        MapWidget(
+          clinic: doctorEntity.clinic,
+        ),
         SizedBox(height: 20),
         _doctorActionsWidget(doctorEntity)
       ],
@@ -126,30 +109,6 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
         ],
       );
 
-  ClipRRect _doctorMapWidget(DoctorEntity doctorEntity) {
-    return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(20)),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: 100,
-        child: GoogleMap(
-          myLocationEnabled: true,
-          markers: _markers,
-          onMapCreated: (controller) {
-            _controller.complete(controller);
-          },
-          initialCameraPosition: CameraPosition(
-            target: doctorEntity.clinic.latitude != null &&
-                    doctorEntity.clinic.longitude != null
-                ? LatLng(
-                    doctorEntity.clinic.latitude, doctorEntity.clinic.longitude)
-                : defaultPinLocation,
-            zoom: 12.0,
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   void dispose() {
