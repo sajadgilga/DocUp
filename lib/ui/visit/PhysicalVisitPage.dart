@@ -122,8 +122,8 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
     List<String> visitTimes = [];
     for (WorkTimes workTime in widget.doctorEntity.plan.workTimes) {
       final startHour = workTime.startTime.split(":")[0];
-      final endHour = workTime.endTime.split(":")[0];
-      visitTimes.add(replaceFarsiNumber("از " + startHour + " تا " + endHour));
+      final endHour = int.parse(workTime.endTime.split(":")[0]) + 1;
+      visitTimes.add(replaceFarsiNumber("از " + startHour + " تا $endHour"));
     }
     return visitTimes.toList();
   }

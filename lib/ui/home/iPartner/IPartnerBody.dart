@@ -50,10 +50,12 @@ class IPartnerBody extends StatelessWidget {
   String _getLocation(context) {
     if (partner == null) return '';
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    if (entity.isPatient)
-      return (entity.partnerEntity as DoctorEntity).clinic.clinicName;
-    else
+    if (entity.isPatient) {
+      final clinic = (entity.partnerEntity as DoctorEntity).clinic;
+      if (clinic != null) return clinic.clinicName; else return '';
+    } else {
       return (entity.partnerEntity as PatientEntity).user.firstName; //TODO
+    }
   }
 
   @override
@@ -82,8 +84,7 @@ class IPartnerBody extends StatelessWidget {
 //            _showDoctorDialogue(context);
 //            selectPage(0);
 //          },
-          child:
-          PartnerSummary(
+          child: PartnerSummary(
               name: (partner != null ? partner.user.name : ''),
               speciality: _getSubHeader(context),
               location: _getLocation(context),

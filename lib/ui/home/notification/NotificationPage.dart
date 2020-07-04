@@ -111,7 +111,7 @@ class _NotificationPageState extends State<NotificationPage> {
                     ),
                   ),
                   _notificationCountCircle(
-                      data.newestEventsCounts + data.newestDrugsCounts),
+                      data.newestEventsCounts + data.newestVisitsCounts),
                   _notificationsWidget(context, data),
                 ],
               )),
@@ -129,7 +129,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
   _notificationsWidget(context, NewestNotificationResponse notifications) {
     return (notifications.newestEventsCounts +
-                notifications.newestDrugsCounts) ==
+                notifications.newestVisitsCounts) ==
             0
         ? Expanded(
             child: Positioned(
@@ -147,13 +147,13 @@ class _NotificationPageState extends State<NotificationPage> {
                 child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
-                    itemCount: notifications.newestEventsCounts,
+                    itemCount: notifications.newestVisitsCounts,
                     itemBuilder: (BuildContext context, int index) =>
                         NotificationItem(
-                          title: notifications.newestEvents[index].title,
+                          title: notifications.newestVisits[index].title,
                           description:
-                              notifications.newestEvents[index].description,
-                          time: notifications.newestEvents[index].time,
+                              notifications.newestVisits[index].visitType == 0 ? "درخواست ویزیت حضوری" : "درخواست ویزیت مجازی",
+                          time: notifications.newestVisits[index].requestVisitTime,
                         )),
               ),
             ),
