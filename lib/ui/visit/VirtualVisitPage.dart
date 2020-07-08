@@ -2,6 +2,7 @@ import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/networking/CustomException.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
@@ -55,6 +56,12 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
                 Strings.addCreditAction,
                 () => widget.onPush(
                     NavigatorRoutes.account, _calculateVisitCost()));
+          } else if (apiException.getCode() == 601) {
+            showOneButtonDialog(
+                context,
+                getEnabledTimeString(widget.doctorEntity.plan),
+                Strings.understandAction,
+                () => {});
           } else {
             toast(context, data.error.toString());
           }
@@ -75,8 +82,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         child: Column(children: <Widget>[
           DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
           ALittleVerticalSpace(),
-          _visitTypeWidget(VISIT_METHOD, ["متنی", /*"صوتی", */ "تصویری"],
-              size: 1),
+          _visitTypeWidget(VISIT_METHOD, ["متنی", "صوتی",  "تصویری"]),
           ALittleVerticalSpace(),
           _visitTypeWidget(VISIT_DURATION_PLAN, ["پایه", "تکمیلی", "طولانی"]),
           ALittleVerticalSpace(),
@@ -122,19 +128,22 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               for (var index = items.length - 1; index >= 0; index--)
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0, left: 4.0),
-                  child: ActionButton(
-                    width: (size == 0 ? 120 : 150),
-                    color: typeSelected[title] == index
-                        ? IColors.themeColor
-                        : Colors.grey,
-                    title: items[index],
-                    callBack: () {
-                      setState(() {
-                        typeSelected[title] = index;
-                      });
-                    },
+                Visibility(
+                  visible: title == VISIT_DURATION_PLAN || index != VisitMethod.VOICE.index,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 4.0, left: 4.0),
+                    child: ActionButton(
+                      width: (size == 0 ? 120 : 150),
+                      color: typeSelected[title] == index
+                          ? IColors.themeColor
+                          : Colors.grey,
+                      title: items[index],
+                      callBack: () {
+                        setState(() {
+                          typeSelected[title] = index;
+                        });
+                      },
+                    ),
                   ),
                 ),
             ],
@@ -158,6 +167,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
     int cost = 0;
     if (typeSelected[VISIT_METHOD] == VisitMethod.TEXT.index) {
       cost = widget.doctorEntity.plan.baseTextPrice;
+    } else if (typeSelected[VISIT_METHOD] == VisitMethod.VOICE.index) {
+      cost = widget.doctorEntity.plan.baseVoicePrice;
     } else if (typeSelected[VISIT_METHOD] == VisitMethod.VIDEO.index) {
       cost = widget.doctorEntity.plan.baseVideoPrice;
     }
@@ -301,5 +312,27 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
             "T" +
             timeTextController.text +
             "+04:30");
+  }
+
+  String getEnabledTimeString(DoctorPlan plan) {
+    String availableDays = "";
+    for (int day in plan.availableDays) {
+      availableDays += WeekDay.values[day].name + " ";
+    }
+    String workTimes = "";
+    for (WorkTimes workTime in plan.workTimes) {
+      workTimes += "از " +
+          workTime.startTime.split(":")[0] +
+          " تا " +
+          (int.parse(workTime.endTime.split(":")[0]) + 1).toString() +
+          "\n";
+    }
+    return replaceFarsiNumber("درخواست ویزیت به پزشک مورد نظر در روزهای " +
+        availableDays +
+        "امکان پذیر است " +
+        "\n"
+            "ساعات ارائه ویزیت  " +
+        "\n" +
+        workTimes);
   }
 }
