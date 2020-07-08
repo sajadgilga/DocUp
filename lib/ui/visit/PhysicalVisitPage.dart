@@ -3,6 +3,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/DoctorPlan.dart';
+import 'package:docup/networking/CustomException.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
@@ -46,12 +47,17 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
             "در انتظار تایید پزشک", () => Navigator.pop(context),
             color: Colors.black54);
       } else if (data.status == Status.ERROR) {
-        if (data.error.getCode() == 602) {
-          showOneButtonDialog(
-              context,
-              Strings.notEnoughCreditMessage,
-              Strings.addCreditAction,
-              () => widget.onPush(NavigatorRoutes.account, "10000"));
+        if (data.error is ApiException) {
+          ApiException apiException = data.error;
+          if (apiException.getCode() == 602) {
+            showOneButtonDialog(
+                context,
+                Strings.notEnoughCreditMessage,
+                Strings.addCreditAction,
+                () => widget.onPush(NavigatorRoutes.account, "10000"));
+          } else {
+            toast(context, data.error.toString());
+          }
         } else {
           toast(context, data.error.toString());
         }
@@ -118,7 +124,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
       );
 
   _getVisitTimes() {
-    if(widget.doctorEntity.plan.workTimes == null) return List<String>.empty();
+    if (widget.doctorEntity.plan.workTimes == null) return List<String>.empty();
     List<String> visitTimes = [];
     for (WorkTimes workTime in widget.doctorEntity.plan.workTimes) {
       final startHour = workTime.startTime.split(":")[0];

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
-  static const String URL_IP = "185.252.30.163:8001";
+  static const String URL_IP = "185.252.30.163";
   final String _BASE_URL = "http://$URL_IP/";
 
   Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {
@@ -18,7 +18,7 @@ class ApiProvider {
       responseJson =
           _response(httpResponse: response, utf8Support: utf8Support);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException('اتصال به اینترنت را بررسی کنید');
     }
     return responseJson;
   }
@@ -36,7 +36,7 @@ class ApiProvider {
           .post(_BASE_URL + url, data: data, options: Options(headers: headers));
       responseJson = _response(dioResponse: response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException('اتصال به اینترنت را بررسی کنید');
     }
     return responseJson;
   }
@@ -50,7 +50,7 @@ class ApiProvider {
           body: jsonEncode(body), headers: headers);
       responseJson = _response(httpResponse: response, utf8Support: utf8Support);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException('اتصال به اینترنت را بررسی کنید');
     }
     return responseJson;
   }
@@ -82,7 +82,7 @@ class ApiProvider {
           body: jsonEncode(body), headers: headers);
       responseJson = _response(httpResponse: response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException('اتصال به اینترنت را بررسی کنید');
     }
     return responseJson;
   }

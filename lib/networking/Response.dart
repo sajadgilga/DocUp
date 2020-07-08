@@ -3,7 +3,7 @@ import 'package:docup/networking/CustomException.dart';
 class Response<T> {
   Status status;
   T data;
-  ApiException error;
+  Exception error;
 
   Response.loading() : status = Status.LOADING;
   Response.completed(this.data) : status = Status.COMPLETED;

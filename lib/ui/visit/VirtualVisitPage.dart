@@ -2,6 +2,7 @@ import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/networking/CustomException.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
@@ -45,13 +46,18 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         showOneButtonDialog(context, Strings.visitRequestedMessage,
             Strings.understandAction, () => Navigator.pop(context));
       } else if (data.status == Status.ERROR) {
-        if (data.error.getCode() == 602) {
-          showOneButtonDialog(
-              context,
-              Strings.notEnoughCreditMessage,
-              Strings.addCreditAction,
-              () => widget.onPush(
-                  NavigatorRoutes.account, _calculateVisitCost()));
+        if (data.error is ApiException) {
+          ApiException apiException = data.error;
+          if (apiException.getCode() == 602) {
+            showOneButtonDialog(
+                context,
+                Strings.notEnoughCreditMessage,
+                Strings.addCreditAction,
+                () => widget.onPush(
+                    NavigatorRoutes.account, _calculateVisitCost()));
+          } else {
+            toast(context, data.error.toString());
+          }
         } else {
           toast(context, data.error.toString());
         }
