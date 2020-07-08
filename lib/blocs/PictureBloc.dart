@@ -19,7 +19,7 @@ class PictureBloc extends Bloc<PictureEvent, PictureState> {
       final response = await _repository.get(event.listId);
       yield PicturesLoaded(section: response);
     } catch (e) {
-      yield PictureError();
+//      yield PictureError();
     }
   }
 
@@ -37,7 +37,7 @@ class PictureBloc extends Bloc<PictureEvent, PictureState> {
       yield PictureUploaded();
       yield PicturesLoaded(section: (state as PictureUploading).section);
     } catch (e) {
-//      yield PictureError();
+      yield PictureError();
     print(e.toString());
     }
   }

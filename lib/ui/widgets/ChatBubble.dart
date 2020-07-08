@@ -120,7 +120,7 @@ class _ChatBubbleState extends State<ChatBubble> {
             padding: EdgeInsets.only(left: 5, top: 5),
             child: SvgPicture.asset(
               'assets/whatsapp.svg',
-              color: Colors.red,
+              color: Colors.green,
               width: 10,
               height: 10,
             )));

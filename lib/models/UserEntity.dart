@@ -82,7 +82,7 @@ class Entity {
 
   int sectionId (String name){
     try {
-      return mEntity.panelMap[iPanelId]
+       return mEntity.panelMap[iPanelId]
           .sections[name].id;
     }catch(_) {
       return -1;

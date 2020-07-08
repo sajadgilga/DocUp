@@ -124,7 +124,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
       );
 
   _getVisitTimes() {
-    if (widget.doctorEntity.plan.workTimes == null) return List<String>.empty();
+    if (widget.doctorEntity.plan.workTimes == null) return [];
     List<String> visitTimes = [];
     for (WorkTimes workTime in widget.doctorEntity.plan.workTimes) {
       final startHour = workTime.startTime.split(":")[0];
