@@ -20,7 +20,7 @@ class _PriceWidgetState extends State<PriceWidget>{
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment:CrossAxisAlignment.end,
       children: <Widget>[
-        Text("ریال", style: TextStyle(fontSize: 16)),
+        Text("تومان", style: TextStyle(fontSize: 16)),
         Padding(
           padding: const EdgeInsets.only(left: 12.0, right: 12.0),
           child: Text(widget.price, style: TextStyle(fontSize: 18, color: IColors.themeColor, fontWeight: FontWeight.bold)),
