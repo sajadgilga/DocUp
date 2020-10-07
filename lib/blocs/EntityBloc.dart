@@ -120,7 +120,7 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
 
   @override
   Stream<EntityState> mapEventToState(event) async* {
-    if (event is EntityGet) {
+    if (event  is EntityGet) {
       yield* _get();
     } else if (event is EntityUpdate)
       yield* _update();

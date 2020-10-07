@@ -1,3 +1,4 @@
+import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,12 @@ import 'package:flutter/material.dart';
 class DoctorData extends StatelessWidget {
   final DoctorEntity doctorEntity;
   final double width;
+  final int
+      clinicMarkLocation; // 1 mean location should be in front of doctor name,2 mean it should be near expertise and -1 mean no location mark
 
-  const DoctorData({Key key, this.doctorEntity, this.width}) : super(key: key);
+  const DoctorData(
+      {Key key, this.doctorEntity, this.width, this.clinicMarkLocation})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,21 +19,28 @@ class DoctorData extends StatelessWidget {
       width: this.width,
       child: Column(
         children: <Widget>[
-          Text(
-              "دکتر ${doctorEntity.user.firstName} ${doctorEntity.user.lastName != null ? doctorEntity.user.lastName : ""}",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center),
+          Row(
+            mainAxisAlignment: clinicMarkLocation == 1
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.center,
+            children: [
+              clinicMarkLocation == 1 ? _clinicLocationMark() : SizedBox(),
+              Text(
+                  "دکتر ${doctorEntity.user.firstName} ${doctorEntity.user.lastName != null ? doctorEntity.user.lastName : ""}",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center),
+            ],
+          ),
           SizedBox(height: 5),
           Visibility(
-            visible: doctorEntity.clinic != null && doctorEntity.clinic.clinicName != null,
+            visible: doctorEntity.clinic != null &&
+                doctorEntity.clinic.clinicName != null,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: clinicMarkLocation == 2
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                    " کلینیک ${doctorEntity.clinic != null ? doctorEntity.clinic.clinicName : ""}",
-                    style: TextStyle(fontSize: 14, color: Colors.grey)),
-                Image.asset("assets/location.png"),
-                SizedBox(width: 5),
+                clinicMarkLocation == 2 ? _clinicLocationMark() : SizedBox(),
                 Flexible(
                   child: Text(
                     "${doctorEntity.expert}",
@@ -62,6 +74,22 @@ class DoctorData extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _clinicLocationMark() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+            " کلینیک ${doctorEntity.clinic != null ? doctorEntity.clinic.clinicName : ""}",
+            style: TextStyle(fontSize: 12, color: IColors.themeColor)),
+        Icon(
+          Icons.add_location,
+          color: IColors.themeColor,
+          size: 20,
+        ),
+      ],
     );
   }
 }

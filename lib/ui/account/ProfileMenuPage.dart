@@ -14,6 +14,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/MapWidget.dart';
+import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,94 +42,113 @@ class _ProfileMenuPageState extends State<ProfileMenuPage> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            DocUpHeader(title: "پروفایل من"),
-            MediumVerticalSpace(),
-            Text("کارت های من (0)",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-            MediumVerticalSpace(),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.6,
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            PageTopLeftIcon(
+              topLeft: Icon(
+                Icons.menu,
+                size: 25,
+              ),              onTap: () {
+                /// TODO
+                widget.onPush(NavigatorRoutes.root, null);
+              },
+              topRightFlag: false,
+              topLeftFlag: Platform.isIOS,
+            ),
+            DocUpHeader(
+              title: "پروفایل من",
+              docUpLogo: false,
+            ),
+          ],
+        ),
+        MediumVerticalSpace(),
+        Text("کارت های من (0)",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+        MediumVerticalSpace(),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Text("اضافه کردن کارت بانکی"),
-                        ],
-                      ),
-                      ALittleVerticalSpace(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () => showNextVersionDialog(context),
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    color: IColors.themeColor,
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(30.0))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(Icons.add,
-                                      size: 18, color: Colors.white),
-                                )),
-                          ),
-                        ],
+                      Text("اضافه کردن کارت بانکی"),
+                    ],
+                  ),
+                  ALittleVerticalSpace(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () => showNextVersionDialog(context),
+                        child: Container(
+                            decoration: BoxDecoration(
+                                color: IColors.themeColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30.0))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(Icons.add,
+                                  size: 18, color: Colors.white),
+                            )),
                       ),
                     ],
                   ),
-                ),
-              ),
-            ),
-            ALittleVerticalSpace(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Text("درباره ما",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 ],
               ),
             ),
-            ALittleVerticalSpace(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Text("قوانین و شرایط",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                ],
-              ),
-            ),
-            ALittleVerticalSpace(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Text("ارتباط با ما",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                ],
-              ),
-            ),
-            ActionButton(
-              color: IColors.red,
-              title: "خروج از حساب کاربری",
-              callBack: logout,
-            ),
-            ALittleVerticalSpace()
-          ],
-        ));
+          ),
+        ),
+        ALittleVerticalSpace(),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text("درباره ما",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            ],
+          ),
+        ),
+        ALittleVerticalSpace(),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text("قوانین و شرایط",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            ],
+          ),
+        ),
+        ALittleVerticalSpace(),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text("ارتباط با ما",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            ],
+          ),
+        ),
+        ActionButton(
+          color: IColors.red,
+          title: "خروج از حساب کاربری",
+          callBack: logout,
+        ),
+        ALittleVerticalSpace()
+      ],
+    ));
   }
 
-  void logout() async{
+  void logout() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove("token");
     prefs.remove("isPatient");

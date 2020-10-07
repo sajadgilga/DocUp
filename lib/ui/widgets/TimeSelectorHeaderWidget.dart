@@ -4,16 +4,20 @@ import 'package:flutter/material.dart';
 
 class TimeSelectorHeaderWidget extends StatefulWidget {
   final Function(bool) callback;
+  final bool initialTimeIsSelected;
 
-  TimeSelectorHeaderWidget({this.callback});
+  TimeSelectorHeaderWidget({this.callback, this.initialTimeIsSelected});
 
   @override
   _TimeSelectorHeaderWidgetState createState() =>
-      _TimeSelectorHeaderWidgetState();
+      _TimeSelectorHeaderWidgetState(
+          timeIsSelected: this.initialTimeIsSelected);
 }
 
 class _TimeSelectorHeaderWidgetState extends State<TimeSelectorHeaderWidget> {
-  bool timeIsSelected = true;
+  bool timeIsSelected = false;
+
+  _TimeSelectorHeaderWidgetState({this.timeIsSelected = false});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +40,7 @@ class _TimeSelectorHeaderWidgetState extends State<TimeSelectorHeaderWidget> {
             SizedBox(width: 20),
             GestureDetector(
                 child: Icon(Icons.access_time,
-                    color: timeIsSelected ? IColors.themeColor: Colors.grey),
+                    color: timeIsSelected ? IColors.themeColor : Colors.grey),
                 onTap: () {
                   setState(() {
                     timeIsSelected = true;

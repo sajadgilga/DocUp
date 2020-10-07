@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:docup/constants/assets.dart';
+import 'package:docup/constants/strings.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/blocs/CreditBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
@@ -8,6 +11,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/InputDoneView.dart';
+import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -114,14 +118,34 @@ class _PatientProfilePageState extends State<PatientProfilePage>
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        DocUpHeader(title: "پروفایل من"),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            PageTopLeftIcon(
+              topLeft: Icon(
+                Icons.menu,
+                size: 25,
+              ),
+              onTap: () {
+                /// TODO
+              },
+              topRightFlag: false,
+              topLeftFlag: true,
+            ),
+            DocUpHeader(
+              title: "پروفایل من",
+              docUpLogo: false,
+            ),
+          ],
+        ),
         SizedBox(height: 10),
         _userInfoLabelWidget(),
         _userInfoWidget(),
         _changePasswordWidget(context),
+        SizedBox(height: 10),
         _userCreditLabelWidget(),
         _userCreditWidget(),
-        SizedBox(height: 20),
+        SizedBox(height: 30),
         _addCreditWidget(),
         SizedBox(height: 10),
         _supportWidget()
@@ -129,30 +153,45 @@ class _PatientProfilePageState extends State<PatientProfilePage>
     ));
   }
 
-  _supportWidget() => GestureDetector(
-        onTap: () => launch("tel://09335705997"),
-        child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                  style: TextStyle(
-                      fontFamily: 'iransans',
-                      color: Colors.black87,
-                      fontSize: 15),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text:
-                            "لطفا انتقادات و پیشنهادات خود را با شماره تماس ۰۹۳۳۵۷۰۵۹۹۷ در واتس اپ یا تلگرام با تیم"),
-                    TextSpan(
-                        text: " داکآپ ",
-                        style: TextStyle(
-                            color: IColors.themeColor,
-                            fontWeight: FontWeight.bold)),
-                    TextSpan(text: "در میان بگذارید ")
-                  ]),
-            )),
-      );
+  _supportWidget() {
+    double iconsSize = 60;
+    double telegramIconScale = (210 / 156);
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            onTap: () =>
+                launch("http://telegram.me/" + Strings.supportTelegramId),
+            child: Container(
+                padding: EdgeInsets.all(5),
+                width: iconsSize * telegramIconScale,
+                child: Image.asset(
+                  Assets.accountTelegramIcon,
+                  width: iconsSize * telegramIconScale,
+                )),
+          ),
+          GestureDetector(
+            onTap: () => launch(
+                "whatsapp://send?phone=" + Strings.supportWhatsAppPhoneNumber),
+            child: Container(
+                padding: EdgeInsets.all(5),
+                width: iconsSize,
+                child: Image.asset(
+                  Assets.accountWhatsAppIcon,
+                  width: iconsSize,
+                )),
+          ),
+          Text(
+            "انتقادات و پیشنهادات",
+            style: TextStyle(fontSize: 17),
+          ),
+        ],
+      ),
+    );
+  }
 
   _userCreditWidget() =>
       BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
@@ -166,11 +205,22 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                 color: IColors.darkBlue),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(
-                " ${state is EntityLoaded && state.entity != null && state.entity.mEntity != null ? replaceFarsiNumber(normalizeCredit(state.entity.mEntity.user.credit)) : "0"} تومان ",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 18),
-                textDirection: TextDirection.rtl,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    " ${state is EntityLoaded && state.entity != null && state.entity.mEntity != null ? replaceFarsiNumber(normalizeCredit(state.entity.mEntity.user.credit)) : "0"}",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    textDirection: TextDirection.rtl,
+                  ),
+                  Text(
+                    "ریال",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                    textDirection: TextDirection.rtl,
+                  ),
+                ],
               ),
             ),
           ),
@@ -192,6 +242,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
             child: ActionButton(
                 title: "افزایش اعتبار",
                 icon: Icon(Icons.add),
+                rtl: true,
                 color: IColors.themeColor,
                 callBack: () {
                   if (_amountTextController.text.isEmpty) {
@@ -215,6 +266,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                 width: MediaQuery.of(context).size.width * 0.4,
                 child: TextField(
                   controller: _amountTextController,
+                  textAlign: TextAlign.center,
                   decoration: new InputDecoration(
                       border: new OutlineInputBorder(
                         borderRadius: const BorderRadius.all(
@@ -277,7 +329,15 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                     ],
                   ),
                   SizedBox(width: 20),
-                  Avatar(user: user),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircularAvatar(
+                      user: user,
+                      onTap: () {
+//                        widget.onPush(NavigatorRoutes.uploadPicDialogue);
+                      },
+                    ),
+                  ),
                 ],
               );
             } else

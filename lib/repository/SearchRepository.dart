@@ -17,8 +17,7 @@ class SearchRepository {
   }
 
   Future<SearchResult> searchPatientRequests(searchParam) async {
-    final response = await _provider
-        .get('api/visits/');
+    final response = await _provider.get('api/visits/');
 //        .get('api/search/patients-list?query=$searchParam&status=0,1');
     return SearchResult.fromJson(response, false, isVisit: true);
   }

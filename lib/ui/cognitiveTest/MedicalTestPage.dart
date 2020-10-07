@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
@@ -7,10 +8,12 @@ import 'package:docup/blocs/MedicalTestBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/MedicalTest.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/utils/Device.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -42,25 +45,48 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   @override
   Widget build(BuildContext context) {
     _bloc.add(GetTest(id: 3));
-    return SingleChildScrollView(
-        child: BlocBuilder<MedicalTestBloc, MedicalTestState>(
-            bloc: _bloc,
-            builder: (context, state) {
-              if (state is GetTestLoaded)
-                return _medicalTestWidget(state.result);
-              else if (state is GetTestLoading)
-                return APICallLoading();
-              else
-                return APICallError();
-            }));
+    return MaterialApp(
+      home: Scaffold(
+        body: SingleChildScrollView(
+          child: BlocBuilder<MedicalTestBloc, MedicalTestState>(
+              bloc: _bloc,
+              builder: (context, state) {
+                if (state is GetTestLoaded)
+                  return _medicalTestWidget(state.result);
+                else if (state is GetTestLoading)
+                  return APICallLoading();
+                else
+                  return APICallError();
+              }),
+        ),
+      ),
+    );
   }
 
   _medicalTestWidget(MedicalTest test) => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          DocUpHeader(title: test.name),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              PageTopLeftIcon(
+                topLeft: Icon(
+                  Icons.arrow_back,
+                  color: IColors.themeColor,
+                  size: 20,
+                ),
+                onTap: () {
+                  /// TODO
+                  widget.onPush(NavigatorRoutes.root, null);
+                },
+                topRightFlag: false,
+                topLeftFlag: Platform.isIOS,
+              ),
+              DocUpHeader(title: test.name),
+            ],
+          ),
           ALittleVerticalSpace(),
-          QuestionList(test.questions, answeringController),
+          QuestionList(test.questions, answeringController, context),
           MediumVerticalSpace(),
           _showTestResultButtonWidget(test.questions.length),
           MediumVerticalSpace()
@@ -70,8 +96,9 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   _showTestResultButtonWidget(int questionsCount) => Center(
         child: ActionButton(
             width: MediaQuery.of(context).size.width * 0.5,
-            title: "ارسال نتایج",
+            title: "مشاهده پاسخ",
             color: IColors.blue,
+            borderRadius: 15,
             callBack: () => showTestResult(questionsCount)),
       );
 
@@ -86,8 +113,12 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
             context,
             "ریسک آلزایمر بالا است ",
             "رزرو ویزیت",
-            () => widget.onPush(NavigatorRoutes.doctorDialogue,
-                BlocProvider.of<EntityBloc>(context).state.entity.partnerEntity));
+            () => widget.onPush(
+                NavigatorRoutes.doctorDialogue,
+                BlocProvider.of<EntityBloc>(context)
+                    .state
+                    .entity
+                    .partnerEntity));
       } else {
         showOneButtonDialog(context, "ریسک آلزایمر پایین است ", "متوجه شدم",
             () => Navigator.pop(context));
@@ -106,9 +137,10 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
 
 class QuestionList extends StatelessWidget {
   final List<Question> questions;
+  final BuildContext context;
   StreamController<Answer> answeringController = BehaviorSubject();
 
-  QuestionList(this.questions, this.answeringController);
+  QuestionList(this.questions, this.answeringController, this.context);
 
   @override
   Widget build(BuildContext context) {
@@ -129,9 +161,17 @@ class QuestionList extends StatelessWidget {
         ],
       );
 
-  _questionLabelWidget(String label) => Padding(
-        padding: const EdgeInsets.only(right: 16.0, left: 16.0),
-        child: Text(label, textAlign: TextAlign.right),
+  _questionLabelWidget(String label) => Container(
+        width: MediaQuery.of(context).size.width,
+        alignment: Alignment.centerRight,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+          child: Text(
+            label,
+            textAlign: TextAlign.right,
+            textDirection: TextDirection.rtl,
+          ),
+        ),
       );
 }
 
@@ -160,6 +200,9 @@ class _QuestionAnswersWidgetState extends State<QuestionAnswersWidget> {
                 title: widget.answers[index].text,
                 color: getButtonColor(widget.answers[index].id),
                 textColor: Colors.black,
+                borderRadius: 15,
+                fontSize: 17,
+                boxShadowFlag: true,
                 callBack: () => answerClicked(widget.answers[index]))
         ]);
   }

@@ -7,6 +7,7 @@ import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
@@ -17,14 +18,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'ResultList.dart';
 
-class SearchPage extends StatelessWidget {
+class PartnerSearchPage extends StatelessWidget {
   final Function(String, UserEntity) onPush;
   final isRequestPage;
   TextEditingController _controller = TextEditingController();
 
 //  SearchBloc searchBloc = SearchBloc();
 
-  SearchPage({@required this.onPush, this.isRequestPage = false});
+  PartnerSearchPage({@required this.onPush, this.isRequestPage = false});
 
   void _search(context) {
     var _state = BlocProvider.of<EntityBloc>(context).state;
@@ -85,25 +86,28 @@ class SearchPage extends StatelessWidget {
         ),
       );
 
-  Widget _searchBox(width, context) => Container(
-        margin: EdgeInsets.only(right: 40, left: 40),
-        padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(80))),
-        child: TextField(
-          controller: _controller,
-          onSubmitted: (text) {
-            _search(context);
-          },
-          textAlign: TextAlign.end,
-          textDirection: TextDirection.ltr,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: Strings.searchBoxHint,
-            prefixIcon: Icon(
-              Icons.search,
-              size: 30,
+  Widget _searchBox(width, context) => Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Container(
+          margin: EdgeInsets.only(right: 40, left: 40),
+          padding: EdgeInsets.only(top: 5, bottom: 5, left: 20, right: 20),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(25))),
+          child: TextField(
+            controller: _controller,
+            onSubmitted: (text) {
+              _search(context);
+            },
+            textAlign: TextAlign.end,
+            textDirection: TextDirection.ltr,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: Strings.searchBoxHint,
+              prefixIcon: Icon(
+                Icons.search,
+                size: 30,
+              ),
             ),
           ),
         ),
@@ -157,6 +161,7 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _initialSearch(context);
+    var _state = BlocProvider.of<EntityBloc>(context).state;
 //    _search(context);
 //    _controller.addListener((){print(_controller.text); });
     return Container(
@@ -164,9 +169,25 @@ class SearchPage extends StatelessWidget {
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
       child: Column(
         children: <Widget>[
-          _header(context),
-          _searchBox(MediaQuery.of(context).size.width, context),
-          Expanded(flex: 2, child: _resultList())
+          Padding(
+            padding: const EdgeInsets.only(top: 15),
+            child: SearchBox(
+              isPatient: _state.entity.isDoctor,
+              onSubmit: (String c){
+                _search(context);
+              },
+            ),
+          ),
+          Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 11, vertical: 14),
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 250, 250, 250),
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: _resultList()),
+              ))
         ],
       ),
     );

@@ -22,6 +22,10 @@ import 'package:docup/ui/account/ProfileMenuPage.dart';
 import 'package:docup/ui/account/VisitConfPage.dart';
 import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
+import 'package:docup/ui/noronioClinic/DoctorNoronioService.dart';
+import 'package:docup/ui/noronioClinic/PatientNoronioService.dart';
+import 'package:docup/ui/panel/MyPartners/MyPartnerDialog.dart';
+import 'package:docup/ui/panel/MyPartners/MyPartners.dart';
 import 'package:docup/ui/panel/healthDocument/infoPage/InfoPage.dart';
 import 'package:docup/ui/panel/healthFile/eventPage/EventPage.dart';
 import 'package:docup/ui/panel/healthFile/medicinePage/MedicinePage.dart';
@@ -36,7 +40,9 @@ import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
 import 'package:docup/ui/patientDetail/PatientRequestPage.dart';
-import 'package:docup/ui/visitRequests/VisitRequestsPage.dart';
+import 'package:docup/ui/visitsList/PhysicalVisitListPage.dart';
+import 'package:docup/ui/visitsList/VirtualVisitListPage.dart';
+import 'package:docup/ui/visitsList/VisitRequestsListPage.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -52,10 +58,14 @@ class NavigatorRoutes {
   static const String notificationView = '/notification';
   static const String panelMenu = '/panelMenu';
   static const String panel = '/panel';
+  static const String myDoctorDialog = '/myDoctorDialog';
 
   static const String account = '/account';
-  static const String searchView = '/searchView';
-  static const String requestsView = '/requestsView';
+  static const String partnerSearchView = '/searchView';
+  static const String visitRequestList = '/visitRequestList';
+  static const String physicalVisitList = '/physicalVisitList';
+  static const String virtualVisitList = '/virtualVisitList';
+
   static const String virtualVisitPage = '/virtualVisitPage';
   static const String physicalVisitPage = '/physicalVisitPage';
   static const String uploadPicDialogue = '/uploadPicDialogue';
@@ -124,13 +134,14 @@ class NavigatorViewState extends State<NavigatorView> {
               _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
-          NavigatorRoutes.searchView: (context) => _searchPage(context),
+          NavigatorRoutes.partnerSearchView: (context) =>
+              _partnerSearchPage(context),
           NavigatorRoutes.cognitiveTest: (context) =>
               _cognitiveTest(context, detail),
           NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
               child: UploadSlider(listId: detail, body: widgetArg)),
-          NavigatorRoutes.requestsView: (context) =>
+          NavigatorRoutes.visitRequestList: (context) =>
               _visitRequestPage(context),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
@@ -152,9 +163,14 @@ class NavigatorViewState extends State<NavigatorView> {
               _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
-          NavigatorRoutes.searchView: (context) => _searchPage(context),
-          NavigatorRoutes.requestsView: (context) =>
+          NavigatorRoutes.partnerSearchView: (context) =>
+              _partnerSearchPage(context),
+          NavigatorRoutes.visitRequestList: (context) =>
               _visitRequestPage(context),
+          NavigatorRoutes.physicalVisitList: (context) =>
+              _physicalVisitListPage(context),
+          NavigatorRoutes.virtualVisitList: (context) =>
+              _virtualVisitListPage(context),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
@@ -177,7 +193,9 @@ class NavigatorViewState extends State<NavigatorView> {
 //        };
       case 1:
         return {
-          NavigatorRoutes.root: (context) => _panelMenu(context),
+          NavigatorRoutes.root: (context) => _myDoctorsList(context),
+          NavigatorRoutes.myDoctorDialog: (context) =>
+              _myDoctorsDialog(context, detail: detail),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.panel: (context) => _panel(context, detail: detail),
           NavigatorRoutes.doctorDialogue: (context) =>
@@ -192,8 +210,9 @@ class NavigatorViewState extends State<NavigatorView> {
                 listId: detail,
                 body: widgetArg,
               )),
-          NavigatorRoutes.searchView: (context) => _searchPage(context),
-          NavigatorRoutes.requestsView: (context) =>
+          NavigatorRoutes.partnerSearchView: (context) =>
+              _partnerSearchPage(context),
+          NavigatorRoutes.visitRequestList: (context) =>
               _visitRequestPage(context),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
@@ -207,14 +226,28 @@ class NavigatorViewState extends State<NavigatorView> {
         };
       case 2:
         return {
-          NavigatorRoutes.root: (context) => _empty(context),
+          NavigatorRoutes.root: (context) => _noronioClinic(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          NavigatorRoutes.partnerSearchView: (context) =>
+              _partnerSearchPage(context),
+          NavigatorRoutes.physicalVisitPage: (context) =>
+              _physicalVisitPage(context, detail),
+          NavigatorRoutes.virtualVisitPage: (context) =>
+              _virtualVisitPage(context, detail),
+          NavigatorRoutes.doctorDialogue: (context) =>
+              _doctorDetailPage(context, detail),
         };
       case 3:
         return {
           NavigatorRoutes.root: (context) => _account(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
+          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
+              value: _pictureBloc,
+              child: UploadSlider(
+                listId: detail,
+                body: widgetArg,
+              )),
           NavigatorRoutes.profileMenuPage: (context) =>
               _profileMenuPage(context, detail),
         };
@@ -226,7 +259,8 @@ class NavigatorViewState extends State<NavigatorView> {
               _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
-          NavigatorRoutes.searchView: (context) => _searchPage(context),
+          NavigatorRoutes.partnerSearchView: (context) =>
+              _partnerSearchPage(context),
         };
     }
   }
@@ -329,6 +363,27 @@ class NavigatorViewState extends State<NavigatorView> {
         onPush: (direction) {
           push(context, direction);
         },
+      );
+    }
+  }
+
+  Widget _noronioClinic(context) {
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+
+    /// TODO
+    if (entity.isDoctor) {
+      return DoctorNoronioService(
+        onPush: (direction, entity) {
+          push(context, direction, detail: entity);
+        },
+        globalOnPush: widget.pushOnBase,
+      );
+    } else {
+      return PatientNoronioService(
+        onPush: (direction, entity) {
+          push(context, direction, detail: entity);
+        },
+        globalOnPush: widget.pushOnBase,
       );
     }
   }
@@ -548,12 +603,12 @@ class NavigatorViewState extends State<NavigatorView> {
         ));
   }
 
-  Widget _searchPage(context, {isRequests = false}) => MultiBlocProvider(
+  Widget _partnerSearchPage(context, {isRequests = false}) => MultiBlocProvider(
           providers: [
             BlocProvider<SearchBloc>.value(value: _searchBloc),
 //            BlocProvider<VisitBloc>.value(value: _visitBloc),
           ],
-          child: SearchPage(
+          child: PartnerSearchPage(
             isRequestPage: isRequests,
             onPush: (direction, entity) {
               push(context, direction, detail: entity);
@@ -561,39 +616,110 @@ class NavigatorViewState extends State<NavigatorView> {
           ));
 
   Widget _visitRequestPage(context) => MultiBlocProvider(
-          providers: [
-            BlocProvider<SearchBloc>.value(value: _searchBloc),
+        providers: [
+          BlocProvider<SearchBloc>.value(value: _searchBloc),
 //            BlocProvider<VisitBloc>.value(value: _visitBloc),
-          ],
-          child: VisitRequestsPage(
-            onPush: (direction, entity) {
-              push(context, direction, detail: entity);
-            },
-          ));
+        ],
+        child: VisitRequestsPage(
+          onPush: (direction, entity) {
+            push(context, direction, detail: entity);
+          },
+        ),
+      );
+
+  Widget _virtualVisitListPage(context) => MultiBlocProvider(
+        providers: [
+          BlocProvider<SearchBloc>.value(value: _searchBloc),
+        ],
+        child: VirtualVisitList(
+          onPush: (direction, entity) {
+            push(context, direction, detail: entity);
+          },
+        ),
+      );
+
+  Widget _physicalVisitListPage(context) => MultiBlocProvider(
+        providers: [
+          BlocProvider<SearchBloc>.value(value: _searchBloc),
+        ],
+        child: PhysicalVisitList(
+          onPush: (direction, entity) {
+            push(context, direction, detail: entity);
+          },
+        ),
+      );
 
   Widget _panelMenu(context) {
 //    BlocProvider.of<PanelBloc>(context).add(GetMyPanels());
     return MultiBlocProvider(
-        providers: [
-          BlocProvider<TabSwitchBloc>.value(
-            value: _tabSwitchBloc,
-          ),
-          BlocProvider<PanelSectionBloc>.value(
-            value: _panelSectionBloc,
-          ),
-          BlocProvider<SearchBloc>.value(value: _searchBloc),
-          BlocProvider<VisitTimeBloc>.value(
-            value: _visitTimeBloc,
-          ),
-        ],
-        child: PanelMenu(
-          () {
-            _pop(context);
-          },
-          onPush: (direction) {
-            push(context, direction);
-          },
-        ));
+      providers: [
+        BlocProvider<TabSwitchBloc>.value(
+          value: _tabSwitchBloc,
+        ),
+        BlocProvider<PanelSectionBloc>.value(
+          value: _panelSectionBloc,
+        ),
+        BlocProvider<SearchBloc>.value(value: _searchBloc),
+        BlocProvider<VisitTimeBloc>.value(
+          value: _visitTimeBloc,
+        ),
+      ],
+      child: PanelMenu(
+        () {
+          _pop(context);
+        },
+        onPush: (direction) {
+          push(context, direction);
+        },
+      ),
+    );
+  }
+
+  Widget _myDoctorsList(context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TabSwitchBloc>.value(
+          value: _tabSwitchBloc,
+        ),
+        BlocProvider<PanelSectionBloc>.value(
+          value: _panelSectionBloc,
+        ),
+        BlocProvider<SearchBloc>.value(value: _searchBloc),
+        BlocProvider<VisitTimeBloc>.value(
+          value: _visitTimeBloc,
+        ),
+      ],
+      child: MyPartners(
+        isRequestPage: false,
+        onPush: (direction, entity) {
+          push(context, direction, detail: entity);
+        },
+      ),
+    );
+  }
+
+  Widget _myDoctorsDialog(context, {detail}) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TabSwitchBloc>.value(
+          value: _tabSwitchBloc,
+        ),
+        BlocProvider<PanelSectionBloc>.value(
+          value: _panelSectionBloc,
+        ),
+        BlocProvider<SearchBloc>.value(value: _searchBloc),
+        BlocProvider<VisitTimeBloc>.value(
+          value: _visitTimeBloc,
+        ),
+      ],
+      child: MyPartnerDialog(
+        isRequestPage: false,
+        doctor: detail,
+        onPush: (direction, entity) {
+          push(context, direction, detail: entity);
+        },
+      ),
+    );
   }
 
   Widget _empty(context) {

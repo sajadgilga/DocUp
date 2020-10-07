@@ -1,11 +1,7 @@
 import 'dart:async';
 
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 import '../../constants/strings.dart';
@@ -14,8 +10,18 @@ import '../../constants/colors.dart';
 class SearchBox extends StatefulWidget {
   Function(String, UserEntity) onPush;
   bool isPatient;
+  final Function() onTap;
+  final bool enableFlag;
+  final Function(String c) onSubmit;
+  final Function(String c) onChange;
 
-  SearchBox({this.onPush, @required this.isPatient = true});
+  SearchBox(
+      {this.onPush,
+      @required this.isPatient = true,
+      this.onTap,
+      this.onSubmit,
+      this.onChange,
+      this.enableFlag = true});
 
   @override
   State<StatefulWidget> createState() {
@@ -57,18 +63,14 @@ class _SearchBoxState extends State<SearchBox> {
   }
 
   double _getSearchBoxWidth(width) {
-    return (width > 550 ? width * .6 : (width > 400 ? width * .5 : width * .4));
+    return (width > 550
+        ? width * .65
+        : (width > 400 ? width * .60 : width * .55));
   }
 
   void _changeTag() {}
 
   void _showTags() {}
-
-  void _search(context) {
-    FocusScope.of(context).unfocus();
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-    widget.onPush(NavigatorRoutes.searchView, null);
-  }
 
   Widget _filterText() {
     return Text(searchTag,
@@ -80,78 +82,82 @@ class _SearchBoxState extends State<SearchBox> {
 
   @override
   Widget build(BuildContext context) {
-    FocusScope.of(context).unfocus();
+//    FocusScope.of(context).unfocus();
+    return widget.enableFlag
+        ? _simpleTooltip()
+        : GestureDetector(onTap: widget.onTap, child: _simpleTooltip());
+  }
+
+  Widget _simpleTooltip() {
     return SimpleTooltip(
-        hideOnTooltipTap: true,
-        show: _tooltip,
-        tooltipDirection: TooltipDirection.down,
-        backgroundColor: IColors.whiteTransparent,
-        borderColor: IColors.themeColor,
-        content: Text(
-          Strings.PatientSearchBoxTooltip,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 12,
-            decoration: TextDecoration.none,
-          ),
+      hideOnTooltipTap: true,
+      show: _tooltip,
+      tooltipDirection: TooltipDirection.down,
+      backgroundColor: IColors.whiteTransparent,
+      borderColor: IColors.themeColor,
+      content: Text(
+        Strings.PatientSearchBoxTooltip,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.black87,
+          fontSize: 12,
+          decoration: TextDecoration.none,
         ),
-        child: Container(
-          width: MediaQuery.of(context).size.width * .85,
-          padding: EdgeInsets.only(
-              top: 5,
-              bottom: 20,
-              left: MediaQuery.of(context).size.width * .07,
-              right: MediaQuery.of(context).size.width * .04),
-          decoration: BoxDecoration(
-              color: Color.fromRGBO(247, 247, 247, .9),
-              borderRadius: BorderRadius.all(Radius.circular(80))),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  constraints: BoxConstraints(),
-                  child: SizedBox(
-                      width:
-                          _getSearchBoxWidth(MediaQuery.of(context).size.width),
-                      height: 50,
-                      child: TextField(
-                        controller: _controller,
-//                    onSubmitted: (text) {
-//                      _search();
-//                    },
-                        onTap: () {
-                          _search(context);
-                        },
-                        textAlign: TextAlign.end,
-                        textDirection: TextDirection.ltr,
-                        decoration: InputDecoration(
-                            hintText: (widget.isPatient
-                                ? Strings.PatientSearchBoxHint
-                                : Strings.DoctorSearchBoxHint),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              size: 30,
-                            ),
-                            focusColor: IColors.themeColor,
-                            fillColor: IColors.themeColor),
-                      )),
-                ),
-                GestureDetector(
-                    onTap: () {},
-                    child: Row(
-                      children: <Widget>[
-                        _filterText(),
-                        Container(
-                          child: Icon(
-                            Icons.filter_list,
-                            size: 20,
-                          ),
-                          margin: EdgeInsets.only(left: 5),
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width * .8,
+        height: 50,
+        padding: EdgeInsets.only(
+            top: 5,
+            bottom: 5,
+            left: MediaQuery.of(context).size.width * .07,
+            right: MediaQuery.of(context).size.width * .04),
+        decoration: BoxDecoration(
+            color: Color.fromRGBO(247, 247, 247, .9),
+            borderRadius: BorderRadius.all(Radius.circular(50))),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.search,
+                size: 25,
+              ),
+              Container(
+                  width: _getSearchBoxWidth(MediaQuery.of(context).size.width),
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.only(left: 5, right: 15),
+                  child: TextField(
+                    controller: _controller,
+                    textAlign: TextAlign.end,
+                    enabled: widget.enableFlag,
+                    textDirection: TextDirection.ltr,
+                    onSubmitted: widget.onSubmit,
+                    onChanged: widget.onChange,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: (widget.isPatient
+                            ? Strings.PatientSearchBoxHint
+                            : Strings.DoctorSearchBoxHint),
+                        focusColor: IColors.themeColor,
+                        fillColor: IColors.themeColor),
+                  )),
+              GestureDetector(
+                  onTap: () {},
+                  child: Row(
+                    children: <Widget>[
+//                          _filterText(),
+                      Container(
+                        child: Icon(
+                          Icons.filter_list,
+                          size: 20,
                         ),
-                      ],
-                    ))
-              ]),
+                        margin: EdgeInsets.only(left: 5),
+                      ),
+                    ],
+                  ))
+            ]),
 //      ),child: Row(
 //        mainAxisAlignment: MainAxisAlignment.center,
 //        children: <Widget>[
@@ -164,6 +170,7 @@ class _SearchBoxState extends State<SearchBox> {
 //          Icon(Icons.filter_list)
 //        ],
 //      ),
-        ));
+      ),
+    );
   }
 }

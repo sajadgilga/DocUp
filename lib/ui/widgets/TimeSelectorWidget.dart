@@ -56,35 +56,39 @@ class TimerSelectorPaint extends CustomPainter {
   final BuildContext context;
   final Function(int) callback;
   final Set<int> selectedNumbers;
+  final double upShift = 3;
+  final double rightShift = 3;
 
   TimerSelectorPaint(
       {this.context, this.selectedNumbers, this.tappedOffset, this.callback});
 
   final Map<int, Offset> numbers = {
-    13: Offset(40, -69.282),
-    14: Offset(69.282, -40),
-    15: Offset(80, 0),
-    16: Offset(69.282, 40),
-    17: Offset(40, 69.282),
-    18: Offset(0, 80),
-    19: Offset(-40, 69.282),
-    20: Offset(-69.282, 40),
-    21: Offset(-80, 0),
-    22: Offset(-69.282, -40),
-    23: Offset(-40, -69.282),
+    1: Offset(40, -69.282),
+    2: Offset(69.282, -40),
+    3: Offset(80, 0),
+    4: Offset(69.282, 40),
+    5: Offset(40, 69.282),
+    6: Offset(0, 80),
+    7: Offset(-40, 69.282),
+    8: Offset(-69.282, 40),
+    9: Offset(-80, 0),
+    10: Offset(-69.282, -40),
+    11: Offset(-40, -69.282),
     12: Offset(0, -80)
   };
+  final double xOffset = 8;
+  final double yOffset = 112;
 
   int selectedNumber = -1;
 
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint();
-    paint.color = IColors.themeColor;
+    paint.color = Colors.white;
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = 50;
 
-    canvas.drawCircle(Offset(8, 112), 80.0, paint);
+    canvas.drawCircle(Offset(xOffset, yOffset), 80.0, paint);
 
     Offset localOffset;
     if (tappedOffset != null) {
@@ -103,7 +107,7 @@ class TimerSelectorPaint extends CustomPainter {
   void paintNumber(
       Canvas canvas, int number, Offset position, Offset localOffset) {
     final textStyle = TextStyle(
-        color: Colors.black,
+        color: IColors.darkGrey,
         fontSize: 20,
         fontFamily: 'iransans',
         fontWeight: FontWeight.bold);
@@ -117,23 +121,33 @@ class TimerSelectorPaint extends CustomPainter {
     );
     textPainter.layout();
     textPainter.paint(canvas, Offset(position.dx, position.dy + 100));
-
-    if (selectedNumbers.contains(number) &&
-        isPointInside(position, localOffset)) {
-    } else if (selectedNumbers.contains(number) ||
-        isPointInside(position, localOffset)) {
-      Paint paint = Paint();
-      paint.color = Colors.black;
-      paint.style = PaintingStyle.stroke;
-      paint.strokeWidth = 2;
-      canvas.drawCircle(Offset(position.dx + 8, position.dy + 112), 20, paint);
+    if (selectedNumbers != null) {
+      if (selectedNumbers.contains(number) &&
+          isPointInside(position, localOffset)) {
+        Paint paint = Paint();
+        paint.color = IColors.themeColor;
+        paint.style = PaintingStyle.stroke;
+        paint.strokeWidth = 2;
+        canvas.drawCircle(
+            Offset(position.dx + xOffset, position.dy + yOffset), 20, paint);
+      } else if (selectedNumbers.contains(number) ||
+          isPointInside(position, localOffset)) {
+        Paint paint = Paint();
+        paint.color = Colors.black;
+        paint.style = PaintingStyle.stroke;
+        paint.strokeWidth = 2;
+        canvas.drawCircle(
+            Offset(position.dx + xOffset, position.dy + yOffset), 20, paint);
+      }
     }
+
     if (isPointInside(position, localOffset)) {
       selectedNumber = number;
     }
   }
 
   bool isPointInside(Offset point, Offset localOffset) {
+    return true;
     if (localOffset == null) return false;
     return pow(point.dx + 8 - localOffset.dx, 2) +
             pow(point.dy + 112 - localOffset.dy, 2) <

@@ -19,10 +19,12 @@ class DoctorSummaryWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         DoctorData(
-            width: MediaQuery.of(context).size.width * 0.7,
-            doctorEntity: doctorEntity),
+          width: MediaQuery.of(context).size.width * 0.7,
+          doctorEntity: doctorEntity,
+          clinicMarkLocation: 1,
+        ),
         SizedBox(width: 10),
-        Avatar(user: doctorEntity.user),
+        PolygonAvatar(user: doctorEntity.user),
       ],
     );
   }

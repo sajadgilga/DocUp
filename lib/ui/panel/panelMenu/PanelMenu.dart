@@ -61,7 +61,7 @@ class _PanelMenuState extends State<PanelMenu> {
             padding: EdgeInsets.only(top: 10, left: 20),
             child: GestureDetector(
               onTap: () {
-                widget.onPush(NavigatorRoutes.searchView);
+                widget.onPush(NavigatorRoutes.partnerSearchView);
               },
               child: SvgPicture.asset(
                 Assets.searchIcon,

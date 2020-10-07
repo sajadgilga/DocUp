@@ -11,6 +11,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/searchPage/ResultList.dart';
+import 'package:docup/ui/visitsList/visitSearchResult/VisitResult.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,19 @@ class VisitRequestsPage extends StatelessWidget {
         ),
       );
 
+  Widget _searchListTitle() {
+    return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+      Padding(
+        padding: const EdgeInsets.only(right: 40, bottom: 5),
+        child: Text(
+          "درخواست ویزیت",
+          softWrap: true,
+          style: TextStyle(fontSize: 14),
+        ),
+      ),
+    ]);
+  }
+
   Widget _searchBox(width, context) => Container(
         margin: EdgeInsets.only(right: 40, left: 40),
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
@@ -114,6 +128,7 @@ class VisitRequestsPage extends StatelessWidget {
       isDoctor: false,
       text: 'امروز',
       visitResults: todayVisits,
+      emptyText: Strings.emptyRequestsDoctorSide,
       isRequestsOnly: true,
     );
   }
@@ -131,6 +146,7 @@ class VisitRequestsPage extends StatelessWidget {
       isDoctor: false,
       text: 'روزهای بعد',
       visitResults: nextDayVisits,
+      emptyText: Strings.emptyRequestsDoctorSide,
       isRequestsOnly: true,
     );
   }
@@ -147,11 +163,12 @@ class VisitRequestsPage extends StatelessWidget {
       builder: (context, state) {
         if (state is SearchLoaded) {
           return Container(
-            margin: EdgeInsets.only(top: 20),
+              margin: EdgeInsets.only(top: 20),
               constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height - 260),
               child: ListView(
                 children: <Widget>[
+                  _searchListTitle(),
                   _todayItems(state.result.visit_results),
                   _nextDayItems(state.result.visit_results)
                 ],
@@ -173,6 +190,7 @@ class VisitRequestsPage extends StatelessWidget {
                     maxHeight: MediaQuery.of(context).size.height - 260),
                 child: ListView(
                   children: <Widget>[
+                    _searchListTitle(),
                     _todayItems(state.result.visit_results),
                     _nextDayItems(state.result.visit_results)
                   ],

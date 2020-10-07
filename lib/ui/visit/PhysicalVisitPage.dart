@@ -9,7 +9,10 @@ import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
+import 'package:docup/ui/widgets/TimeSelectorHeaderWidget.dart';
+import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:docup/ui/widgets/VisitDateTimePicker.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -75,7 +78,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
         child: Column(children: <Widget>[
           DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
           ALittleVerticalSpace(),
-          _labelWidget("حضوری"),
+          _labelWidget("نوع مشاوره:"),
           ALittleVerticalSpace(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -88,11 +91,11 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
             ],
           ),
           ALittleVerticalSpace(),
-          _calendarWidget(),
+          VisitDateTimePicker(dateTextController, widget.doctorEntity),
           ALittleVerticalSpace(),
-          _labelWidget(TIME_SELECTION),
-          ALittleVerticalSpace(),
-          _timesWidget(TIME_SELECTION, _getVisitTimes()),
+//          _labelWidget(TIME_SELECTION),
+//          ALittleVerticalSpace(),
+//          _timesWidget(TIME_SELECTION, _getVisitTimes()),
           ALittleVerticalSpace(),
           _acceptPolicyWidget(),
           ALittleVerticalSpace(),
@@ -102,26 +105,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
       ),
     );
   }
-
-  _calendarWidget() => Column(
-        children: <Widget>[
-          _labelWidget("زمان برگزاری"),
-          ALittleVerticalSpace(),
-          Container(
-            color: IColors.grey,
-            child: PersianDateTimePicker2(
-              color: IColors.themeColor,
-              type: "date",
-              initial: getTomorrowInJalali(),
-              min: getTodayInJalali(),
-              disable: getDisableDays(widget.doctorEntity.plan.availableDays),
-              onSelect: (date) {
-                dateTextController.text = date;
-              },
-            ),
-          ),
-        ],
-      );
 
   _getVisitTimes() {
     if (widget.doctorEntity.plan.workTimes == null) return [];

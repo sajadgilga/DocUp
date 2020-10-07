@@ -61,7 +61,7 @@ class _PanelState extends State<Panel> {
   }
 
   void _showSearchPage() {
-    widget.onPush(NavigatorRoutes.searchView, null);
+    widget.onPush(NavigatorRoutes.partnerSearchView, null);
   }
 
   Widget _header() => Header(

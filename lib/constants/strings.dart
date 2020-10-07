@@ -4,8 +4,12 @@ class Strings {
   static const String bottomNavigationPanelTitle = 'پنل کاربری';
   static const String bottomNavigationServicesTitle = 'خدمات';
   static const String bottomNavigationProfileTitle = 'پروفایل';
+
 //
   static const String registerHeaderMessage = ": ثبت نام در داک آپ به عنوان";
+  static const String registerAsDoctorMessage = "ثبت نام پزشکان";
+
+  static const String registerAsPatientMessage = "ثبت نام بیمار";
   static const String signInHeaderMessage = ": ورود در داک آپ به عنوان";
   static const String yourDoctorMessage = "پزشک همراه شما";
   static const String yourPatientMessage = "همگام با بیمار";
@@ -32,8 +36,9 @@ class Strings {
   static const String accountQuestion = "حساب کاربری دارید؟";
   static final String searchBoxHint = 'جستجو';
   static final String PatientSearchBoxHint = 'جستجوی پزشک';
-  static final String PatientSearchBoxTooltip = 'برای جستجو و اتصال به پزشک، کلیک کنید';
-  static final String DoctorSearchBoxHint =  'جستجوی بیماران شما';
+  static final String PatientSearchBoxTooltip =
+      'برای جستجو و اتصال به پزشک، کلیک کنید';
+  static final String DoctorSearchBoxHint = 'جستجوی بیماران شما';
   static final String docupIntroHomePart1 = 'داک‌ آپ،';
 
 //
@@ -102,9 +107,9 @@ class Strings {
   static final String virtualReservationLabel = 'ویزیت مجازی';
 
 //
-  static final String patientTrackingVisitPendingLabel = 'درخواست ویزیت';
-  static final String patientTrackingCuringLabel = 'درحال درمان';
-  static final String patientTrackingCuredLabel = 'درمان موفق';
+  static final String patientTrackingVisitFaceToFaceLabel = 'ویزیت حضوری';
+  static final String patientTrackingVirtualVisitLabel = 'ویزیت مجازی';
+  static final String patientTrackingRequestVisitLabel = 'درخواست های ویزیت';
 
 //
   static final String uploadPicTextFieldHint = 'توضیح...';
@@ -153,6 +158,9 @@ class Strings {
       '\n'
       ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
 
+  /// TODO
+  static final String learningVideosLink = "http://www.google.com";
+
 //
   static final String emptyWaitDoctorLabel = 'منتظر بمانید';
 
@@ -163,8 +171,10 @@ class Strings {
   static final String emptyChatPage = 'پیامی تاکنون ارسال نشده است';
 
 //
-  static final String emptySearch =
+  static final String emptyDoctorSearch =
       'متاسفانه پزشکی با این نام در داکآپ موجود نمی‌باشد';
+  static final String emptyVisitSearch =
+      'متاسفانه بیماری با این نام در این بخش موجود نمی‌باشد';
   static final String emptySearchDoctorSide =
       'متاسفانه بیماری با این نام در لیست بیماران شما موجود نمی‌باشد';
   static final String emptyRequestsDoctorSide =
@@ -187,9 +197,21 @@ class Strings {
   static final String enterVisitTimeMessage = "لطفا زمان ویزیت را وارد کنید";
   static final String offlineDoctorMessage =
       " پزشک آنلاین نیست لطفا زمانی را برای ویزیت مشخص کنید";
+
   //
   static final String drugNameTextFieldHint = 'نام دارو';
   static final String countTextFieldHint = 'تعداد';
   static final String periodTextFieldHint = 'هر چند ساعت';
   static final String submitDrugLabel = 'ارسال برای بیمار';
+
+  static final String supportWhatsAppPhoneNumber = "+989335705997";
+  static final String supportTelegramId = "amirmosio";
+
+  static final String noVirtualAppointment =
+      "هیچ سابقه ای از مشاوره" + "\n" + "مجازی موجود نمی باشد.";
+
+  /// Errors
+  static final String errorCode_615 = "لطفا عنوان کاربر را درست انتخاب کنید،" +
+      "\n" +
+      "این کاربر قبلا با عنوان دیگری ثبت نام کرده است.";
 }

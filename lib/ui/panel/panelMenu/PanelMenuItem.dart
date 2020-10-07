@@ -59,7 +59,7 @@ class PanelMenuMainItem extends StatelessWidget {
 
   void _selectMenuItem({context, menuItem}) {
     if (menuItem == DoctorPanelSection.REQUESTS) {
-      onPush(NavigatorRoutes.requestsView);
+      onPush(NavigatorRoutes.visitRequestList);
     }
   }
 

@@ -18,13 +18,13 @@ class SignUpResponseEntity {
 
 class VerifyResponseEntity {
   final String token;
+  final String fullName;
 
-  VerifyResponseEntity({this.token});
+  VerifyResponseEntity({this.token, this.fullName});
 
   factory VerifyResponseEntity.fromJson(Map<String, dynamic> json) {
     return VerifyResponseEntity(
-      token: json['token'],
-    );
+        token: json['token'], fullName: json['fullname']);
   }
 
   Map<String, dynamic> toJson() {

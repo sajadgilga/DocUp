@@ -1,4 +1,3 @@
-
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/DoctorCreditWidget.dart';
@@ -9,6 +8,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/MapWidget.dart';
+import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,18 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  DocUpHeader(),
+                  PageTopLeftIcon(
+                    topLeft: Icon(
+                      Icons.menu,
+                      size: 25,
+                    ),
+                    onTap: () {
+                      /// TODO
+                      widget.onPush(NavigatorRoutes.profileMenuPage, null);
+                    },
+                    topRightFlag: false,
+                    topLeftFlag: true,
+                  ),
                   MediumVerticalSpace(),
                   GestureDetector(
                       onTap: () => widget.onPush(
@@ -42,7 +53,8 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                       child: DoctorCreditWidget(
                         credit: doctorEntity.user.credit,
                       )),
-                  Avatar(user: doctorEntity.user),
+                  ALittleVerticalSpace(),
+                  PolygonAvatar(user: doctorEntity.user),
                   ALittleVerticalSpace(),
                   DoctorData(
                       width: MediaQuery.of(context).size.width,
@@ -52,8 +64,11 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                     clinic: doctorEntity.clinic,
                   ),
                   ALittleVerticalSpace(),
+                  ALittleVerticalSpace(),
                   ActionButton(
                     color: IColors.themeColor,
+                    width: MediaQuery.of(context).size.width * (70 / 100),
+                    height: 60,
                     title: "اطلاعات ویزیت مجازی و حضوری",
 //                    callBack: () => showNextVersionDialog(context),
                     callBack: () => widget.onPush(

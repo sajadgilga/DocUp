@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/MedicineBloc.dart';
 import 'package:docup/blocs/NotificationBloc.dart';
@@ -6,6 +8,9 @@ import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/DocupHeader.dart';
+import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:docup/ui/widgets/medicines/ReminderList.dart';
@@ -14,6 +19,7 @@ import 'package:docup/ui/home/notification/Notification.dart';
 
 import 'package:docup/ui/home/iPartner/IPartner.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'TrackingList.dart';
@@ -92,12 +98,17 @@ class _HomeState extends State<Home> {
   Widget _trackingList() {
     return BlocBuilder<PatientTrackerBloc, TrackerState>(
         builder: (context, state) {
-      return TrackingList(
-        all: state.patientTracker.all,
-        cured: state.patientTracker.cured,
-        curing: state.patientTracker.curing,
-        visitPending: state.patientTracker.visitPending,
-        onPush: widget.onPush,
+      return Column(
+        children: [
+          DocUpSubHeader(title: "مراجعین من"),
+          TrackingList(
+            all: state.patientTracker.all,
+            cured: state.patientTracker.cured,
+            curing: state.patientTracker.curing,
+            visitPending: state.patientTracker.visitPending,
+            onPush: widget.onPush,
+          ),
+        ],
       );
     });
   }
@@ -105,10 +116,82 @@ class _HomeState extends State<Home> {
   Widget _homeList() {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isPatient) {
-      return _reminderList();
+      return _learningVideos();
     } else if (entity.isDoctor) {
       return _trackingList();
     }
+  }
+
+  Widget _noronioClinic() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+      child: GestureDetector(
+        onTap: () {
+          /// TODO
+          widget.selectPage(2);
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(child: Image.asset(Assets.homeNoronioClinic)),
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(),
+                  child: Text("کلینیک نورونیو", style: TextStyle(fontSize: 17)),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 40),
+                  child: Text(
+                    "پایش سلامت شناختی",
+                    style: TextStyle(fontSize: 10),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _learningVideos() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+      child: GestureDetector(
+        onTap: () async {
+          await launchURL(Strings.learningVideosLink);
+        },
+        child: Stack(
+          alignment: Alignment.centerRight,
+          children: [
+            Container(child: Image.asset(Assets.homeVideos)),
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: 40),
+                  child:
+                      Text("ویدیو های آموزشی", style: TextStyle(fontSize: 17)),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 100, bottom: 15),
+                  child: Text(
+                    "مراقبت از خود با آگاهی بیشتر",
+                    style: TextStyle(fontSize: 10),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _homeListLabel() {
@@ -174,67 +257,57 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Stack(
+        child: Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Image(
-            image: AssetImage(Assets.homeBackground),
-            width: MediaQuery.of(context).size.width,
-            fit: BoxFit.fitWidth,
-          ),
-          Container(
-              child: Column(
-            children: <Widget>[
-              Header(
-                  child: GestureDetector(
-                      onTap: () {
-                        widget.onPush(NavigatorRoutes.notificationView, null);
-                      },
-                      child: Row(children: <Widget>[
-                        BlocBuilder<NotificationBloc, NotificationState>(
+          Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
+            BlocBuilder<NotificationBloc, NotificationState>(
 //                            bloc: _notificationBloc,
-                            builder: (context, state) {
-                          if (state.notifications != null &&
-                              state.notifications.newestEventsCounts != null)
-                            return HomeNotification(
-                                newNotificationCount:
-                                    state.notifications.newestEventsCounts);
-                          else
-                            return HomeNotification(
-                              newNotificationCount: 0,
-                            );
-                        }),
+                builder: (context, state) {
+              if (state.notifications != null &&
+                  state.notifications.newestEventsCounts != null)
+                return HomeNotification(
+                    newNotificationCount:
+                        state.notifications.newestEventsCounts);
+              else
+                return HomeNotification(
+                  newNotificationCount: 0,
+                );
+            }),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
+                child: SearchBox(
+                  onPush: widget.onPush,
+                  isPatient: BlocProvider.of<EntityBloc>(context)
+                      .state
+                      .entity
+                      .isPatient,
+                  enableFlag: false,
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                    SystemChrome.setEnabledSystemUIOverlays(
+                        [SystemUiOverlay.bottom]);
+                    widget.onPush(NavigatorRoutes.partnerSearchView, null);
+                  },
+                ),
+              ),
+            ),
 //                        OnCallMedicalHeaderIcon()
-                      ]))),
-              Container(
-                height: 20,
-              ),
-              _intro(MediaQuery.of(context).size.width),
-              Container(
-                height: 20,
-              ),
-              SearchBox(
-                onPush: widget.onPush,
-                isPatient:
-                    BlocProvider.of<EntityBloc>(context).state.entity.isPatient,
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              _homeListLabel(),
-              SizedBox(height: 5),
-              SizedBox(
-                  width: 20,
-                  height: 3,
-                  child: Divider(
-                    thickness: 2,
-                    color: Colors.white,
-                  )),
-              _homeList(),
-              _iPartner()
-            ],
-          ))
+          ]),
+          SizedBox(
+            height: 25,
+          ),
+          _noronioClinic(),
+          _homeList(),
+          SizedBox(
+            height: 15,
+          ),
+          _iPartner()
         ],
       ),
-    );
+    ));
   }
 }

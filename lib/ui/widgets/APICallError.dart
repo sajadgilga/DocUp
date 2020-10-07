@@ -1,4 +1,6 @@
+import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:flutter/material.dart';
 
 class APICallError extends StatelessWidget {
@@ -6,31 +8,43 @@ class APICallError extends StatelessWidget {
 
   final Function onRetryPressed;
 
-  const APICallError({Key key, this.errorMessage, this.onRetryPressed})
+  const APICallError(
+      {Key key, this.errorMessage = "error", this.onRetryPressed})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            errorMessage,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.red,
-              fontSize: 18,
+    /// TODO
+    return Container(
+        height: MediaQuery.of(context).size.height,
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Container(
+              child: Image.asset(Assets.apiCallError),
             ),
-          ),
-          SizedBox(height: 8),
-          RaisedButton(
-            color: IColors.themeColor,
-            child: Text('Retry', style: TextStyle(color: Colors.black)),
-            onPressed: onRetryPressed,
-          )
-        ],
-      ),
-    );
+            Column(
+              children: [
+                Text(
+                  errorMessage,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 8),
+                ActionButton(
+                  color: IColors.themeColor,
+                  textColor: IColors.whiteTransparent,
+                  title: 'Retry',
+                  borderRadius: 10,
+                  callBack: onRetryPressed,
+                )
+              ],
+            )
+          ],
+        ));
   }
 }

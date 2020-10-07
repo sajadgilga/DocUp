@@ -1,4 +1,5 @@
 import 'package:docup/blocs/DoctorInfoBloc.dart';
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
@@ -10,10 +11,12 @@ import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
 import 'package:docup/ui/widgets/TimeSelectionWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:docup/ui/widgets/VisitDateTimePicker.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'VisitUtils.dart';
 
@@ -82,16 +85,20 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         child: Column(children: <Widget>[
           DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
           ALittleVerticalSpace(),
-          _visitTypeWidget(VISIT_METHOD, ["متنی", "صوتی",  "تصویری"]),
+          _visitTypeWidget(VISIT_METHOD, ["متنی", "صوتی", "تصویری"],
+              width: 120, height: 50, fontSize: 16),
           ALittleVerticalSpace(),
-          _visitTypeWidget(VISIT_DURATION_PLAN, ["پایه", "تکمیلی", "طولانی"]),
+          _visitTypeWidget(VISIT_DURATION_PLAN, ["پایه", "تکمیلی", "طولانی"],
+              width: 100, height: 45, fontSize: 14),
           ALittleVerticalSpace(),
           _visitDurationTimeWidget(),
           ALittleVerticalSpace(),
-          _priceWidget(),
-          ALittleVerticalSpace(),
           _enableVisitTimeWidget(),
-          _timeSelectionWidget(),
+          visitTimeChecked
+              ? VisitDateTimePicker(dateTextController, widget.doctorEntity)
+              : SizedBox(),
+          ALittleVerticalSpace(),
+          _priceWidget(),
           ALittleVerticalSpace(),
           _acceptPolicyWidget(),
           ALittleVerticalSpace(),
@@ -108,7 +115,9 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
   }
 
-  _visitTypeWidget(String title, List<String> items, {size = 0}) => Column(
+  _visitTypeWidget(String title, List<String> items,
+          {double width = 120, double height = 40, double fontSize = 17}) =>
+      Column(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -129,11 +138,14 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
             children: <Widget>[
               for (var index = items.length - 1; index >= 0; index--)
                 Visibility(
-                  visible: title == VISIT_DURATION_PLAN || index != VisitMethod.VOICE.index,
+                  visible: title == VISIT_DURATION_PLAN ||
+                      index != VisitMethod.VOICE.index,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 4.0, left: 4.0),
                     child: ActionButton(
-                      width: (size == 0 ? 120 : 150),
+                      width: width,
+                      height: height,
+                      fontSize: fontSize,
                       color: typeSelected[title] == index
                           ? IColors.themeColor
                           : Colors.grey,
@@ -154,10 +166,13 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
   _priceWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text("تومان", style: TextStyle(fontSize: 16)),
+          Text("ریال", style: TextStyle(fontSize: 16)),
           SizedBox(width: 5),
           Text(replaceFarsiNumber(_calculateVisitCost()),
-              style: TextStyle(color: IColors.themeColor, fontSize: 18)),
+              style: TextStyle(
+                  color: IColors.themeColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600)),
           SizedBox(width: 5),
           Text("قیمت نهایی", style: TextStyle(fontSize: 16))
         ],
@@ -176,48 +191,48 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
     return cost.toString();
   }
 
-  _timeSelectionWidget() => Visibility(
-        visible: visitTimeChecked,
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "ساعت",
-                  textAlign: TextAlign.right,
-                ),
-                Icon(Icons.access_time, size: 30),
-                SizedBox(width: 50),
-                Text("تاریخ"),
-                Icon(Icons.calendar_today),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.35,
-                  child: TimeSelectionWidget(
-                      timeTextController: timeTextController),
-                ),
-                SizedBox(width: 50),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.35,
-                  child: TextField(
-                      controller: dateTextController,
-                      onTap: () => showDatePickerDialog(
-                          context,
-                          widget.doctorEntity.plan.availableDays,
-                          dateTextController)),
-                ),
-              ],
-            )
-          ],
-        ),
-      );
+//  _timeSelectionWidget() => Visibility(
+//        visible: visitTimeChecked,
+//        child: Column(
+//          children: <Widget>[
+//            Row(
+//              mainAxisAlignment: MainAxisAlignment.center,
+//              crossAxisAlignment: CrossAxisAlignment.center,
+//              children: <Widget>[
+//                Text(
+//                  "ساعت",
+//                  textAlign: TextAlign.right,
+//                ),
+//                Icon(Icons.access_time, size: 30),
+//                SizedBox(width: 50),
+//                Text("تاریخ"),
+//                Icon(Icons.calendar_today),
+//              ],
+//            ),
+//            Row(
+//              mainAxisAlignment: MainAxisAlignment.center,
+//              crossAxisAlignment: CrossAxisAlignment.center,
+//              children: <Widget>[
+//                Container(
+//                  width: MediaQuery.of(context).size.width * 0.35,
+//                  child: TimeSelectionWidget(
+//                      timeTextController: timeTextController),
+//                ),
+//                SizedBox(width: 50),
+//                Container(
+//                  width: MediaQuery.of(context).size.width * 0.35,
+//                  child: TextField(
+//                      controller: dateTextController,
+//                      onTap: () => showDatePickerDialog(
+//                          context,
+//                          widget.doctorEntity.plan.availableDays,
+//                          dateTextController)),
+//                ),
+//              ],
+//            )
+//          ],
+//        ),
+//      );
 
   Row _enableVisitTimeWidget() {
     return Row(

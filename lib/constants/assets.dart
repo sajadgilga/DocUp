@@ -22,6 +22,35 @@ class Assets {
   static final String servicesIcon = 'assets/servicesIcon.svg';
   static final String panelIcon = 'assets/panelIcon.svg';
 
+  static final String noronioServiceDoctorList =
+      "assets/noronioClinic/doctor (1)@2x.png";
+  static final String noronioServiceBrainTest =
+      "assets/noronioClinic/brain@2x.png";
+  static final String noronioServiceGame =
+      "assets/noronioClinic/mobile-game@2x.png";
+
+  static final String homeNoronioClinic = "assets/home/Layer 2@2x.png";
+  static final String homeVideos = "assets/home/Layer 2_2@2x.png";
+  static final String homePresentVisit =
+      "assets/home/video-conference_2@3x.png";
+  static final String homeVirtualVisit = "assets/home/video-conference@3x.png";
+  static final String homeVisitRequest = "assets/home/request@3x.png";
+
+  static final String accountTelegramIcon = "assets/account/logo (1)@3x.png";
+  static final String accountWhatsAppIcon =
+      "assets/account/brands-and-logotypes@3x.png";
+
+  static final String panelMyDoctorIcon =
+      "assets/panel/Icon awesome-user-md@2x.png";
+  static final String panelDoctorDialogDoctorIcon =
+      "assets/panel/doctor@3x.png";
+  static final String panelDoctorDialogPatientIcon =
+      "assets/panel/patient@3x.png";
+  static final String panelDoctorDialogAppointmentIcon =
+      "assets/panel/appointment@3x.png";
+  static final String apiCallError =
+      "assets/Group 2910.svg";
+
   static String docupIcon = docupPatientIcon;
 
   static void changeIcons(RoleType roleType) {

@@ -12,6 +12,7 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenuItem.dart';
+import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
@@ -27,27 +28,11 @@ class PatientPanelMenu extends StatelessWidget {
 
   Widget _menu(height, context) => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[_menuLabel(), _menuList(height, context)],
-      );
-
-  Widget _menuLabel() => Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          Text(
-            (isPatient
-                ? Strings.patientPanelMenuLabel
-                : Strings.doctorPanelMenuLabel),
-            style: TextStyle(fontWeight: FontWeight.w100, fontSize: 14),
-          ),
-          Container(
-              alignment: Alignment.topRight,
-              padding: EdgeInsets.only(right: 5),
-              width: 20,
-              height: 20,
-              child: Divider(
-                thickness: 2,
-                color: Colors.black,
-              )),
+          menuLabel(isPatient
+              ? Strings.patientPanelMenuLabel
+              : Strings.doctorPanelMenuLabel),
+          _menuList(height, context)
         ],
       );
 
@@ -74,7 +59,7 @@ class PatientPanelMenu extends StatelessWidget {
             getColor(PatientPanelSection.HEALTH_CALENDAR,
                 panelTabState: tabs['calendar'], context: context),
             panelTabState: tabs['calendar']),
-          PanelSubItem(
+        PanelSubItem(
             Strings.panelEventsSubLabel,
             'events',
             getColor(PatientPanelSection.HEALTH_CALENDAR,

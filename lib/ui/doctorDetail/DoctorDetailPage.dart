@@ -74,12 +74,12 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
   _doctorInfoWidget(DoctorEntity doctorEntity) {
     return Column(
       children: <Widget>[
-        SizedBox(height: 50),
-        Avatar(user: doctorEntity.user),
+        SizedBox(height: 60),
+        PolygonAvatar(user: doctorEntity.user),
         SizedBox(height: 10),
         DoctorData(
             width: MediaQuery.of(context).size.width,
-            doctorEntity: doctorEntity),
+            doctorEntity: doctorEntity,clinicMarkLocation: 2,),
         SizedBox(height: 20),
         MapWidget(
           clinic: doctorEntity.clinic,
@@ -93,22 +93,25 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
   _doctorActionsWidget(DoctorEntity doctorEntity) => Column(
         children: <Widget>[
           ActionButton(
-            width: 200,
+            width: 250,
+            height: 60,
+            borderRadius: 15,
             color: IColors.themeColor,
             title: Strings.physicalReservationLabel,
-            callBack: () => widget.onPush(
-                NavigatorRoutes.physicalVisitPage, doctorEntity),
+            callBack: () =>
+                widget.onPush(NavigatorRoutes.physicalVisitPage, doctorEntity),
           ),
           SizedBox(height: 10),
           ActionButton(
-              width: 200,
+              width: 250,
+              height: 60,
+              borderRadius: 15,
               color: IColors.darkBlue,
               title: Strings.virtualReservationLabel,
               callBack: () => widget.onPush(
                   NavigatorRoutes.virtualVisitPage, doctorEntity)),
         ],
       );
-
 
   @override
   void dispose() {

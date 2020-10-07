@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
-  static const String URL_IP = "185.252.30.163";
+  static const String URL_IP = "185.252.30.163:8001";
   final String _BASE_URL = "http://$URL_IP/";
 
   Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {
@@ -33,7 +33,8 @@ class ApiProvider {
         headers.addAll({HttpHeaders.authorizationHeader: "JWT " + token});
       }
       final response = await Dio()
-          .post(_BASE_URL + url, data: data, options: Options(headers: headers));
+          .post(
+          _BASE_URL + url, data: data, options: Options(headers: headers));
       responseJson = _response(dioResponse: response);
     } on SocketException {
       throw FetchDataException('اتصال به اینترنت را بررسی کنید');
@@ -48,15 +49,19 @@ class ApiProvider {
       final headers = await getHeaders(withToken: withToken);
       final response = await http.post(baseUrl + url,
           body: jsonEncode(body), headers: headers);
-      responseJson = _response(httpResponse: response, utf8Support: utf8Support);
+      responseJson =
+          _response(httpResponse: response, utf8Support: utf8Support);
     } on SocketException {
       throw FetchDataException('اتصال به اینترنت را بررسی کنید');
     }
     return responseJson;
   }
 
-  Future<dynamic> post(String url, {Map body, bool withToken = true, bool utf8Support = false}) async {
-    return postWithBaseUrl(_BASE_URL, url, body: body, withToken: withToken, utf8Support: utf8Support);
+  Future<dynamic> post(String url,
+      {Map body, bool withToken = true, bool utf8Support = false}) async {
+    return postWithBaseUrl(_BASE_URL, url, body: body,
+        withToken: withToken,
+        utf8Support: utf8Support);
   }
 
   getHeaders({bool withToken = true}) async {
@@ -87,17 +92,17 @@ class ApiProvider {
     return responseJson;
   }
 
-  dynamic _response(
-      {http.Response httpResponse,
-      Response dioResponse,
-      bool utf8Support = false}) {
+  dynamic _response({http.Response httpResponse,
+    Response dioResponse,
+    bool utf8Support = false}) {
     var response;
     if (httpResponse != null)
       response = httpResponse;
     else
       response = dioResponse;
     print(
-        "API RESPONSE -->>>> code:${response.statusCode} - ${response.body.toString()}");
+        "API RESPONSE -->>>> code:${response.statusCode} - ${response.body
+            .toString()}");
     switch (response.statusCode) {
       case 200:
       case 201:
@@ -108,7 +113,8 @@ class ApiProvider {
         var responseJson = decodeResponse(utf8Support, response);
         throw ApiException(responseJson['error_code'], responseJson['detail']);
       default:
-        throw ApiException(response.statusCode, "مشکلی در برقراری ارتباط وجود دارد");
+        throw ApiException(
+            response.statusCode, "مشکلی در برقراری ارتباط وجود دارد");
     }
   }
 

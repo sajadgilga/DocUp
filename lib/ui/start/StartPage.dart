@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:docup/blocs/AuthBloc.dart';
 import 'package:docup/blocs/DoctorBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/models/AuthResponseEntity.dart';
+import 'package:docup/networking/CustomException.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/BasePage.dart';
 import 'package:docup/ui/start/RoleType.dart';
@@ -67,8 +70,27 @@ class _StartPageState extends State<StartPage> {
           Navigator.of(context).pop();
           _loadingEnable = false;
         }
-        showErrorSnackBar(response.error.toString());
+        if (((response.error.runtimeType) == ApiException)) {
+          if ((response.error as ApiException).getCode() == 615) {
+            showErrorSnackBar(Strings.errorCode_615, secs: 10);
+          }
+        } else
+          showErrorSnackBar(
+            response.error.toString(),
+          );
         return false;
+      case Status.COMPLETED:
+        if (_loadingEnable) {
+          Navigator.of(context).pop();
+          _loadingEnable = false;
+        }
+        if (response.data.runtimeType == VerifyResponseEntity) {
+          try {
+            String utfName = utf8.decode(response.data.fullName.codeUnits);
+            _fullNameController.text = utfName;
+          } catch (e) {}
+        }
+        return true;
       default:
         if (_loadingEnable) {
           Navigator.of(context).pop();
@@ -78,10 +100,14 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
-  showErrorSnackBar(String message) {
+  showErrorSnackBar(String message, {int secs = 3}) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 3),
+      content: Text(
+        message,
+        textDirection: TextDirection.rtl,
+        textAlign: TextAlign.right,
+      ),
+      duration: Duration(seconds: secs),
     ));
   }
 
@@ -334,12 +360,32 @@ class _StartPageState extends State<StartPage> {
         callBack: submit,
       );
 
-  _headerWidget() => Text(
-        Strings.registerHeaderMessage,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      );
+  _headerWidget() {
+    String header = "";
+    if (startType == StartType.LOGIN) {
+      if (currentRoleType == RoleType.DOCTOR) {
+        header = Strings.registerAsDoctorMessage;
+      } else {
+        header = Strings.registerAsPatientMessage;
+      }
+    } else {
+      header = Strings.registerHeaderMessage;
+    }
+    return Text(
+      header,
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    );
+  }
 
-  _optionsWidget() => Row(
+  _optionsWidget() {
+    if (startType == StartType.LOGIN) {
+      return Visibility(
+        child: GestureDetector(
+          child: OptionButton(currentRoleType, stream: _controller.stream),
+        ),
+      );
+    } else {
+      return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Visibility(
@@ -361,6 +407,8 @@ class _StartPageState extends State<StartPage> {
           )
         ],
       );
+    }
+  }
 
   _messageWidget() => Text(
         getMessageText(),
