@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/widgets/PopupMenues/PopUpMenus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
@@ -14,6 +15,11 @@ class SearchBox extends StatefulWidget {
   final bool enableFlag;
   final Function(String c) onSubmit;
   final Function(String c) onChange;
+  TextEditingController controller;
+  final Rect popMenuRect;
+  final List<String> popUpMenuItems;
+  int selectedIndex;
+  final Function(MenuItemProvider) onMenuClick;
 
   SearchBox(
       {this.onPush,
@@ -21,7 +27,16 @@ class SearchBox extends StatefulWidget {
       this.onTap,
       this.onSubmit,
       this.onChange,
-      this.enableFlag = true});
+      this.controller,
+      this.popMenuRect,
+      this.popUpMenuItems,
+      this.selectedIndex,
+      this.onMenuClick,
+      this.enableFlag = true}) {
+    if (controller == null) {
+      controller = TextEditingController();
+    }
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -32,13 +47,12 @@ class SearchBox extends StatefulWidget {
 
 class _SearchBoxState extends State<SearchBox> {
   String searchTag;
-  TextEditingController _controller;
   bool _tooltip = false;
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    _controller?.dispose();
+    widget.controller?.dispose();
     super.dispose();
   }
 
@@ -129,7 +143,7 @@ class _SearchBoxState extends State<SearchBox> {
                   alignment: Alignment.centerRight,
                   padding: EdgeInsets.only(left: 5, right: 15),
                   child: TextField(
-                    controller: _controller,
+                    controller: widget.controller,
                     textAlign: TextAlign.end,
                     enabled: widget.enableFlag,
                     textDirection: TextDirection.ltr,
@@ -144,7 +158,7 @@ class _SearchBoxState extends State<SearchBox> {
                         fillColor: IColors.themeColor),
                   )),
               GestureDetector(
-                  onTap: () {},
+                  onTap: widget.enableFlag ? _showPopUpMenu : widget.onTap,
                   child: Row(
                     children: <Widget>[
 //                          _filterText(),
@@ -172,5 +186,74 @@ class _SearchBoxState extends State<SearchBox> {
 //      ),
       ),
     );
+  }
+
+  void _showPopUpMenu() {
+    double itemHeight = 35;
+    double itemWidth = 125;
+    Widget getText(String title, {bool selected = false}) {
+      return Container(
+        alignment: Alignment.center,
+        width: itemWidth,
+        height: itemHeight,
+        child: Container(
+          alignment: Alignment.center,
+          height: itemHeight * (70 / 100),
+          width: itemWidth * (85 / 100),
+          padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              color:
+                  selected ? IColors.themeColor : Color.fromARGB(0, 0, 0, 0)),
+          child: Text(
+            title,
+            softWrap: true,
+            overflow: TextOverflow.fade,
+            style: TextStyle(
+                fontSize: 11,
+                color: selected ? Colors.white : IColors.darkGrey),
+          ),
+        ),
+      );
+    }
+
+    List<MenuItem> items = [];
+    if (widget.popUpMenuItems != null) {
+      for (int i = 0; i < widget.popUpMenuItems.length; i++) {
+        items.add(MenuItem(
+            child: getText(widget.popUpMenuItems[i],
+                selected: i == widget.selectedIndex),
+            title: widget.popUpMenuItems[i]));
+      }
+    }
+
+    PopupMenu menu = PopupMenu(
+        items: items,
+        context: context,
+        maxColumn: 1,
+        backgroundColor: Colors.white,
+        onClickMenu: (c) {
+          widget.selectedIndex = -1;
+          for (int i = 0; i < widget.popUpMenuItems.length; i++) {
+            if (c.menuTitle == widget.popUpMenuItems[i]) {
+              setState(() {
+                widget.selectedIndex = i;
+              });
+              break;
+            }
+          }
+          if (widget.onMenuClick != null) {
+            widget.onMenuClick(c);
+          }
+        },
+        stateChanged: (c) {},
+        itemHeight: itemHeight,
+        itemWidth: itemWidth,
+        arrowHeight: 0,
+        highlightColor: Colors.red,
+        lineColor: Colors.white,
+        onDismiss: () {});
+
+    menu.show(rect: widget.popMenuRect);
   }
 }

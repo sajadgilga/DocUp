@@ -191,6 +191,13 @@
             </list>
           </value>
         </entry>
+        <entry key="flutter_circular_slider">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_circular_slider-2.5.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="flutter_launcher_icons">
           <value>
             <list>
@@ -738,6 +745,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_crashlytics-0.1.4+1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-6.0.16/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_bloc-3.2.0/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_circular_slider-2.5.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_launcher_icons-0.7.5/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications-1.4.4+4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications_platform_interface-1.0.1/lib" />

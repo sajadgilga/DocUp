@@ -1,3 +1,4 @@
+import 'package:docup/ui/widgets/WholeIntroChild.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -40,36 +41,28 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       key: introKey,
       pages: [
         PageViewModel(
-          title: "داکآپ، پل ارتباطی پزشک و بیمار",
-          body:
-          "رزرو نوبت،‌ گفتگو با پزشکان متخصص و پیگیری آنلاین روند درمان",
-          image: _buildImage('img1'),
+          wholePageChild: WholeIntoChild1(),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "تقویم سلامت",
-          body:
-          "ایجاد رویداد سلامت، یادآوری داروها و نوبت‌های ویزیت",
-          image: _buildImage('img2'),
+          wholePageChild: WholeIntoChild2(),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "مطب مجازی",
-          body:
-          "تسهیل روند تشخیص و درمان با کمک تست‌های آنلاین و هوش مصنوعی",
-          image: _buildImage('img3'),
+          wholePageChild: WholeIntoChild3(
+            onDone: () => _onIntroEnd(context),
+          ),
           decoration: pageDecoration,
         ),
-
       ],
-      onDone: () => _onIntroEnd(context),
+      onDone: () {},
       //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
       showSkipButton: true,
       skipFlex: 0,
       nextFlex: 0,
       skip: const Text(''),
-      next: const Icon(Icons.arrow_forward),
-      done: const Text('ورود', style: TextStyle(fontWeight: FontWeight.w600)),
+      next: SizedBox(),
+      done: SizedBox(),
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
         color: Color(0xFFBDBDBD),

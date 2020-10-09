@@ -9,6 +9,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
+import 'package:docup/ui/widgets/PopupMenues/PopUpMenus.dart';
 import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -302,6 +303,9 @@ class _HomeState extends State<Home> {
           ),
           _noronioClinic(),
           _homeList(),
+//          TimeSelectorWidget(
+//            initTimes: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+//          ),
           SizedBox(
             height: 15,
           ),

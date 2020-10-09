@@ -86,7 +86,8 @@ class _StartPageState extends State<StartPage> {
         }
         if (response.data.runtimeType == VerifyResponseEntity) {
           try {
-            String utfName = utf8.decode(response.data.fullName.codeUnits);
+            String utfName =
+                utf8.decode(response.data.fullName.codeUnits).trim();
             _fullNameController.text = utfName;
           } catch (e) {}
         }

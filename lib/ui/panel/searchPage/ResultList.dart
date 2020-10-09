@@ -8,6 +8,7 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
@@ -18,9 +19,14 @@ class ResultList extends StatefulWidget {
   List<UserEntity> results;
   bool isDoctor;
   bool isRequestsOnly;
+  bool nextPageFetchLoader;
 
   ResultList(
-      {this.onPush, this.results, this.isDoctor, this.isRequestsOnly = false});
+      {this.onPush,
+      this.results,
+      this.isDoctor,
+      this.isRequestsOnly = false,
+      this.nextPageFetchLoader = false});
 
   @override
   _ResultListState createState() => _ResultListState();
@@ -45,7 +51,10 @@ class _ResultListState extends State<ResultList> {
     return Expanded(
       flex: 2,
       child: ListView(
-        children: results,
+        children: widget.nextPageFetchLoader
+            ? results + [APICallLoading()]
+            : results,
+        physics: BouncingScrollPhysics(),
       ),
     );
   }
@@ -213,16 +222,17 @@ class _SearchResultDoctorItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () => _showDoctorDialogue(context),
-        child: Container(
-          color: Color.fromRGBO(0, 0, 0, 0),
-          margin: EdgeInsets.only(top: 10, bottom: 10),
-          constraints:
-              BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[_info(), _image(context)],
-          ),
-        ));
+      onTap: () => _showDoctorDialogue(context),
+      child: Container(
+        color: Color.fromRGBO(0, 0, 0, 0),
+        margin: EdgeInsets.only(top: 10, bottom: 10),
+        constraints:
+            BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[_info(), _image(context)],
+        ),
+      ),
+    );
   }
 }

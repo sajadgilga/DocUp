@@ -15,7 +15,6 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/account/DoctorProfilePage.dart';
 import 'package:docup/ui/account/PatientProfilePage.dart';
 import 'package:docup/ui/account/ProfileMenuPage.dart';
@@ -44,7 +43,6 @@ import 'package:docup/ui/visitsList/PhysicalVisitListPage.dart';
 import 'package:docup/ui/visitsList/VirtualVisitListPage.dart';
 import 'package:docup/ui/visitsList/VisitRequestsListPage.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
-import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -135,7 +133,7 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
           NavigatorRoutes.partnerSearchView: (context) =>
-              _partnerSearchPage(context),
+              _partnerSearchPage(context, detail: detail),
           NavigatorRoutes.cognitiveTest: (context) =>
               _cognitiveTest(context, detail),
           NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
@@ -164,7 +162,7 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
           NavigatorRoutes.partnerSearchView: (context) =>
-              _partnerSearchPage(context),
+              _partnerSearchPage(context, detail: detail),
           NavigatorRoutes.visitRequestList: (context) =>
               _visitRequestPage(context),
           NavigatorRoutes.physicalVisitList: (context) =>
@@ -211,7 +209,7 @@ class NavigatorViewState extends State<NavigatorView> {
                 body: widgetArg,
               )),
           NavigatorRoutes.partnerSearchView: (context) =>
-              _partnerSearchPage(context),
+              _partnerSearchPage(context, detail: detail),
           NavigatorRoutes.visitRequestList: (context) =>
               _visitRequestPage(context),
           NavigatorRoutes.account: (context) =>
@@ -229,7 +227,7 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.root: (context) => _noronioClinic(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.partnerSearchView: (context) =>
-              _partnerSearchPage(context),
+              _partnerSearchPage(context, detail: detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
               _physicalVisitPage(context, detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
@@ -603,13 +601,15 @@ class NavigatorViewState extends State<NavigatorView> {
         ));
   }
 
-  Widget _partnerSearchPage(context, {isRequests = false}) => MultiBlocProvider(
+  Widget _partnerSearchPage(context, {isRequests = false, detail = null}) =>
+      MultiBlocProvider(
           providers: [
             BlocProvider<SearchBloc>.value(value: _searchBloc),
 //            BlocProvider<VisitBloc>.value(value: _visitBloc),
           ],
           child: PartnerSearchPage(
             isRequestPage: isRequests,
+            clinicIdDoctorSearch: detail,
             onPush: (direction, entity) {
               push(context, direction, detail: entity);
             },

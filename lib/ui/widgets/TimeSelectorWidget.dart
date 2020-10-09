@@ -5,6 +5,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_circular_slider/flutter_circular_slider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class TimeSelectorWidget extends StatefulWidget {
@@ -30,24 +31,37 @@ class _TimeSelectorWidgetState extends State<TimeSelectorWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 250,
-      child: CustomPaint(
-        painter: TimerSelectorPaint(
-            context: context,
-            tappedOffset: widget.tappedOffset,
-            selectedNumbers: selectedNumbers,
-            callback: (number) {
-              setState(() {
-                if (selectedNumbers.contains(number)) {
-                  selectedNumbers.remove(number);
-                } else {
-                  selectedNumbers.add(number);
-                }
-                widget.controller.add(selectedNumbers);
-              });
-            }),
-      ),
-    );
+        height: 250,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            CustomPaint(
+              painter: TimerSelectorPaint(
+                  context: context,
+                  tappedOffset: widget.tappedOffset,
+                  selectedNumbers: selectedNumbers,
+                  callback: (number) {
+                    setState(() {
+                      if (selectedNumbers.contains(number)) {
+                        selectedNumbers.remove(number);
+                      } else {
+                        selectedNumbers.add(number);
+                      }
+                      widget.controller.add(selectedNumbers);
+                    });
+                  }),
+            ),
+            DoubleCircularSlider(
+              12,
+              0,
+              0,
+              width: 180,
+              height: 180,
+              baseColor: Color.fromARGB(0, 0, 0, 0),
+              selectionColor: Colors.red,
+            ),
+          ],
+        ));
   }
 }
 
@@ -76,8 +90,8 @@ class TimerSelectorPaint extends CustomPainter {
     11: Offset(-40, -69.282),
     12: Offset(0, -80)
   };
-  final double xOffset = 8;
-  final double yOffset = 112;
+  final double xOffset = 0;
+  final double yOffset = 0;
 
   int selectedNumber = -1;
 
@@ -120,7 +134,8 @@ class TimerSelectorPaint extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     textPainter.layout();
-    textPainter.paint(canvas, Offset(position.dx, position.dy + 100));
+    textPainter.paint(
+        canvas, Offset(position.dx + xOffset - 8, position.dy + yOffset - 13));
     if (selectedNumbers != null) {
       if (selectedNumbers.contains(number) &&
           isPointInside(position, localOffset)) {
@@ -147,10 +162,9 @@ class TimerSelectorPaint extends CustomPainter {
   }
 
   bool isPointInside(Offset point, Offset localOffset) {
-    return true;
     if (localOffset == null) return false;
-    return pow(point.dx + 8 - localOffset.dx, 2) +
-            pow(point.dy + 112 - localOffset.dy, 2) <
+    return pow(point.dx + xOffset - localOffset.dx, 2) +
+            pow(point.dy + yOffset - localOffset.dy, 2) <
         pow(20, 2);
   }
 

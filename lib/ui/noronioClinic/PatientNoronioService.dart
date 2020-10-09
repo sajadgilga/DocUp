@@ -12,7 +12,8 @@ class PatientNoronioService extends StatefulWidget {
   final Function(String, dynamic) onPush;
   final Function(String, dynamic) globalOnPush;
 
-  PatientNoronioService({Key key, @required this.onPush, @required this.globalOnPush})
+  PatientNoronioService(
+      {Key key, @required this.onPush, @required this.globalOnPush})
       : super(key: key);
 
   @override
@@ -48,7 +49,9 @@ class _PatientNoronioServiceState extends State<PatientNoronioService> {
               children: [
                 SquareBoxNoronioClinicService(Assets.noronioServiceDoctorList,
                     () {
-                  widget.onPush(NavigatorRoutes.partnerSearchView, null);
+                  int noronioClinicId = 3;
+                  widget.onPush(
+                      NavigatorRoutes.partnerSearchView, noronioClinicId);
                 }, "مشاهده پزشکان"),
                 SquareBoxNoronioClinicService(Assets.noronioServiceBrainTest,
                     () {

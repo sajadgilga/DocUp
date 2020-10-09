@@ -33,7 +33,7 @@ class MyPartners extends StatelessWidget {
     var searchBloc = BlocProvider.of<SearchBloc>(context);
     if (_state.entity.isDoctor)
       searchBloc.add(SearchPatient(text: "", isRequestOnly: isRequestPage));
-    else if (_state.entity.isPatient) searchBloc.add(SearchDoctor(text: ""));
+    else if (_state.entity.isPatient) searchBloc.add(SearchDoctor(paramSearch: ""));
   }
 
   @override

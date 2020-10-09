@@ -341,9 +341,13 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                 ],
               );
             } else
-              return Container();
+              return Container(
+                child: Text("..."),
+              );
           } else
-            return Container();
+            return Container(
+              child: Text("..."),
+            );
         },
       );
 
