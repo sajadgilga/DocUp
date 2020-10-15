@@ -50,12 +50,16 @@ class _DoctorNoronioServiceState extends State<DoctorNoronioService> {
                 SquareBoxNoronioClinicService(Assets.noronioServiceDoctorList,
                     () {
                   // TODO
-                  widget.onPush(NavigatorRoutes.partnerSearchView, null);
+                  int noronioClinicId = 4;
+
+                  widget.onPush(
+                      NavigatorRoutes.partnerSearchView, noronioClinicId);
                 }, "مشاهده پزشکان"),
                 SquareBoxNoronioClinicService(Assets.noronioServiceBrainTest,
                     () {
                   /// TODO
-                  widget.globalOnPush(NavigatorRoutes.cognitiveTest, null);
+//                  widget.globalOnPush(NavigatorRoutes.cognitiveTest, null);
+                  toast(context, "در آینده آماده می شود");
                 }, "تست رایگان آلزایمر")
               ],
             ),

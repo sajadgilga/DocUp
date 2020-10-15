@@ -1,9 +1,9 @@
 import 'package:docup/models/ChatMessage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ChatBox extends StatefulWidget {
   final Function(int) selectPage;
@@ -20,7 +20,7 @@ class ChatBox extends StatefulWidget {
 class _ChatBoxState extends State<ChatBox> {
 
   Widget _myMessages() => Container(
-          margin: EdgeInsets.only(left: 20, right: 40),
+          margin: EdgeInsets.only(left: 20, right: 20),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

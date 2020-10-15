@@ -20,6 +20,8 @@ class SearchBox extends StatefulWidget {
   final List<String> popUpMenuItems;
   int selectedIndex;
   final Function(MenuItemProvider) onMenuClick;
+  final bool filterPopup;
+  final String hintText;
 
   SearchBox(
       {this.onPush,
@@ -32,6 +34,8 @@ class SearchBox extends StatefulWidget {
       this.popUpMenuItems,
       this.selectedIndex,
       this.onMenuClick,
+      this.hintText,
+      this.filterPopup = true,
       this.enableFlag = true}) {
     if (controller == null) {
       controller = TextEditingController();
@@ -78,7 +82,7 @@ class _SearchBoxState extends State<SearchBox> {
 
   double _getSearchBoxWidth(width) {
     return (width > 550
-        ? width * .65
+        ? width * .60
         : (width > 400 ? width * .60 : width * .55));
   }
 
@@ -101,6 +105,8 @@ class _SearchBoxState extends State<SearchBox> {
         ? _simpleTooltip()
         : GestureDetector(onTap: widget.onTap, child: _simpleTooltip());
   }
+
+  /// TODO amir: cleaning hintText for all pages
 
   Widget _simpleTooltip() {
     return SimpleTooltip(
@@ -138,39 +144,42 @@ class _SearchBoxState extends State<SearchBox> {
                 Icons.search,
                 size: 25,
               ),
-              Container(
-                  width: _getSearchBoxWidth(MediaQuery.of(context).size.width),
-                  alignment: Alignment.centerRight,
-                  padding: EdgeInsets.only(left: 5, right: 15),
-                  child: TextField(
-                    controller: widget.controller,
-                    textAlign: TextAlign.end,
-                    enabled: widget.enableFlag,
-                    textDirection: TextDirection.ltr,
-                    onSubmitted: widget.onSubmit,
-                    onChanged: widget.onChange,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: (widget.isPatient
-                            ? Strings.PatientSearchBoxHint
-                            : Strings.DoctorSearchBoxHint),
-                        focusColor: IColors.themeColor,
-                        fillColor: IColors.themeColor),
+              Expanded(
+                  // width: _getSearchBoxWidth(MediaQuery.of(context).size.width),
+                  // alignment: Alignment.centerRight,
+                  // padding: EdgeInsets.only(left: 5, right: 15),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 5,right: 5),
+                    child: TextField(
+                      controller: widget.controller,
+                      textAlign: TextAlign.end,
+                      enabled: widget.enableFlag,
+                      textDirection: TextDirection.ltr,
+                      onSubmitted: widget.onSubmit,
+                      onChanged: widget.onChange,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: widget.hintText ??
+                              (widget.isPatient
+                                  ? Strings.PatientSearchBoxHint
+                                  : Strings.DoctorSearchBoxHint),
+                          focusColor: IColors.themeColor,
+                          fillColor: IColors.themeColor),
+                    ),
                   )),
-              GestureDetector(
-                  onTap: widget.enableFlag ? _showPopUpMenu : widget.onTap,
-                  child: Row(
-                    children: <Widget>[
-//                          _filterText(),
-                      Container(
+              widget.filterPopup
+                  ? GestureDetector(
+                      onTap: widget.enableFlag ? _showPopUpMenu : widget.onTap,
+                      child: Container(
+                        width: 25,
+                        height: 25,
                         child: Icon(
                           Icons.filter_list,
-                          size: 20,
+                          size: 25,
                         ),
                         margin: EdgeInsets.only(left: 5),
-                      ),
-                    ],
-                  ))
+                      ))
+                  : SizedBox(),
             ]),
 //      ),child: Row(
 //        mainAxisAlignment: MainAxisAlignment.center,

@@ -18,7 +18,7 @@ class APICallError extends StatelessWidget {
     /// TODO
     double x = MediaQuery.of(context).size.width;
     double y = MediaQuery.of(context).size.height;
-    double imageWidth = x * (150 / 360);
+    double imageWidth = x * (130 / 360);
     return Container(
         height: y,
         width: x,
@@ -28,7 +28,7 @@ class APICallError extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(left: x * (41 / 360)),
+              padding: EdgeInsets.only(left: x * (10 / 360)),
               width: imageWidth,
               child: SvgPicture.asset(
                 Assets.apiCallError,
@@ -44,9 +44,10 @@ class APICallError extends StatelessWidget {
                   "خطا در برقراری ارتباط",
                   textAlign: TextAlign.right,
                   textDirection: TextDirection.rtl,
+                  maxLines: 2,
                   style: TextStyle(
                       color: Colors.red,
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -55,9 +56,10 @@ class APICallError extends StatelessWidget {
                       " کنید و مجددا تلاش نمایید.",
                   textAlign: TextAlign.right,
                   textDirection: TextDirection.rtl,
+                  maxLines: 6,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 17,
+                    fontSize: 16,
                   ),
                 ),
                 Text(

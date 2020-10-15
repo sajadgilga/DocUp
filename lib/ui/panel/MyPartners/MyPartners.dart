@@ -22,18 +22,22 @@ import 'MyPartnersResultList.dart';
 
 class MyPartners extends StatelessWidget {
   final Function(String, UserEntity) onPush;
-  final isRequestPage;
 
 //  SearchBloc searchBloc = SearchBloc();
 
-  MyPartners({@required this.onPush, this.isRequestPage = false});
+  MyPartners({@required this.onPush});
 
   void _initialSearch(context) {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
     if (_state.entity.isDoctor)
-      searchBloc.add(SearchPatient(text: "", isRequestOnly: isRequestPage));
-    else if (_state.entity.isPatient) searchBloc.add(SearchDoctor(paramSearch: ""));
+      searchBloc.add(SearchPatient(
+        text: "",
+      ));
+    else if (_state.entity.isPatient)
+      searchBloc.add(SearchDoctor(
+          patientUsername: _state.entity.mEntity.user.username,
+          isMyDoctors: true));
   }
 
   @override
@@ -86,7 +90,7 @@ class MyPartners extends StatelessWidget {
             results: (state.result.isDoctor
                 ? state.result.doctor_results
                 : state.result.patient_results),
-            isRequestsOnly: isRequestPage,
+            isRequestsOnly: false,
           );
         }
         if (state is SearchError)
@@ -105,7 +109,7 @@ class MyPartners extends StatelessWidget {
               results: (state.result.isDoctor
                   ? state.result.doctor_results
                   : state.result.patient_results),
-              isRequestsOnly: isRequestPage,
+              isRequestsOnly: false,
             );
         }
         return Container();

@@ -195,6 +195,7 @@ class Strings {
   static final String physicalVisitPrivacyPolicyMessage =
       "من همه قوانین و مقررات رزرو ویزیت حضوری را خوانده و موافقت میکنم";
   static final String enterVisitTimeMessage = "لطفا زمان ویزیت را وارد کنید";
+  static final String enterVisitDateMessage = "لطفا تاریخ ویزیت را وارد کنید";
   static final String offlineDoctorMessage =
       " پزشک آنلاین نیست لطفا زمانی را برای ویزیت مشخص کنید";
 

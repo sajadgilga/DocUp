@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/blocs/CreditBloc.dart';
@@ -22,7 +23,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show PlatformException;
 
 class PatientProfilePage extends StatefulWidget {
-  final ValueChanged<String> onPush;
+  final Function(String, dynamic) onPush;
   final String defaultCreditForCharge;
 
   PatientProfilePage(
@@ -113,45 +114,58 @@ class _PatientProfilePageState extends State<PatientProfilePage>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            PageTopLeftIcon(
-              topLeft: Icon(
-                Icons.menu,
-                size: 25,
+  Widget build(BuildContext context) =>
+      BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+        if (state is EntityLoaded) {
+          if (state.entity.mEntity != null) {
+            PatientEntity patientEntity = state.entity.mEntity as PatientEntity;
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      PageTopLeftIcon(
+                        topLeft: Icon(
+                          Icons.menu,
+                          size: 25,
+                        ),
+                        onTap: () {
+                          /// TODO
+                          widget.onPush(NavigatorRoutes.patientProfileMenuPage,
+                              patientEntity);
+                        },
+                        topRightFlag: false,
+                        topLeftFlag: true,
+                      ),
+                      DocUpHeader(
+                        title: "پروفایل من",
+                        docUpLogo: false,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  _userInfoLabelWidget(),
+                  _userInfoWidget(patientEntity),
+                  _changePasswordWidget(context),
+                  SizedBox(height: 10),
+                  _userCreditLabelWidget(),
+                  _userCreditWidget(),
+                  SizedBox(height: 30),
+                  _addCreditWidget(),
+                  SizedBox(height: 10),
+                  _supportWidget()
+                ],
               ),
-              onTap: () {
-                /// TODO
-              },
-              topRightFlag: false,
-              topLeftFlag: true,
-            ),
-            DocUpHeader(
-              title: "پروفایل من",
-              docUpLogo: false,
-            ),
-          ],
-        ),
-        SizedBox(height: 10),
-        _userInfoLabelWidget(),
-        _userInfoWidget(),
-        _changePasswordWidget(context),
-        SizedBox(height: 10),
-        _userCreditLabelWidget(),
-        _userCreditWidget(),
-        SizedBox(height: 30),
-        _addCreditWidget(),
-        SizedBox(height: 10),
-        _supportWidget()
-      ],
-    ));
-  }
+            );
+          } else {
+            return Container(child: Text("..."),);
+          }
+        } else {
+          return Container(child: Text("..."),);
+        }
+      });
 
   _supportWidget() {
     double iconsSize = 60;
@@ -310,45 +324,30 @@ class _PatientProfilePageState extends State<PatientProfilePage>
         ),
       );
 
-  _userInfoWidget() => BlocBuilder<EntityBloc, EntityState>(
-        builder: (context, state) {
-          if (state is EntityLoaded) {
-            if (state.entity.mEntity != null) {
-              var user = state.entity.mEntity.user;
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                          "${user.firstName == null ? "" : user.firstName} ${user.lastName == null ? "" : user.lastName}",
-                          style: TextStyle(fontSize: 16)),
-                      SizedBox(height: 10),
-                      Text("${replaceFarsiNumber(user.phoneNumber)}",
-                          style: TextStyle(fontSize: 16)),
-                    ],
-                  ),
-                  SizedBox(width: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircularAvatar(
-                      user: user,
-                      onTap: () {
+  _userInfoWidget(PatientEntity patientEntity) => Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Text(
+                  "${patientEntity.user.firstName == null ? "" : patientEntity.user.firstName} ${patientEntity.user.lastName == null ? "" : patientEntity.user.lastName}",
+                  style: TextStyle(fontSize: 16)),
+              SizedBox(height: 10),
+              Text("${replaceFarsiNumber(patientEntity.user.phoneNumber)}",
+                  style: TextStyle(fontSize: 16)),
+            ],
+          ),
+          SizedBox(width: 20),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircularAvatar(
+              user: patientEntity.user,
+              onTap: () {
 //                        widget.onPush(NavigatorRoutes.uploadPicDialogue);
-                      },
-                    ),
-                  ),
-                ],
-              );
-            } else
-              return Container(
-                child: Text("..."),
-              );
-          } else
-            return Container(
-              child: Text("..."),
-            );
-        },
+              },
+            ),
+          ),
+        ],
       );
 
   _userInfoLabelWidget() => Padding(

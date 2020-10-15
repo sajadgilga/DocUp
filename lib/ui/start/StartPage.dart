@@ -4,6 +4,7 @@ import 'package:docup/blocs/AuthBloc.dart';
 import 'package:docup/blocs/DoctorBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
+import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/AuthResponseEntity.dart';
 import 'package:docup/networking/CustomException.dart';
@@ -382,7 +383,12 @@ class _StartPageState extends State<StartPage> {
     if (startType == StartType.LOGIN) {
       return Visibility(
         child: GestureDetector(
-          child: OptionButton(currentRoleType, stream: _controller.stream),
+          child: Image.asset(
+            currentRoleType == RoleType.DOCTOR
+                ? Assets.waitForCodeDoctor
+                : Assets.waitFroCodePatient,
+            scale: 0.8,
+          ),
         ),
       );
     } else {

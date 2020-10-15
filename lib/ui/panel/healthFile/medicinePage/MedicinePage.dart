@@ -2,13 +2,14 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/MedicineBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/panel/healthFile/medicinePage/CreateMedicinePage.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/widgets/FloatingButton.dart';
 import 'package:docup/ui/widgets/medicines/ReminderList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'CreateMedicinePage.dart';
 
 enum _MedicinePage { MAIN, CREATION }
 

@@ -7,6 +7,7 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
@@ -130,12 +131,8 @@ class _SearchResultPatientItem extends StatelessWidget {
   Widget _image(context) => Container(
       child: Container(
           width: 70,
-          child: ClipPolygon(
-            sides: 6,
-            rotate: 90,
-            child: (entity.patientEntity.user.avatar != null
-                ? Image.network(entity.patientEntity.user.avatar)
-                : Image.asset(Assets.emptyAvatar)),
+          child: PolygonAvatar(
+            user: entity.patientEntity.user,
           )));
 
   String _statusString(type, method) {
@@ -149,20 +146,27 @@ class _SearchResultPatientItem extends StatelessWidget {
 
   Widget _status() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Text(
-            _statusString(entity.visitType, entity.visitMethod),
-            style: TextStyle(
-                color: IColors.themeColor,
-                fontSize: 8,
-                fontWeight: FontWeight.bold),
-            textAlign: TextAlign.right,
-          ),
-          PatientStatus.values[entity.status].icon,
-        ],
+      height: 30,
+      padding: EdgeInsets.only(left: 10),
+      child: Expanded(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Text(
+              _statusString(entity.visitType, entity.visitMethod),
+              softWrap: true,
+              overflow: TextOverflow.fade,
+              style: TextStyle(
+                  color: IColors.themeColor,
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold),
+              textAlign: TextAlign.left,
+              textDirection: TextDirection.rtl,
+            ),
+            SizedBox(child: PatientStatus.values[entity.status].icon,),
+          ],
+        ),
       ),
     );
   }
@@ -175,15 +179,21 @@ class _SearchResultPatientItem extends StatelessWidget {
     } catch (_) {
       utfName = entity.patientEntity.user.name;
     }
-    return Container(
-      margin: EdgeInsets.only(right: 15),
+    return Expanded(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(
-            utfName,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
-            textAlign: TextAlign.right,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                utfName,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
+                textAlign: TextAlign.right,
+              ),
+            ],
           ),
           _status()
         ],
@@ -203,6 +213,7 @@ class _SearchResultPatientItem extends StatelessWidget {
           ),
           margin: EdgeInsets.only(top: 10, bottom: 10, left: 10),
           child: Row(
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[_info(), _image(context)],
           ),
@@ -291,7 +302,7 @@ extension PatientStatusExtension on PatientStatus {
           color: this.color,
         );
       case PatientStatus.VISIT_REQUEST:
-        return SvgPicture.asset('');
+        return Image.asset(Assets.visitListDoctorIcon1,width: 15,height: 15,);
       case PatientStatus.VIRTUAL_VISIT_REQUEST:
         return SvgPicture.asset(
           Assets.onCallMedicalIcon,
@@ -300,7 +311,7 @@ extension PatientStatusExtension on PatientStatus {
       case PatientStatus.CURED:
         return Icon(Icons.update, size: 15, color: this.color);
       default:
-        return Container();
+        return Image.asset(Assets.visitListDoctorIcon1,width: 15,height: 15,);
     }
   }
 }

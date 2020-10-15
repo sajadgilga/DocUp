@@ -3,6 +3,8 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/blocs/MedicalTestBloc.dart';
 import 'package:docup/constants/colors.dart';
@@ -63,41 +65,74 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
     );
   }
 
-  _medicalTestWidget(MedicalTest test) => Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              PageTopLeftIcon(
-                topLeft: Icon(
-                  Icons.arrow_back,
-                  color: IColors.themeColor,
-                  size: 20,
+  _medicalTestWidget(MedicalTest test) =>
+      BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
+        if (state is EntityLoaded) {
+          if (state.entity.mEntity != null) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    PageTopLeftIcon(
+                      topLeft: Icon(
+                        Icons.arrow_back,
+                        color: IColors.themeColor,
+                        size: 20,
+                      ),
+                      onTap: () {
+                        /// TODO
+                        widget.onPush(NavigatorRoutes.root, null);
+                      },
+                      topRightFlag: false,
+                      topLeftFlag: Platform.isIOS,
+                    ),
+                  ],
                 ),
-                onTap: () {
-                  /// TODO
-                  widget.onPush(NavigatorRoutes.root, null);
-                },
-                topRightFlag: false,
-                topLeftFlag: Platform.isIOS,
-              ),
-              DocUpHeader(title: test.name),
-            ],
+                ALittleVerticalSpace(),
+                state.entity.isDoctor ? _sendToPatientIcon() : SizedBox(),
+                ALittleVerticalSpace(),
+                QuestionList(test.questions, answeringController, context),
+                MediumVerticalSpace(),
+                state.entity.isDoctor
+                    ? SizedBox()
+                    : _showTestResultButtonWidget(test.questions.length),
+                MediumVerticalSpace()
+              ],
+            );
+          }
+        }
+        return APICallLoading();
+      });
+
+  Widget _sendToPatientIcon() {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      GestureDetector(
+        onTap: (){
+          /// TODO mosio: it should open up a dialog to send this test to patient
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: ActionButton(
+            title: "ارسال برای" + "\n" + "بیمار",
+            width: 100,
+            height: 80,
+            textColor: Colors.white,
+            borderRadius: 10,
+            color: IColors.themeColor,
           ),
-          ALittleVerticalSpace(),
-          QuestionList(test.questions, answeringController, context),
-          MediumVerticalSpace(),
-          _showTestResultButtonWidget(test.questions.length),
-          MediumVerticalSpace()
-        ],
-      );
+        ),
+      ),
+      Padding(padding: const EdgeInsets.only(right: 20), child: SizedBox())
+    ]);
+  }
 
   _showTestResultButtonWidget(int questionsCount) => Center(
         child: ActionButton(
             width: MediaQuery.of(context).size.width * 0.5,
             title: "مشاهده پاسخ",
-            color: IColors.blue,
+            color: IColors.themeColor,
             borderRadius: 15,
             callBack: () => showTestResult(questionsCount)),
       );

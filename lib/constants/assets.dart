@@ -51,6 +51,16 @@ class Assets {
   static final String apiCallError =
       "assets/Group 2910.svg";
 
+  static final String introPage1 = "assets/img1.png";
+  static final String introPage2 = "assets/img2.png";
+  static final String introPage3 = "assets/img3.png";
+
+  static final String waitFroCodePatient = "assets/startPage/Group 1851.png";
+  static final String waitForCodeDoctor = "assets/startPage/Group 1850.png";
+
+  static final String visitListDoctorIcon1 = "assets/visitLists/doctor_4@3x.png";
+  static final String patientDetailFilesIcon = "assets/visitLists/file@2x.png";
+
   static String docupIcon = docupPatientIcon;
 
   static void changeIcons(RoleType roleType) {

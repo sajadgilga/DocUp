@@ -30,7 +30,8 @@ class PhysicalVisitPage extends StatefulWidget {
   _PhysicalVisitPageState createState() => _PhysicalVisitPageState();
 }
 
-class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
+class _PhysicalVisitPageState extends State<PhysicalVisitPage>
+    with TickerProviderStateMixin {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
 
   Map<String, String> typeSelected = {
@@ -39,6 +40,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
   };
   bool policyChecked = false;
   TextEditingController dateTextController = TextEditingController();
+  TextEditingController timeTextController = TextEditingController();
   int timeIndexSelected = -1;
 
   @override
@@ -91,7 +93,11 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
             ],
           ),
           ALittleVerticalSpace(),
-          VisitDateTimePicker(dateTextController, widget.doctorEntity),
+          AnimatedSize(
+              duration: Duration(milliseconds: 400),
+              vsync: this,
+              child: VisitDateTimePicker(
+                  dateTextController, timeTextController, widget.doctorEntity)),
           ALittleVerticalSpace(),
 //          _labelWidget(TIME_SELECTION),
 //          ALittleVerticalSpace(),
@@ -183,29 +189,52 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage> {
               title,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               textAlign: TextAlign.right,
+              textDirection: TextDirection.rtl,
             ),
           ],
         ),
       );
 
   _sendVisitRequest() {
-    if (timeIndexSelected == -1) {
-      showOneButtonDialog(
-          context, "لطفا زمان رزرو ویزیت را وارد کنید", "باشه", () {});
+    if (!policyChecked) return;
+    if (dateTextController.text.isEmpty || timeTextController.text.isEmpty) {
+      if (dateTextController.text.isEmpty) {
+        showOneButtonDialog(
+            context, Strings.enterVisitDateMessage, Strings.okAction, () {});
+      } else {
+        showOneButtonDialog(
+            context, Strings.enterVisitTimeMessage, Strings.okAction, () {});
+      }
     } else {
-      _bloc.visitRequest(
-          widget.doctorEntity.id,
-          0,
-          0,
-          0,
-          convertToGeorgianDate(dateTextController.text) +
-              "T" +
-              _getStartTime(timeIndexSelected) +
-              "+04:30");
+      sendVisitRequest();
     }
   }
 
   _getStartTime(int timeIndexSelected) {
     return widget.doctorEntity.plan.workTimes[timeIndexSelected].startTime;
+  }
+
+  void sendVisitRequest() {
+    /// TODO mosio: timeTextController.text should be used here later
+    String startTime = timeTextController.text.split("-")[0];
+    int startMinute = getTimeMinute(startTime);
+    String endTime = timeTextController.text.split("-")[1];
+    int endMinute = getTimeMinute(endTime);
+    if (endMinute < startMinute) {
+      endMinute += 24 * 60;
+    }
+    int duration = getTimeMinute(endTime) - getTimeMinute(startTime);
+
+    String visitDuration = "+" + convertMinuteToTimeString(duration);
+
+    _bloc.visitRequest(
+        widget.doctorEntity.id,
+        0,
+        0,
+        0,
+        convertToGeorgianDate(dateTextController.text) +
+            "T" +
+            startTime +
+            visitDuration);
   }
 }

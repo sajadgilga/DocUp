@@ -65,14 +65,11 @@ class IPartnerBody extends StatelessWidget {
       children: <Widget>[
         ChatBox(selectPage: selectPage, color: color),
         SizedBox(
-          width: 5,
-        ),
-        SizedBox(
           height: 60,
           child: VerticalDivider(
             color: Colors.grey,
             thickness: 1.5,
-            width: 10,
+            width: 5,
           ),
         ),
         SizedBox(

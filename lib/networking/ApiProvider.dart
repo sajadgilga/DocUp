@@ -32,9 +32,8 @@ class ApiProvider {
       if (token != null && token.isNotEmpty) {
         headers.addAll({HttpHeaders.authorizationHeader: "JWT " + token});
       }
-      final response = await Dio()
-          .post(
-          _BASE_URL + url, data: data, options: Options(headers: headers));
+      final response = await Dio().post(_BASE_URL + url,
+          data: data, options: Options(headers: headers));
       responseJson = _response(dioResponse: response);
     } on SocketException {
       throw FetchDataException('اتصال به اینترنت را بررسی کنید');
@@ -59,9 +58,8 @@ class ApiProvider {
 
   Future<dynamic> post(String url,
       {Map body, bool withToken = true, bool utf8Support = false}) async {
-    return postWithBaseUrl(_BASE_URL, url, body: body,
-        withToken: withToken,
-        utf8Support: utf8Support);
+    return postWithBaseUrl(_BASE_URL, url,
+        body: body, withToken: withToken, utf8Support: utf8Support);
   }
 
   getHeaders({bool withToken = true}) async {
@@ -92,17 +90,22 @@ class ApiProvider {
     return responseJson;
   }
 
-  dynamic _response({http.Response httpResponse,
-    Response dioResponse,
-    bool utf8Support = false}) {
+  dynamic _response(
+      {http.Response httpResponse,
+      Response dioResponse,
+      bool utf8Support = false}) {
     var response;
     if (httpResponse != null)
       response = httpResponse;
     else
       response = dioResponse;
-    print(
-        "API RESPONSE -->>>> code:${response.statusCode} - ${response.body
-            .toString()}");
+    String body = "";
+    try {
+      body = utf8.decode(response.body.toString().codeUnits);
+    } catch (e) {
+      body = response.body.toString();
+    }
+    print("API RESPONSE -->>>> code:${response.statusCode} - ${body}");
     switch (response.statusCode) {
       case 200:
       case 201:
@@ -111,7 +114,10 @@ class ApiProvider {
         return responseJson;
       case 403:
         var responseJson = decodeResponse(utf8Support, response);
-        throw ApiException(responseJson['error_code'], responseJson['detail']);
+
+        /// some changes happend in backend and error_code became code and detail became msg
+        throw ApiException(responseJson['error_code'] ?? responseJson['code'],
+            responseJson['detail'] ?? responseJson['msg']);
       default:
         throw ApiException(
             response.statusCode, "مشکلی در برقراری ارتباط وجود دارد");

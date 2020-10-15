@@ -1,7 +1,10 @@
-import 'package:docup/ui/widgets/WholeIntroChild.dart';
+import 'package:docup/ui/widgets/IntroductionScreen2/WholeIntroChild.dart';
+import 'package:docup/ui/widgets/IntroductionScreen2/dots_decorator.dart';
+import 'package:docup/ui/widgets/IntroductionScreen2/introduction_screen.dart';
+import 'package:docup/ui/widgets/IntroductionScreen2/page_decoration.dart';
+import 'package:docup/ui/widgets/IntroductionScreen2/page_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 
 import 'StartPage.dart';
 
@@ -11,7 +14,7 @@ class OnBoardingPage extends StatefulWidget {
 }
 
 class _OnBoardingPageState extends State<OnBoardingPage> {
-  final introKey = GlobalKey<IntroductionScreenState>();
+  final introKey = GlobalKey<IntroductionScreenState2>();
 
   void _onIntroEnd(context) {
     Navigator.of(context).pushReplacement(
@@ -19,17 +22,11 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     );
   }
 
-  Widget _buildImage(String assetName) {
-    return Align(
-      child: Image.asset('assets/$assetName.png', width: 350.0),
-      alignment: Alignment.bottomCenter,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     const bodyStyle = TextStyle(fontSize: 19.0);
-    const pageDecoration = const PageDecoration(
+    const pageDecoration = const PageDecoration2(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
       bodyTextStyle: bodyStyle,
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
@@ -37,18 +34,18 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       imagePadding: EdgeInsets.zero,
     );
 
-    return IntroductionScreen(
+    return IntroductionScreen2(
       key: introKey,
       pages: [
-        PageViewModel(
+        PageViewModel2(
           wholePageChild: WholeIntoChild1(),
           decoration: pageDecoration,
         ),
-        PageViewModel(
+        PageViewModel2(
           wholePageChild: WholeIntoChild2(),
           decoration: pageDecoration,
         ),
-        PageViewModel(
+        PageViewModel2(
           wholePageChild: WholeIntoChild3(
             onDone: () => _onIntroEnd(context),
           ),
@@ -63,7 +60,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       skip: const Text(''),
       next: SizedBox(),
       done: SizedBox(),
-      dotsDecorator: const DotsDecorator(
+      dotsDecorator: const DotsDecorator2(
         size: Size(10.0, 10.0),
         color: Color(0xFFBDBDBD),
         activeSize: Size(22.0, 10.0),

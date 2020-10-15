@@ -21,7 +21,7 @@ class DoctorSummaryWidget extends StatelessWidget {
         DoctorData(
           width: MediaQuery.of(context).size.width * 0.7,
           doctorEntity: doctorEntity,
-          clinicMarkLocation: 1,
+          clinicMarkLocation: 2,
         ),
         SizedBox(width: 10),
         PolygonAvatar(user: doctorEntity.user),

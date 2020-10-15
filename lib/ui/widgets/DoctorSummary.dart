@@ -1,5 +1,8 @@
+import 'package:docup/models/UserEntity.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
+
+import 'Avatar.dart';
 
 class PartnerSummary extends StatelessWidget {
   final String name;
@@ -14,18 +17,10 @@ class PartnerSummary extends StatelessWidget {
       padding: EdgeInsets.all(10),
       child: Container(
         width: 50,
-        child: ClipPolygon(
-          sides: 6,
-          rotate: 90,
-          boxShadows: [
-            PolygonBoxShadow(color: Colors.black, elevation: 1.0),
-            PolygonBoxShadow(color: Colors.grey, elevation: 2.0)
-          ],
-          child: Image(
-            image: (url != null
-                ? NetworkImage(url)
-                : AssetImage('assets/avatar.png')),
-          ),
+        child: PolygonAvatar(
+          user: User()
+            ..avatar = url
+            ..online = 0,
         ),
       ));
 
@@ -34,16 +29,16 @@ class PartnerSummary extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(bottom: 5),
+              margin: EdgeInsets.only(bottom: 5),
 //              constraints: BoxConstraints(
 //                  maxWidth: MediaQuery.of(context).size.width * .3),
               child: Text(
-                (name != null? name: ''),
+                (name != null ? name : ''),
                 textDirection: TextDirection.rtl,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               )),
           Text(
-            (speciality != null? speciality: ''),
+            (speciality != null ? speciality : ' - '),
             textDirection: TextDirection.rtl,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
@@ -51,7 +46,7 @@ class PartnerSummary extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Text(
-                (location != null? location: ''),
+                (location != null ? location : ''),
                 textDirection: TextDirection.rtl,
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
               ),

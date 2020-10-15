@@ -1,14 +1,15 @@
+import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'ActionButton.dart';
+import '../ActionButton.dart';
 
 class WholeIntoChild1 extends StatelessWidget {
   final String header = "داکآپ، پل ارتباطی پزشک و بیمار";
   final String subHeader =
       "رزرو نوبت، گفتگو با پزشکان متخصص و پیگیر آنلاین روند درمان";
-  final String imageAddress = 'assets/img1.png';
+  final String imageAddress = Assets.introPage1;
   final Color bgColor = Color.fromARGB(255, 245, 245, 245);
 
   @override
@@ -23,8 +24,8 @@ class WholeIntoChild1 extends StatelessWidget {
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          _buildImage(imageAddress, 2.1,
-              EdgeInsets.only(top: y * (297 / 640), right: x * (10 / 100))),
+          _buildImage(imageAddress, 1.8,
+              EdgeInsets.only(top: y * (260 / 640), right: x * (15 / 100))),
           getIntro(
               padding: EdgeInsets.only(top: y * (102 / 640)),
               height: y * (155 / 640),
@@ -45,7 +46,7 @@ class WholeIntoChild2 extends StatelessWidget {
   final String header = "مطب مجازی";
   final String subHeader =
       "تسهیل روند تشخیص و درمان با کمک تست‌های آنلاین و هوش مصنوعی";
-  final String imageAddress = 'assets/img2.png';
+  final String imageAddress = Assets.introPage2;
   final Color bgColor = Color.fromARGB(255, 125, 174, 164);
 
   @override
@@ -82,7 +83,7 @@ class WholeIntoChild3 extends StatelessWidget {
   final String header = "تقویم سلامت";
   final String subHeader =
       "ایجاد رویداد سلامت، یادآوری داروها و نوبت‌های ویزیت";
-  final String imageAddress = 'assets/img3.png';
+  final String imageAddress = Assets.introPage3;
   final Color bgColor = Color.fromARGB(255, 105, 129, 168);
   final Function() onDone;
 
@@ -131,7 +132,7 @@ class WholeIntoChild3 extends StatelessWidget {
           color: bgColor,
         ),
         height: height,
-        title: "ورود یا ثیت نام",
+        title: "ورود یا ثبت نام",
         borderRadius: 25,
         textColor: bgColor,
         color: Colors.white,

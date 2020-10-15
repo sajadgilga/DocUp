@@ -30,7 +30,8 @@ class VirtualVisitPage extends StatefulWidget {
   _VirtualVisitPageState createState() => _VirtualVisitPageState();
 }
 
-class _VirtualVisitPageState extends State<VirtualVisitPage> {
+class _VirtualVisitPageState extends State<VirtualVisitPage>
+    with TickerProviderStateMixin {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
   TextEditingController timeTextController = TextEditingController();
   TextEditingController dateTextController = TextEditingController();
@@ -94,9 +95,14 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
           _visitDurationTimeWidget(),
           ALittleVerticalSpace(),
           _enableVisitTimeWidget(),
-          visitTimeChecked
-              ? VisitDateTimePicker(dateTextController, widget.doctorEntity)
-              : SizedBox(),
+          AnimatedSize(
+            vsync: this,
+            duration: Duration(milliseconds: 400),
+            child: visitTimeChecked
+                ? VisitDateTimePicker(
+                    dateTextController, timeTextController, widget.doctorEntity)
+                : SizedBox(),
+          ),
           ALittleVerticalSpace(),
           _priceWidget(),
           ALittleVerticalSpace(),
@@ -290,8 +296,13 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
     if (!policyChecked) return;
     if (visitTimeChecked) {
       if (dateTextController.text.isEmpty || timeTextController.text.isEmpty) {
-        showOneButtonDialog(
-            context, Strings.enterVisitTimeMessage, Strings.okAction, () {});
+        if (dateTextController.text.isEmpty) {
+          showOneButtonDialog(
+              context, Strings.enterVisitDateMessage, Strings.okAction, () {});
+        } else {
+          showOneButtonDialog(
+              context, Strings.enterVisitTimeMessage, Strings.okAction, () {});
+        }
       } else {
         sendVisitRequest();
       }
@@ -318,6 +329,19 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
   }
 
   void sendVisitRequest() {
+    /// TODO mosio: timeTextController.text should be used here later
+    String startTime = timeTextController.text.split("-")[0];
+    int startMinute = getTimeMinute(startTime);
+
+    String endTime = timeTextController.text.split("-")[1];
+    int endMinute = getTimeMinute(endTime);
+    if (endMinute < startMinute) {
+      endMinute += 24 * 60;
+    }
+    int duration = getTimeMinute(endTime) - getTimeMinute(startTime);
+
+    String visitDuration = "+" + convertMinuteToTimeString(duration);
+
     _bloc.visitRequest(
         widget.doctorEntity.id,
         1,
@@ -325,8 +349,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage> {
         typeSelected[VISIT_DURATION_PLAN],
         convertToGeorgianDate(dateTextController.text) +
             "T" +
-            timeTextController.text +
-            "+04:30");
+            startTime +
+            visitDuration);
   }
 
   String getEnabledTimeString(DoctorPlan plan) {

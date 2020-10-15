@@ -9,6 +9,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
+import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/searchPage/ResultList.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
@@ -23,6 +24,7 @@ import 'visitSearchResult/VisitResult.dart';
 class PhysicalVisitList extends StatelessWidget {
   final Function(String, UserEntity) onPush;
   TextEditingController _controller = TextEditingController();
+  final int patientVisitStatus = 0; //TODO amir: make it and enum, here and now 0 means physical visit
 
 //  SearchBloc searchBloc = SearchBloc();
 
@@ -31,16 +33,23 @@ class PhysicalVisitList extends StatelessWidget {
   void _search(context) {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchBloc.add(SearchPatient(text: _controller.text, isRequestOnly: true));
+    searchBloc.add(SearchVisit(
+        text: _controller.text,
+        acceptStatus: 1,
+        visitType: patientVisitStatus));
 
-    FocusScope.of(context).unfocus();
+//    FocusScope.of(context).unfocus();
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
   void _initialSearch(context) {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchBloc.add(SearchPatient(text: _controller.text, isRequestOnly: true));
+    searchBloc.add(SearchLoadingEvent());
+    searchBloc.add(SearchVisit(
+        text: _controller.text,
+        acceptStatus: 1,
+        visitType: patientVisitStatus));
   }
 
   @override
@@ -162,7 +171,7 @@ class PhysicalVisitList extends StatelessWidget {
 //      }
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
-        if (state is SearchLoaded) {
+        if (state is SearchLoaded && state.result.visit_results != null) {
           return Container(
               margin: EdgeInsets.only(top: 20),
               constraints: BoxConstraints(
@@ -180,7 +189,7 @@ class PhysicalVisitList extends StatelessWidget {
             child: Text('error!'),
           );
         if (state is SearchLoading) {
-          if (state.result == null)
+          if (state.result == null || state.result.visit_results == null)
             return Container(
               child: Waiting(),
             );
@@ -208,15 +217,31 @@ class PhysicalVisitList extends StatelessWidget {
     _initialSearch(context);
 //    _search(context);
 //    _controller.addListener((){print(_controller.text); });
-    return Container(
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-      child: Column(
-        children: <Widget>[
-          _header(context),
-          _searchBox(MediaQuery.of(context).size.width, context),
-          _resultList()
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        constraints:
+            BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+        child: Column(
+          children: <Widget>[
+            SearchBox(
+                isPatient: false,
+                controller: _controller,
+                popMenuRect: Rect.fromLTRB(
+                    MediaQuery.of(context).size.width * 2,
+                    MediaQuery.of(context).size.height * (30 / 100),
+                    0,
+                    0),
+                selectedIndex: 0,
+                onMenuClick: null,
+                hintText: "نام بیمار",
+                filterPopup: false,
+                popUpMenuItems: null,
+                onChange: (String c) {
+                  _search(context);
+                }),
+            _resultList()
+          ],
+        ),
       ),
     );
   }

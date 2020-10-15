@@ -9,6 +9,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
@@ -100,7 +101,7 @@ class _MyPartnersResultListState extends State<MyPartnersResultList> {
 }
 
 class _MyPartnerItem extends StatelessWidget {
-  final DoctorEntity entity;
+  final UserEntity entity;
   final Function(String, UserEntity) onPush;
 
   _MyPartnerItem({Key key, @required this.entity, this.onPush})
@@ -124,14 +125,13 @@ class _MyPartnerItem extends StatelessWidget {
   }
 
   Widget _image(context) => Container(
-      child: Container(
+        child: Container(
           width: 70,
-          child: ClipPolygon(
-            sides: 6,
-            rotate: 90,
-            child: Image.network(
-                (entity.user.avatar != null ? entity.user.avatar : '')),
-          )));
+          child: PolygonAvatar(
+            user: entity.user,
+          ),
+        ),
+      );
 
   Widget _location() => Padding(
         padding: EdgeInsets.only(),
@@ -173,14 +173,19 @@ class _MyPartnerItem extends StatelessWidget {
   }
 
   Widget _nameAndExpertise() {
-    String utfName;
-    String utfExpert;
+    String utfName = "";
+    String utfExpert = "";
     try {
       utfName = utf8.decode(entity.user.name.toString().codeUnits);
-      utfExpert = utf8.decode(entity.expert.toString().codeUnits);
+      if (this.entity is DoctorEntity) {
+        utfExpert = utf8.decode(
+            ((entity as DoctorEntity).expert ?? " - ").toString().codeUnits);
+      }
     } catch (_) {
       utfName = entity.user.name;
-      utfExpert = entity.expert;
+      if (this.entity is DoctorEntity) {
+        utfExpert = (entity as DoctorEntity).expert ?? " - ";
+      }
     }
     return Container(
       padding: EdgeInsets.only(right: 15),
@@ -221,7 +226,7 @@ class _MyPartnerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          onPush(NavigatorRoutes.myDoctorDialog, entity);
+          onPush(NavigatorRoutes.myPartnerDialog, entity);
         },
         child: Container(
           margin: EdgeInsets.only(top: 10, bottom: 10),

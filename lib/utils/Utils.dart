@@ -33,6 +33,7 @@ extension WeekDaysExtension on WeekDay {
     }
   }
 }
+
 String replaceFarsiNumber(String input) {
   const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   const farsi = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -47,10 +48,8 @@ String replaceFarsiNumber(String input) {
 String normalizeDateAndTime(String str) {
   String date = str.split("T")[0];
   String time = str.split("T")[1].split("+")[0];
-  final jalaliDate = Jalali.fromDateTime(DateTime(
-      int.parse(date.split("-")[0]),
-      int.parse(date.split("-")[1]),
-      int.parse(date.split("-")[2])));
+  final jalaliDate = Jalali.fromDateTime(DateTime(int.parse(date.split("-")[0]),
+      int.parse(date.split("-")[1]), int.parse(date.split("-")[2])));
   String finalDate = "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
   return "تاریخ: $finalDate زمان : $time ";
 }
@@ -74,12 +73,8 @@ DateTime getDateAndTimeFromJalali(String jalaiDateStr, String timeStr) {
       Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
           .toGregorian();
   var timeArray = timeStr.split(":");
-  return DateTime(
-      georgianDate.year,
-      georgianDate.month,
-      georgianDate.day,
-      int.parse(timeArray[0]),
-      int.parse(timeArray[1]));
+  return DateTime(georgianDate.year, georgianDate.month, georgianDate.day,
+      int.parse(timeArray[0]), int.parse(timeArray[1]));
 }
 
 bool validatePhoneNumber(String value) {
@@ -110,7 +105,8 @@ AlertDialog getLoadingDialog() => AlertDialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
     content: Waiting());
 
-void showDatePickerDialog(context, List<int> availableDays, TextEditingController controller) {
+void showDatePickerDialog(
+    context, List<int> availableDays, TextEditingController controller) {
   showDialog(
     context: context,
     builder: (BuildContext _) {
@@ -127,7 +123,6 @@ void showDatePickerDialog(context, List<int> availableDays, TextEditingControlle
     },
   );
 }
-
 
 getDisableDays(List<int> availableDays) {
   List<String> disableDays = [];
@@ -268,4 +263,54 @@ void toast(context, String message) {
     content: Text(message),
     duration: Duration(seconds: 3),
   ));
+}
+
+int getTimeMinute(String time) {
+  String removeAllSpace(String text) {
+    return text.replaceAll(" ", "");
+  }
+
+  String replacePersianWithEnglishNumber(String text) {
+    List<String> persianNumber = [
+      "۰",
+      "۱",
+      "۲",
+      "۳",
+      "۴",
+      "۵",
+      "۶",
+      "۷",
+      "۸",
+      "۹"
+    ];
+    for (int i = 0; i < persianNumber.length; i++) {
+      text = text.replaceAll(persianNumber[i], i.toString());
+    }
+    return text;
+  }
+  time = removeAllSpace(time);
+  time = replacePersianWithEnglishNumber(time);
+  try {
+    if (time.contains(":")) {
+      int hour = int.parse(time.split(":")[0]);
+      int minute = int.parse(time.split(":")[1]);
+      return (60 * hour) + minute;
+    } else {
+      int minute = int.parse(time);
+      return minute;
+    }
+  } catch (Exception) {
+    return 0;
+  }
+}
+
+
+
+String convertMinuteToTimeString(int lessonsMinute) {
+  int hour = ((lessonsMinute / 60).floor());
+  int minute = lessonsMinute % 60;
+  String hourString = hour < 10 ? "0" + hour.toString() : hour.toString();
+  String minuteString =
+  minute < 10 ? "0" + minute.toString() : minute.toString();
+  return hourString + ":" + minuteString;
 }

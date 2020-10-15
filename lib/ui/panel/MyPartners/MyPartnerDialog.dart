@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/VisitBloc.dart';
 import 'package:docup/constants/assets.dart';
@@ -12,6 +13,7 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
@@ -26,7 +28,7 @@ import 'MyPartnersResultList.dart';
 class MyPartnerDialog extends StatelessWidget {
   final Function(String, UserEntity) onPush;
   final isRequestPage;
-  final DoctorEntity doctor;
+  final UserEntity partner;
   TextEditingController _controller = TextEditingController();
 
 //  SearchBloc searchBloc = SearchBloc();
@@ -34,7 +36,7 @@ class MyPartnerDialog extends StatelessWidget {
   MyPartnerDialog(
       {@required this.onPush,
       this.isRequestPage = false,
-      @required this.doctor});
+      @required this.partner});
 
   @override
   void dispose() {
@@ -46,20 +48,17 @@ class MyPartnerDialog extends StatelessWidget {
     return Container(
         child: Container(
             width: 70,
-            child: ClipPolygon(
-              sides: 6,
-              rotate: 90,
-              child: Image.network(
-                  (doctor.user.avatar != null ? doctor.user.avatar : '')),
+            child: PolygonAvatar(
+              user: partner.user,
             )));
   }
 
   Widget _nameAndExpertise(context) {
     String utfName;
     try {
-      utfName = utf8.decode(doctor.user.name.toString().codeUnits);
+      utfName = utf8.decode(partner.user.name.toString().codeUnits);
     } catch (_) {
-      utfName = doctor.user.name;
+      utfName = partner.user.name;
     }
     return Container(
       padding: EdgeInsets.only(right: 15),
@@ -80,7 +79,7 @@ class MyPartnerDialog extends StatelessWidget {
     );
   }
 
-  Widget _doctorDetail(context) {
+  Widget _partnerDetail(context) {
     return Padding(
       padding: EdgeInsets.only(top: 30, right: 25),
       child: Row(
@@ -90,7 +89,7 @@ class MyPartnerDialog extends StatelessWidget {
     );
   }
 
-  Widget _myDoctorItem(Function() onTap, String iconAddress, String header,
+  Widget _myPartnerItem(Function() onTap, String iconAddress, String header,
       String subHeader, Color headerColor) {
     double iconSize = 43;
     return Padding(
@@ -124,7 +123,10 @@ class MyPartnerDialog extends StatelessWidget {
                         textDirection: TextDirection.rtl,
                         overflow: TextOverflow.fade,
                         softWrap: true,
-                        style: TextStyle(fontSize: 13.5, color: headerColor),
+                        style: TextStyle(
+                            fontSize: 13.5,
+                            color: headerColor,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                     Padding(
@@ -173,7 +175,7 @@ class MyPartnerDialog extends StatelessWidget {
               topLeftFlag: Platform.isIOS,
               topRight: Container(
                   child: Image.asset(Assets.logoTransparent, width: 50)),
-              topRightFlag: true,
+              topRightFlag: false,
               onTap: () {
                 onPush(NavigatorRoutes.root, null);
               },
@@ -196,31 +198,94 @@ class MyPartnerDialog extends StatelessWidget {
                 ],
               ),
             ),
-            _doctorDetail(context),
+            _partnerDetail(context),
             SizedBox(
               height: 35,
             ),
-            _myDoctorItem(
-                () {},
-                Assets.panelDoctorDialogDoctorIcon,
-                "ویزیت پزشک",
-                "ویزیت مجازی با پزشک خود را دنبال کنید",
-                IColors.blue),
-            _myDoctorItem(
-                () {},
-                Assets.panelDoctorDialogPatientIcon,
-                "پرونده سلامت",
-                "پرونده سلامت اتان را بررسی کنید",
-                IColors.green),
-            _myDoctorItem(
-                () {},
-                Assets.panelDoctorDialogAppointmentIcon,
-                "رویداد های سلامت",
-                "رویداد های سلامت اتان را پیگیری کنید",
-                IColors.black),
+            (partner is DoctorEntity) ? _myDoctorItems(context) : SizedBox(),
+            (partner is PatientEntity) ? _myPatientItems(context) : SizedBox()
           ],
         ),
       ),
+    );
+  }
+
+  Widget _myDoctorItems(context) {
+    return Column(
+      children: [
+        _myPartnerItem(() {
+          /// navigation
+          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
+          _panelSectionBloc.add(PanelSectionSelect(
+              patientSection: PatientPanelSection.DOCTOR_INTERFACE));
+          onPush(NavigatorRoutes.panel, partner);
+
+          /// #
+        }, Assets.panelDoctorDialogDoctorIcon, "ویزیت پزشک",
+            "ویزیت مجازی با پزشک خود را دنبال کنید", IColors.blue),
+        _myPartnerItem(() {
+          /// navigation
+          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
+          _panelSectionBloc.add(PanelSectionSelect(
+              patientSection: PatientPanelSection.HEALTH_FILE));
+          onPush(NavigatorRoutes.panel, partner);
+
+          /// #
+        }, Assets.panelDoctorDialogPatientIcon, "پرونده سلامت",
+            "پرونده سلامت اتان را بررسی کنید", IColors.green),
+        _myPartnerItem(() {
+          /// navigation
+
+          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
+          _panelSectionBloc.add(PanelSectionSelect(
+              patientSection: PatientPanelSection.HEALTH_CALENDAR));
+          onPush(NavigatorRoutes.panel, partner);
+
+          /// #
+        }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
+            "رویداد های سلامت اتان را پیگیری کنید", IColors.black),
+      ],
+    );
+    ;
+  }
+
+  Widget _myPatientItems(context) {
+    return Column(
+      children: [
+        _myPartnerItem(() {
+          /// navigation
+
+          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
+          _panelSectionBloc.add(PanelSectionSelect(
+              patientSection: PatientPanelSection.DOCTOR_INTERFACE));
+          onPush(NavigatorRoutes.panel, partner);
+
+          /// #
+        }, Assets.panelDoctorDialogDoctorIcon, "ویزیت بیمار",
+            "ویزیت محازی و حضوری بیمار", IColors.themeColor),
+        _myPartnerItem(() {
+          /// navigation
+
+          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
+          _panelSectionBloc.add(
+              PanelSectionSelect(patientSection: PatientPanelSection.HEALTH_FILE));
+          onPush(NavigatorRoutes.panel, partner);
+
+          /// #
+        }, Assets.panelDoctorDialogPatientIcon, "پرونده سلامت",
+            "پرونده سلامت اتان را بررسی کنید", IColors.black),
+        _myPartnerItem(() {
+          /// navigation
+
+          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
+          _panelSectionBloc.add(PanelSectionSelect(
+              patientSection: PatientPanelSection.HEALTH_CALENDAR));
+          onPush(NavigatorRoutes.panel, partner);
+
+          /// #
+        }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
+            "رویداد های سلامت اتان را پیگیری کنید", IColors.red),
+      ],
     );
   }
 }

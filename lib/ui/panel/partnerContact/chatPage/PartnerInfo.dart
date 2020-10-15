@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/assets.dart';
- import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
@@ -40,43 +43,58 @@ class PartnerInfo extends StatelessWidget {
             children: <Widget>[
               Container(
                   width: 70,
-                  child: ClipPolygon(
-                    sides: 6,
-                    rotate: 90,
-                    child: (entity.partnerEntity.user.avatar != null
-                        ? Image.network(entity.partnerEntity.user.avatar)
-                        : Image.asset(Assets.emptyAvatar)),
+                  child: PolygonAvatar(
+                    user: entity.partnerEntity.user,
                   )),
               Align(
                   alignment: Alignment(-.75, 1),
-                  child: (entity.partnerEntity.user.online > 0
+                  child: (entity.partnerEntity.user.online??0 > 0
                       ? _isOnline()
                       : Container()))
             ],
           )));
 
-  Widget _info() => Column(
-        children: <Widget>[
-          Text(
-            entity.partnerEntity.user.name,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-            ),
-            textAlign: TextAlign.right,
-            textDirection: TextDirection.rtl,
+  Widget _info() {
+    String name = "";
+    try {
+      name = utf8.decode(entity.partnerEntity.user.name.codeUnits);
+    } catch (e) {
+      try {
+        name = entity.partnerEntity.user.name;
+      } catch (e) {
+      }
+    }
+    String expertise = "";
+    try {
+      expertise = utf8.decode(entity.pExpert.codeUnits);
+    } catch (e) {
+      try {
+        expertise = entity.pExpert;
+      } catch (e) {
+      }
+    }
+
+    return Column(
+      children: <Widget>[
+        Text(
+          name,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
           ),
-          Text(
-            entity.pExpert,
-            style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-                color: Colors.grey),
-            textAlign: TextAlign.right,
-            textDirection: TextDirection.rtl,
-          )
-        ],
-      );
+          textAlign: TextAlign.right,
+          textDirection: TextDirection.rtl,
+        ),
+        Text(
+          expertise,
+          style: TextStyle(
+              fontSize: 14, fontWeight: FontWeight.normal, color: Colors.grey),
+          textAlign: TextAlign.right,
+          textDirection: TextDirection.rtl,
+        )
+      ],
+    );
+  }
 
   Widget _location() => Row(
         children: <Widget>[

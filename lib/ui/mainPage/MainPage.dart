@@ -289,11 +289,11 @@ class _MainPageState extends State<MainPage> {
   Widget _buildNavigator(int index) {
     return NavigatorView(
       selectPage: (int section) {
-        if (section == 1) {
-          _chatPage(section);
-        } else {
-          _selectPage(section);
-        }
+        // if (section == 1) {
+        // _chatPage(section);
+        // } else {
+        _selectPage(section);
+        // }
       },
       navigatorKey: _navigatorKeys[index],
       index: index,

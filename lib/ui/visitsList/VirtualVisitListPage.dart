@@ -9,9 +9,11 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
+import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/searchPage/ResultList.dart';
 import 'package:docup/ui/visitsList/visitSearchResult/VisitResult.dart';
+import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 class VirtualVisitList extends StatelessWidget {
   final Function(String, UserEntity) onPush;
   TextEditingController _controller = TextEditingController();
+  final int patientVisitStatus =
+      1; //TODO amir: make it and enum,here and now 0 means physical visit
 
 //  SearchBloc searchBloc = SearchBloc();
 
@@ -30,16 +34,22 @@ class VirtualVisitList extends StatelessWidget {
   void _search(context) {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchBloc.add(SearchPatient(text: _controller.text, isRequestOnly: true));
+    searchBloc.add(SearchVisit(
+        text: _controller.text,
+        acceptStatus: 1,
+        visitType: patientVisitStatus));
 
-    FocusScope.of(context).unfocus();
+//    FocusScope.of(context).unfocus();
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
   void _initialSearch(context) {
-    var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchBloc.add(SearchPatient(text: _controller.text, isRequestOnly: true));
+    searchBloc.add(SearchLoadingEvent());
+    searchBloc.add(SearchVisit(
+        text: _controller.text,
+        acceptStatus: 1,
+        visitType: patientVisitStatus));
   }
 
   @override
@@ -48,60 +58,30 @@ class VirtualVisitList extends StatelessWidget {
     _controller?.dispose();
   }
 
-  Widget _docupIcon() => Container(
-        padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
-        child: Image.asset(Assets.docupIcon, width: 50),
-//        child: SvgPicture.asset(Assets.docupIcon, width: 50),
-        alignment: Alignment.centerRight,
-      );
-
-  Widget _backArrow(context) {
-    return (true
-        ? GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-                margin: EdgeInsets.only(left: 40),
-                child: Icon(
-                  Icons.keyboard_backspace,
-                  color: IColors.themeColor,
-                  size: 30,
-                )))
-        : Container());
-  }
-
-  Widget _header(context) => Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[_backArrow(context)],
-        ),
-      );
-
-  Widget _searchBox(width, context) => Container(
-        margin: EdgeInsets.only(right: 40, left: 40),
-        padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-        width: MediaQuery.of(context).size.width * (80 / 100),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(80))),
-        child: TextField(
-          controller: _controller,
-          onSubmitted: (text) {
-            _search(context);
-          },
-          textAlign: TextAlign.end,
-          textDirection: TextDirection.ltr,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: Strings.searchBoxHint,
-            prefixIcon: Icon(
-              Icons.search,
-              size: 30,
-            ),
-          ),
-        ),
-      );
+//  Widget _searchBox(width, context) => Container(
+//        margin: EdgeInsets.only(right: 40, left: 40),
+//        padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
+//        width: MediaQuery.of(context).size.width * (80 / 100),
+//        decoration: BoxDecoration(
+//            color: Colors.white,
+//            borderRadius: BorderRadius.all(Radius.circular(80))),
+//        child: TextField(
+//          controller: _controller,
+//          onSubmitted: (text) {
+//            _search(context);
+//          },
+//          textAlign: TextAlign.end,
+//          textDirection: TextDirection.ltr,
+//          decoration: InputDecoration(
+//            border: InputBorder.none,
+//            hintText: Strings.searchBoxHint,
+//            prefixIcon: Icon(
+//              Icons.search,
+//              size: 30,
+//            ),
+//          ),
+//        ),
+//      );
 
   Widget _todayItems(List<VisitEntity> results) {
     List<VisitEntity> todayVisits = [];
@@ -162,7 +142,7 @@ class VirtualVisitList extends StatelessWidget {
 //      }
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
-        if (state is SearchLoaded) {
+        if (state is SearchLoaded && state.result.visit_results != null) {
           return Container(
             margin: EdgeInsets.only(top: 20),
             constraints: BoxConstraints(
@@ -181,11 +161,11 @@ class VirtualVisitList extends StatelessWidget {
             child: Text('error!'),
           );
         if (state is SearchLoading) {
-          if (state.result == null)
+          if (state.result == null || state.result.visit_results == null) {
             return Container(
               child: Waiting(),
             );
-          else
+          } else {
             return Container(
                 margin: EdgeInsets.only(top: 20),
                 constraints: BoxConstraints(
@@ -197,6 +177,7 @@ class VirtualVisitList extends StatelessWidget {
                     _nextDayItems(state.result.visit_results)
                   ],
                 ));
+          }
         }
         return Container();
       },
@@ -209,19 +190,32 @@ class VirtualVisitList extends StatelessWidget {
     _initialSearch(context);
 //    _search(context);
 //    _controller.addListener((){print(_controller.text); });
-    return Container(
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: [
-              _backArrow(context),
-            ],
-          ),
-          _searchBox(MediaQuery.of(context).size.width, context),
-          _resultList()
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        constraints:
+            BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+        child: Column(
+          children: <Widget>[
+            ALittleVerticalSpace(),
+            SearchBox(
+                isPatient: false,
+                controller: _controller,
+                popMenuRect: Rect.fromLTRB(
+                    MediaQuery.of(context).size.width * 2,
+                    MediaQuery.of(context).size.height * (30 / 100),
+                    0,
+                    0),
+                selectedIndex: 0,
+                onMenuClick: null,
+                hintText: "نام بیمار",
+                filterPopup: false,
+                popUpMenuItems: null,
+                onChange: (String c) {
+                  _search(context);
+                }),
+            _resultList()
+          ],
+        ),
       ),
     );
   }

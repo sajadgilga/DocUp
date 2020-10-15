@@ -22,6 +22,7 @@
     <application
         android:name=".Application"
         android:label="docup"
+        android:screenOrientation="portrait"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

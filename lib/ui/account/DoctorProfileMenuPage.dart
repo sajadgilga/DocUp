@@ -26,32 +26,34 @@ import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show PlatformException;
 
-class ProfileMenuPage extends StatefulWidget {
+class DoctorProfileMenuPage extends StatefulWidget {
   final Function(String, dynamic) onPush;
   final DoctorEntity doctorEntity;
 
-  ProfileMenuPage({Key key, @required this.onPush, this.doctorEntity})
+  DoctorProfileMenuPage({Key key, @required this.onPush, this.doctorEntity})
       : super(key: key);
 
   @override
-  _ProfileMenuPageState createState() => _ProfileMenuPageState();
+  _DoctorProfileMenuPageState createState() => _DoctorProfileMenuPageState();
 }
 
-class _ProfileMenuPageState extends State<ProfileMenuPage> {
+class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
+        MediumVerticalSpace(),
         Stack(
           alignment: Alignment.center,
           children: [
             PageTopLeftIcon(
               topLeft: Icon(
-                Icons.menu,
+                Icons.arrow_back,
                 size: 25,
-              ),              onTap: () {
+              ),
+              onTap: () {
                 /// TODO
                 widget.onPush(NavigatorRoutes.root, null);
               },
@@ -142,6 +144,8 @@ class _ProfileMenuPageState extends State<ProfileMenuPage> {
           color: IColors.red,
           title: "خروج از حساب کاربری",
           callBack: logout,
+          width: 200,
+          height: 60,
         ),
         ALittleVerticalSpace()
       ],

@@ -40,19 +40,21 @@ class _PanelState extends State<Panel> {
   @override
   initState() {
     BlocProvider.of<TabSwitchBloc>(context).listen((data) {
-      setState(() {
-
-      });
+      setState(() {});
     });
     super.initState();
   }
 
   Widget children(PanelTabState state) {
     List<Widget> _widget;
-    if (state is FirstTab) _widget = widget.pages[0];
-    else if (state is SecondTab) _widget = widget.pages[1];
-    else if (state is ThirdTab) _widget = widget.pages[2];
-    else return Container();
+    if (state is FirstTab)
+      _widget = widget.pages[0];
+    else if (state is SecondTab)
+      _widget = widget.pages[1];
+    else if (state is ThirdTab)
+      _widget = widget.pages[2];
+    else
+      return Container();
     if (_widget == null || _widget.length == 0)
       return Center(
         child: Text('مشکل در بارگزاری صفحه'),
@@ -107,33 +109,38 @@ class _PanelState extends State<Panel> {
 
   @override
   Widget build(BuildContext context) {
+    double tabsHeight = 90;
     return Stack(
       children: <Widget>[
-        Container(
-            constraints:
-                BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-            child: Column(children: <Widget>[
-              _header(),
-              SizedBox(
-                height: 40,
+        Column(
+          children: [
+            SizedBox(
+              height: tabsHeight,
+            ),
+            Expanded(
+              child: BlocBuilder<TabSwitchBloc, PanelTabState>(
+                builder: (context, state) => Container(child: children(state)),
               ),
-              BlocBuilder<TabSwitchBloc, PanelTabState>(
-                builder: (context, state) =>
-                    Expanded(flex: 2, child: children(state)),
-//                Expanded(flex: 2, child: children()[state]),
-              ),
-            ])),
-        Container(
-          margin: EdgeInsets.only(top: 80),
-          child: Divider(
-            thickness: 1,
-            color: Colors.grey,
-          ),
+            ),
+          ],
         ),
         Container(
-          margin: EdgeInsets.only(top: 70),
-          child: _tabs(),
-        )
+          padding: const EdgeInsets.symmetric(vertical: 30),
+          child: Stack(
+            alignment: Alignment.topCenter,
+            fit: StackFit.loose,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.grey,
+                ),
+              ),
+              _tabs()
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -210,7 +217,7 @@ class TabState extends State<Tab> {
       },
       child: Icon(
         subTab.widget,
-        size: 40,
+        size: 35,
         color:
             (widget.tabState.index == idx ? IColors.themeColor : Colors.grey),
       ),
@@ -225,27 +232,17 @@ class TabState extends State<Tab> {
       _widgets.add((s.widget == null ? Container() : _icon(s, i)));
       if (i < widget.tabState.subtabs.length - 1)
         _widgets.add(Container(
-            child: Divider(
-          height: 25,
-          indent: 3,
-          thickness: 2,
-          color: Colors.grey,
-        )));
+          margin: EdgeInsets.symmetric(horizontal: 7),
+          height: 20,
+          width: 1,
+          color: IColors.darkGrey,
+        ));
     }
     return Container(
-      padding: EdgeInsets.only(top: 25),
-      constraints: BoxConstraints.expand(width: 120, height: 100),
+      constraints: BoxConstraints.expand(height: 70),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color.fromARGB(0, 0, 0, 0),
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: Offset(0, 1), // changes position of shadow
-          ),
-        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -256,47 +253,62 @@ class TabState extends State<Tab> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
-      _dropDown(),
-      GestureDetector(
-        onTap: () {
-          _switchTab(widget.tabState, context);
-        },
-        child: Container(
-            constraints: BoxConstraints.expand(width: 120, height: 35),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              color: widget.backgroundColor,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 10,
-                  offset: Offset(0, 1), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                (widget.tabState.subtabs.length > 0
-                    ? Icon(
-                        (_isDropped
-                            ? Icons.arrow_drop_up
-                            : Icons.arrow_drop_down),
-                        color: widget.color,
-                      )
-                    : Container()),
-                Text(
-                  widget.tabState.text,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: widget.color, fontSize: 10),
-                )
-              ],
-            )),
-      )
-    ]);
+    return Container(
+      constraints: BoxConstraints.tightFor(width: 110),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: Offset(0, 1), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+        GestureDetector(
+          onTap: () {
+            _switchTab(widget.tabState, context);
+          },
+          child: Container(
+              constraints: BoxConstraints.expand(width: 110, height: 40),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: widget.backgroundColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                    offset: Offset(0, 1), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  (widget.tabState.subtabs.length > 0
+                      ? Icon(
+                          (_isDropped
+                              ? Icons.arrow_drop_up
+                              : Icons.arrow_drop_down),
+                          color: widget.color,
+                        )
+                      : Container()),
+                  Text(
+                    widget.tabState.text,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: widget.color, fontSize: 10),
+                  )
+                ],
+              )),
+        ),
+        _dropDown(),
+      ]),
+    );
   }
 }
 
@@ -374,10 +386,10 @@ class TabsState extends State<Tabs> {
 //            ),
 //          ),
           Container(
-              padding: EdgeInsets.only(right: 20, left: 20),
+              padding: EdgeInsets.only(right: 10, left: 10),
               alignment: Alignment.topCenter,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Tab(

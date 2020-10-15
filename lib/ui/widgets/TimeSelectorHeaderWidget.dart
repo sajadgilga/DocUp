@@ -6,7 +6,7 @@ class TimeSelectorHeaderWidget extends StatefulWidget {
   final Function(bool) callback;
   final bool initialTimeIsSelected;
 
-  TimeSelectorHeaderWidget({this.callback, this.initialTimeIsSelected});
+  TimeSelectorHeaderWidget({this.callback, this.initialTimeIsSelected=false});
 
   @override
   _TimeSelectorHeaderWidgetState createState() =>

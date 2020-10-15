@@ -27,8 +27,8 @@ class DoctorData extends StatelessWidget {
               clinicMarkLocation == 1 ? _clinicLocationMark() : SizedBox(),
               Text(
                   "دکتر ${doctorEntity.user.firstName} ${doctorEntity.user.lastName != null ? doctorEntity.user.lastName : ""}",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,softWrap: true,overflow: TextOverflow.fade,),
             ],
           ),
           SizedBox(height: 5),

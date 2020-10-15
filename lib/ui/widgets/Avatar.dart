@@ -6,14 +6,18 @@ import 'package:polygon_clipper/polygon_clipper.dart';
 
 class PolygonAvatar extends StatelessWidget {
   final User user;
+  double imageSize;
 
-  const PolygonAvatar({Key key, this.user}) : super(key: key);
+  PolygonAvatar({Key key, this.user,this.imageSize}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (imageSize==null){
+      imageSize = MediaQuery.of(context).size.width * 0.25;
+    }
     return Stack(children: <Widget>[
       Container(
-        width: MediaQuery.of(context).size.width * 0.25,
+        width: imageSize,
         child: ClipPolygon(
           sides: 6,
           rotate: 90,
@@ -22,8 +26,8 @@ class PolygonAvatar extends StatelessWidget {
             PolygonBoxShadow(color: Colors.grey, elevation: 5.0)
           ],
           child: user.avatar != null
-              ? Image.network(user.avatar)
-              : Image.asset("assets/avatar.png"),
+              ? Image.network(user.avatar,width: imageSize,height: imageSize,)
+              : Image.asset("assets/avatar.png",width: imageSize,height: imageSize,),
         ),
       ),
       Visibility(

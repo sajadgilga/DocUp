@@ -23,23 +23,22 @@ import 'ResultList.dart';
 
 class PartnerSearchPage extends StatefulWidget {
   final Function(String, UserEntity) onPush;
-  final isRequestPage;
   final int clinicIdDoctorSearch;
+  final Function(int) selectPage;
 
   PartnerSearchPage(
-      {Key key, this.onPush, this.isRequestPage, this.clinicIdDoctorSearch})
+      {Key key, this.onPush, this.clinicIdDoctorSearch, this.selectPage})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return PartnerSearchPageState(onPush: onPush, isRequestPage: isRequestPage);
+    return PartnerSearchPageState(onPush: onPush);
   }
 }
 
 class PartnerSearchPageState extends State<PartnerSearchPage> {
   final Function(String, UserEntity) onPush;
-  final isRequestPage;
   TextEditingController _controller = TextEditingController();
   LinkedHashMap<int, List<UserEntity>> orderedPageItems = new LinkedHashMap();
   bool allItemsFetched = false;
@@ -59,7 +58,7 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
     return res;
   }
 
-  PartnerSearchPageState({@required this.onPush, this.isRequestPage = false});
+  PartnerSearchPageState({@required this.onPush});
 
   @override
   void initState() {
@@ -71,12 +70,12 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
   void _search(context) {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
-    if (_state.entity.isDoctor)
-      searchBloc.add(SearchPatient(
-          text: _controller.text,
-          isRequestOnly: isRequestPage,
-          patientFilter: filterString));
-    else if (_state.entity.isPatient)
+    if (_state.entity.isDoctor &&
+        [null, 0].contains(widget.clinicIdDoctorSearch))
+      searchBloc.add(
+          SearchPatient(text: _controller.text, patientFilter: filterString));
+    else if (_state.entity.isPatient ||
+        ![null, 0].contains(widget.clinicIdDoctorSearch))
       searchBloc.add(SearchDoctor(
           paramSearch: _controller.text,
           clinicId: widget.clinicIdDoctorSearch,
@@ -88,12 +87,12 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
   void _initialSearch(context) {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
-    if (_state.entity.isDoctor)
-      searchBloc.add(SearchPatient(
-          text: _controller.text,
-          isRequestOnly: isRequestPage,
-          patientFilter: filterString));
-    else if (_state.entity.isPatient)
+    if (_state.entity.isDoctor &&
+        [null, 0].contains(widget.clinicIdDoctorSearch))
+      searchBloc.add(
+          SearchPatient(text: _controller.text, patientFilter: filterString));
+    else if (_state.entity.isPatient ||
+        ![null, 0].contains(widget.clinicIdDoctorSearch))
       searchBloc.add(SearchDoctor(
           paramSearch: _controller.text,
           clinicId: widget.clinicIdDoctorSearch,
@@ -174,13 +173,17 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
 //      }
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
-        if (state is SearchLoaded) {
+        if (state is SearchLoaded &&
+            (state.result.isDoctor
+                ? state.result.doctor_results != null
+                : state.result.patient_results != null)) {
           _updatePageItemsAndPagingFlags(state.result);
-          return ResultList(
+          return PartnerResultList(
             onPush: onPush,
             isDoctor: state.result.isDoctor,
+            selectPage: widget.selectPage,
             results: _getItemsFromOrderedPageItem(),
-            isRequestsOnly: isRequestPage,
+            isRequestsOnly: false,
             nextPageFetchLoader: !allItemsFetched,
           );
         }
@@ -189,18 +192,22 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
             errorMessage: "",
           );
         if (state is SearchLoading) {
-          if (state.result == null)
+          if (state.result == null ||
+              (state.result.isDoctor
+                  ? state.result.doctor_results == null
+                  : state.result.patient_results == null))
             return Container(
               child: Waiting(),
             );
           else {
             _updatePageItemsAndPagingFlags(state.result);
-            return ResultList(
+            return PartnerResultList(
               onPush: onPush,
               isDoctor: state.result.isDoctor,
+              selectPage: widget.selectPage,
               results: _getItemsFromOrderedPageItem(),
               nextPageFetchLoader: !allItemsFetched,
-              isRequestsOnly: isRequestPage,
+              isRequestsOnly: false,
             );
           }
         }
@@ -222,8 +229,11 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
             child: SearchBox(
               isPatient: !_state.entity.isDoctor,
               controller: _controller,
-              popMenuRect: Rect.fromLTRB(MediaQuery.of(context).size.width * 2,
-                  MediaQuery.of(context).size.height * (30 / 100), 0, 0),
+              popMenuRect: Rect.fromLTRB(
+                  0,
+                  0,
+                  MediaQuery.of(context).size.width * 2,
+                  MediaQuery.of(context).size.height * (2.5 / 100)),
               selectedIndex: 0,
               onMenuClick: (MenuItemProvider item) {
                 filterString = item.menuTitle;
@@ -235,6 +245,7 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
                       "پوست و زیبایی",
                       "مغز و اعصاب",
                       "قلب و عروق",
+                      "دکترای کاردرمانی"
                     ]
                   : ["همه", "در انتظار تایید", "درمان موفق", "در حال درمان"],
               onChange: (String c) {

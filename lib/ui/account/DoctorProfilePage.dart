@@ -41,7 +41,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                     ),
                     onTap: () {
                       /// TODO
-                      widget.onPush(NavigatorRoutes.profileMenuPage, null);
+                      widget.onPush(NavigatorRoutes.doctorProfileMenuPage, doctorEntity);
                     },
                     topRightFlag: false,
                     topLeftFlag: true,
@@ -49,7 +49,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                   MediumVerticalSpace(),
                   GestureDetector(
                       onTap: () => widget.onPush(
-                          NavigatorRoutes.profileMenuPage, doctorEntity),
+                          NavigatorRoutes.doctorProfileMenuPage, doctorEntity),
                       child: DoctorCreditWidget(
                         credit: doctorEntity.user.credit,
                       )),

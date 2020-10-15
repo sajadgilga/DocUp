@@ -257,9 +257,11 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Container(
-      child: Column(
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: SingleChildScrollView(
+          child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -277,22 +279,24 @@ class _HomeState extends State<Home> {
                   newNotificationCount: 0,
                 );
             }),
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
-                child: SearchBox(
-                  onPush: widget.onPush,
-                  isPatient: BlocProvider.of<EntityBloc>(context)
-                      .state
-                      .entity
-                      .isPatient,
-                  enableFlag: false,
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                    SystemChrome.setEnabledSystemUIOverlays(
-                        [SystemUiOverlay.bottom]);
-                    widget.onPush(NavigatorRoutes.partnerSearchView, null);
-                  },
+            Expanded(
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
+                  child: SearchBox(
+                    onPush: widget.onPush,
+                    isPatient: BlocProvider.of<EntityBloc>(context)
+                        .state
+                        .entity
+                        .isPatient,
+                    enableFlag: false,
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      SystemChrome.setEnabledSystemUIOverlays(
+                          [SystemUiOverlay.bottom]);
+                      widget.onPush(NavigatorRoutes.partnerSearchView, null);
+                    },
+                  ),
                 ),
               ),
             ),
@@ -303,15 +307,12 @@ class _HomeState extends State<Home> {
           ),
           _noronioClinic(),
           _homeList(),
-//          TimeSelectorWidget(
-//            initTimes: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
-//          ),
           SizedBox(
             height: 15,
           ),
           _iPartner()
         ],
-      ),
-    ));
+      )),
+    );
   }
 }

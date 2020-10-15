@@ -10,9 +10,11 @@ import 'TimeSelectorWidget.dart';
 
 class VisitDateTimePicker extends StatefulWidget {
   TextEditingController dateTextController;
+  TextEditingController timeTextController;
   DoctorEntity doctorEntity;
 
-  VisitDateTimePicker(this.dateTextController, this.doctorEntity);
+  VisitDateTimePicker(
+      this.dateTextController, this.timeTextController, this.doctorEntity);
 
   @override
   _VisitDateTimePickerState createState() => _VisitDateTimePickerState();
@@ -45,7 +47,7 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                     },
                   ),
                 )
-              : TimeSelectorWidget()
+              : TimeSelectorWidget(timeController: widget.timeTextController,)
         ],
       ),
     );

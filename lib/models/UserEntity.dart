@@ -22,6 +22,14 @@ class Entity {
 
   Entity({this.type, this.mEntity, this.partnerEntity});
 
+  Entity copy(){
+    Entity entity = Entity();
+    entity.mEntity = this.mEntity;
+    entity.partnerEntity = this.partnerEntity;
+    entity.iPanelId = this.iPanelId;
+    entity.type = this.type;
+    return entity;
+  }
   int get id {
     if (isDoctor)
       return (partnerEntity as DoctorEntity).id;

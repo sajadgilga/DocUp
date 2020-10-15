@@ -46,6 +46,12 @@ class _OptionButtonState extends State<OptionButton> {
               )
             : Container(),
       );
+  @override
+  void setState(fn) {
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   void initState() {

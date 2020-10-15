@@ -49,13 +49,14 @@ class _PatientNoronioServiceState extends State<PatientNoronioService> {
               children: [
                 SquareBoxNoronioClinicService(Assets.noronioServiceDoctorList,
                     () {
-                  int noronioClinicId = 3;
+                  int noronioClinicId = 4;
                   widget.onPush(
                       NavigatorRoutes.partnerSearchView, noronioClinicId);
                 }, "مشاهده پزشکان"),
                 SquareBoxNoronioClinicService(Assets.noronioServiceBrainTest,
                     () {
-                  widget.globalOnPush(NavigatorRoutes.cognitiveTest, null);
+//                  widget.globalOnPush(NavigatorRoutes.cognitiveTest, null);
+                  toast(context, "در آینده آماده می شود");
                 }, "تست رایگان آلزایمر")
               ],
             ),
