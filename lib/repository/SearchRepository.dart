@@ -44,7 +44,7 @@ class SearchRepository {
     if (visitType != null) {
       urlParams += "&visit_type=$visitType";
     }
-    final response = await _provider.get('api/visits/?status=0');
+    final response = await _provider.get('api/visits/${urlParams}');
     return SearchResult.fromJson(response, false, isVisit: true);
   }
 

@@ -71,7 +71,50 @@ Here we have all the ui elements, widgets and the part that navigate between pag
    - #### /noronioClinic
      This is the third section (**service**) that contains noronioClinic services such as **free alzheimer test** , **noronio doctors**, **usefull games** and other services that will be added here.
    - #### /panel
-     TODO
+     For every **doctor** and **patient** that have at least one **visit** or **event**, we have one **panel** object that will be created in the database. **Panel** is main part of communication between patients and doctors. All video/voice call, visits, chats, health documents, prescribes drugs ... are here. We have three parts in  panel section: **DOCTOR_INTERFACE**, **HEALTH_FILE**, **HEALTH_CALENDAR** that **Panel widget** is a template for these three and each one of those parts can have multiple subPages.
+     **DOCTOR_INTERFACE**: **IllnessPage**, **ChatPage**, **VideoCallPage**
+     **HEALTH_FILE**: **InfoPage**, **InfoPage**, **InfoPage**
+     **HEALTH_CALENDAR**: **[DateCalender,TimeCalender]**, **EventPage**, **MedicinePage**
+    For example, you can see how the **HEALTH_CALENDAR** panel widget is created in **NavigatorAndView.dart** file in **_panelPages** method.
+
+         Panel(
+              onPush: (direction, entity) {
+                push(context, direction, detail: entity);
+              },
+              pages: [
+                [
+                  DateCalender(
+                    entity: entity,
+                    onPush: (direction, entity) {
+                      push(context, direction, detail: entity);
+                    },
+                  ),
+                  TimeCalender(
+                    entity: entity,
+                    onPush: (direction, entity) {
+                      push(context, direction, detail: entity);
+                    },
+                  )
+                ],
+                [
+                  EventPage(
+                    entity: entity,
+                    onPush: (direction, entity) {
+                      push(context, direction, detail: entity);
+                    },
+                  )
+                ],
+                [
+                  MedicinePage(
+                    entity: entity,
+                    onPush: (direction, entity) {
+                      push(context, direction, detail: entity);
+                    },
+                  )
+                ],
+              ],
+            )
+
    - #### /patientDetail
      Every patient should choose one or more doctors and send them requests and in the other side doctors will choose thier patient by accpeting. They can see the patient informations in this page to choose to accept or reject them as thier will.
    - #### /start
@@ -201,12 +244,8 @@ Below is an exmaple of home page widget that you have to pass **selectPage**, **
                 },
                 globalOnPush: widget.pushOnBase,
               ),
-        );
+             );
+        }
     }
-  }
 
 So in summary, for adding a new sub page to home or other parts we have to add it's named root and widget as key and value in returned map of **_routeBuilders** method.
-
-
-
-
