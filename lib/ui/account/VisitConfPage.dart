@@ -7,6 +7,7 @@ import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/visit/VisitUtils.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
@@ -180,7 +181,7 @@ class _VisitConfPageState extends State<VisitConfPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text(
+                  AutoText(
                     "قیمت پایه",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     textAlign: TextAlign.right,

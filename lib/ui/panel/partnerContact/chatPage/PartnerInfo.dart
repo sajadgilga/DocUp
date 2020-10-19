@@ -5,6 +5,7 @@ import 'package:docup/constants/assets.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,7 +77,7 @@ class PartnerInfo extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        Text(
+        AutoText(
           name,
           style: TextStyle(
             fontSize: 16,
@@ -85,7 +86,7 @@ class PartnerInfo extends StatelessWidget {
           textAlign: TextAlign.right,
           textDirection: TextDirection.rtl,
         ),
-        Text(
+        AutoText(
           expertise,
           style: TextStyle(
               fontSize: 14, fontWeight: FontWeight.normal, color: Colors.grey),
@@ -98,7 +99,7 @@ class PartnerInfo extends StatelessWidget {
 
   Widget _location() => Row(
         children: <Widget>[
-          Text(
+          AutoText(
             entity.pClinicName,
             style: TextStyle(
                 color: Colors.grey,

@@ -9,6 +9,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/Panel.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
@@ -120,7 +121,7 @@ class PanelMenuMainItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(
+                AutoText(
                   utfText,
                   style: TextStyle(
                       fontSize: 12, color: (item == null ? color : item.color)),
@@ -159,7 +160,7 @@ class PanelMenuMainItem extends StatelessWidget {
       },
       child: Container(
         margin: EdgeInsets.only(left: 10),
-        child: Text(
+        child: AutoText(
           label,
           textAlign: TextAlign.right,
           style: TextStyle(
@@ -169,7 +170,7 @@ class PanelMenuMainItem extends StatelessWidget {
 
   Widget _subLabel() => Container(
         margin: EdgeInsets.only(right: 10),
-        child: Text(
+        child: AutoText(
           subLabel,
           textAlign: TextAlign.right,
           style: TextStyle(
@@ -189,7 +190,7 @@ class PanelMenuMainItem extends StatelessWidget {
             child: Wrap(children: <Widget>[
               Container(
                   padding: EdgeInsets.only(left: 5, right: 5),
-                  child: Text(replaceFarsiNumber(state.count.toString()),
+                  child: AutoText(replaceFarsiNumber(state.count.toString()),
                       style: TextStyle(color: Colors.white, fontSize: 12)),
                   decoration: BoxDecoration(
                       color: IColors.themeColor,

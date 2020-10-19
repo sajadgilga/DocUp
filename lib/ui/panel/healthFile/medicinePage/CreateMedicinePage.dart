@@ -4,6 +4,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Medicine.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +118,12 @@ class _CreateMedicinePageState extends State<CreateMedicinePage> {
 
     if (_createMedicineBloc.state == MedicineCreationStates.SENDING) return;
     _createMedicineBloc.add(MedicineCreate(
-        medicine: Medicine(drugName: name, usage: count, patient: patientId, usagePeriod: int.parse(period), numbers: int.parse(count))));
+        medicine: Medicine(
+            drugName: name,
+            usage: count,
+            patient: patientId,
+            usagePeriod: int.parse(period),
+            numbers: int.parse(count))));
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -138,7 +144,7 @@ class _CreateMedicinePageState extends State<CreateMedicinePage> {
                 color: IColors.themeColor),
             padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
             margin: EdgeInsets.only(top: 60, bottom: 30),
-            child: Text(
+            child: AutoText(
               Strings.submitDrugLabel,
               textAlign: TextAlign.center,
               style: TextStyle(

@@ -1,8 +1,8 @@
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/MedicineBloc.dart';
-import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/FloatingButton.dart';
 import 'package:docup/ui/widgets/medicines/ReminderList.dart';
 import 'package:flutter/cupertino.dart';
@@ -61,7 +61,7 @@ class _MedicinePageState extends State<MedicinePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        Text(
+        AutoText(
           'امروز',
           textAlign: TextAlign.right,
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
@@ -75,7 +75,7 @@ class _MedicinePageState extends State<MedicinePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        Text(
+        AutoText(
           'تا هفته آینده',
           textAlign: TextAlign.right,
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),

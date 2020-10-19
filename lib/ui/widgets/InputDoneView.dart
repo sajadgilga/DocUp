@@ -2,6 +2,8 @@ import 'package:docup/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'AutoText.dart';
+
 class InputDoneView extends StatelessWidget {
 
 
@@ -19,7 +21,7 @@ class InputDoneView extends StatelessWidget {
             onPressed: () {
               FocusScope.of(context).requestFocus(new FocusNode());
             },
-            child: Text(
+            child: AutoText(
                 "Done",
                 style: TextStyle(color: Color.fromARGB(255, 47, 124, 246),fontWeight: FontWeight.bold)
             ),

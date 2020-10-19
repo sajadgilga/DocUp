@@ -3,6 +3,8 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'AutoText.dart';
+
 class PatientData extends StatelessWidget {
   final PatientEntity patientEntity;
 
@@ -16,7 +18,7 @@ class PatientData extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.7,
       child: Column(
         children: <Widget>[
-          Text(
+          AutoText(
               "${patientEntity.user.firstName} ${patientEntity.user.lastName}",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center),
@@ -25,7 +27,7 @@ class PatientData extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(width: 5),
-              Text("${patientEntity.user.firstName} ${patientEntity.user.lastName}",
+              AutoText("${patientEntity.user.firstName} ${patientEntity.user.lastName}",
                   style: TextStyle(
                     fontSize: 14,
                   )),
@@ -35,7 +37,7 @@ class PatientData extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
+              AutoText(
                 "کد نظام پزشکی :‌ ${patientEntity.user.password}",
                 style: TextStyle(fontSize: 12),
                 textAlign: TextAlign.end,

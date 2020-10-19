@@ -1,6 +1,8 @@
 
 import 'package:flutter/widgets.dart';
 
+import 'AutoText.dart';
+
 class Waiting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class Waiting extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-          Text(
+          AutoText(
             "منتظر باشید",
             style: TextStyle(fontWeight: FontWeight.bold),
           )

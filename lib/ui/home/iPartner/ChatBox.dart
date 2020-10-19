@@ -1,4 +1,5 @@
 import 'package:docup/models/ChatMessage.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/widgets/ChatBubble.dart';
@@ -28,7 +29,7 @@ class _ChatBoxState extends State<ChatBox> {
                 SizedBox(
                   height: 5,
                 ),
-                Text(
+                AutoText(
                   'پیام‌های اخیر',
                   style: TextStyle(
                     fontSize: 10,

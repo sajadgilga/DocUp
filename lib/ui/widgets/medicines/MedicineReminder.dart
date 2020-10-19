@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../constants/colors.dart';
+import '../AutoText.dart';
 
 enum MedicineType { capsule, syrup, ointment }
 
@@ -148,7 +149,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
         alignment: Alignment.center,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          Text(
+          AutoText(
             'ساعت ${widget.time}',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -190,7 +191,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
                 width: 15,
                 height: 15,
               ),
-              Text(
+              AutoText(
                 '${widget.count}',
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -198,7 +199,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
                     color: _reminderState.color,
                     fontWeight: FontWeight.bold),
               ),
-              Text(
+              AutoText(
                 '${widget.title}',
                 textAlign: TextAlign.center,
                 style: TextStyle(

@@ -2,6 +2,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 
+import 'AutoText.dart';
 import 'Avatar.dart';
 
 class PartnerSummary extends StatelessWidget {
@@ -32,12 +33,12 @@ class PartnerSummary extends StatelessWidget {
               margin: EdgeInsets.only(bottom: 5),
 //              constraints: BoxConstraints(
 //                  maxWidth: MediaQuery.of(context).size.width * .3),
-              child: Text(
+              child: AutoText(
                 (name != null ? name : ''),
                 textDirection: TextDirection.rtl,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               )),
-          Text(
+          AutoText(
             (speciality != null ? speciality : ' - '),
             textDirection: TextDirection.rtl,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
@@ -45,7 +46,7 @@ class PartnerSummary extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text(
+              AutoText(
                 (location != null ? location : ''),
                 textDirection: TextDirection.rtl,
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),

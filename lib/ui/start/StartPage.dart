@@ -1,22 +1,25 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:docup/blocs/AuthBloc.dart';
 import 'package:docup/blocs/DoctorBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
+import 'package:docup/blocs/timer/TimerEvent.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/AuthResponseEntity.dart';
 import 'package:docup/networking/CustomException.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/BasePage.dart';
 import 'package:docup/ui/start/RoleType.dart';
-import 'package:docup/blocs/timer/TimerEvent.dart';
+import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/InputField.dart';
 import 'package:docup/ui/widgets/OptionButton.dart';
 import 'package:docup/ui/widgets/Timer.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -89,7 +92,10 @@ class _StartPageState extends State<StartPage> {
           try {
             String utfName =
                 utf8.decode(response.data.fullName.codeUnits).trim();
-            _fullNameController.text = utfName;
+            _fullNameController.text = utfName ?? "";
+            if ([null, ""].contains(utfName)) {
+              showPrivacyAndPolicy();
+            }
           } catch (e) {}
         }
         return true;
@@ -102,9 +108,62 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
+  void showPrivacyAndPolicy() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Color.fromARGB(0, 0, 0, 0),
+            content: Container(
+              constraints: BoxConstraints.tightFor(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height),
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    constraints: BoxConstraints.tightFor(
+                        width: MediaQuery.of(context).size.width * 0.8),
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        ALittleVerticalSpace(),
+                        AutoText(
+                          Strings.privacyAndPolicy,
+                          color: IColors.darkGrey,
+                          fontSize: 17,
+                        ),
+                        AutoText(
+                          Strings.policyDescription,
+                          color: IColors.darkGrey,
+                          fontSize: 17,
+                          maxLines: 20,
+                        ),
+                        ActionButton(
+                          title: "تایید",
+                          color: IColors.green,
+                          callBack: () {
+                            Navigator.maybePop(context);
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   showErrorSnackBar(String message, {int secs = 3}) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(
+      content: AutoText(
         message,
         textDirection: TextDirection.rtl,
         textAlign: TextAlign.right,
@@ -291,7 +350,7 @@ class _StartPageState extends State<StartPage> {
                       create: (context) => _timerBloc, child: Timer())),
               GestureDetector(
                 onTap: () => submit(resend: true),
-                child: Text(" ارسال مجدد کد",
+                child: AutoText(" ارسال مجدد کد",
                     style: TextStyle(
                         color: IColors.themeColor,
                         fontWeight: FontWeight.bold,
@@ -373,7 +432,7 @@ class _StartPageState extends State<StartPage> {
     } else {
       header = Strings.registerHeaderMessage;
     }
-    return Text(
+    return AutoText(
       header,
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     );
@@ -417,7 +476,7 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
-  _messageWidget() => Text(
+  _messageWidget() => AutoText(
         getMessageText(),
         style: TextStyle(fontSize: 13),
         textAlign: TextAlign.center,
@@ -428,7 +487,7 @@ class _StartPageState extends State<StartPage> {
         maintainAnimation: true,
         maintainState: true,
         visible: startType != StartType.LOGIN,
-        child: Text(
+        child: AutoText(
           getTitleText(),
           style: TextStyle(
               color: IColors.themeColor,

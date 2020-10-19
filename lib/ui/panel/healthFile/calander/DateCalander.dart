@@ -1,11 +1,9 @@
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/MedicineBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
-import 'package:docup/ui/widgets/FloatingButton.dart';
-import 'package:docup/ui/widgets/TimeSelectionWidget.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/medicines/ReminderList.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,7 +51,7 @@ class _DateCalenderState extends State<DateCalender> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        Text(
+        AutoText(
           'امروز',
           textAlign: TextAlign.right,
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
@@ -67,7 +65,7 @@ class _DateCalenderState extends State<DateCalender> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        Text(
+        AutoText(
           'تا هفته آینده',
           textAlign: TextAlign.right,
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),

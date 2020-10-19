@@ -24,5 +24,4 @@ don't forget to remove port from test backend url
 /// TODO
 after disposing page searchBloc.add(SearchLoading(null)) maybe preventing page from a bug
 to clean search result for other pages
-/// TODO
-land scape lock
+

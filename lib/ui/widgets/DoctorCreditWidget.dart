@@ -3,6 +3,8 @@ import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'AutoText.dart';
+
 class DoctorCreditWidget extends StatefulWidget {
   final String credit;
 
@@ -45,12 +47,12 @@ class _DoctorCreditWidgetState extends State<DoctorCreditWidget> {
                           color: IColors.themeColor,
                           blurRadius: 3)
                     ]),
-                child: Text("برداشت"),
+                child: AutoText("برداشت"),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 24.0),
-              child: Text(
+              child: AutoText(
                 "اعتبار حساب" + "\n" + replaceFarsiNumber(widget.credit),
                 style: TextStyle(color: Colors.white),
               ),

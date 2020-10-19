@@ -3,6 +3,8 @@ import 'package:docup/models/DoctorEntity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'AutoText.dart';
+
 class DoctorData extends StatelessWidget {
   final DoctorEntity doctorEntity;
   final double width;
@@ -25,7 +27,7 @@ class DoctorData extends StatelessWidget {
                 : MainAxisAlignment.center,
             children: [
               clinicMarkLocation == 1 ? _clinicLocationMark() : SizedBox(),
-              Text(
+              AutoText(
                   "دکتر ${doctorEntity.user.firstName} ${doctorEntity.user.lastName != null ? doctorEntity.user.lastName : ""}",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,softWrap: true,overflow: TextOverflow.fade,),
@@ -42,7 +44,7 @@ class DoctorData extends StatelessWidget {
               children: <Widget>[
                 clinicMarkLocation == 2 ? _clinicLocationMark() : SizedBox(),
                 Flexible(
-                  child: Text(
+                  child: AutoText(
                     "${doctorEntity.expert}",
                     style: TextStyle(
                       fontSize: 14,
@@ -59,7 +61,7 @@ class DoctorData extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
+                AutoText(
                   "کد نظام پزشکی :‌ ${doctorEntity.councilCode}",
                   style: TextStyle(fontSize: 12),
                   textAlign: TextAlign.end,
@@ -81,7 +83,7 @@ class DoctorData extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
+        AutoText(
             " کلینیک ${doctorEntity.clinic != null ? doctorEntity.clinic.clinicName : ""}",
             style: TextStyle(fontSize: 12, color: IColors.themeColor)),
         Icon(

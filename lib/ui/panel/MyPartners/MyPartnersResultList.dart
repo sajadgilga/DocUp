@@ -9,6 +9,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,7 +38,7 @@ class _MyPartnersResultListState extends State<MyPartnersResultList> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
-              child: Text(
+              child: AutoText(
                 Strings.noVirtualAppointment,
                 style: TextStyle(fontSize: 14, color: IColors.darkGrey),
                 textAlign: TextAlign.center,
@@ -112,12 +113,12 @@ class _MyPartnerItem extends StatelessWidget {
 //        context: context,
 //        builder: (BuildContext context) {
 //          return AlertDialog(
-//            title: Text(
+//            title: AutoText(
 //              "منتظر ما باشید",
 //              textAlign: TextAlign.center,
 //              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
 //            ),
-//            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+//            content: AutoText("این امکان در نسخه‌های بعدی اضافه خواهد شد",
 //                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
 //          );
 //        });
@@ -140,7 +141,7 @@ class _MyPartnerItem extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(left: 0),
-              child: Text(
+              child: AutoText(
                 "نورونیو",
                 style: TextStyle(fontSize: 10, color: Colors.black26),
               ),
@@ -164,7 +165,7 @@ class _MyPartnerItem extends StatelessWidget {
       decoration: BoxDecoration(
           color: IColors.themeColor,
           borderRadius: BorderRadius.all(Radius.circular(7))),
-      child: Text(
+      child: AutoText(
         text,
         textAlign: TextAlign.center,
         style: TextStyle(color: Colors.white, fontSize: 10),
@@ -196,14 +197,14 @@ class _MyPartnerItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _location(),
-              Text(
+              AutoText(
                 utfName,
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900),
                 textAlign: TextAlign.right,
               ),
             ],
           ),
-          Text(
+          AutoText(
             utfExpert,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
             textAlign: TextAlign.right,

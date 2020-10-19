@@ -1,5 +1,6 @@
 import 'package:docup/ui/visit/calendar/utils/consts.dart';
 import 'package:docup/ui/visit/calendar/utils/date.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
@@ -128,7 +129,7 @@ class _DayContainer2State extends State<DayContainer2> {
                     color: isStart || isEnd ? Colors.white : Colors.transparent,
                     borderRadius: BorderRadius.all(Radius.circular(50))),
                 child: Center(
-                  child: Text(
+                  child: AutoText(
                     date != '' ? date.formatter.d : '',
                     textAlign: TextAlign.center,
                     style: TextStyle(

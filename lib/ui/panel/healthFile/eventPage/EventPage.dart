@@ -1,9 +1,9 @@
 import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/constants/colors.dart';
 import 'package:docup/models/Event.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/home/notification/NotificationPage.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/FloatingButton.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -75,7 +75,7 @@ class _EventPageState extends State<EventPage> {
   Widget _emptyList() {
     return Container(
         margin: EdgeInsets.only(top: 50),
-        child: Center(child: Text("رویداد سلامتی موجود نیست")));
+        child: Center(child: AutoText("رویداد سلامتی موجود نیست")));
   }
 
   Widget _body() {
@@ -85,7 +85,6 @@ class _EventPageState extends State<EventPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Stack(children: <Widget>[
       SingleChildScrollView(
           child: Container(

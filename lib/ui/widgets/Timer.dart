@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'AutoText.dart';
+
 class Timer extends StatelessWidget {
 
   @override
@@ -17,7 +19,7 @@ class Timer extends StatelessWidget {
             ((state.duration / 60) % 60).floor().toString().padLeft(2, '0');
         final String secondsStr =
             (state.duration % 60).floor().toString().padLeft(2, '0');
-        return Text(
+        return AutoText(
           replaceFarsiNumber(' $minutesStr:$secondsStr '),
           style: TextStyle(
             fontSize: 14,

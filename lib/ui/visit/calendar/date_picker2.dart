@@ -1,6 +1,7 @@
 
 import 'package:docup/ui/visit/calendar/utils/consts.dart';
 import 'package:docup/ui/visit/calendar/widget/render_table2.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
@@ -181,7 +182,7 @@ class _DatePicker2State extends State<DatePicker2> with TickerProviderStateMixin
       return Container(
         width: cellWidth,
         height: cellHeight,
-        child: Text(
+        child: AutoText(
           day,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -206,12 +207,12 @@ class _DatePicker2State extends State<DatePicker2> with TickerProviderStateMixin
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
+                          AutoText(
                             'از ${fullFormat(startSelectedDate)}',
                             textAlign: TextAlign.right,
                             style: TextStyle(color: Colors.white),
                           ),
-                          Text(
+                          AutoText(
                             'تا ${fullFormat(endSelectedDate)}',
                             textAlign: TextAlign.right,
                             style: TextStyle(color: Colors.white),
@@ -221,12 +222,12 @@ class _DatePicker2State extends State<DatePicker2> with TickerProviderStateMixin
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
+                          AutoText(
                             '${startSelectedDate.formatter.yyyy}',
                             textAlign: TextAlign.right,
                             style: TextStyle(color: Colors.white),
                           ),
-                          Text(
+                          AutoText(
                             '${monthDayFormat(startSelectedDate)}',
                             textAlign: TextAlign.right,
                             style: TextStyle(
@@ -267,7 +268,7 @@ class _DatePicker2State extends State<DatePicker2> with TickerProviderStateMixin
                                 onPressed: () {
                                   widget.onChangePicker('year');
                                 },
-                                child: Text(yearMonthNFormat(initDate)),
+                                child: AutoText(yearMonthNFormat(initDate)),
                               ),
                             )),
                       ),
@@ -313,7 +314,7 @@ class _DatePicker2State extends State<DatePicker2> with TickerProviderStateMixin
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   FlatButton(
-                    child: Text(
+                    child: AutoText(
                       'تایید',
                       style: TextStyle(fontSize: 16, color: Global.color),
                     ),
@@ -322,7 +323,7 @@ class _DatePicker2State extends State<DatePicker2> with TickerProviderStateMixin
                     },
                   ),
                   FlatButton(
-                    child: Text(
+                    child: AutoText(
                       'انصراف',
                       style: TextStyle(fontSize: 16, color: Global.color),
                     ),
@@ -331,7 +332,7 @@ class _DatePicker2State extends State<DatePicker2> with TickerProviderStateMixin
                     },
                   ),
                   FlatButton(
-                    child: Text(
+                    child: AutoText(
                       'اکنون',
                       style: TextStyle(fontSize: 16, color: Global.color),
                     ),

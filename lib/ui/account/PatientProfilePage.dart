@@ -5,6 +5,7 @@ import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/blocs/CreditBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
@@ -160,10 +161,10 @@ class _PatientProfilePageState extends State<PatientProfilePage>
               ),
             );
           } else {
-            return Container(child: Text("..."),);
+            return Container(child: AutoText("..."),);
           }
         } else {
-          return Container(child: Text("..."),);
+          return Container(child: AutoText("..."),);
         }
       });
 
@@ -198,7 +199,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                   width: iconsSize,
                 )),
           ),
-          Text(
+          AutoText(
             "انتقادات و پیشنهادات",
             style: TextStyle(fontSize: 17),
           ),
@@ -222,13 +223,13 @@ class _PatientProfilePageState extends State<PatientProfilePage>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text(
+                  AutoText(
                     " ${state is EntityLoaded && state.entity != null && state.entity.mEntity != null ? replaceFarsiNumber(normalizeCredit(state.entity.mEntity.user.credit)) : "0"}",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white, fontSize: 18),
                     textDirection: TextDirection.rtl,
                   ),
-                  Text(
+                  AutoText(
                     "ریال",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white, fontSize: 14),
@@ -271,7 +272,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
           ),
           Row(
             children: <Widget>[
-              Text("تومان", style: TextStyle(fontSize: 18)),
+              AutoText("تومان", style: TextStyle(fontSize: 18)),
               SizedBox(
                 width: 10,
               ),
@@ -303,7 +304,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
 
   _userCreditLabelWidget() => Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Text("اعتبار من",
+        child: AutoText("اعتبار من",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             textAlign: TextAlign.right),
       );
@@ -329,11 +330,11 @@ class _PatientProfilePageState extends State<PatientProfilePage>
         children: <Widget>[
           Column(
             children: <Widget>[
-              Text(
+              AutoText(
                   "${patientEntity.user.firstName == null ? "" : patientEntity.user.firstName} ${patientEntity.user.lastName == null ? "" : patientEntity.user.lastName}",
                   style: TextStyle(fontSize: 16)),
               SizedBox(height: 10),
-              Text("${replaceFarsiNumber(patientEntity.user.phoneNumber)}",
+              AutoText("${replaceFarsiNumber(patientEntity.user.phoneNumber)}",
                   style: TextStyle(fontSize: 16)),
             ],
           ),
@@ -352,7 +353,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
 
   _userInfoLabelWidget() => Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Text("اطلاعات کاربری",
+        child: AutoText("اطلاعات کاربری",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             textAlign: TextAlign.right),
       );

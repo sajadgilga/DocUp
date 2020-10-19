@@ -1,4 +1,5 @@
 import 'package:docup/constants/assets.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/constants/colors.dart';
@@ -34,7 +35,7 @@ class _OnCallMedicalHeaderIconState extends State<OnCallMedicalHeaderIcon> {
         child: Wrap(children: <Widget>[
           Container(
               padding: EdgeInsets.only(left: 5, right: 5),
-              child: Text('$newNotificationCount',
+              child: AutoText('$newNotificationCount',
                   style: TextStyle(color: Colors.white, fontSize: 12)),
               decoration: BoxDecoration(
                   color: IColors.themeColor,

@@ -7,6 +7,7 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,7 +37,7 @@ class _VisitResultListState extends State<VisitResultList> {
   Widget _list(List<Widget> results) {
     if (results.length == 0)
       return Center(
-        child: Text(
+        child: AutoText(
           widget.emptyText ?? "",
           style: TextStyle(fontSize: 10),
           textAlign: TextAlign.center,
@@ -80,7 +81,7 @@ class _VisitResultListState extends State<VisitResultList> {
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(10),
                         bottomRight: Radius.circular(10))),
-                child: Text(
+                child: AutoText(
                   widget.text,
                   style: TextStyle(
                       color: Colors.white,
@@ -112,12 +113,12 @@ class _SearchResultPatientItem extends StatelessWidget {
 //        context: context,
 //        builder: (BuildContext context) {
 //          return AlertDialog(
-//            title: Text(
+//            title: AutoText(
 //              "منتظر ما باشید",
 //              textAlign: TextAlign.center,
 //              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
 //            ),
-//            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+//            content: AutoText("این امکان در نسخه‌های بعدی اضافه خواهد شد",
 //                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
 //          );
 //        });
@@ -153,7 +154,7 @@ class _SearchResultPatientItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            Text(
+            AutoText(
               _statusString(entity.visitType, entity.visitMethod),
               softWrap: true,
               overflow: TextOverflow.fade,
@@ -188,7 +189,7 @@ class _SearchResultPatientItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
+              AutoText(
                 utfName,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
                 textAlign: TextAlign.right,

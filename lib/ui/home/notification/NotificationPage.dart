@@ -6,6 +6,7 @@ import 'package:docup/models/NewestNotificationResponse.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/customPainter/DrawerPainter.dart';
@@ -37,7 +38,7 @@ class _NotificationPageState extends State<NotificationPage> {
             child: Wrap(children: <Widget>[
               Container(
                   padding: EdgeInsets.only(left: 5, right: 5),
-                  child: Text(replaceFarsiNumber("$count"),
+                  child: AutoText(replaceFarsiNumber("$count"),
                       style: TextStyle(color: Colors.white, fontSize: 14)),
                   decoration: BoxDecoration(
                       color: IColors.themeColor,
@@ -105,7 +106,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   Positioned(
                     right: 90,
                     top: 150,
-                    child: Text(
+                    child:AutoText(
                       "اعلانات",
                       style: TextStyle(fontSize: 24),
                     ),
@@ -135,7 +136,7 @@ class _NotificationPageState extends State<NotificationPage> {
             child: Positioned(
                 right: MediaQuery.of(context).size.width * 0.4,
                 top: 200,
-                child: Text("اعلانی موجود نیست")),
+                child: AutoText("اعلانی موجود نیست")),
           )
         : Expanded(
             child: Positioned(
@@ -188,7 +189,7 @@ class NotificationItem extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0),
-                    child: Text(
+                    child: AutoText(
                       time == null
                           ? "هم اکنون"
                           : replaceFarsiNumber(normalizeDateAndTime(time)),
@@ -212,14 +213,14 @@ class NotificationItem extends StatelessWidget {
                           showShadow: true,
                           shadowColor: IColors.themeColor),
                       SizedBox(width: 5),
-                      Text(
+                      AutoText(
                         title == null ? "اعلان جدید" : title,
                         textDirection: TextDirection.rtl,
                         style:
                             TextStyle(color: IColors.themeColor, fontSize: 16),
                       ),
                       SizedBox(width: 10),
-                      Text(
+                      AutoText(
                         description == null ? "" : description,
                         textDirection: TextDirection.rtl,
                         style: TextStyle(color: IColors.darkGrey),
@@ -233,7 +234,7 @@ class NotificationItem extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 20.0),
                       child: Row(
                         children: <Widget>[
-                          Text(
+                          AutoText(
                             location != null ? location : "",
                             style: TextStyle(color: IColors.darkGrey),
                           ),

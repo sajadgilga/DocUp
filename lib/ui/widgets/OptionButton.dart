@@ -5,6 +5,8 @@ import 'package:docup/ui/start/RoleType.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'AutoText.dart';
+
 // ignore: must_be_immutable
 class OptionButton extends StatefulWidget {
   final Stream<RoleType> stream;
@@ -84,7 +86,7 @@ class _OptionButtonState extends State<OptionButton> {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Text(
+                            AutoText(
                               roleType.name,
                               style: TextStyle(
                                   fontSize: 13,

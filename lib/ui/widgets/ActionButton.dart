@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 
+import 'AutoText.dart';
+
 typedef ActionCallBack = void Function();
 
 class ActionButton extends StatefulWidget {
@@ -81,7 +83,7 @@ class _ActionButtonState extends State<ActionButton> {
                           EdgeInsets.only(right: widget.width * (70 / 100)),
                       child: widget.extraLeftIcon,
                     ),
-              Text(
+              AutoText(
                 widget.title != null ? widget.title : "",
                 style: TextStyle(
                     fontSize: widget.fontSize,

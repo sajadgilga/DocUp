@@ -1,3 +1,4 @@
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,7 @@ class HomeNotification extends StatelessWidget {
         child: Wrap(children: <Widget>[
           Container(
               padding: EdgeInsets.only(left: 5, right: 5),
-              child: Text('${replaceFarsiNumber(newNotificationCount.toString())}',
+              child: AutoText('${replaceFarsiNumber(newNotificationCount.toString())}',
                   style: TextStyle(color: Colors.white, fontSize: 12)),
               decoration: BoxDecoration(
                   color: IColors.themeColor,

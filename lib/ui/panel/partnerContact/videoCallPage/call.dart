@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:docup/ui/mainPage/CallRepo.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 import 'utils/settings.dart';
 
@@ -263,7 +264,7 @@ class _CallPageState extends State<CallPage> {
                           color: Colors.yellowAccent,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: Text(
+                        child: AutoText(
                           _infoStrings[index],
                           style: TextStyle(color: Colors.blueGrey),
                         ),

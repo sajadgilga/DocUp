@@ -12,6 +12,7 @@ import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/searchPage/ResultList.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class PhysicalVisitList extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
       Padding(
         padding: const EdgeInsets.only(right: 40, bottom: 5),
-        child: Text(
+        child: AutoText(
           "ویزیت های حضوری",
           softWrap: true,
           style: TextStyle(fontSize: 14),
@@ -186,7 +187,7 @@ class PhysicalVisitList extends StatelessWidget {
         }
         if (state is SearchError)
           return Container(
-            child: Text('error!'),
+            child: AutoText('error!'),
           );
         if (state is SearchLoading) {
           if (state.result == null || state.result.visit_results == null)

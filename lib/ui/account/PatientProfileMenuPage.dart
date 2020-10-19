@@ -6,6 +6,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DoctorCreditWidget.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
@@ -81,7 +82,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text("درباره ما",
+              AutoText("درباره ما",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             ],
           ),
@@ -92,7 +93,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text("قوانین و شرایط",
+              AutoText("قوانین و شرایط",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             ],
           ),
@@ -103,7 +104,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text("ارتباط با ما",
+              AutoText("ارتباط با ما",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             ],
           ),
@@ -129,7 +130,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
         children: [
           Padding(
             padding: EdgeInsets.only(right: 20),
-            child: Text(
+            child: AutoText(
               "تنطیمات اکانت",
               softWrap: true,
               overflow: TextOverflow.fade,
@@ -158,7 +159,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
                       ),
                     ),
                   ),
-                  Text(
+                  AutoText(
                     "شماره تلفن",
                     softWrap: true,
                     overflow: TextOverflow.fade,

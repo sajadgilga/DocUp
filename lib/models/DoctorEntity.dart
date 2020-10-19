@@ -11,6 +11,7 @@ class DoctorEntity extends UserEntity {
   String clinicNumber;
   String clinicAddress;
   int fee;
+  List<String> accountNumbers = [];
 
   DoctorPlan plan;
 
@@ -28,6 +29,9 @@ class DoctorEntity extends UserEntity {
         user = json['user'] != null ? new User.fromJson(json['user']) : null;
       if (json.containsKey('council_code'))
         councilCode = json['council_code'];
+      if (json.containsKey('account_number')){
+        accountNumbers = [json['account_number']];
+      }
       if (json.containsKey('expert'))
         expert = json['expert'];
       if (json.containsKey('clinic'))
@@ -60,6 +64,7 @@ class DoctorEntity extends UserEntity {
     }
     data['council_code'] = this.councilCode;
     data['expert'] = this.expert;
+    data['account_number'] = this.accountNumbers;
     if (this.clinic != null) {
       data['clinic'] = this.clinic.toJson();
     }

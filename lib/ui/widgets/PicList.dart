@@ -13,6 +13,7 @@ import 'package:dashed_container/dashed_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
 
+import 'AutoText.dart';
 import 'Waiting.dart';
 
 class PicList extends StatefulWidget {
@@ -42,7 +43,7 @@ class PicList extends StatefulWidget {
 class _PicListState extends State<PicList> {
   Widget _label() => Container(
         padding: EdgeInsets.only(bottom: 15),
-        child: Text(
+        child: AutoText(
           widget.picLabel,
           style: TextStyle(
               color: IColors.darkGrey,
@@ -58,7 +59,7 @@ class _PicListState extends State<PicList> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           widget.asset,
-          Text(
+          AutoText(
             widget.uploadLabel,
             style: TextStyle(
                 fontSize: 8,
@@ -125,7 +126,7 @@ class _PicListState extends State<PicList> {
                     ),
                   ),
                 )),
-            Text(
+            AutoText(
               pic.title,
               style: TextStyle(
                 fontSize: 8,
@@ -156,7 +157,7 @@ class _PicListState extends State<PicList> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-              child: Text(
+              child: AutoText(
 //                Strings.illnessInfoPicShowLabel,
                 '',
                 style: TextStyle(
@@ -171,7 +172,7 @@ class _PicListState extends State<PicList> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(
+                  AutoText(
                     widget.recentLabel,
                     textAlign: TextAlign.right,
                     style: TextStyle(
@@ -238,7 +239,7 @@ class _PicListState extends State<PicList> {
                   margin: EdgeInsets.only(top: 40), child: APICallLoading());
           }
           return Container(
-            child: Text(''),
+            child: AutoText(''),
           );
         },
       );

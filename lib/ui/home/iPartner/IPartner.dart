@@ -2,6 +2,7 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/ui/home/iPartner/IPartnerBody.dart';
@@ -41,7 +42,7 @@ class IPartner extends StatelessWidget {
               color: color,
               width: 60,
               height: 30,
-              child: Text(
+              child: AutoText(
                 label,
                 style: TextStyle(color: Colors.white, fontSize: 10),
                 textAlign: TextAlign.center,
@@ -64,7 +65,7 @@ class IPartner extends StatelessWidget {
     if (isEmpty)
       return Expanded(
         child: Center(
-          child: Text(
+          child: AutoText(
             (entity.isPatient
                 ? Strings.emptyDoctorLabel
                 : Strings.emptyPatientLabel),

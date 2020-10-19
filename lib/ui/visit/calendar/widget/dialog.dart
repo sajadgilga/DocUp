@@ -162,18 +162,18 @@ class CDialog extends StatelessWidget {
 ///     barrierDismissible: false, // user must tap button!
 ///     builder: (BuildContext context) {
 ///       return AlertDialog(
-///         title: Text('Rewind and remember'),
+///         title: AutoText('Rewind and remember'),
 ///         content: SingleChildScrollView(
 ///           child: ListBody(
 ///             children: <Widget>[
-///               Text('You will never be satisfied.'),
-///               Text('You\’re like me. I’m never satisfied.'),
+///               AutoText('You will never be satisfied.'),
+///               AutoText('You\’re like me. I’m never satisfied.'),
 ///             ],
 ///           ),
 ///         ),
 ///         actions: <Widget>[
 ///           FlatButton(
-///             child: Text('Regret'),
+///             child: AutoText('Regret'),
 ///             onPressed: () {
 ///               Navigator.of(context).pop();
 ///             },
@@ -410,7 +410,7 @@ class CAlertDialog extends StatelessWidget {
 /// ```dart
 /// SimpleDialogOption(
 ///   onPressed: () { Navigator.pop(context, Department.treasury); },
-///   child: const Text('Treasury department'),
+///   child: const AutoText('Treasury department'),
 /// )
 /// ```
 /// {@end-tool}
@@ -489,15 +489,15 @@ class SimpleDialogOption extends StatelessWidget {
 ///     context: context,
 ///     builder: (BuildContext context) {
 ///       return SimpleDialog(
-///         title: const Text('Select assignment'),
+///         title: const AutoText('Select assignment'),
 ///         children: <Widget>[
 ///           SimpleDialogOption(
 ///             onPressed: () { Navigator.pop(context, Department.treasury); },
-///             child: const Text('Treasury department'),
+///             child: const AutoText('Treasury department'),
 ///           ),
 ///           SimpleDialogOption(
 ///             onPressed: () { Navigator.pop(context, Department.state); },
-///             child: const Text('State department'),
+///             child: const AutoText('State department'),
 ///           ),
 ///         ],
 ///       );

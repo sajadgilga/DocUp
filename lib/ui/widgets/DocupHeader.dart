@@ -3,6 +3,8 @@ import 'package:docup/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'AutoText.dart';
+
 class DocUpHeader extends StatelessWidget {
   final String title;
   final bool docUpLogo;
@@ -28,7 +30,7 @@ class DocUpHeader extends StatelessWidget {
   _headerWidget() => Visibility(
         visible: title != null,
         child: Center(
-            child: Text(title == null ? "" : title,
+            child: AutoText(title == null ? "" : title,
                 style: TextStyle(color: IColors.themeColor, fontSize: 24))),
       );
 }
@@ -48,7 +50,7 @@ class DocUpSubHeader extends StatelessWidget {
   _headerWidget() => Visibility(
         visible: title != null,
         child: Center(
-            child: Text(title == null ? "" : title,
+            child: AutoText(title == null ? "" : title,
                 style: TextStyle(fontSize: 14))),
       );
 }
@@ -56,7 +58,7 @@ class DocUpSubHeader extends StatelessWidget {
 Widget menuLabel(title, {double fontSize = 14, bool divider = true}) => Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        Text(
+        AutoText(
           (title),
           style: TextStyle(
               fontWeight: FontWeight.w100,

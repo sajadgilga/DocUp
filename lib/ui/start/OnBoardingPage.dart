@@ -1,3 +1,4 @@
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/IntroductionScreen2/WholeIntroChild.dart';
 import 'package:docup/ui/widgets/IntroductionScreen2/dots_decorator.dart';
 import 'package:docup/ui/widgets/IntroductionScreen2/introduction_screen.dart';
@@ -57,7 +58,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       showSkipButton: true,
       skipFlex: 0,
       nextFlex: 0,
-      skip: const Text(''),
+      skip: AutoText(''),
       next: SizedBox(),
       done: SizedBox(),
       dotsDecorator: const DotsDecorator2(

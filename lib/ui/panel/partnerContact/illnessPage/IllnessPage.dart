@@ -11,6 +11,7 @@ import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/VisitBox.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
@@ -106,7 +107,7 @@ class IllnessPage extends StatelessWidget {
                     child: Icon(Icons.add),
                     backgroundColor: IColors.themeColor,
                   ),
-                  Text("تست جدید", style: TextStyle(fontSize: 12))
+                  AutoText("تست جدید", style: TextStyle(fontSize: 12))
                 ],
               ),
             ),

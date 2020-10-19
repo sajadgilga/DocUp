@@ -4,6 +4,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -109,7 +110,7 @@ class TrackingBlock extends StatelessWidget {
 //        lineWidth: 7.0,
 //        animation: true,
 //        percent: 1,
-//        center: new Text(
+//        center: newAutoText(
 //          "${replaceFarsiNumber(value.toString())}",
 //          style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 9.0),
 //        ),
@@ -132,7 +133,7 @@ class TrackingBlock extends StatelessWidget {
 
   Widget _label() => Container(
         margin: EdgeInsets.only(top: 5),
-        child: Text(
+        child:AutoText(
           label,
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 9),

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../ActionButton.dart';
+import '../AutoText.dart';
 
 class WholeIntoChild1 extends StatelessWidget {
   final String header = "داکآپ، پل ارتباطی پزشک و بیمار";
@@ -162,7 +163,7 @@ Widget getIntro(
         children: [
           Padding(
             padding: EdgeInsets.only(top: 10),
-            child: Text(
+            child: AutoText(
               header,
               textDirection: TextDirection.rtl,
               textAlign: TextAlign.right,
@@ -173,7 +174,7 @@ Widget getIntro(
           ),
           Padding(
             padding: EdgeInsets.only(top: 10),
-            child: Text(
+            child: AutoText(
               subHeader,
               textDirection: TextDirection.rtl,
               textAlign: TextAlign.right,

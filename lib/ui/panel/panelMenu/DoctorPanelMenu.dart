@@ -13,6 +13,7 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenuItem.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,7 @@ class DoctorPanelMenu extends StatelessWidget {
   Widget _menuLabel() => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          Text(
+          AutoText(
             Strings.doctorPanelMenuLabel,
             style: TextStyle(fontWeight: FontWeight.w100, fontSize: 14),
           ),

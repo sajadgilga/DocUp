@@ -3,6 +3,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'AutoText.dart';
 import 'DocupHeader.dart';
 
 class SquareBoxNoronioClinicService extends StatelessWidget {
@@ -42,7 +43,7 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Row(
                         children: [
-                          Text(
+                          AutoText(
                             'نورونیو',
                             style: TextStyle(
                                 color: IColors.themeColor, fontSize: 10),

@@ -10,6 +10,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +43,7 @@ class _PartnerResultListState extends State<PartnerResultList> {
     if (results.length == 0)
       return Expanded(
         child: Center(
-          child: Text(
+          child: AutoText(
             (widget.isDoctor
                 ? Strings.emptyDoctorSearch
                 : (widget.isRequestsOnly
@@ -90,7 +91,7 @@ class _PartnerResultListState extends State<PartnerResultList> {
         children: <Widget>[
           Container(
             alignment: Alignment.centerRight,
-            child: Text(
+            child: AutoText(
               (widget.isRequestsOnly
                   ? Strings.requestsSearchLabel
                   : Strings.resultSearchLabel),
@@ -121,12 +122,12 @@ class _SearchResultDoctorItem extends StatelessWidget {
 //        context: context,
 //        builder: (BuildContext context) {
 //          return AlertDialog(
-//            title: Text(
+//            title: AutoText(
 //              "منتظر ما باشید",
 //              textAlign: TextAlign.center,
 //              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
 //            ),
-//            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+//            content: AutoText("این امکان در نسخه‌های بعدی اضافه خواهد شد",
 //                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
 //          );
 //        });
@@ -160,7 +161,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
       decoration: BoxDecoration(
           color: IColors.themeColor,
           borderRadius: BorderRadius.all(Radius.circular(7))),
-      child: Text(
+      child: AutoText(
         text,
         textAlign: TextAlign.center,
         style: TextStyle(color: Colors.white, fontSize: 10),
@@ -198,14 +199,14 @@ class _SearchResultDoctorItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _rating(),
-              Text(
+              AutoText(
                 utfName == "" ? " - " : utfName,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
                 textAlign: TextAlign.right,
               ),
             ],
           ),
-          Text(
+          AutoText(
             utfExpert == "" ? " - " : utfExpert,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
             textAlign: TextAlign.right,
@@ -258,12 +259,12 @@ class _SearchResultPatientItem extends StatelessWidget {
 //        context: context,
 //        builder: (BuildContext context) {
 //          return AlertDialog(
-//            title: Text(
+//            title: AutoText(
 //              "منتظر ما باشید",
 //              textAlign: TextAlign.center,
 //              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
 //            ),
-//            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+//            content: AutoText("این امکان در نسخه‌های بعدی اضافه خواهد شد",
 //                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
 //          );
 //        });
@@ -295,7 +296,7 @@ class _SearchResultPatientItem extends StatelessWidget {
       decoration: BoxDecoration(
           color: IColors.themeColor,
           borderRadius: BorderRadius.all(Radius.circular(7))),
-      child: Text(
+      child: AutoText(
         text,
         textAlign: TextAlign.center,
         style: TextStyle(color: Colors.white, fontSize: 10),
@@ -331,14 +332,14 @@ class _SearchResultPatientItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _rating(),
-              Text(
+              AutoText(
                 utfName == "" ? " - " : utfName,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
                 textAlign: TextAlign.right,
               ),
             ],
           ),
-          Text(
+          AutoText(
             utfExpert == "" ? " - " : utfExpert,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
             textAlign: TextAlign.right,

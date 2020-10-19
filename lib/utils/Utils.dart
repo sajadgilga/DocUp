@@ -1,6 +1,8 @@
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
@@ -70,8 +72,8 @@ DateTime getDateAndTimeFromWS(String str) {
 DateTime getDateAndTimeFromJalali(String jalaiDateStr, String timeStr) {
   var array = jalaiDateStr.split("/");
   var georgianDate =
-      Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
-          .toGregorian();
+  Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
+      .toGregorian();
   var timeArray = timeStr.split(":");
   return DateTime(georgianDate.year, georgianDate.month, georgianDate.day,
       int.parse(timeArray[0]), int.parse(timeArray[1]));
@@ -93,20 +95,22 @@ String normalizeCredit(String credit) {
 String convertToGeorgianDate(String jalaliDate) {
   var array = jalaliDate.split("/");
   var georgianDate =
-      Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
-          .toGregorian();
+  Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
+      .toGregorian();
   return "${georgianDate.year}-${georgianDate.month}-${georgianDate.day}";
 }
 
 void hideKeyboard(context) => FocusScope.of(context).unfocus();
 
-AlertDialog getLoadingDialog() => AlertDialog(
-    backgroundColor: Colors.white,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-    content: Waiting());
+AlertDialog getLoadingDialog() =>
+    AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0)),
+        content: Waiting());
 
-void showDatePickerDialog(
-    context, List<int> availableDays, TextEditingController controller) {
+void showDatePickerDialog(context, List<int> availableDays,
+    TextEditingController controller) {
   showDialog(
     context: context,
     builder: (BuildContext _) {
@@ -146,13 +150,13 @@ String getTomorrowInJalali() {
   return tomorrow;
 }
 
-void showOneButtonDialog(
-    context, String message, String action, Function callback,
+void showOneButtonDialog(context, String message, String action,
+    Function callback,
     {Color color}) {
   BuildContext dialogContext;
   AlertDialog dialog = AlertDialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-    title: Text(
+    title: AutoText(
       message,
       style: TextStyle(fontSize: 14),
       textAlign: TextAlign.center,
@@ -174,23 +178,30 @@ void showOneButtonDialog(
       });
 }
 
-void showListDialog(
-    context, List<String> items, String action, Function callback) {
+void showListDialog(context, List<String> items, String action,
+    Function callback) {
   BuildContext dialogContext;
 
   AlertDialog dialog = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       content: Container(
-        height: MediaQuery.of(context).size.height / 3,
-        width: MediaQuery.of(context).size.width / 3,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height / 3,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width / 3,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ListView.builder(
                 shrinkWrap: true,
                 itemCount: items.length,
-                itemBuilder: (BuildContext context, int index) => ListTile(
-                      title: Text(items[index], textAlign: TextAlign.center),
+                itemBuilder: (BuildContext context, int index) =>
+                    ListTile(
+                      title: AutoText(items[index], textAlign: TextAlign.center),
                       onTap: () {
                         Navigator.pop(dialogContext);
                         callback(index);
@@ -229,12 +240,12 @@ void showNextVersionDialog(context) {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
+          title: AutoText(
             "منتظر ما باشید",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+          content: AutoText("این امکان در نسخه‌های بعدی اضافه خواهد شد",
               textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
         );
       });
@@ -260,9 +271,57 @@ launchURL(String url) async {
 
 void toast(context, String message) {
   Scaffold.of(context).showSnackBar(SnackBar(
-    content: Text(message),
+    content: AutoText(message),
     duration: Duration(seconds: 3),
   ));
+}
+
+String getCreditCardFourParts(String accountNumber) {
+  accountNumber = accountNumber.replaceAll(" ", "");
+  List<String> res = [];
+  for (int i = 0; i < (accountNumber.length / 4).ceil(); i++) {
+    res.add(
+        accountNumber.substring(i * 4, min(accountNumber.length, 4 * (i + 1))));
+  }
+  return res.join(" ");
+}
+
+String replaceEnglishWithPersianNumber(String text) {
+  List<String> persianNumber = [
+    "۰",
+    "۱",
+    "۲",
+    "۳",
+    "۴",
+    "۵",
+    "۶",
+    "۷",
+    "۸",
+    "۹"
+  ];
+  for (int i = 0; i < persianNumber.length; i++) {
+    text = text.replaceAll(i.toString(), persianNumber[i]);
+  }
+  return text;
+}
+
+String replacePersianWithEnglishNumber(String text) {
+  List<String> persianNumber = [
+    "۰",
+    "۱",
+    "۲",
+    "۳",
+    "۴",
+    "۵",
+    "۶",
+    "۷",
+    "۸",
+    "۹"
+  ];
+  for (int i = 0; i < persianNumber.length; i++) {
+    text = text.replaceAll(persianNumber[i], i.toString());
+  }
+  return text;
 }
 
 int getTimeMinute(String time) {
@@ -270,24 +329,6 @@ int getTimeMinute(String time) {
     return text.replaceAll(" ", "");
   }
 
-  String replacePersianWithEnglishNumber(String text) {
-    List<String> persianNumber = [
-      "۰",
-      "۱",
-      "۲",
-      "۳",
-      "۴",
-      "۵",
-      "۶",
-      "۷",
-      "۸",
-      "۹"
-    ];
-    for (int i = 0; i < persianNumber.length; i++) {
-      text = text.replaceAll(persianNumber[i], i.toString());
-    }
-    return text;
-  }
   time = removeAllSpace(time);
   time = replacePersianWithEnglishNumber(time);
   try {
@@ -303,8 +344,6 @@ int getTimeMinute(String time) {
     return 0;
   }
 }
-
-
 
 String convertMinuteToTimeString(int lessonsMinute) {
   int hour = ((lessonsMinute / 60).floor());

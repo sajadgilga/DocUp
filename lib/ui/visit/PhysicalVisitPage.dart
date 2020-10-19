@@ -8,6 +8,7 @@ import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
 import 'package:docup/ui/widgets/TimeSelectorHeaderWidget.dart';
 import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
@@ -132,7 +133,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
   _acceptPolicyWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Text(
+          AutoText(
             Strings.physicalVisitPrivacyPolicyMessage,
             textAlign: TextAlign.right,
             style: TextStyle(fontSize: 10),
@@ -185,7 +186,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text(
+            AutoText(
               title,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               textAlign: TextAlign.right,

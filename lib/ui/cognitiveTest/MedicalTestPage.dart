@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/blocs/MedicalTestBloc.dart';
 import 'package:docup/constants/colors.dart';
@@ -201,7 +202,7 @@ class QuestionList extends StatelessWidget {
         alignment: Alignment.centerRight,
         child: Padding(
           padding: const EdgeInsets.only(right: 16.0, left: 16.0),
-          child: Text(
+          child: AutoText(
             label,
             textAlign: TextAlign.right,
             textDirection: TextDirection.rtl,

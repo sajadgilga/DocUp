@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'ActionButton.dart';
+import 'AutoText.dart';
 import 'VerticalSpace.dart';
 
 class LabelAndListWidget extends StatefulWidget {
@@ -73,7 +74,7 @@ class _LabelAndListWidgetState extends State<LabelAndListWidget> {
         ),
       );
 
-  Widget _labelWidget() => Text(
+  Widget _labelWidget() => AutoText(
         widget.title,
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         textAlign: TextAlign.right,

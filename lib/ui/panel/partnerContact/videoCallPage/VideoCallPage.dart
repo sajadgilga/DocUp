@@ -11,6 +11,7 @@ import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/panel/partnerContact/videoCallPage/call.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -135,7 +136,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text(
+            child: AutoText(
               widget.entity.isPatient
                   ? "در صورت تایید پزشک، امکان برقراری ارتباط از طریق تماس تصویری امکان پذیر است"
                   : "با شروع تماس تصویری از سمت بیمار نوتیفیکیش‌ی جهت ملحق شدن برای شما ارسال خواهد شد",

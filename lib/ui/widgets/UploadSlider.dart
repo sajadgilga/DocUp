@@ -11,6 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import 'AutoText.dart';
+
 class UploadSlider extends StatefulWidget {
   int listId;
   final Widget body;
@@ -120,7 +122,7 @@ class UploadSliderState extends State<UploadSlider> {
         margin: EdgeInsets.only(left: 40, right: 40, top: 40),
         child: Column(
           children: <Widget>[
-            Align(alignment: Alignment.centerRight, child: Text('توضیحات')),
+            Align(alignment: Alignment.centerRight, child: AutoText('توضیحات')),
             _descriptionTextField(),
             _date()
           ],
@@ -132,12 +134,12 @@ class UploadSliderState extends State<UploadSlider> {
 //        context: context,
 //        builder: (BuildContext context) {
 //          return AlertDialog(
-//            title: Text(
+//            title: AutoText(
 //              "منتظر ما باشید",
 //              textAlign: TextAlign.center,
 //              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
 //            ),
-//            content: Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+//            content: AutoText("این امکان در نسخه‌های بعدی اضافه خواهد شد",
 //                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
 //          );
 //        });
@@ -171,7 +173,7 @@ class UploadSliderState extends State<UploadSlider> {
               decoration: BoxDecoration(
                   color: IColors.themeColor,
                   borderRadius: BorderRadius.all(Radius.circular(25))),
-              child: Text(
+              child: AutoText(
                 'ذخیره',
                 textAlign: TextAlign.center,
               ),

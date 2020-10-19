@@ -1,22 +1,15 @@
-import 'dart:io';
-
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
-import 'package:docup/blocs/VisitBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/home/SearchBox.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
-import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'MyPartnersResultList.dart';
 
@@ -52,7 +45,7 @@ class MyPartners extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: EdgeInsets.symmetric(),
-          child: Text(
+          child: AutoText(
             entity.isPatient ? "پزشکان من" : "بیماران من",
             style: TextStyle(
                 fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey),
@@ -95,7 +88,7 @@ class MyPartners extends StatelessWidget {
         }
         if (state is SearchError)
           return Container(
-            child: Text('error!'),
+            child: AutoText('error!'),
           );
         if (state is SearchLoading) {
           if (state.result == null)

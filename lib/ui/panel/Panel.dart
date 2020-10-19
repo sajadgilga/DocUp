@@ -7,6 +7,7 @@ import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class _PanelState extends State<Panel> {
       return Container();
     if (_widget == null || _widget.length == 0)
       return Center(
-        child: Text('مشکل در بارگزاری صفحه'),
+        child: AutoText('مشکل در بارگزاری صفحه'),
       );
     return _widget[(_widget.length > state.index ? state.index : 0)];
   }
@@ -298,7 +299,7 @@ class TabState extends State<Tab> {
                           color: widget.color,
                         )
                       : Container()),
-                  Text(
+                  AutoText(
                     widget.tabState.text,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: widget.color, fontSize: 10),
@@ -355,7 +356,7 @@ class TabsState extends State<Tabs> {
               (tabState.subtabs.length > 0
                   ? Icon(Icons.arrow_drop_down)
                   : Container()),
-              Text(
+              AutoText(
                 tabState.text,
 //            text,
                 textAlign: TextAlign.center,

@@ -8,6 +8,7 @@ import 'package:docup/networking/CustomException.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
 import 'package:docup/ui/widgets/TimeSelectionWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
@@ -115,8 +116,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     );
   }
 
-  Text _visitDurationTimeWidget() {
-    return Text(
+  AutoText _visitDurationTimeWidget() {
+    return AutoText(
         "ویزیت مجازی حداکثر ${replaceFarsiNumber((VisitDurationPlan.values[typeSelected[VISIT_DURATION_PLAN]].duration).toString())} دقیقه می‌باشد",
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
   }
@@ -130,7 +131,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(
+                AutoText(
                   title,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   textAlign: TextAlign.right,
@@ -172,15 +173,15 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   _priceWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text("ریال", style: TextStyle(fontSize: 16)),
+          AutoText("ریال", style: TextStyle(fontSize: 16)),
           SizedBox(width: 5),
-          Text(replaceFarsiNumber(_calculateVisitCost()),
+          AutoText(replaceFarsiNumber(_calculateVisitCost()),
               style: TextStyle(
                   color: IColors.themeColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w600)),
           SizedBox(width: 5),
-          Text("قیمت نهایی", style: TextStyle(fontSize: 16))
+          AutoText("قیمت نهایی", style: TextStyle(fontSize: 16))
         ],
       );
 
@@ -205,13 +206,13 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
 //              mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
 //              children: <Widget>[
-//                Text(
+//                AutoText(
 //                  "ساعت",
 //                  textAlign: TextAlign.right,
 //                ),
 //                Icon(Icons.access_time, size: 30),
 //                SizedBox(width: 50),
-//                Text("تاریخ"),
+//                AutoText("تاریخ"),
 //                Icon(Icons.calendar_today),
 //              ],
 //            ),
@@ -244,7 +245,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        Text(
+        AutoText(
           "تعیین وقت قبلی ویزیت مجازی",
           textAlign: TextAlign.right,
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -265,7 +266,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   _acceptPolicyWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Text(
+          AutoText(
             Strings.virtualVisitPrivacyPolicyMessage,
             textAlign: TextAlign.right,
             style: TextStyle(fontSize: 10),

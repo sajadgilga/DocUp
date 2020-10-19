@@ -8,6 +8,7 @@ import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PopupMenues/PopUpMenus.dart';
 import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
@@ -22,6 +23,8 @@ import 'package:docup/ui/home/iPartner/IPartner.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_credit_card/credit_card_model.dart';
+import 'package:flutter_credit_card/flutter_credit_card.dart';
 
 import 'TrackingList.dart';
 import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
@@ -73,12 +76,12 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.only(right: width * .075),
         shrinkWrap: true,
         children: <Widget>[
-          Text(
+          AutoText(
             Strings.docupIntroHomePart1,
             textDirection: TextDirection.rtl,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          Text(
+          AutoText(
             Strings.docupIntroHomePart2,
             textDirection: TextDirection.rtl,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
@@ -139,14 +142,14 @@ class _HomeState extends State<Home> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(),
-                  child: Text("کلینیک نورونیو", style: TextStyle(fontSize: 17)),
+                  child: AutoText("کلینیک نورونیو", style: TextStyle(fontSize: 17)),
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 Padding(
                   padding: EdgeInsets.only(right: 40),
-                  child: Text(
+                  child: AutoText(
                     "پایش سلامت شناختی",
                     style: TextStyle(fontSize: 10),
                   ),
@@ -175,14 +178,14 @@ class _HomeState extends State<Home> {
                 Padding(
                   padding: EdgeInsets.only(right: 40),
                   child:
-                      Text("ویدیو های آموزشی", style: TextStyle(fontSize: 17)),
+                      AutoText("ویدیو های آموزشی", style: TextStyle(fontSize: 17)),
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 Padding(
                   padding: EdgeInsets.only(right: 100, bottom: 15),
-                  child: Text(
+                  child: AutoText(
                     "مراقبت از خود با آگاهی بیشتر",
                     style: TextStyle(fontSize: 10),
                   ),
@@ -198,13 +201,13 @@ class _HomeState extends State<Home> {
   Widget _homeListLabel() {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isPatient) {
-      return Text(
+      return AutoText(
         Strings.medicineReminder,
         textAlign: TextAlign.center,
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
       );
     } else if (entity.isDoctor) {
-      return Text(
+      return AutoText(
         Strings.doctorTrackingLabel,
         textAlign: TextAlign.center,
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),

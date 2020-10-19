@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/PopupMenues/PopUpMenus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -91,7 +92,7 @@ class _SearchBoxState extends State<SearchBox> {
   void _showTags() {}
 
   Widget _filterText() {
-    return Text(searchTag,
+    return AutoText(searchTag,
         style: TextStyle(
             fontSize: 9,
             fontWeight: FontWeight.bold,
@@ -115,7 +116,7 @@ class _SearchBoxState extends State<SearchBox> {
       tooltipDirection: TooltipDirection.down,
       backgroundColor: IColors.whiteTransparent,
       borderColor: IColors.themeColor,
-      content: Text(
+      content:AutoText(
         Strings.PatientSearchBoxTooltip,
         textAlign: TextAlign.center,
         style: TextStyle(
@@ -214,7 +215,7 @@ class _SearchBoxState extends State<SearchBox> {
               borderRadius: BorderRadius.all(Radius.circular(5)),
               color:
                   selected ? IColors.themeColor : Color.fromARGB(0, 0, 0, 0)),
-          child: Text(
+          child:AutoText(
             title,
             softWrap: true,
             overflow: TextOverflow.fade,

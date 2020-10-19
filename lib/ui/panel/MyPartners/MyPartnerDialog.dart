@@ -13,6 +13,7 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
@@ -62,7 +63,7 @@ class MyPartnerDialog extends StatelessWidget {
     }
     return Container(
       padding: EdgeInsets.only(right: 15),
-      child: Text(
+      child: AutoText(
         utfName,
         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900),
         textAlign: TextAlign.right,
@@ -118,7 +119,7 @@ class MyPartnerDialog extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 7),
-                      child: Text(
+                      child: AutoText(
                         header,
                         textDirection: TextDirection.rtl,
                         overflow: TextOverflow.fade,
@@ -131,7 +132,7 @@ class MyPartnerDialog extends StatelessWidget {
                     ),
                     Padding(
                         padding: EdgeInsets.symmetric(vertical: 5),
-                        child: Text(
+                        child: AutoText(
                           subHeader,
                           textDirection: TextDirection.rtl,
                           overflow: TextOverflow.fade,

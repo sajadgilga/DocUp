@@ -5,6 +5,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Medicine.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
@@ -128,7 +129,7 @@ class _TimeCalenderState extends State<TimeCalender> {
                 color: IColors.themeColor),
             padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
             margin: EdgeInsets.only(top: 60, bottom: 30),
-            child: Text(
+            child: AutoText(
               Strings.submitDrugLabel,
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -157,12 +158,13 @@ class _TimeCalenderState extends State<TimeCalender> {
                   entity: widget.entity,
                   onPush: widget.onPush,
                 ),
-                ALittleVerticalSpace(height: 15,),
+                ALittleVerticalSpace(
+                  height: 15,
+                ),
                 TimeSelectorWidget()
               ]),
         ),
       ),
-
     );
   }
 }

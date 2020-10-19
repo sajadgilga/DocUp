@@ -45,6 +45,7 @@ import 'package:docup/ui/patientDetail/PatientRequestPage.dart';
 import 'package:docup/ui/visitsList/PhysicalVisitListPage.dart';
 import 'package:docup/ui/visitsList/VirtualVisitListPage.dart';
 import 'package:docup/ui/visitsList/VisitRequestsListPage.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -802,12 +803,12 @@ class InStructureState extends State<InStructure> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(
+            AutoText(
               "منتظر ما باشید",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            Text("این امکان در نسخه‌های بعدی اضافه خواهد شد",
+            AutoText("این امکان در نسخه‌های بعدی اضافه خواهد شد",
                 textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
             SizedBox(
               height: 20,

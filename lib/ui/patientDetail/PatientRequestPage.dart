@@ -15,6 +15,7 @@ import 'package:docup/ui/visitsList/visitSearchResult/VisitResult.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
@@ -131,7 +132,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
               descriptionBox(
                 "توضیحات:",
                 Icon(Icons.info_outline),
-                child: Text(
+                child: AutoText(
                   ([null, ""].contains(visitEntity.patientMessage))
                       ? "توضیحاتی موجود نمی باشد"
                       : visitEntity.patientMessage,
@@ -152,7 +153,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Text(
+                          AutoText(
                             "پرونده سلامت (در صورت ویزیت قبلی)",
                             textAlign: TextAlign.right,
                           ),
@@ -231,7 +232,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Text(
+                AutoText(
                   title,
                   style: TextStyle(fontSize: 16, color: IColors.darkGrey),
                   textDirection: TextDirection.rtl,
@@ -271,7 +272,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                 ),
               ),
             ),
-            Text(
+            AutoText(
               'تصویر',
               style: TextStyle(
                 fontSize: 8,
@@ -290,7 +291,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
     return Container(
       margin: EdgeInsets.only(right: 15, top: 10),
       child: pictures.isEmpty
-          ? Text(
+          ? AutoText(
               "پرونده ای موجود نمی باشد",
               style: TextStyle(fontSize: 14, color: IColors.darkGrey),
               textDirection: TextDirection.rtl,
@@ -321,7 +322,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                 ),
                 Container(
                   width: 60,
-                  child: Text(
+                  child: AutoText(
                     replaceFarsiNumber(normalizeDateAndTime(entity.visitTime)),
                     style: TextStyle(fontSize: 12, color: IColors.green),
                     textAlign: TextAlign.end,
@@ -337,7 +338,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  Text(
+                  AutoText(
                       widget.patientEntity.user.name.split(" ")[0] +
                           " \n " +
                           (widget.patientEntity.user.name + " ")
@@ -353,7 +354,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Row(
                     children: [
-                      Text(
+                      AutoText(
                         entity.visitType == 0
                             ? "ویزیت حضوری"
                             : "ویزیت مجازی، $visitMethod",

@@ -31,7 +31,7 @@ class PageTopLeftIcon extends StatelessWidget {
               onTap();
             },
             child: Padding(
-              padding: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(8.0),
               child: topLeftFlag ? topLeft : SizedBox(),
             ),
           ),

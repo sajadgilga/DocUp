@@ -2,6 +2,8 @@ import 'package:docup/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'AutoText.dart';
+
 class TimeSelectorHeaderWidget extends StatefulWidget {
   final Function(bool) callback;
   final bool initialTimeIsSelected;
@@ -55,7 +57,7 @@ class _TimeSelectorHeaderWidgetState extends State<TimeSelectorHeaderWidget> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("زمان برگزاری",
+              child: AutoText("زمان برگزاری",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   textAlign: TextAlign.right),
             ),

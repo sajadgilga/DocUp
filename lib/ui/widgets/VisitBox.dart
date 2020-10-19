@@ -2,6 +2,8 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/models/VisitTime.dart';
 import 'package:flutter/material.dart';
 
+import 'AutoText.dart';
+
 class VisitBox extends StatefulWidget {
   final List<VisitTime> visitTimes;
 
@@ -25,14 +27,14 @@ class _VisitBoxState extends State<VisitBox> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(
+              AutoText(
                 time.day,
                 style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: (time.isNear ? IColors.themeColor : Colors.black54)),
               ),
-              Text(
+              AutoText(
                 time.month.name,
                 style: TextStyle(
                     fontSize: 10,
@@ -64,13 +66,13 @@ class _VisitBoxState extends State<VisitBox> {
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(10),
                       bottomRight: Radius.circular(10))),
-              child: Text(
+              child: AutoText(
                 ' ویزیت ها ',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white, fontSize: 10),
               ),
             ),
-            Text(
+            AutoText(
               '۱۳۹۸',
               textAlign: TextAlign.center,
               style: TextStyle(

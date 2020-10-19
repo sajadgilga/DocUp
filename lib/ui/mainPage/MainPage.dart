@@ -10,6 +10,7 @@ import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/repository/NotificationRepository.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -251,7 +252,7 @@ class _MainPageState extends State<MainPage> {
                       ))
                 ],
               )),
-          title: Text(
+          title: AutoText(
             destination.title,
           ),
           backgroundColor: Colors.white);

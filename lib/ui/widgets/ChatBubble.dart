@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../constants/colors.dart';
+import 'AutoText.dart';
 
 class ChatBubble extends StatefulWidget {
   final ChatMessage message;
@@ -57,7 +58,7 @@ class _ChatBubbleState extends State<ChatBubble> {
             borderRadius: _borderRadius(),
             shape: BoxShape.rectangle,
             boxShadow: _shadow()),
-        child: Text(
+        child: AutoText(
           widget.message.message,
           textAlign: TextAlign.right,
           textDirection: TextDirection.rtl,
@@ -100,7 +101,7 @@ class _ChatBubbleState extends State<ChatBubble> {
     var dateAndStatus = <Widget>[
       Container(
           padding: EdgeInsets.only(top: 5),
-          child: Text(
+          child: AutoText(
             '${widget.message.createdDate.hour}:${widget.message.createdDate.minute}', //TODO
             style: TextStyle(fontSize: 8),
           )),

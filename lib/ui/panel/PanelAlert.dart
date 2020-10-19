@@ -1,4 +1,5 @@
 import 'package:docup/constants/colors.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 
 enum AlertSize { SM, MD, LG }
@@ -67,7 +68,7 @@ class PanelAlert extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text(
+                  AutoText(
                     label,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14),
@@ -85,7 +86,7 @@ class PanelAlert extends StatelessWidget {
                             color: (btnColor != null
                                 ? btnColor
                                 : IColors.themeColor)),
-                        child: Text(
+                        child: AutoText(
                           buttonLabel,
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 14, color: Colors.white),

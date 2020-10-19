@@ -12,6 +12,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/repository/ChatMessageRepository.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
@@ -333,7 +334,7 @@ class _ChatBoxState extends State<_ChatBox> {
       return Expanded(
           flex: 2,
           child: Center(
-            child: Text(
+            child: AutoText(
               Strings.emptyChatPage,
               textAlign: TextAlign.center,
               style: TextStyle(color: IColors.darkGrey),
@@ -357,7 +358,7 @@ class _ChatBoxState extends State<_ChatBox> {
 //              return _msgList();
 //            } else
 //              return Center(
-//                child: Text(
+//                child: AutoText(
 //                  Strings.emptyChatPage,
 //                  textAlign: TextAlign.center,
 //                  style: TextStyle(color: IColors.darkGrey),
@@ -373,7 +374,7 @@ class _ChatBoxState extends State<_ChatBox> {
 //                return _msgList();
 //              } else
 //                return Center(
-//                  child: Text(
+//                  child: AutoText(
 //                    Strings.emptyChatPage,
 //                    textAlign: TextAlign.center,
 //                    style: TextStyle(color: IColors.darkGrey),

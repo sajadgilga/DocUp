@@ -1,6 +1,8 @@
 import 'package:docup/constants/colors.dart';
 import 'package:flutter/material.dart';
 
+import 'AutoText.dart';
+
 class FloatingButton extends StatelessWidget {
   final Function() callback;
   final String label;
@@ -28,7 +30,7 @@ class FloatingButton extends StatelessWidget {
           ),
           Container(
               padding: EdgeInsets.only(top: 10),
-              child: Text(
+              child: AutoText(
                 label,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12),

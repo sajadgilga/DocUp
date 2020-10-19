@@ -4,6 +4,8 @@ import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import 'AutoText.dart';
+
 class APICallError extends StatelessWidget {
   final String errorMessage;
 
@@ -40,7 +42,7 @@ class APICallError extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
+                AutoText(
                   "خطا در برقراری ارتباط",
                   textAlign: TextAlign.right,
                   textDirection: TextDirection.rtl,
@@ -50,7 +52,7 @@ class APICallError extends StatelessWidget {
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
-                Text(
+                AutoText(
                   "لطفا اتصال به اینترنت را بررسی" +
                       "\n" +
                       " کنید و مجددا تلاش نمایید.",
@@ -62,7 +64,7 @@ class APICallError extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                Text(
+                AutoText(
                   errorMessage,
                   textAlign: TextAlign.left,
                   style: TextStyle(

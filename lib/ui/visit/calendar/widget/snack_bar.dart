@@ -1,3 +1,4 @@
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 
 class SnackbarHelper {
@@ -18,7 +19,7 @@ class SnackbarHelper {
         );
     }
     final snackBar = SnackBar(
-      content: Text('$body'),
+      content: AutoText('$body'),
       backgroundColor: bgColor,
     );
     Scaffold.of(context).showSnackBar(snackBar);

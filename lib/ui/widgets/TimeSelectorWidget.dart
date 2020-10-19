@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_circular_slider/flutter_circular_slider.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'AutoText.dart';
+
 class TimeSelectorWidget extends StatefulWidget {
   Offset tappedOffset;
   StreamController<Set<int>> controller = BehaviorSubject();
@@ -78,7 +80,7 @@ class _TimeSelectorWidgetState extends State<TimeSelectorWidget> {
                       child: Container(
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                        child: Text(
+                        child: AutoText(
                           "AM",
                           style: TextStyle(
                               color: AM_PM == 0
@@ -107,7 +109,7 @@ class _TimeSelectorWidgetState extends State<TimeSelectorWidget> {
                       child: Container(
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                        child: Text("PM",
+                        child: AutoText("PM",
                             style: TextStyle(
                                 color: AM_PM == 1
                                     ? Colors.white
