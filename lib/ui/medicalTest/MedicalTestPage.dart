@@ -553,7 +553,7 @@ class SendToPatientDialog {
   Widget getPatientItem(UserEntity userEntity) {
     bool selected = false;
     if (this.selectedPatient != null &&
-        this.selectedPatient.user.username == userEntity.user.username) {
+        this.selectedPatient.id == userEntity.id) {
       selected = true;
     }
     return GestureDetector(
