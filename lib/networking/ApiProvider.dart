@@ -113,11 +113,17 @@ class ApiProvider {
         print(responseJson);
         return responseJson;
       case 403:
+      case 400:
         var responseJson = decodeResponse(utf8Support, response);
 
         /// some changes happend in backend and error_code became code and detail became msg
-        throw ApiException(responseJson['error_code'] ?? responseJson['code'],
-            responseJson['detail'] ?? responseJson['msg']);
+        throw ApiException(
+            responseJson['error_code'] ?? responseJson['code'],
+            responseJson['detail'] ??
+                responseJson['msg'] ??
+                (responseJson['non_field_errors']!=null
+                    ? responseJson['non_field_errors'][0]
+                    : "unknown"));
       default:
         throw ApiException(
             response.statusCode, "مشکلی در برقراری ارتباط وجود دارد");

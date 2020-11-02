@@ -14,9 +14,9 @@ class DoctorRepository {
     return DoctorEntity.fromJson(response);
   }
 
-  Future<DoctorEntity> update(DoctorEntity patient) async {
+  Future<DoctorEntity> update(DoctorEntity doctor) async {
     final response =
-        await _provider.patch("api/auth/doctor/", body: patient.toJson());
+        await _provider.patch("api/auth/doctor/", body: doctor.toJson());
     return DoctorEntity.fromJson(response);
   }
 

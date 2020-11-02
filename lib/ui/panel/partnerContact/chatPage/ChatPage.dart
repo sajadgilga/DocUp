@@ -1,27 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:docup/blocs/ChatMessageBloc.dart';
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/visit_time/visit_time_bloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/ChatMessage.dart';
-import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/repository/ChatMessageRepository.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
-import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:loadmore/loadmore.dart';
-import 'dart:math';
 
 import 'PartnerInfo.dart';
 
@@ -44,9 +37,8 @@ class _ChatPageState extends State<ChatPage> {
     if (_controller.text == '') {
       return;
     }
-    var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    SocketHelper()
-        .sendMessage(panelId: _entity.iPanelId, message: _controller.text);
+    SocketHelper().sendMessage(
+        panelId: widget.entity.iPanelId, message: _controller.text);
 
     _controller.text = '';
   }
@@ -129,86 +121,81 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget build(BuildContext context) {
-    return BlocBuilder<EntityBloc, EntityState>(
-      builder: (context, state) {
-        try {
-          if (state.entity.panel.status == 0 ||
-              state.entity.panel.status == 1) {
-            if (state.entity.isPatient)
-              return Stack(children: <Widget>[
-                _ChatPage(),
-                PanelAlert(
-                  label: Strings.requestSentLabel,
-                  buttonLabel: Strings.waitingForApproval,
-                  btnColor: IColors.disabledButton,
-                )
-              ]);
-            else
-              return Stack(children: <Widget>[
-                _ChatPage(),
-                PanelAlert(
-                  label: Strings.requestSentLabelDoctorSide,
-                  buttonLabel: Strings.waitingForApprovalDoctorSide,
-                  callback: () {
-                    widget.onPush(NavigatorRoutes.patientDialogue,
-                        state.entity.partnerEntity);
-                  },
-                )
-              ]);
-          } else if (state.entity.panel.status == 3 ||
-              state.entity.panel.status == 2) {
-//            return _ChatPage();
-            return BlocBuilder<VisitTimeBloc, VisitTimeState>(
-              builder: (context, _visitTimeState) {
-                String _visitTime;
-                if (_visitTimeState is VisitTimeLoadedState)
-                  _visitTime = replaceFarsiNumber(
-                      normalizeDateAndTime(_visitTimeState.visit.visitTime));
-                return Stack(children: <Widget>[
-                  _ChatPage(),
-                  PanelAlert(
-                    label: 'ویزیت شما '
-                        '\n'
-                        '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
-                        '\n'
-                        'است' /* Strings.notRequestTimeDoctorSide*/,
-                    buttonLabel: Strings.waitLabel,
-                    btnColor: IColors.disabledButton,
-                    size: AlertSize.LG,
-                  ) //TODO: change to timer
-                ]);
+    try {
+      if (widget.entity.panel.status == 0 || widget.entity.panel.status == 1) {
+        if (widget.entity.isPatient)
+          return Stack(children: <Widget>[
+            _ChatPage(),
+            PanelAlert(
+              label: Strings.requestSentLabel,
+              buttonLabel: Strings.waitingForApproval,
+              btnColor: IColors.disabledButton,
+            )
+          ]);
+        else
+          return Stack(children: <Widget>[
+            _ChatPage(),
+            PanelAlert(
+              label: Strings.requestSentLabelDoctorSide,
+              buttonLabel: Strings.waitingForApprovalDoctorSide,
+              callback: () {
+                widget.onPush(NavigatorRoutes.patientDialogue,
+                    widget.entity.partnerEntity);
               },
-            );
-          } else if (state.entity.panel.status == 6 ||
-              state.entity.panel.status == 7) {
-            if (state.entity.isPatient)
-              return Stack(children: <Widget>[
-                _ChatPage(),
-                PanelAlert(
-                  label: Strings.noAvailableVirtualVisit,
-                  buttonLabel: Strings.reserveVirtualVisit,
-                  callback: () {
-                    widget.onPush(NavigatorRoutes.doctorDialogue,
-                        state.entity.partnerEntity);
-                  },
-                )
-              ]);
-            else
-              return Stack(children: <Widget>[
-                _ChatPage(),
-                PanelAlert(
-                  label: Strings.noAvailableVirtualVisit,
-                  buttonLabel: Strings.reserveVirtualVisitDoctorSide,
-                  btnColor: IColors.disabledButton,
-                )
-              ]);
-          } else
-            return _ChatPage();
-        } catch (_) {
-          return Container();
-        }
-      },
-    );
+            )
+          ]);
+      } else if (widget.entity.panel.status == 3 ||
+          widget.entity.panel.status == 2) {
+//            return _ChatPage();
+        return BlocBuilder<VisitTimeBloc, VisitTimeState>(
+          builder: (context, _visitTimeState) {
+            String _visitTime;
+            if (_visitTimeState is VisitTimeLoadedState)
+              _visitTime = replaceFarsiNumber(
+                  normalizeDateAndTime(_visitTimeState.visit.visitTime));
+            return Stack(children: <Widget>[
+              _ChatPage(),
+              PanelAlert(
+                label: 'ویزیت شما '
+                    '\n'
+                    '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
+                    '\n'
+                    'است' /* Strings.notRequestTimeDoctorSide*/,
+                buttonLabel: Strings.waitLabel,
+                btnColor: IColors.disabledButton,
+                size: AlertSize.LG,
+              ) //TODO: change to timer
+            ]);
+          },
+        );
+      } else if (widget.entity.panel.status == 6 ||
+          widget.entity.panel.status == 7) {
+        if (widget.entity.isPatient)
+          return Stack(children: <Widget>[
+            _ChatPage(),
+            PanelAlert(
+              label: Strings.noAvailableVirtualVisit,
+              buttonLabel: Strings.reserveVirtualVisit,
+              callback: () {
+                widget.onPush(NavigatorRoutes.doctorDialogue,
+                    widget.entity.partnerEntity);
+              },
+            )
+          ]);
+        else
+          return Stack(children: <Widget>[
+            _ChatPage(),
+            PanelAlert(
+              label: Strings.noAvailableVirtualVisit,
+              buttonLabel: Strings.reserveVirtualVisitDoctorSide,
+              btnColor: IColors.disabledButton,
+            )
+          ]);
+      } else
+        return _ChatPage();
+    } catch (_) {
+      return Container();
+    }
   }
 }
 
@@ -230,6 +217,13 @@ class _ChatBoxState extends State<_ChatBox> {
   List<ChatMessage> _messages = [];
   int length = 0;
   bool _isLoading = false;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   initState() {
@@ -295,8 +289,8 @@ class _ChatBoxState extends State<_ChatBox> {
   }
 
   void _checkMsgAsSeen(msgId) {
-    var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    SocketHelper().checkMessageAsSeen(panelId: _entity.iPanelId, msgId: msgId);
+    SocketHelper()
+        .checkMessageAsSeen(panelId: widget.entity.iPanelId, msgId: msgId);
   }
 
   Future _loadData({up = 1, down = 1, unidirectional = true}) async {
@@ -311,14 +305,13 @@ class _ChatBoxState extends State<_ChatBox> {
         _checkMsgAsSeen(mid);
       }
     }
-    var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
     final List<ChatMessage> response = await _repository.getMessages(
-        panel: _entity.iPanelId,
+        panel: widget.entity.iPanelId,
         size: _ChatBox.size,
         up: up,
         down: down,
         messageId: mid,
-        isPatient: _entity.isPatient);
+        isPatient: widget.entity.isPatient);
     setState(() {
       if (down == 1 && mid != null)
         _messages.insertAll(0, response.reversed.toList());

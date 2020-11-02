@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:docup/constants/colors.dart';
@@ -47,9 +48,12 @@ String replaceFarsiNumber(String input) {
   return input;
 }
 
-String normalizeDateAndTime(String str) {
+String normalizeDateAndTime(String str, {bool cutSeconds=false}) {
   String date = str.split("T")[0];
   String time = str.split("T")[1].split("+")[0];
+  if (cutSeconds && time.split(":").length == 3) {
+    time = time.split(":")[0] + ":" + time.split(":")[1];
+  }
   final jalaliDate = Jalali.fromDateTime(DateTime(int.parse(date.split("-")[0]),
       int.parse(date.split("-")[1]), int.parse(date.split("-")[2])));
   String finalDate = "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
@@ -72,8 +76,8 @@ DateTime getDateAndTimeFromWS(String str) {
 DateTime getDateAndTimeFromJalali(String jalaiDateStr, String timeStr) {
   var array = jalaiDateStr.split("/");
   var georgianDate =
-  Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
-      .toGregorian();
+      Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
+          .toGregorian();
   var timeArray = timeStr.split(":");
   return DateTime(georgianDate.year, georgianDate.month, georgianDate.day,
       int.parse(timeArray[0]), int.parse(timeArray[1]));
@@ -95,22 +99,36 @@ String normalizeCredit(String credit) {
 String convertToGeorgianDate(String jalaliDate) {
   var array = jalaliDate.split("/");
   var georgianDate =
-  Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
-      .toGregorian();
+      Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
+          .toGregorian();
   return "${georgianDate.year}-${georgianDate.month}-${georgianDate.day}";
 }
 
 void hideKeyboard(context) => FocusScope.of(context).unfocus();
 
-AlertDialog getLoadingDialog() =>
-    AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0)),
-        content: Waiting());
+class LoadingAlertDialog{
+  BuildContext dialogContext;
+  BuildContext context;
+  LoadingAlertDialog(this.context);
+  void showLoading(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          this.dialogContext = context;
+          return getLoadingDialog();
+        });
+  }
+  void disposeDialog(){
+    Navigator.maybePop(dialogContext);
+  }
+}
+AlertDialog getLoadingDialog() => AlertDialog(
+    backgroundColor: Colors.white,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+    content: Waiting());
 
-void showDatePickerDialog(context, List<int> availableDays,
-    TextEditingController controller) {
+void showDatePickerDialog(
+    context, List<int> availableDays, TextEditingController controller) {
   showDialog(
     context: context,
     builder: (BuildContext _) {
@@ -128,10 +146,10 @@ void showDatePickerDialog(context, List<int> availableDays,
   );
 }
 
-getDisableDays(List<int> availableDays) {
-  List<String> disableDays = [];
+Map<int,String> getDisableDays(List<int> availableDays) {
+  Map<int,String> disableDays = {};
   for (int i = 0; i < 7; i++) {
-    if (!availableDays.contains(i)) disableDays.add(WeekDay.values[i].name);
+    if (!availableDays.contains(i)) disableDays[i] = WeekDay.values[i].name;
   }
   return disableDays;
 }
@@ -142,6 +160,15 @@ String getTodayInJalali() {
   return now;
 }
 
+
+String getYesterdayInJalily(){
+  DateTime dt = DateTime.now();
+  dt = dt.subtract(Duration(days: 1));
+  Jalali jalali = Jalali.fromDateTime(dt);
+  final date = "${jalali.year}/${jalali.month}/${jalali.day}";
+  return date;
+}
+
 String getTomorrowInJalali() {
   DateTime dt = DateTime.now();
   dt = dt.add(Duration(days: 1));
@@ -150,24 +177,28 @@ String getTomorrowInJalali() {
   return tomorrow;
 }
 
-void showOneButtonDialog(context, String message, String action,
-    Function callback,
+void showOneButtonDialog(
+    context, String message, String action, Function callback,
     {Color color}) {
   BuildContext dialogContext;
   AlertDialog dialog = AlertDialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-    title: AutoText(
+    title: Text(
       message,
       style: TextStyle(fontSize: 14),
       textAlign: TextAlign.center,
     ),
-    content: ActionButton(
-      color: color == null ? IColors.themeColor : color,
-      title: action,
-      callBack: () {
-        Navigator.pop(dialogContext);
-        callback();
-      },
+    content: Container(
+      width: 10,
+      child: ActionButton(
+        color: color == null ? IColors.themeColor : color,
+        title: action,
+        height: 45,
+        callBack: () {
+          Navigator.pop(dialogContext);
+          callback();
+        },
+      ),
     ),
   );
   showDialog(
@@ -178,30 +209,24 @@ void showOneButtonDialog(context, String message, String action,
       });
 }
 
-void showListDialog(context, List<String> items, String action,
-    Function callback) {
+void showListDialog(
+    context, List<String> items, String action, Function callback) {
   BuildContext dialogContext;
 
   AlertDialog dialog = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       content: Container(
-        height: MediaQuery
-            .of(context)
-            .size
-            .height / 3,
-        width: MediaQuery
-            .of(context)
-            .size
-            .width / 3,
+        height: MediaQuery.of(context).size.height / 3,
+        width: MediaQuery.of(context).size.width / 3,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ListView.builder(
                 shrinkWrap: true,
                 itemCount: items.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    ListTile(
-                      title: AutoText(items[index], textAlign: TextAlign.center),
+                itemBuilder: (BuildContext context, int index) => ListTile(
+                      title:
+                          AutoText(items[index], textAlign: TextAlign.center),
                       onTap: () {
                         Navigator.pop(dialogContext);
                         callback(index);
@@ -350,6 +375,13 @@ String convertMinuteToTimeString(int lessonsMinute) {
   int minute = lessonsMinute % 60;
   String hourString = hour < 10 ? "0" + hour.toString() : hour.toString();
   String minuteString =
-  minute < 10 ? "0" + minute.toString() : minute.toString();
+      minute < 10 ? "0" + minute.toString() : minute.toString();
   return hourString + ":" + minuteString;
+}
+
+String utf8IfPossible(String text) {
+  try {
+    text = utf8.decode(text.codeUnits);
+  } catch (e) {}
+  return text;
 }

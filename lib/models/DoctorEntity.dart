@@ -1,7 +1,7 @@
 import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/models/Panel.dart';
+import 'package:docup/utils/Utils.dart';
 
-import 'PatientEntity.dart';
 import 'UserEntity.dart';
 
 class DoctorEntity extends UserEntity {
@@ -11,46 +11,56 @@ class DoctorEntity extends UserEntity {
   String clinicNumber;
   String clinicAddress;
   int fee;
-  List<String> accountNumbers = [];
+  List<String> accountNumbers;
 
   DoctorPlan plan;
 
   DoctorEntity(
-      {
-      this.councilCode,
+      {this.councilCode,
       this.expert,
       this.clinic,
-      this.fee, user, id, panels}): super(user:user, id: id, panels: panels);
+      this.accountNumbers,
+      this.fee,
+      user,
+      id,
+      panels})
+      : super(user: user, id: id, panels: panels);
 
   DoctorEntity.fromJson(Map<String, dynamic> json) {
     try {
       id = json['id'];
       if (json.containsKey('user'))
         user = json['user'] != null ? new User.fromJson(json['user']) : null;
-      if (json.containsKey('council_code'))
-        councilCode = json['council_code'];
-      if (json.containsKey('account_number')){
-        accountNumbers = [json['account_number']];
+      if (json.containsKey('council_code')) councilCode = json['council_code'];
+      if (json.containsKey('account_number')) {
+        accountNumbers =
+            json['account_number'] == null ? null : [json['account_number']];
       }
-      if (json.containsKey('expert'))
-        expert = json['expert'];
+      if (json.containsKey('expert')) expert = utf8IfPossible(json['expert']);
       if (json.containsKey('clinic'))
         clinic =
-        json['clinic'] != null ? new Clinic.fromJson(json['clinic']) : null;
+            json['clinic'] != null ? new Clinic.fromJson(json['clinic']) : null;
       fee = json['fee'];
       if (json.containsKey('clinic_address'))
         clinicAddress = json['clinic_address'];
       if (json.containsKey('clinic_number'))
         clinicNumber = json['clinic_number'];
-      if (!json.containsKey('panels')) return;
       panels = [];
-      if (json['panels'].length != 0)
-        json['panels'].forEach((panel) {
-          if (panel == null)
-            return;
-          panels.add(Panel.fromJson(panel));
-          panelMap[panels.last.id] = panels.last;
-        });
+
+      if (json.containsKey('panels')){
+        if (json['panels'].length != 0) {
+          json['panels'].forEach((panel) {
+            if (panel != null){
+              panels.add(Panel.fromJson(panel));
+              panelMap[panels.last.id] = panels.last;
+            }
+          });
+        }
+      }
+
+      if (json['plan'] != null) {
+        plan = DoctorPlan.fromJson(json['plan']);
+      }
     } catch (_) {
       // TODO
     }
@@ -58,17 +68,29 @@ class DoctorEntity extends UserEntity {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    if (this.id != null) {
+      data['id'] = this.id;
+    }
     if (this.user != null) {
       data['user'] = this.user.toJson();
     }
-    data['council_code'] = this.councilCode;
-    data['expert'] = this.expert;
-    data['account_number'] = this.accountNumbers;
+    if (this.councilCode != null) {
+      data['council_code'] = this.councilCode;
+    }
+    if (this.expert != null) {
+      data['expert'] = this.expert;
+    }
+
+    if (this.accountNumbers != null) {
+      data['account_number'] =
+          this.accountNumbers.length == 0 ? null : this.accountNumbers.first;
+    }
     if (this.clinic != null) {
       data['clinic'] = this.clinic.toJson();
     }
-    data['fee'] = this.fee;
+    if (this.fee != null) {
+      data['fee'] = this.fee;
+    }
     return data;
   }
 }
@@ -144,9 +166,9 @@ class Clinic {
     id = json['id'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     subType = json['sub_type'];
-    clinicName = json['clinic_name'];
-    clinicAddress = json['clinic_address'];
-    description = json['description'];
+    clinicName = utf8IfPossible(json['clinic_name']);
+    clinicAddress = utf8IfPossible(json['clinic_address']);
+    description = utf8IfPossible(json['description']);
     longitude = json['longitude'];
     latitude = json['latitude'];
   }

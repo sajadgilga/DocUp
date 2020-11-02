@@ -1,32 +1,26 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
+import 'dart:math';
 
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/DoctorCreditWidget.dart';
-import 'package:docup/ui/widgets/DoctorData.dart';
-import 'package:docup/ui/widgets/DocupHeader.dart';
-import 'package:docup/blocs/CreditBloc.dart';
-import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/DoctorBloc.dart';
+import 'package:docup/blocs/UtilBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
+import 'package:docup/models/BankData.dart';
+import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/networking/Response.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/Avatar.dart';
-import 'package:docup/ui/widgets/MapWidget.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uni_links/uni_links.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/services.dart' show PlatformException;
 
 class DoctorProfileMenuPage extends StatefulWidget {
   final Function(String, dynamic) onPush;
@@ -119,8 +113,10 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
 
   Widget _userCreditCards() {
     List<Widget> creditCards = [];
-    widget.doctorEntity.accountNumbers.forEach((element) {
-      creditCards.add(_creditCard(element));
+    (widget.doctorEntity.accountNumbers ?? []).forEach((element) {
+      creditCards.add(CreditCard(
+        doctorEntity: widget.doctorEntity,
+      ));
     });
     return Column(
       children: [
@@ -130,11 +126,9 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              widget.doctorEntity.accountNumbers.length == 0
-                  ? SizedBox()
-                  : _addCreditCardPlusIcon(horizontalPadding: 15),
+              SizedBox(),
               AutoText(
-                "کارت های من (${widget.doctorEntity.accountNumbers.length})",
+                "کارت بانکی من",
                 softWrap: true,
                 textAlign: TextAlign.end,
                 textDirection: TextDirection.rtl,
@@ -144,16 +138,156 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
           ),
         ),
         MediumVerticalSpace(),
-        widget.doctorEntity.accountNumbers.length == 0
-            ? _creditCard("", isEmpty: true)
-            : Column(
-                children: creditCards,
-              )
+        CreditCard(
+          doctorEntity: widget.doctorEntity,
+        )
       ],
     );
   }
 
-  Widget _creditCard(String accountNumber, {bool isEmpty = false}) {
+  void logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove("token");
+    prefs.remove("isPatient");
+    exit(0);
+  }
+}
+
+class CreditCard extends StatefulWidget {
+  // final Function(String, dynamic) onPush;
+  final DoctorEntity doctorEntity;
+
+  CreditCard(
+      {Key key,
+      // @required this.onPush,
+      this.doctorEntity})
+      : super(key: key);
+
+  @override
+  _CreditCardState createState() => _CreditCardState();
+}
+
+class _CreditCardState extends State<CreditCard> {
+  DoctorBloc _doctorBloc = DoctorBloc();
+  UtilBloc _utilBloc = UtilBloc();
+  int addOrUpdatingCardStatus = 0;
+  StateSetter dialogStateSetter;
+  BuildContext dialogContext;
+  String logoLink;
+  int linkStatus = 0;
+
+  ///0 for loading 1 for complated -1 for error
+  bool _isEmpty() {
+    if (widget.doctorEntity.accountNumbers == null ||
+        widget.doctorEntity.accountNumbers.length == 0 ||
+        widget.doctorEntity.accountNumbers[0] == null) {
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  void initState() {
+    _doctorBloc.doctorStream.listen((response) {
+      switch (response.status) {
+        case Status.LOADING:
+          setLoading();
+          return;
+        case Status.COMPLETED:
+          setComplete(response);
+          return;
+        case Status.ERROR:
+          setError();
+          return;
+        default:
+          return;
+      }
+    });
+
+    _utilBloc.bankStream.listen((response) {
+      switch (response.status) {
+        case Status.LOADING:
+          setState(() {
+            linkStatus = 0;
+            logoLink = null;
+          });
+          return;
+        case Status.COMPLETED:
+          setState(() {
+            linkStatus = 1;
+
+            logoLink = (response.data as BankData).logo;
+          });
+          return;
+        case Status.ERROR:
+          setState(() {
+            linkStatus = -1;
+
+            logoLink = null;
+          });
+          return;
+        default:
+          return;
+      }
+    });
+    fetchBankData();
+
+    super.initState();
+  }
+
+  void setLoading() {
+    try {
+      dialogStateSetter(() {
+        addOrUpdatingCardStatus = 1;
+      });
+    } catch (e) {}
+    setState(() {
+      addOrUpdatingCardStatus = 1;
+    });
+  }
+
+  void setComplete(response) {
+    widget.doctorEntity.accountNumbers =
+        (response.data as DoctorEntity).accountNumbers;
+    try {
+      dialogStateSetter(() {
+        addOrUpdatingCardStatus = 0;
+      });
+    } catch (e) {}
+    setState(() {
+      addOrUpdatingCardStatus = 0;
+    });
+    try {
+      Navigator.of(this.dialogContext).pop('dialog');
+    } catch (e) {}
+    fetchBankData();
+  }
+
+  void setError() {
+    try {
+      dialogStateSetter(() {
+        addOrUpdatingCardStatus = 3;
+      });
+    } catch (e) {}
+    setState(() {
+      addOrUpdatingCardStatus = 3;
+    });
+    Timer(Duration(seconds: 3), () {
+      try {
+        dialogStateSetter(() {
+          addOrUpdatingCardStatus = 0;
+        });
+      } catch (e) {}
+      setState(() {
+        addOrUpdatingCardStatus = 0;
+      });
+    });
+  }
+
+  /// 0 as undefined 1 as waiting 2 as completed, 3 as error
+  @override
+  Widget build(BuildContext context) {
+    double imageSize = MediaQuery.of(context).size.width * 0.2;
     return Container(
       width: MediaQuery.of(context).size.width * 0.6,
       constraints: BoxConstraints(
@@ -172,10 +306,18 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 5),
-                  child: AutoText(isEmpty
-                      ? "اضافه کردن کارت بانکی"
-                      : getCreditCardFourParts(
-                          replaceEnglishWithPersianNumber(accountNumber))),
+                  child: AutoText(
+                    _isEmpty()
+                        ? "اضافه کردن کارت بانکی"
+                        : getCreditCardFourParts(
+                            replaceEnglishWithPersianNumber(
+                                (widget.doctorEntity.accountNumbers ??
+                                        [""])[0] ??
+                                    ""),
+                          ),
+                    textDirection:
+                        _isEmpty() ? TextDirection.rtl : TextDirection.ltr,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
@@ -183,23 +325,41 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
                 )
               ],
             ),
-            isEmpty
-                ? SizedBox()
-                : Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Icon(
-                      Icons.home,
-                      size: 60,
-                    )),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: _isEmpty()
+                  ? SizedBox(
+                      width: imageSize,
+                      height: imageSize,
+                      child: Icon(
+                        Icons.credit_card,
+                        size: imageSize / 2,
+                        color: IColors.darkGrey,
+                      ),
+                    )
+                  : logoLink == null
+                      ? SizedBox(
+                          width: imageSize,
+                          height: imageSize,
+                          child: DocUpAPICallLoading2(textFlag: false,width: 60,),
+                        )
+                      : SizedBox(
+                          child: Image.network(
+                            logoLink,
+                            width: imageSize,
+                            height: imageSize,
+                          ),
+                        ),
+            )
           ]),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              isEmpty
+              _isEmpty()
                   ? _addCreditCardPlusIcon(buttonSize: 50)
                   : ActionButton(
-                      title: "حذف",
+                      title: addOrUpdatingCardStatus == 3 ? "خطا" : "حذف",
                       icon: Icon(
                         Icons.delete,
                         color: Colors.white,
@@ -207,8 +367,11 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
                       ),
                       color: IColors.red,
                       fontSize: 12,
-                      width: 80,
-                      height: 40,
+                      loading: addOrUpdatingCardStatus == 1,
+                      height: 45,
+                      callBack: () {
+                        addOrDeleteCardNumber(null, setState, deleteFlag: true);
+                      },
                       textColor: Colors.white,
                     )
             ],
@@ -246,105 +409,156 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
   void showAddCardDialog() {
     MaskedTextController controller =
         MaskedTextController(mask: '0000  0000  0000  0000');
+    String bankName = "بانک -";
 
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             backgroundColor: Color.fromARGB(0, 0, 0, 0),
-            content: Container(
-              constraints: BoxConstraints.tightFor(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height),
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    constraints: BoxConstraints.tightFor(
-                        width: MediaQuery.of(context).size.width * 0.8),
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        ALittleVerticalSpace(),
-                        _creditCardSinglePartTextField(controller),
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              AutoText("متعلق به ",
-                                  color: IColors.darkGrey, fontSize: 14)
-                            ],
+            content: StatefulBuilder(
+                builder: (BuildContext context, StateSetter dialogStateSetter) {
+              this.dialogStateSetter = dialogStateSetter;
+              this.dialogContext = context;
+              return Container(
+                constraints: BoxConstraints.tightFor(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height),
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      constraints: BoxConstraints.tightFor(
+                          width: MediaQuery.of(context).size.width * 0.8),
+                      padding: const EdgeInsets.all(12.0),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(15))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          ALittleVerticalSpace(),
+                          Container(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              constraints: BoxConstraints.tightFor(),
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(horizontal: 5),
+                              child: TextField(
+                                expands: false,
+                                controller: controller,
+                                textInputAction: TextInputAction.done,
+                                keyboardType: TextInputType.numberWithOptions(
+                                    signed: false, decimal: false),
+                                textAlign: TextAlign.left,
+                                onChanged: (value) {
+                                  String sixDigits = value.replaceAll(" ", "");
+                                  if (sixDigits.length == 6) {
+                                    dialogStateSetter(() {
+                                      bankName = Strings.bankCodes[sixDigits] ??
+                                          'بانک -';
+                                    });
+                                  }
+                                },
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: '----  ----  ----  ----',
+                                ),
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                AutoText("متعلق به -",
+                                    color: IColors.darkGrey, fontSize: 14)
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              AutoText(
-                                "بانک ",
-                                color: IColors.darkGrey,
-                                fontSize: 14,
+                          Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                AutoText(
+                                  bankName,
+                                  color: IColors.darkGrey,
+                                  fontSize: 14,
+                                )
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              ActionButton(
+                                title: addOrUpdatingCardStatus == 3
+                                    ? "خطا"
+                                    : "تایید",
+                                color:
+                                    [0, 1, 2].contains(addOrUpdatingCardStatus)
+                                        ? IColors.themeColor
+                                        : IColors.red,
+                                fontSize: 12,
+                                width: 110,
+                                height: 40,
+                                loading: addOrUpdatingCardStatus == 1,
+                                callBack: () {
+                                  addOrDeleteCardNumber(
+                                      controller.text, dialogStateSetter);
+                                },
+                                textColor: Colors.white,
                               )
                             ],
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            ActionButton(
-                              title: "اضافه کردن",
-                              color: IColors.red,
-                              fontSize: 12,
-                              width: 110,
-                              height: 40,
-                              callBack: () {},
-                              textColor: Colors.white,
-                            )
-                          ],
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                ),
+              );
+            }),
           );
         });
   }
 
-  Widget _creditCardSinglePartTextField(TextEditingController controller) {
-    return Container(
-        width: MediaQuery.of(context).size.width * 0.5,
-        constraints: BoxConstraints.tightFor(),
-        alignment: Alignment.center,
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        child: TextField(
-          expands: false,
-          controller: controller,
-          textInputAction: TextInputAction.done,
-          keyboardType:
-              TextInputType.numberWithOptions(signed: false, decimal: false),
-          textAlign: TextAlign.left,
-          style: TextStyle(fontSize: 16, color: Colors.black),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: '----  ----  ----  ----',
-          ),
-        ));
+  void addOrDeleteCardNumber(String cardNumber, StateSetter dialogStateSetter,
+      {bool deleteFlag = false}) {
+    bool isNumeric(String s) {
+      if (s == null) {
+        return false;
+      }
+      return double.parse(s, (e) => null) != null;
+    }
+
+    bool addingCard = (!deleteFlag &&
+        cardNumber.replaceAll(" ", "").length == 16 &&
+        isNumeric(cardNumber.replaceAll(" ", "")));
+    bool deletingCard = (deleteFlag && cardNumber == null);
+
+    if (addingCard || deletingCard) {
+      _doctorBloc.addOrUpdateAccountNumber(
+          cardNumber == null ? cardNumber : cardNumber.replaceAll("  ", ""));
+    } else {
+      setError();
+    }
   }
 
-  void logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove("token");
-    prefs.remove("isPatient");
-    exit(0);
+  void fetchBankData() {
+    if (!_isEmpty()) {
+      String cardNumber =
+          widget.doctorEntity.accountNumbers[0].replaceAll("  ", "");
+      cardNumber = cardNumber.substring(0, min(6, cardNumber.length));
+      _utilBloc.getBankData(cardNumber);
+    }
+  }
+
+  @override
+  void dispose() {
+    _doctorBloc.dispose();
+    super.dispose();
   }
 }

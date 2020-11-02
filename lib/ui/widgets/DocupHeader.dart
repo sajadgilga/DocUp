@@ -8,8 +8,10 @@ import 'AutoText.dart';
 class DocUpHeader extends StatelessWidget {
   final String title;
   final bool docUpLogo;
+  final Color color;
 
-  DocUpHeader({Key key, this.title, this.docUpLogo = true}) : super(key: key);
+  DocUpHeader({Key key, this.title, this.docUpLogo = true, this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +33,17 @@ class DocUpHeader extends StatelessWidget {
         visible: title != null,
         child: Center(
             child: AutoText(title == null ? "" : title,
-                style: TextStyle(color: IColors.themeColor, fontSize: 24))),
+                style: TextStyle(
+                    color: this.color ?? IColors.themeColor, fontSize: 24))),
       );
 }
 
 class DocUpSubHeader extends StatelessWidget {
   final String title;
+  final Color color;
+  final double fontSize;
 
-  DocUpSubHeader({Key key, this.title}) : super(key: key);
+  DocUpSubHeader({Key key, this.title, this.color,this.fontSize}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +56,8 @@ class DocUpSubHeader extends StatelessWidget {
         visible: title != null,
         child: Center(
             child: AutoText(title == null ? "" : title,
-                style: TextStyle(fontSize: 14))),
+                style: TextStyle(
+                    fontSize: fontSize??14, color: color ?? IColors.black))),
       );
 }
 

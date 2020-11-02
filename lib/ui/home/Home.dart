@@ -6,28 +6,22 @@ import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/blocs/PatientTrackerBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/home/SearchBox.dart';
+import 'package:docup/ui/home/iPartner/IPartner.dart';
+import 'package:docup/ui/home/notification/Notification.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
-import 'package:docup/ui/widgets/PopupMenues/PopUpMenus.dart';
-import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
+import 'package:docup/ui/widgets/VisitDateTimePicker.dart';
+import 'package:docup/ui/widgets/medicines/ReminderList.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
-import 'package:docup/ui/widgets/Header.dart';
-import 'package:docup/ui/widgets/medicines/ReminderList.dart';
-import 'package:docup/ui/home/SearchBox.dart';
-import 'package:docup/ui/home/notification/Notification.dart';
-
-import 'package:docup/ui/home/iPartner/IPartner.dart';
-import 'package:docup/constants/strings.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_credit_card/credit_card_model.dart';
-import 'package:flutter_credit_card/flutter_credit_card.dart';
 
 import 'TrackingList.dart';
-import 'onCallMedical/OnCallMedicalHeaderIcon.dart';
 
 class Home extends StatefulWidget {
   final Function(String, dynamic) onPush;
@@ -44,13 +38,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-//  List<Doctor> iDoctors;
-  NotificationBloc _notificationBloc = NotificationBloc();
   MedicineBloc _medicineBloc = MedicineBloc();
 
   @override
   void initState() {
-//    _notificationBloc.add(GetNewestNotifications());
     _medicineBloc.add(MedicineGet());
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isDoctor)
@@ -60,14 +51,12 @@ class _HomeState extends State<Home> {
 
   @override
   void didUpdateWidget(Home oldWidget) {
-//    _notificationBloc.add(GetNewestNotifications());
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   void dispose() {
     _medicineBloc.close();
-    _notificationBloc.close();
     super.dispose();
   }
 
@@ -142,7 +131,8 @@ class _HomeState extends State<Home> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(),
-                  child: AutoText("کلینیک نورونیو", style: TextStyle(fontSize: 17)),
+                  child: AutoText("کلینیک نورونیو",
+                      style: TextStyle(fontSize: 17)),
                 ),
                 SizedBox(
                   height: 20,
@@ -177,8 +167,8 @@ class _HomeState extends State<Home> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(right: 40),
-                  child:
-                      AutoText("ویدیو های آموزشی", style: TextStyle(fontSize: 17)),
+                  child: AutoText("ویدیو های آموزشی",
+                      style: TextStyle(fontSize: 17)),
                 ),
                 SizedBox(
                   height: 20,
@@ -270,15 +260,17 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
             BlocBuilder<NotificationBloc, NotificationState>(
-//                            bloc: _notificationBloc,
                 builder: (context, state) {
               if (state.notifications != null &&
                   state.notifications.newestEventsCounts != null)
                 return HomeNotification(
+                    onPush: widget.onPush,
                     newNotificationCount:
-                        state.notifications.newestEventsCounts);
+                        state.notifications.newestEventsCounts +
+                            state.notifications.newestVisitsCounts);
               else
                 return HomeNotification(
+                  onPush: widget.onPush,
                   newNotificationCount: 0,
                 );
             }),

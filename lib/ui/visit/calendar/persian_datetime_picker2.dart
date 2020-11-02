@@ -2,16 +2,18 @@ library persian_datetime_picker;
 
 import 'package:docup/ui/visit/calendar/utils/consts.dart';
 import 'package:flutter/material.dart';
+
 import 'handle_picker2.dart';
 
 class PersianDateTimePicker2 extends StatefulWidget {
   final initial;
   final type;
-  final disable;
+  final Map<int, String> disable;
   final min;
   final max;
   final Color color;
   final Function(String) onSelect;
+
   PersianDateTimePicker2(
       {this.type = 'date',
       this.initial = null,
@@ -32,7 +34,7 @@ class _PersianDateTimePicker2State extends State<PersianDateTimePicker2> {
     super.initState();
     Global.color = widget.color;
     Global.pickerType = widget.type;
-    Global.disable = widget.disable ?? '';
+    Global.disable = widget.disable ?? <int, String>{};
     Global.min = widget.min;
     Global.max = widget.max;
   }
@@ -41,10 +43,10 @@ class _PersianDateTimePicker2State extends State<PersianDateTimePicker2> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: HandlePicker2(
-          type: widget.type,
-          initDateTime: widget.initial,
-          onSelect: widget.onSelect,
-        ),
+        type: widget.type,
+        initDateTime: widget.initial,
+        onSelect: widget.onSelect,
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:docup/utils/Utils.dart';
+
 import 'DoctorEntity.dart';
 import 'PatientEntity.dart';
 import 'Picture.dart';
@@ -100,8 +102,8 @@ class PanelSection {
   PanelSection.fromJson(Map<String, dynamic> json) {
     try {
       if (json.containsKey('id')) id = json['id'];
-      if (json.containsKey('title')) title = json['title'];
-      if (json.containsKey('description')) description = json['description'];
+      if (json.containsKey('title')) title = utf8IfPossible(json['title']);
+      if (json.containsKey('description')) description = utf8IfPossible(json['description']);
       pictures = [];
 //      if (json['images'].value.length != 0) {
       json['images']

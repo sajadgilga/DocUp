@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -36,10 +35,17 @@ class PatientRequestPage extends StatefulWidget {
 
 class _PatientRequestPageState extends State<PatientRequestPage> {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
+  int patientVisitStatus =
+      0; //TODO amir: make it and enum, here and now 0 means physical visit
 
   void _updateSearch() {
     var searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchBloc.add(SearchVisit(text: ''));
+    if (patientVisitStatus == 0 || patientVisitStatus == 1) {
+      searchBloc.add(SearchVisit(
+          text: '', acceptStatus: 1, visitType: patientVisitStatus));
+    } else {
+      searchBloc.add(SearchVisit(text: '', acceptStatus: 0));
+    }
     var _panelBloc = BlocProvider.of<PanelBloc>(context);
     _panelBloc.add(GetMyPanels());
   }
@@ -71,10 +77,16 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
             if (snapshot.hasData) {
               switch (snapshot.data.status) {
                 case Status.LOADING:
-                  return APICallLoading();
+                  return DocUpAPICallLoading2();
                   break;
                 case Status.COMPLETED:
-                  return _headerWidget(snapshot.data.data);
+                  VisitEntity visitEntity = snapshot.data.data;
+                  if (visitEntity.status == 0) {
+                    patientVisitStatus = null;
+                  } else {
+                    patientVisitStatus = visitEntity.visitType;
+                  }
+                  return _headerWidget(visitEntity);
                   break;
                 case Status.ERROR:
                   return APICallError(

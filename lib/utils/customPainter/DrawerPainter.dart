@@ -17,13 +17,13 @@ class DrawerPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     double iconWidth = 60;
-    double iconHeight = 75;
+    double iconHeight = 60;
     double startX = arcStart;
-    double startY = 0;
+    double startY = 40;
     double endX = startX + 15;
     double endY = 0;
     double controllerWidth = 5;
-    double controllerHeight = 5;
+    double controllerHeight = 0;
     double arcHeight = 10;
 
     Offset topLeft = Offset(0, iconHeight);
@@ -31,12 +31,12 @@ class DrawerPainter extends CustomPainter {
     Offset bottomRight = Offset(size.width - endX, size.height);
     Offset bottomLeft = Offset(0, size.height);
 
-    Offset endFirstCurve = Offset(startX, 50);
+    Offset endFirstCurve = Offset(startX, startY);
     Offset controllerFirstCurve = Offset(
         endFirstCurve.dx - controllerWidth, iconHeight - controllerHeight);
 
-    Offset endArc = Offset(startX + iconWidth, 50);
-    Offset controllerArc = Offset(startX + iconWidth / 2, 10);
+    Offset endArc = Offset(startX + iconWidth, startY);
+    Offset controllerArc = Offset(startX + iconWidth / 2, 0);
 
     Offset endSecondCurve = Offset(2 * startX + iconWidth, iconHeight);
     Offset controllerSecondCurve = Offset(

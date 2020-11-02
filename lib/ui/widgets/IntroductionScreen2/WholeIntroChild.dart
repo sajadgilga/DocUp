@@ -128,8 +128,8 @@ class WholeIntoChild3 extends StatelessWidget {
       child: ActionButton(
         width: width,
         callBack: onDone,
-        extraLeftIcon: Icon(
-          Icons.arrow_back_ios,
+        rightIcon: Icon(
+          Icons.arrow_forward_ios,
           color: bgColor,
         ),
         height: height,

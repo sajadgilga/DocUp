@@ -99,14 +99,13 @@ class _TimeCalenderState extends State<TimeCalender> {
       return;
     }
 
-    int patientId = BlocProvider.of<EntityBloc>(context).state.entity.pId;
 
     if (_createMedicineBloc.state == MedicineCreationStates.SENDING) return;
     _createMedicineBloc.add(MedicineCreate(
         medicine: Medicine(
             drugName: name,
             usage: count,
-            patient: patientId,
+            patient: widget.entity.pId,
             usagePeriod: int.parse(period),
             numbers: int.parse(count))));
     showDialog(

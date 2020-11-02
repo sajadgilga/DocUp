@@ -98,7 +98,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
               duration: Duration(milliseconds: 400),
               vsync: this,
               child: VisitDateTimePicker(
-                  dateTextController, timeTextController, widget.doctorEntity)),
+                  dateTextController, timeTextController, widget.doctorEntity,scrollableTimeSelectorType: true,)),
           ALittleVerticalSpace(),
 //          _labelWidget(TIME_SELECTION),
 //          ALittleVerticalSpace(),
@@ -133,10 +133,15 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
   _acceptPolicyWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          AutoText(
-            Strings.physicalVisitPrivacyPolicyMessage,
-            textAlign: TextAlign.right,
-            style: TextStyle(fontSize: 10),
+          Container(
+            width: MediaQuery.of(context).size.width - 80,
+
+            child: AutoText(
+              Strings.physicalVisitPrivacyPolicyMessage,
+              textAlign: TextAlign.right,
+              style: TextStyle(fontSize: 10),
+              maxLines: 2,
+            ),
           ),
           Checkbox(
             activeColor: IColors.themeColor,
@@ -216,7 +221,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
   }
 
   void sendVisitRequest() {
-    /// TODO mosio: timeTextController.text should be used here later
+    /// TODO amir: timeTextController.text should be used here later
     String startTime = timeTextController.text.split("-")[0];
     int startMinute = getTimeMinute(startTime);
     String endTime = timeTextController.text.split("-")[1];

@@ -1,27 +1,34 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:docup/constants/assets.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/blocs/CreditBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
+import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/account/EditProfileDataDialog.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
+import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/InputDoneView.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
+import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_tooltip/simple_tooltip.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/services.dart' show PlatformException;
+
+import 'EditProfileAvatarDialog.dart';
 
 class PatientProfilePage extends StatefulWidget {
   final Function(String, dynamic) onPush;
@@ -38,6 +45,7 @@ class PatientProfilePage extends StatefulWidget {
 class _PatientProfilePageState extends State<PatientProfilePage>
     with WidgetsBindingObserver {
   CreditBloc _creditBloc = CreditBloc();
+  bool _tooltip = false;
 
   AlertDialog _loadingDialog = getLoadingDialog();
   bool _loadingEnable;
@@ -46,6 +54,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
 
   @override
   void initState() {
+    checkPatientBillingDescription();
     initUniLinks();
     _loadingEnable = false;
     _creditBloc.listen((event) {
@@ -100,6 +109,20 @@ class _PatientProfilePageState extends State<PatientProfilePage>
     }
   }
 
+  //
+  Future<void> checkPatientBillingDescription(
+      {bool changeTooltip = true}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShown = false;
+    if (prefs.containsKey("patientBillingDescription")) {
+      hasShown = prefs.getBool("patientBillingDescription");
+    }
+    prefs.setBool("patientBillingDescription", true);
+    if (changeTooltip) {
+      _tooltip = !hasShown;
+    }
+  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -117,7 +140,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
-        if (state is EntityLoaded) {
+        if (state is EntityLoaded || state != null) {
           if (state.entity.mEntity != null) {
             PatientEntity patientEntity = state.entity.mEntity as PatientEntity;
             return SingleChildScrollView(
@@ -148,11 +171,44 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                   ),
                   SizedBox(height: 10),
                   _userInfoLabelWidget(),
-                  _userInfoWidget(patientEntity),
+                  _userInfoWidget(state.entity),
                   _changePasswordWidget(context),
                   SizedBox(height: 10),
                   _userCreditLabelWidget(),
-                  _userCreditWidget(),
+                  GestureDetector(
+                    onTap: () {
+                      checkPatientBillingDescription(changeTooltip: false);
+
+                      setState(() {
+                        _tooltip = true;
+                      });
+
+                      /// TODO
+                      Timer(Duration(seconds: 10), () {
+                        _tooltip = false;
+                      });
+                    },
+                    child: SimpleTooltip(
+                        hideOnTooltipTap: true,
+                        show: _tooltip,
+                        animationDuration: Duration(milliseconds: 460),
+                        tooltipDirection: TooltipDirection.down,
+                        backgroundColor: IColors.whiteTransparent,
+                        borderColor: IColors.themeColor,
+                        tooltipTap: () {
+                          checkPatientBillingDescription();
+                        },
+                        content: AutoText(
+                          Strings.patientBillingDescription,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 12,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                        child: _userCreditWidget()),
+                  ),
                   SizedBox(height: 30),
                   _addCreditWidget(),
                   SizedBox(height: 10),
@@ -161,10 +217,10 @@ class _PatientProfilePageState extends State<PatientProfilePage>
               ),
             );
           } else {
-            return Container(child: AutoText("..."),);
+            return Waiting();
           }
         } else {
-          return Container(child: AutoText("..."),);
+          return Waiting();
         }
       });
 
@@ -325,31 +381,49 @@ class _PatientProfilePageState extends State<PatientProfilePage>
         ),
       );
 
-  _userInfoWidget(PatientEntity patientEntity) => Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              AutoText(
-                  "${patientEntity.user.firstName == null ? "" : patientEntity.user.firstName} ${patientEntity.user.lastName == null ? "" : patientEntity.user.lastName}",
-                  style: TextStyle(fontSize: 16)),
-              SizedBox(height: 10),
-              AutoText("${replaceFarsiNumber(patientEntity.user.phoneNumber)}",
-                  style: TextStyle(fontSize: 16)),
-            ],
-          ),
-          SizedBox(width: 20),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircularAvatar(
-              user: patientEntity.user,
-              onTap: () {
-//                        widget.onPush(NavigatorRoutes.uploadPicDialogue);
+  _userInfoWidget(Entity entity) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            AutoText(
+              "${entity.mEntity.user.firstName == null ? "" : entity.mEntity.user.firstName} ${entity.mEntity.user.lastName == null ? "" : entity.mEntity.user.lastName}",
+              fontSize: 16,
+            ),
+            SizedBox(height: 10),
+            ActionButton(
+              title: "ویرایش اطلاعات",
+              color: IColors.themeColor,
+              callBack: () {
+                EditProfileDataDialog editProfileData =
+                    EditProfileDataDialog(context, entity, () {
+                  EntityBloc entityBloc = BlocProvider.of<EntityBloc>(context);
+                  entityBloc.add(EntityGet());
+                });
+                editProfileData.showEditableDataDialog();
               },
+            )
+          ],
+        ),
+        SizedBox(width: 20),
+        GestureDetector(
+          onTap: () {
+            // EditProfileAvatarDialog dialog =
+            //     EditProfileAvatarDialog(context, entity, () {});
+            // dialog.showEditableAvatarDialog();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: EditingCircularAvatar(
+              user: entity.mEntity.user,
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 
   _userInfoLabelWidget() => Padding(
         padding: const EdgeInsets.all(12.0),

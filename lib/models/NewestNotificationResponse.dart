@@ -1,31 +1,56 @@
-import 'Medicine.dart';
-import 'Notification.dart';
+import 'dart:ui';
+
+import 'package:docup/constants/colors.dart';
 
 class NewestNotificationResponse {
   int newestEventsCounts;
   List<NewestEvents> newestEvents;
   int newestVisitsCounts;
-  List<NewestVisits> newestVisits;
+  List<NewestVisit> newestVisits;
+
+  void addOrUpdateNewVisitPushNotification(NewestVisit visit) {
+    int prevVisitNotificationIndex = -1;
+    for (int i = 0; i < newestVisits.length; i++) {
+      if (newestVisits[i].id == visit.id) {
+        prevVisitNotificationIndex = i;
+        break;
+      }
+    }
+    if (prevVisitNotificationIndex == -1) {
+      newestVisits.insert(0, visit);
+      newestVisitsCounts += 1;
+    } else {
+      newestVisits.removeAt(prevVisitNotificationIndex);
+      newestVisits.insert(0, visit);
+    }
+  }
 
   NewestNotificationResponse(
-      {this.newestEventsCounts,
-        this.newestEvents,
-        this.newestVisitsCounts,
-        this.newestVisits});
+      {this.newestEventsCounts = 0,
+      this.newestEvents,
+      this.newestVisitsCounts = 0,
+      this.newestVisits}) {
+    if (this.newestEvents == null) {
+      this.newestEvents = [];
+    }
+    if (this.newestVisits == null) {
+      this.newestVisits = [];
+    }
+  }
 
   NewestNotificationResponse.fromJson(Map<String, dynamic> json) {
-    newestEventsCounts = json['newest_events_counts'];
+    newestEventsCounts = json['newest_events_counts'] ?? 0;
     if (json['newest_events'] != null) {
       newestEvents = new List<NewestEvents>();
       json['newest_events'].forEach((v) {
         newestEvents.add(new NewestEvents.fromJson(v));
       });
     }
-    newestVisitsCounts = json['newest_visits_counts'];
+    newestVisitsCounts = json['newest_visits_counts'] ?? 0;
     if (json['newest_visits'] != null) {
-      newestVisits = new List<NewestVisits>();
+      newestVisits = new List<NewestVisit>();
       json['newest_visits'].forEach((v) {
-        newestVisits.add(new NewestVisits.fromJson(v));
+        newestVisits.add(new NewestVisit.fromJson(v));
       });
     }
   }
@@ -55,12 +80,12 @@ class NewestEvents {
 
   NewestEvents(
       {this.id,
-        this.owner,
-        this.invitedDoctors,
-        this.title,
-        this.description,
-        this.time,
-        this.endTime});
+      this.owner,
+      this.invitedDoctors,
+      this.title,
+      this.description,
+      this.time,
+      this.endTime});
 
   NewestEvents.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -148,7 +173,7 @@ class InvitedDoctors {
   }
 }
 
-class NewestVisits {
+class NewestVisit {
   int id;
   String createdDate;
   String modifiedDate;
@@ -165,24 +190,24 @@ class NewestVisits {
   int patient;
   int panel;
 
-  NewestVisits(
+  NewestVisit(
       {this.id,
-        this.createdDate,
-        this.modifiedDate,
-        this.enabled,
-        this.doctorMessage,
-        this.title,
-        this.visitType,
-        this.visitMethod,
-        this.visitDurationPlan,
-        this.patientMessage,
-        this.requestVisitTime,
-        this.status,
-        this.doctor,
-        this.patient,
-        this.panel});
+      this.createdDate,
+      this.modifiedDate,
+      this.enabled,
+      this.doctorMessage,
+      this.title,
+      this.visitType,
+      this.visitMethod,
+      this.visitDurationPlan,
+      this.patientMessage,
+      this.requestVisitTime,
+      this.status,
+      this.doctor,
+      this.patient,
+      this.panel});
 
-  NewestVisits.fromJson(Map<String, dynamic> json) {
+  NewestVisit.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdDate = json['created_date'];
     modifiedDate = json['modified_date'];
@@ -218,5 +243,34 @@ class NewestVisits {
     data['patient'] = this.patient;
     data['panel'] = this.panel;
     return data;
+  }
+
+  String getNotificationTitle() {
+    String title = "عنوان";
+    if (status == 0) {
+      title = "در انتظار تایید ویزیت";
+    } else if (status == 1) {
+      title = "تایید درخواست ویزیت";
+    } else if (status == 2) {
+      title = "رد درخواست ویزیت";
+    }
+    if (this.title != null) {
+      title = this.title + ": " + title;
+    }
+    return title;
+  }
+
+  String getNotificationDescription() {
+    return (visitType == 0 ? "ویزیت حضوری" : "ویزیت مجازی");
+  }
+
+  String getNotificationTime() {
+    return requestVisitTime;
+  }
+
+  Color getNotificationColor() {
+    return status == 0
+        ? IColors.darkGrey
+        : (status == 1 ? IColors.themeColor : IColors.red);
   }
 }

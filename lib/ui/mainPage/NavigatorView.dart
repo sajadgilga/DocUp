@@ -2,46 +2,43 @@ import 'dart:convert';
 
 import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/NotificationBloc.dart';
+import 'package:docup/blocs/MedicalTestListBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/PatientTrackerBloc.dart';
 import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
-import 'package:docup/blocs/visit_time/visit_time_bloc.dart';
 import 'package:docup/blocs/VisitBloc.dart';
+import 'package:docup/blocs/visit_time/visit_time_bloc.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/account/DoctorProfileMenuPage.dart';
 import 'package:docup/ui/account/DoctorProfilePage.dart';
 import 'package:docup/ui/account/PatientProfileMenuPage.dart';
 import 'package:docup/ui/account/PatientProfilePage.dart';
-import 'package:docup/ui/account/DoctorProfileMenuPage.dart';
 import 'package:docup/ui/account/VisitConfPage.dart';
-import 'package:docup/ui/cognitiveTest/MedicalTestPage.dart';
 import 'package:docup/ui/doctorDetail/DoctorDetailPage.dart';
-import 'package:docup/ui/noronioClinic/DoctorNoronioService.dart';
-import 'package:docup/ui/noronioClinic/PatientNoronioService.dart';
+import 'package:docup/ui/home/notification/NotificationPage.dart';
+import 'package:docup/ui/medicalTest/MedicalTestPage.dart';
+import 'package:docup/ui/noronioClinic/NoronioService.dart';
 import 'package:docup/ui/panel/MyPartners/MyPartnerDialog.dart';
 import 'package:docup/ui/panel/MyPartners/MyPartners.dart';
+import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/panel/healthDocument/infoPage/InfoPage.dart';
 import 'package:docup/ui/panel/healthFile/calander/DateCalander.dart';
 import 'package:docup/ui/panel/healthFile/calander/TimeCalander.dart';
 import 'package:docup/ui/panel/healthFile/eventPage/EventPage.dart';
 import 'package:docup/ui/panel/healthFile/medicinePage/MedicinePage.dart';
+import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/ChatPage.dart';
 import 'package:docup/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
 import 'package:docup/ui/panel/partnerContact/videoCallPage/VideoCallPage.dart';
-import 'package:docup/ui/visit/PhysicalVisitPage.dart';
-import 'package:docup/ui/visit/VirtualVisitPage.dart';
-import 'package:docup/ui/home/notification/NotificationPage.dart';
-import 'package:docup/ui/mainPage/MainPage.dart';
-import 'package:docup/ui/panel/Panel.dart';
-import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
 import 'package:docup/ui/patientDetail/PatientRequestPage.dart';
+import 'package:docup/ui/visit/PhysicalVisitPage.dart';
+import 'package:docup/ui/visit/VirtualVisitPage.dart';
 import 'package:docup/ui/visitsList/PhysicalVisitListPage.dart';
 import 'package:docup/ui/visitsList/VirtualVisitListPage.dart';
 import 'package:docup/ui/visitsList/VisitRequestsListPage.dart';
@@ -51,6 +48,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../home/Home.dart';
+import 'MainPage.dart';
 
 class NavigatorRoutes {
   static const String mainPage = '/mainPage';
@@ -70,7 +68,8 @@ class NavigatorRoutes {
 
   static const String virtualVisitPage = '/virtualVisitPage';
   static const String physicalVisitPage = '/physicalVisitPage';
-  static const String uploadPicDialogue = '/uploadPicDialogue';
+  static const String uploadFileDialogue = '/uploadFileDialogue';
+  static const String uploadUserProfileDialogue = '/uploadUserProfileDialogue';
   static const String cognitiveTest = '/cognitiveTest';
 
   static const String visitConfig = '/visitConfig';
@@ -106,8 +105,8 @@ class NavigatorViewState extends State<NavigatorView> {
   final VisitBloc _visitBloc = VisitBloc();
   final PictureBloc _pictureBloc = PictureBloc();
   final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
-  final NotificationBloc _notificationBloc = NotificationBloc();
   final VisitTimeBloc _visitTimeBloc = VisitTimeBloc();
+  MedicalTestListBloc _medicalTestListBloc = MedicalTestListBloc();
 
   @override
   dispose() {
@@ -118,7 +117,6 @@ class NavigatorViewState extends State<NavigatorView> {
     _visitBloc.close();
     _pictureBloc.close();
     _trackerBloc.close();
-    _notificationBloc.close();
     _visitTimeBloc.close();
     super.dispose();
   }
@@ -141,9 +139,9 @@ class NavigatorViewState extends State<NavigatorView> {
               _partnerSearchPage(context, detail: detail),
           NavigatorRoutes.cognitiveTest: (context) =>
               _cognitiveTest(context, detail),
-          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
+          NavigatorRoutes.uploadFileDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
-              child: UploadSlider(listId: detail, body: widgetArg)),
+              child: UploadFileSlider(listId: detail, body: widgetArg)),
           NavigatorRoutes.visitRequestList: (context) =>
               _visitRequestPage(context),
           NavigatorRoutes.account: (context) =>
@@ -161,7 +159,7 @@ class NavigatorViewState extends State<NavigatorView> {
       case 0:
         return {
           NavigatorRoutes.root: (context) => _home(context),
-          NavigatorRoutes.notificationView: (context) => _notifictionPage(),
+          NavigatorRoutes.notificationView: (context) => _notificationPage(),
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.doctorDialogue: (context) =>
@@ -212,9 +210,9 @@ class NavigatorViewState extends State<NavigatorView> {
               _patientDetailPage(context, detail),
           NavigatorRoutes.cognitiveTest: (context) =>
               _cognitiveTest(context, detail),
-          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
+          NavigatorRoutes.uploadFileDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
-              child: UploadSlider(
+              child: UploadFileSlider(
                 listId: detail,
                 body: widgetArg,
               )),
@@ -250,12 +248,15 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.root: (context) => _account(context),
           NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
-          NavigatorRoutes.uploadPicDialogue: (context) => BlocProvider.value(
+          NavigatorRoutes.uploadFileDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
-              child: UploadSlider(
+              child: UploadFileSlider(
                 listId: detail,
                 body: widgetArg,
               )),
+          NavigatorRoutes.uploadUserProfileDialogue: (context) =>
+              BlocProvider.value(
+                  value: _pictureBloc, child: UploadUserProfileSlider()),
           NavigatorRoutes.doctorProfileMenuPage: (context) =>
               _doctorProfileMenuPage(context, detail),
           NavigatorRoutes.patientProfileMenuPage: (context) =>
@@ -264,7 +265,7 @@ class NavigatorViewState extends State<NavigatorView> {
       default:
         return {
           NavigatorRoutes.root: (context) => _home(context),
-          NavigatorRoutes.notificationView: (context) => _notifictionPage(),
+          NavigatorRoutes.notificationView: (context) => _notificationPage(),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
@@ -324,16 +325,12 @@ class NavigatorViewState extends State<NavigatorView> {
 
   Widget _home(context) {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    _notificationBloc.add(GetNewestNotifications());
     if (entity.isDoctor) {
       return MultiBlocProvider(
           providers: [
             BlocProvider<PatientTrackerBloc>.value(
               value: _trackerBloc,
             ),
-            BlocProvider<NotificationBloc>.value(
-              value: _notificationBloc,
-            )
           ],
           child: Home(
             selectPage: widget.selectPage,
@@ -343,19 +340,13 @@ class NavigatorViewState extends State<NavigatorView> {
             globalOnPush: widget.pushOnBase,
           ));
     } else if (entity.isPatient) {
-      return MultiBlocProvider(
-          providers: [
-            BlocProvider<NotificationBloc>.value(
-              value: _notificationBloc,
-            )
-          ],
-          child: Home(
-            selectPage: widget.selectPage,
-            onPush: (direction, entity) {
-              push(context, direction, detail: entity);
-            },
-            globalOnPush: widget.pushOnBase,
-          ));
+      return Home(
+        selectPage: widget.selectPage,
+        onPush: (direction, entity) {
+          push(context, direction, detail: entity);
+        },
+        globalOnPush: widget.pushOnBase,
+      );
     }
   }
 
@@ -378,42 +369,47 @@ class NavigatorViewState extends State<NavigatorView> {
   }
 
   Widget _noronioClinic(context) {
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-
-    /// TODO
-    if (entity.isDoctor) {
-      return DoctorNoronioService(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SearchBloc>.value(
+          value: _searchBloc,
+        ),
+        BlocProvider<MedicalTestListBloc>.value(value: _medicalTestListBloc)
+      ],
+      child: NoronioServicePage(
         onPush: (direction, entity) {
           push(context, direction, detail: entity);
         },
         globalOnPush: widget.pushOnBase,
-      );
-    } else {
-      return PatientNoronioService(
-        onPush: (direction, entity) {
-          push(context, direction, detail: entity);
-        },
-        globalOnPush: widget.pushOnBase,
-      );
-    }
+      ),
+    );
   }
 
-  Widget _cognitiveTest(context, UserEntity entity) => MedicalTestPage(
+  Widget _cognitiveTest(context, detail) => BlocProvider.value(
+        value: _searchBloc,
+        child: MedicalTestPage(
+          emptyMedicalTest: detail,
+          onPush: (direction, entity) {
+            push(context, direction, detail: entity);
+          },
+        ),
+      );
+
+  Widget _notificationPage() => NotificationPage(
         onPush: (direction, entity) {
           push(context, direction, detail: entity);
         },
       );
 
-  Widget _notifictionPage() => NotificationPage();
-
-  Widget _panelPages(context,partner) {
-//    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+  Widget _panelPages(context, partner) {
     return BlocBuilder<EntityBloc, EntityState>(
         builder: (context, entityState) {
       return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
         builder: (context, state) {
-          var entity = entityState.entity.copy();
+          var entity = entityState.entity;
           entity.partnerEntity = partner;
+          entity.iPanelId = entity.panelByPartnerId.id;
+          _visitTimeBloc.add(VisitTimeGet(partnerId: entity.pId));
           if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE) {
             return Panel(
               onPush: (direction, entity) {
@@ -422,7 +418,9 @@ class NavigatorViewState extends State<NavigatorView> {
               pages: [
                 [
                   IllnessPage(
-                    entity: partner,
+                    entity: entity,
+                    globalOnPush: widget.pushOnBase,
+                    selectPage: widget.selectPage,
                     onPush: (direction, entity) {
                       push(context, direction, detail: entity);
                     },
@@ -547,8 +545,6 @@ class NavigatorViewState extends State<NavigatorView> {
   }
 
   Widget _panel(context, {incomplete, detail}) {
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    _visitTimeBloc.add(VisitTimeGet(partnerId: entity.pId));
     if (detail != null)
       switch (detail) {
         case "chat":
@@ -577,11 +573,12 @@ class NavigatorViewState extends State<NavigatorView> {
           BlocProvider<SearchBloc>.value(
             value: _searchBloc,
           ),
+          BlocProvider<MedicalTestListBloc>.value(value: _medicalTestListBloc)
         ],
         child: BlocBuilder<PanelBloc, PanelState>(builder: (context, state) {
           if (state is PanelsLoaded || state is PanelLoading) {
             // if (state.panels.length > 0)
-            return _panelPages(context,detail);
+            return _panelPages(context, detail);
           }
           return PanelMenu(
             () {

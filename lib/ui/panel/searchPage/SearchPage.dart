@@ -102,7 +102,10 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    _controller?.dispose();
+    try{
+      _controller?.dispose();
+
+    }catch(e){}
   }
 
 //  Widget _docupIcon() => Container(

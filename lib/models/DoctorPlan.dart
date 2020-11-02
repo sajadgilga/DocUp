@@ -1,3 +1,5 @@
+import 'package:docup/utils/Utils.dart';
+
 class DoctorPlan {
   int id;
   List<int> visitType;
@@ -29,6 +31,7 @@ class DoctorPlan {
       this.basePhysicalVisitPrice});
 
   DoctorPlan.fromJson(Map<String, dynamic> json) {
+    utf8IfPossible("srg");
     id = json['id'];
     visitType = json['visit_type'].cast<int>();
     visitMethod = json['visit_method'].cast<int>();
@@ -43,10 +46,10 @@ class DoctorPlan {
     createdDate = json['created_date'];
     modifiedDate = json['modified_date'];
     enabled = json['enabled'];
-    baseVideoPrice = json['base_video_price'];
-    baseVoicePrice = json['base_voice_price'];
-    baseTextPrice = json['base_text_price'];
-    basePhysicalVisitPrice = json['base_physical_visit_price'];
+    baseVideoPrice = json['base_video_price']??0;
+    baseTextPrice = json['base_text_price']??0;
+    baseVoicePrice = json['base_voice_price']??0;
+    basePhysicalVisitPrice = json['base_physical_visit_price']??0;
   }
 
   Map<String, dynamic> toJson() {

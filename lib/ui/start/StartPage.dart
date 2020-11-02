@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:docup/blocs/AuthBloc.dart';
 import 'package:docup/blocs/DoctorBloc.dart';
@@ -16,8 +15,10 @@ import 'package:docup/ui/BasePage.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/ui/widgets/DescriptionAlertDialog.dart';
 import 'package:docup/ui/widgets/InputField.dart';
 import 'package:docup/ui/widgets/OptionButton.dart';
+import 'package:docup/ui/widgets/SnackBar.dart';
 import 'package:docup/ui/widgets/Timer.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
@@ -51,12 +52,16 @@ class _StartPageState extends State<StartPage> {
   final _usernameController = TextEditingController();
   final _doctorIdController = TextEditingController();
   final _verificationController = TextEditingController();
-  final _fullNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _nationalCodeController = TextEditingController();
+  final _expertiseCodeController = TextEditingController();
 
   RoleType currentRoleType = RoleType.PATIENT;
   StartType startType = StartType.SIGN_UP;
   AlertDialog _loadingDialog = getLoadingDialog();
   bool _loadingEnable;
+  bool validationFormError = false;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
@@ -76,10 +81,19 @@ class _StartPageState extends State<StartPage> {
         }
         if (((response.error.runtimeType) == ApiException)) {
           if ((response.error as ApiException).getCode() == 615) {
-            showErrorSnackBar(Strings.errorCode_615, secs: 10);
+            showSnackBar(_scaffoldKey, Strings.errorCode_615, secs: 10);
+          } else if ((response.error as ApiException).getCode() == 616) {
+            /// TODO amir:
+            showSnackBar(_scaffoldKey, Strings.errorCode_616, secs: 10);
+          } else {
+            showSnackBar(
+              _scaffoldKey,
+              response.error.toString(),
+            );
           }
         } else
-          showErrorSnackBar(
+          showSnackBar(
+            _scaffoldKey,
             response.error.toString(),
           );
         return false;
@@ -90,11 +104,19 @@ class _StartPageState extends State<StartPage> {
         }
         if (response.data.runtimeType == VerifyResponseEntity) {
           try {
-            String utfName =
-                utf8.decode(response.data.fullName.codeUnits).trim();
-            _fullNameController.text = utfName ?? "";
-            if ([null, ""].contains(utfName)) {
-              showPrivacyAndPolicy();
+            String firstName =
+                (utf8IfPossible(response.data.firstName) ?? "").trim();
+            _firstNameController.text = firstName;
+            String lastName =
+                (utf8IfPossible(response.data.lastName) ?? "").trim();
+            _lastNameController.text = lastName;
+            String nationalCode =
+                (utf8IfPossible(response.data.nationalCode) ?? "").trim();
+            _nationalCodeController.text = nationalCode;
+            if (firstName + lastName + nationalCode == "") {
+              showDescriptionAlertDialog(context,
+                  title: Strings.privacyAndPolicy,
+                  description: Strings.policyDescription);
             }
           } catch (e) {}
         }
@@ -108,70 +130,6 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
-  void showPrivacyAndPolicy() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: Color.fromARGB(0, 0, 0, 0),
-            content: Container(
-              constraints: BoxConstraints.tightFor(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height),
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    constraints: BoxConstraints.tightFor(
-                        width: MediaQuery.of(context).size.width * 0.8),
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        ALittleVerticalSpace(),
-                        AutoText(
-                          Strings.privacyAndPolicy,
-                          color: IColors.darkGrey,
-                          fontSize: 17,
-                        ),
-                        AutoText(
-                          Strings.policyDescription,
-                          color: IColors.darkGrey,
-                          fontSize: 17,
-                          maxLines: 20,
-                        ),
-                        ActionButton(
-                          title: "تایید",
-                          color: IColors.green,
-                          callBack: () {
-                            Navigator.maybePop(context);
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  showErrorSnackBar(String message, {int secs = 3}) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: AutoText(
-        message,
-        textDirection: TextDirection.rtl,
-        textAlign: TextAlign.right,
-      ),
-      duration: Duration(seconds: secs),
-    ));
-  }
-
   Future<void> checkToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("token")) {
@@ -180,6 +138,20 @@ class _StartPageState extends State<StartPage> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => BasePage()));
     }
+  }
+
+  Future<void> checkPrivacyAndPolicyFlag() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShown = false;
+    if (prefs.containsKey("privacyAndPolicy")) {
+      hasShown = prefs.getBool("privacyAndPolicy");
+    }
+    if (!hasShown) {
+      showDescriptionAlertDialog(context,
+          title: Strings.privacyAndPolicy,
+          description: Strings.policyDescription);
+    }
+    prefs.setBool("privacyAndPolicy", true);
   }
 
   bool resendCodeEnabled = false;
@@ -206,9 +178,18 @@ class _StartPageState extends State<StartPage> {
 
     _authBloc.verifyStream.listen((data) {
       if (handle(data)) {
-        setState(() {
-          startType = StartType.REGISTER;
-        });
+        if (_firstNameController.text +
+                _lastNameController.text +
+                _nationalCodeController.text !=
+            "") {
+          /// user has been registered before
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => BasePage()));
+        } else {
+          setState(() {
+            startType = StartType.REGISTER;
+          });
+        }
       }
     });
 
@@ -263,14 +244,32 @@ class _StartPageState extends State<StartPage> {
             break;
           case StartType.REGISTER:
             if (currentRoleType == RoleType.PATIENT) {
-              _patientBloc.update(_fullNameController.text);
+              _patientBloc.updateProfile(
+                  firstName: _firstNameController.text,
+                  lastName: _lastNameController.text,
+                  nationalCode: _nationalCodeController.text);
             } else if (currentRoleType == RoleType.DOCTOR) {
-              _doctorBloc.update(_fullNameController.text);
+              _doctorBloc.updateProfile(
+                  firstName: _firstNameController.text,
+                  lastName: _lastNameController.text,
+                  nationalCode: _nationalCodeController.text,
+                  expertise: _expertiseCodeController.text);
             }
             break;
         }
       });
     }
+  }
+
+  void showValidationFormError() {
+    setState(() {
+      validationFormError = true;
+    });
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        validationFormError = false;
+      });
+    });
   }
 
   void back() {
@@ -283,6 +282,7 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
+    checkPrivacyAndPolicyFlag();
     return WillPopScope(
       onWillPop: () async {
         if (startType == StartType.LOGIN) {
@@ -331,7 +331,7 @@ class _StartPageState extends State<StartPage> {
     _usernameController.dispose();
     _doctorIdController.dispose();
     _verificationController.dispose();
-    _fullNameController.dispose();
+    _firstNameController.dispose();
     _authBloc.dispose();
     _patientBloc.dispose();
     _doctorBloc.dispose();
@@ -379,11 +379,6 @@ class _StartPageState extends State<StartPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          ActionButton(
-            color: isContinueEnable ? IColors.themeColor : Colors.grey,
-            title: Strings.continueAction,
-            callBack: submit,
-          ),
           GestureDetector(
             onTap: back,
             child: Container(
@@ -392,9 +387,14 @@ class _StartPageState extends State<StartPage> {
                     borderRadius: BorderRadius.all(Radius.circular(30.0))),
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: Icon(Icons.arrow_forward_ios,
-                      size: 18, color: Colors.white),
+                  child:
+                      Icon(Icons.arrow_back_ios, size: 18, color: Colors.white),
                 )),
+          ),
+          ActionButton(
+            color: isContinueEnable ? IColors.themeColor : Colors.grey,
+            title: Strings.continueAction,
+            callBack: submit,
           ),
         ],
       ));
@@ -402,16 +402,17 @@ class _StartPageState extends State<StartPage> {
   _signUpActionWidget() => ActionButton(
         color: IColors.themeColor,
         title: Strings.verifyAction,
-        icon: Icon(
-          Icons.arrow_back_ios,
-          size: 18,
+        width: 130,
+        rightIcon: Icon(
+          Icons.arrow_forward_ios,
+          size: 15,
         ),
         rtl: false,
         callBack: submit,
       );
 
   _registerActionWidget() => ActionButton(
-        color: IColors.themeColor,
+        color: validationFormError ? IColors.red : IColors.themeColor,
         title: Strings.registerAction,
         icon: Icon(
           Icons.arrow_back_ios,
@@ -531,12 +532,41 @@ class _StartPageState extends State<StartPage> {
         return Column(
           children: <Widget>[
             InputField(
-              inputHint: Strings.nameInputHint,
-              controller: _fullNameController,
+              inputHint: Strings.firstNameInputHint,
+              controller: _firstNameController,
               validationCallback: (text) => text.isNotEmpty,
               errorMessage: 'نام خود را وارد کنید',
               needToHideKeyboard: false,
-            )
+            ),
+            ALittleVerticalSpace(),
+            InputField(
+              inputHint: Strings.lastNameInputHint,
+              controller: _lastNameController,
+              validationCallback: (text) => text.isNotEmpty,
+              errorMessage: 'نام خانوادگی خود را وارد کنید',
+              needToHideKeyboard: false,
+            ),
+            ALittleVerticalSpace(),
+            InputField(
+              inputHint: Strings.nationalCodeInputHint,
+              controller: _nationalCodeController,
+              validationCallback: (text) =>
+                  (text.isNotEmpty && text.length == 10),
+              errorMessage: 'کدملی معتبری را وارد کنید',
+              needToHideKeyboard: false,
+              textInputType: TextInputType.number,
+            ),
+            ALittleVerticalSpace(),
+            currentRoleType == RoleType.DOCTOR
+                ? InputField(
+                    inputHint: Strings.expertiseInputHint,
+                    controller: _expertiseCodeController,
+                    validationCallback: (text) => text.isNotEmpty,
+                    errorMessage: 'تخصص خود را وارد کنید',
+                    needToHideKeyboard: false,
+                    textInputType: TextInputType.text,
+                  )
+                : SizedBox()
           ],
         );
     }

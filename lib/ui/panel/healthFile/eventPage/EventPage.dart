@@ -39,9 +39,7 @@ class _EventPageState extends State<EventPage> {
   }
 
   Widget _floatingButton() {
-    var _isPatient =
-        BlocProvider.of<EntityBloc>(context).state.entity.isPatient;
-    if (_isPatient)
+    if (widget.entity.isPatient)
       return FloatingButton(
         label: 'رویدادهای سلامت',
         callback: () {

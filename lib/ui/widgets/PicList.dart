@@ -1,15 +1,10 @@
 import 'dart:ui';
 
+import 'package:dashed_container/dashed_container.dart';
 import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
 import 'package:docup/models/Picture.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/APICallLoading.dart';
-import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
-import 'package:dashed_container/dashed_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -107,7 +102,9 @@ class _PicListState extends State<PicList> {
                 onTap: () {
                   Navigator.of(context, rootNavigator: true)
                       .push(MaterialPageRoute(builder: (_) {
-                    return DetailScreen(url: pic.imageURL,);
+                    return DetailScreen(
+                      url: pic.imageURL,
+                    );
                   }));
                 },
                 child: Container(
@@ -222,7 +219,7 @@ class _PicListState extends State<PicList> {
           if (state is PictureLoading) {
             if (state.section == null)
               return Container(
-                  margin: EdgeInsets.only(top: 40), child: APICallLoading());
+                  margin: EdgeInsets.only(top: 40), child: Waiting());
 
             if (state.section.id == widget.listId)
               return Container(
@@ -236,7 +233,7 @@ class _PicListState extends State<PicList> {
               );
             else
               return Container(
-                  margin: EdgeInsets.only(top: 40), child: APICallLoading());
+                  margin: EdgeInsets.only(top: 40), child: Waiting());
           }
           return Container(
             child: AutoText(''),

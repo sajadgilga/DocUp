@@ -88,8 +88,7 @@ class _MedicinePageState extends State<MedicinePage> {
   }
 
   Widget _floatingButton() {
-    var _isPatient =
-        BlocProvider.of<EntityBloc>(context).state.entity.isPatient;
+    var _isPatient =widget.entity.isPatient;
     if (_isPatient || _currentPage != _MedicinePage.MAIN) return Container();
     return FloatingButton(
       label: 'داروی جدید',

@@ -11,15 +11,17 @@ class AutoText extends StatelessWidget {
   final double fontSize;
   final int maxLines;
   final TextStyle style;
+  final FontWeight fontWeight;
 
   AutoText(this.text,
       {this.softWrap = true,
       this.textAlign = TextAlign.right,
       this.textDirection = TextDirection.rtl,
       this.color,
-      this.overflow=TextOverflow.fade,
-      this.maxLines = 1,
+      this.overflow = TextOverflow.fade,
+      this.maxLines,
       this.style,
+      this.fontWeight,
       this.fontSize});
 
   @override
@@ -31,7 +33,8 @@ class AutoText extends StatelessWidget {
       textDirection: textDirection,
       overflow: overflow,
       maxLines: maxLines,
-      style: style ?? TextStyle(color: color, fontSize: fontSize),
+      style: style ??
+          TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight),
     );
   }
 }

@@ -1,21 +1,21 @@
 import 'dart:async';
 
 import 'package:docup/blocs/DoctorInfoBloc.dart';
+import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/visit/VisitUtils.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
+import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/LabelAndListWidget.dart';
 import 'package:docup/ui/widgets/PriceWidget.dart';
 import 'package:docup/ui/widgets/TimeSelectorHeaderWidget.dart';
 import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
-import 'package:docup/ui/widgets/LabelAndListWidget.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,8 @@ class VisitConfPage extends StatefulWidget {
   _VisitConfPageState createState() => _VisitConfPageState();
 }
 
-class _VisitConfPageState extends State<VisitConfPage> {
+class _VisitConfPageState extends State<VisitConfPage>
+    with TickerProviderStateMixin {
   Map<String, Set<int>> typeSelected = {
     "انواع مشاوره ها": Set.identity(),
     "انواع زمان مشاوره": Set.identity(),
@@ -100,7 +101,7 @@ class _VisitConfPageState extends State<VisitConfPage> {
             if (snapshot.hasData) {
               switch (snapshot.data.status) {
                 case Status.LOADING:
-                  return APICallLoading();
+                  return DocUpAPICallLoading2();
                   break;
                 case Status.COMPLETED:
                   return Center(child: _rootWidget(snapshot.data.data));
@@ -141,11 +142,11 @@ class _VisitConfPageState extends State<VisitConfPage> {
     isLoaded = true;
 
     return GestureDetector(
-      onTapDown: (details) {
-        setState(() {
-          tappedOffset = details.globalPosition;
-        });
-      },
+      // onTapDown: (details) {
+      //   setState(() {
+      //     tappedOffset = details.globalPosition;
+      //   });
+      // },
       child: SingleChildScrollView(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,7 +202,7 @@ class _VisitConfPageState extends State<VisitConfPage> {
             ALittleVerticalSpace(),
             LabelAndListWidget(
               smallSize: true,
-              title: "وقت ویزیت",
+              title: "نوع ویزیت",
               items: ["حضوری", "مجازی"],
               selectedIndex: typeSelected["وقت ویزیت"],
               callback: labelAndListCallback,
@@ -212,7 +213,10 @@ class _VisitConfPageState extends State<VisitConfPage> {
                 this.timeIsSelected = timeIsSelected;
               });
             }),
-            _timeAndDateSelectorWidget(),
+            AnimatedSize(
+                duration: Duration(milliseconds: 500),
+                vsync: this,
+                child: _timeAndDateSelectorWidget()),
             MediumVerticalSpace(),
             ALittleVerticalSpace(),
             ActionButton(

@@ -1,21 +1,17 @@
-import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
+import 'package:docup/ui/widgets/APICallLoading.dart';
+import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:docup/ui/widgets/MapWidget.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../constants/colors.dart';
 
@@ -50,7 +46,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             if (snapshot.hasData) {
               switch (snapshot.data.status) {
                 case Status.LOADING:
-                  return APICallLoading();
+                  return DocUpAPICallLoading2();
                   break;
                 case Status.COMPLETED:
                   return Center(child: _doctorInfoWidget(snapshot.data.data));
@@ -64,7 +60,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   break;
               }
             }
-            return Container();
+            return DocUpAPICallLoading2();
           },
         ),
       ),
@@ -78,9 +74,11 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
         PolygonAvatar(user: doctorEntity.user),
         SizedBox(height: 10),
         DoctorData(
-            width: MediaQuery.of(context).size.width,
-            doctorEntity: doctorEntity,clinicMarkLocation: 2,),
-        SizedBox(height: 20),
+          width: MediaQuery.of(context).size.width,
+          doctorEntity: doctorEntity,
+          clinicMarkLocation: 2,
+        ),
+        SizedBox(height: 30),
         MapWidget(
           clinic: doctorEntity.clinic,
         ),
@@ -92,24 +90,32 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
 
   _doctorActionsWidget(DoctorEntity doctorEntity) => Column(
         children: <Widget>[
-          ActionButton(
-            width: 250,
-            height: 60,
-            borderRadius: 15,
-            color: IColors.themeColor,
-            title: Strings.physicalReservationLabel,
-            callBack: () =>
-                widget.onPush(NavigatorRoutes.physicalVisitPage, doctorEntity),
+          ALittleVerticalSpace(
+            height: 20,
           ),
+          doctorEntity.plan.visitType.contains(0)
+              ? ActionButton(
+                  width: 250,
+                  height: 60,
+                  borderRadius: 15,
+                  color: IColors.themeColor,
+                  title: Strings.physicalReservationLabel,
+                  callBack: () => widget.onPush(
+                      NavigatorRoutes.physicalVisitPage, doctorEntity),
+                )
+              : SizedBox(),
           SizedBox(height: 10),
-          ActionButton(
-              width: 250,
-              height: 60,
-              borderRadius: 15,
-              color: IColors.darkBlue,
-              title: Strings.virtualReservationLabel,
-              callBack: () => widget.onPush(
-                  NavigatorRoutes.virtualVisitPage, doctorEntity)),
+          doctorEntity.plan.visitType.contains(1)
+              ? ActionButton(
+                  width: 250,
+                  height: 60,
+                  borderRadius: 15,
+                  color: IColors.darkBlue,
+                  title: Strings.virtualReservationLabel,
+                  callBack: () => widget.onPush(
+                      NavigatorRoutes.virtualVisitPage, doctorEntity),
+                )
+              : SizedBox(),
         ],
       );
 

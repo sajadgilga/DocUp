@@ -1,5 +1,6 @@
 // ignore: must_be_immutable
 
+import 'package:docup/constants/colors.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -13,6 +14,7 @@ class InputField extends StatefulWidget {
   String errorMessage;
   bool obscureText;
   ValueChanged<String> onChanged;
+  bool disableInvalidIcon;
 
   InputField(
       {this.inputHint,
@@ -22,6 +24,7 @@ class InputField extends StatefulWidget {
       this.validationCallback,
       this.errorMessage,
       this.onChanged,
+      this.disableInvalidIcon = true,
       this.obscureText = false});
 
   @override
@@ -34,7 +37,7 @@ class _InputFieldState extends State<InputField> {
   @override
   void initState() {
     setState(() {
-      this.isValid = false;
+      isValid = widget.validationCallback(widget.controller.text);
     });
     super.initState();
   }
@@ -54,7 +57,9 @@ class _InputFieldState extends State<InputField> {
         }
       },
       onChanged: (text) {
-        widget.onChanged(text);
+        if (widget.onChanged != null) {
+          widget.onChanged(text);
+        }
         setState(() {
           isValid = widget.validationCallback(text);
         });
@@ -63,7 +68,18 @@ class _InputFieldState extends State<InputField> {
         }
       },
       decoration: InputDecoration(
-          prefixIcon: Visibility(visible: isValid, child: Icon(Icons.check)),
+          prefixIcon: isValid
+              ? Icon(
+                  Icons.check,
+                  color: null,
+                )
+              : Visibility(
+                  child: Icon(
+                    Icons.close,
+                    color: IColors.red,
+                  ),
+                  visible: !widget.disableInvalidIcon,
+                ),
           hintText: widget.inputHint,
           hintStyle: TextStyle(color: Colors.black, fontSize: 16.0),
           labelStyle: TextStyle(color: Colors.black)),

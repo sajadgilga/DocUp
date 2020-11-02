@@ -14,13 +14,13 @@ class DateUtils {
     max = Global.max;
     type = Global.pickerType;
     dayNames = [
-      'saturday',
-      'sunday',
-      'monday',
-      'tuesday',
-      'wednesday',
-      'thursday',
-      'friday',
+      'شنبه',
+      'یکشنبه',
+      'دوشنبه',
+      'سه شنبه',
+      'چهارشنبه',
+      'پنجشنبه',
+      'جمعه',
     ];
   }
 
@@ -141,6 +141,16 @@ class DateUtils {
         for (var i = 0; i < disable.length; i++) {
           inDisable =
               isValidDate(date) ? _isDisableDate(date, disable[i]) : false;
+          if (inDisable) break;
+        }
+        break;
+      case '_InternalLinkedHashMap<int, String>':
+        List<int> keys = (disable as Map).keys.toList();
+        for (var i = 0; i < keys.length; i++) {
+          int key = keys[i];
+          String value = (disable as Map)[key];
+          inDisable =
+          isValidDate(date) ? _isDisableDate(date, value) : false;
           if (inDisable) break;
         }
         break;

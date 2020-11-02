@@ -131,6 +131,7 @@ class _TimeSelectorWidgetState extends State<TimeSelectorWidget> {
                   painter: TimerSelectorPaint(
                     context: context,
                     tappedOffset: widget.tappedOffset,
+                    AM_PM: this.AM_PM,
                     selectedNumbers: selectedNumbers,
                     callback: (c) {},
                   ),
@@ -243,9 +244,13 @@ class TimerSelectorPaint extends CustomPainter {
   final Set<int> selectedNumbers;
   final double upShift = 3;
   final double rightShift = 3;
-
+  int AM_PM = 0; //0 stands for am and 1 stands for pm
   TimerSelectorPaint(
-      {this.context, this.selectedNumbers, this.tappedOffset, this.callback});
+      {this.context,
+      this.selectedNumbers,
+      this.tappedOffset,
+      this.callback,
+      this.AM_PM});
 
   final Map<int, Offset> numbers = {
     1: Offset(40, -69.282),
@@ -282,7 +287,7 @@ class TimerSelectorPaint extends CustomPainter {
     }
 
     numbers.forEach((key, value) {
-      paintNumber(canvas, key, value, localOffset);
+      paintNumber(canvas, key + this.AM_PM * 12, value, localOffset);
     });
     if (selectedNumber != -1) {
       callback(selectedNumber);

@@ -8,11 +8,14 @@ import 'AutoText.dart';
 
 class APICallError extends StatelessWidget {
   final String errorMessage;
-
   final Function onRetryPressed;
+  final bool tightenPage;
 
   const APICallError(
-      {Key key, this.errorMessage = "error", this.onRetryPressed})
+      {Key key,
+      this.errorMessage = "error",
+      this.onRetryPressed,
+      this.tightenPage = false})
       : super(key: key);
 
   @override
@@ -22,7 +25,7 @@ class APICallError extends StatelessWidget {
     double y = MediaQuery.of(context).size.height;
     double imageWidth = x * (130 / 360);
     return Container(
-        height: y,
+        height: tightenPage ? null : y,
         width: x,
         alignment: Alignment.center,
         child: Row(

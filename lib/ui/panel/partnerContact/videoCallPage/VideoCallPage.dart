@@ -55,81 +55,78 @@ class _VideoCallPageState extends State<VideoCallPage> {
   }
 
   Widget build(BuildContext context) {
-    return BlocBuilder<EntityBloc, EntityState>(
-      builder: (context, state) {
-        if (state.entity.panel.status == 0 ||
-            state.entity.panel.status == 1) if (state.entity.isPatient)
-          return Stack(children: <Widget>[
-            _VideoCallPage(),
-            PanelAlert(
-              label: Strings.requestSentLabel,
-              buttonLabel: Strings.waitingForApproval,
-              btnColor: IColors.disabledButton,
-            )
-          ]);
-        else
-          return Stack(children: <Widget>[
-            _VideoCallPage(),
-            PanelAlert(
-              label: Strings.requestSentLabelDoctorSide,
-              buttonLabel: Strings.waitingForApprovalDoctorSide,
-              callback: () {
-                widget.onPush(NavigatorRoutes.patientDialogue,
-                    state.entity.partnerEntity);
-              },
-            )
-          ]);
-        else if (state.entity.panel.status == 3 ||
-            state.entity.panel.status == 2) {
-          return BlocBuilder<VisitTimeBloc, VisitTimeState>(
-            builder: (context, _visitTimeState) {
-              String _visitTime;
-              if (_visitTimeState is VisitTimeLoadedState)
-                _visitTime = replaceFarsiNumber(
-                    normalizeDateAndTime(_visitTimeState.visit.visitTime));
-              return Stack(children: <Widget>[
-                _VideoCallPage(),
-                PanelAlert(
-                  label: 'ویزیت شما '
-                      '\n'
-                      '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
-                      '\n'
-                      'است' /* Strings.notRequestTimeDoctorSide*/,
-                  buttonLabel: Strings.waitLabel,
-                  btnColor: IColors.disabledButton,
-                  size: AlertSize.LG,
-                ) //TODO: change to timer
-              ]);
+    if (widget.entity.panel.status == 0 || widget.entity.panel.status == 1) {
+      if (widget.entity.isPatient) {
+        return Stack(children: <Widget>[
+          _VideoCallPage(),
+          PanelAlert(
+            label: Strings.requestSentLabel,
+            buttonLabel: Strings.waitingForApproval,
+            btnColor: IColors.disabledButton,
+          )
+        ]);
+      } else {
+        return Stack(children: <Widget>[
+          _VideoCallPage(),
+          PanelAlert(
+            label: Strings.requestSentLabelDoctorSide,
+            buttonLabel: Strings.waitingForApprovalDoctorSide,
+            callback: () {
+              widget.onPush(
+                  NavigatorRoutes.patientDialogue, widget.entity.partnerEntity);
             },
-          );
-        }
-//            return _VideoCallPage();
-        else if (state.entity.panel.status == 6 ||
-            state.entity.panel.status == 7) if (state.entity.isPatient)
+          )
+        ]);
+      }
+    } else if (widget.entity.panel.status == 3 ||
+        widget.entity.panel.status == 2) {
+      return BlocBuilder<VisitTimeBloc, VisitTimeState>(
+        builder: (context, _visitTimeState) {
+          String _visitTime;
+          if (_visitTimeState is VisitTimeLoadedState)
+            _visitTime = replaceFarsiNumber(
+                normalizeDateAndTime(_visitTimeState.visit.visitTime));
           return Stack(children: <Widget>[
             _VideoCallPage(),
             PanelAlert(
-              label: Strings.noAvailableVirtualVisit,
-              buttonLabel: Strings.reserveVirtualVisit,
-              callback: () {
-                widget.onPush(
-                    NavigatorRoutes.doctorDialogue, state.entity.partnerEntity);
-              },
-            )
-          ]);
-        else
-          return Stack(children: <Widget>[
-            _VideoCallPage(),
-            PanelAlert(
-              label: Strings.noAvailableVirtualVisit,
-              buttonLabel: Strings.reserveVirtualVisitDoctorSide,
+              label: 'ویزیت شما '
+                  '\n'
+                  '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
+                  '\n'
+                  'است' /* Strings.notRequestTimeDoctorSide*/,
+              buttonLabel: Strings.waitLabel,
               btnColor: IColors.disabledButton,
-            )
+              size: AlertSize.LG,
+            ) //TODO: change to timer
           ]);
-        else
-          return _VideoCallPage();
-      },
-    );
+        },
+      );
+    }
+//            return _VideoCallPage();
+    else if (widget.entity.panel.status == 6 ||
+        widget.entity.panel.status == 7) if (widget.entity.isPatient)
+      return Stack(children: <Widget>[
+        _VideoCallPage(),
+        PanelAlert(
+          label: Strings.noAvailableVirtualVisit,
+          buttonLabel: Strings.reserveVirtualVisit,
+          callback: () {
+            widget.onPush(
+                NavigatorRoutes.doctorDialogue, widget.entity.partnerEntity);
+          },
+        )
+      ]);
+    else
+      return Stack(children: <Widget>[
+        _VideoCallPage(),
+        PanelAlert(
+          label: Strings.noAvailableVirtualVisit,
+          buttonLabel: Strings.reserveVirtualVisitDoctorSide,
+          btnColor: IColors.disabledButton,
+        )
+      ]);
+    else
+      return _VideoCallPage();
   }
 
   _videoCallPane() => Column(

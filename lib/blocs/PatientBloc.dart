@@ -21,11 +21,15 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
     _repository = PatientRepository();
   }
 
-  update(String fullName) async {
+  updateProfile(
+      {String firstName, String lastName, String nationalCode}) async {
     dataSink.add(Response.loading());
     try {
-      PatientEntity patient = await _repository
-          .update(PatientEntity(user: User(firstName: fullName)));
+      PatientEntity patient = await _repository.update(PatientEntity(
+          user: User(
+              firstName: firstName,
+              lastName: lastName,
+              nationalId: nationalCode)));
       dataSink.add(Response.completed(patient));
     } catch (e) {
       dataSink.add(Response.error(e));

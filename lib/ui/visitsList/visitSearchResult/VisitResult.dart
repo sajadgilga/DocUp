@@ -145,34 +145,39 @@ class _SearchResultPatientItem extends StatelessWidget {
     return str;
   }
 
-  Widget _status() {
+  Widget _status(context) {
     return Container(
       height: 30,
-      padding: EdgeInsets.only(left: 10),
-      child: Expanded(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            AutoText(
-              _statusString(entity.visitType, entity.visitMethod),
-              softWrap: true,
-              overflow: TextOverflow.fade,
-              style: TextStyle(
-                  color: IColors.themeColor,
-                  fontSize: 9,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.left,
-              textDirection: TextDirection.rtl,
-            ),
-            SizedBox(child: PatientStatus.values[entity.status].icon,),
-          ],
-        ),
+      constraints:
+          BoxConstraints.tightFor(width: MediaQuery.of(context).size.width / 2,height: 30),
+      alignment: Alignment.bottomLeft,
+      margin: EdgeInsets.only(left: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          AutoText(
+            _statusString(entity.visitType, entity.visitMethod),
+            softWrap: true,
+            overflow: TextOverflow.fade,
+            style: TextStyle(
+                color: IColors.themeColor,
+                fontSize: 9,
+                fontWeight: FontWeight.bold),
+            textAlign: TextAlign.left,
+            textDirection: TextDirection.rtl,
+          ),
+          SizedBox(
+            child: PatientStatus.values[entity.status].icon,
+            width: 15,
+            height: 15,
+          ),
+        ],
       ),
     );
   }
 
-  Widget _info() {
+  Widget _info(context) {
     String utfName;
     try {
       utfName =
@@ -196,7 +201,7 @@ class _SearchResultPatientItem extends StatelessWidget {
               ),
             ],
           ),
-          _status()
+          _status(context)
         ],
       ),
     );
@@ -216,7 +221,7 @@ class _SearchResultPatientItem extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[_info(), _image(context)],
+            children: <Widget>[_info(context), _image(context)],
           ),
         ));
   }
@@ -303,7 +308,11 @@ extension PatientStatusExtension on PatientStatus {
           color: this.color,
         );
       case PatientStatus.VISIT_REQUEST:
-        return Image.asset(Assets.visitListDoctorIcon1,width: 15,height: 15,);
+        return Image.asset(
+          Assets.visitListDoctorIcon1,
+          width: 15,
+          height: 15,
+        );
       case PatientStatus.VIRTUAL_VISIT_REQUEST:
         return SvgPicture.asset(
           Assets.onCallMedicalIcon,
@@ -312,7 +321,11 @@ extension PatientStatusExtension on PatientStatus {
       case PatientStatus.CURED:
         return Icon(Icons.update, size: 15, color: this.color);
       default:
-        return Image.asset(Assets.visitListDoctorIcon1,width: 15,height: 15,);
+        return Image.asset(
+          Assets.visitListDoctorIcon1,
+          width: 15,
+          height: 15,
+        );
     }
   }
 }

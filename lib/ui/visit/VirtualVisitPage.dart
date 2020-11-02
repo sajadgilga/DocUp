@@ -1,5 +1,4 @@
 import 'package:docup/blocs/DoctorInfoBloc.dart';
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
@@ -10,14 +9,12 @@ import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
-import 'package:docup/ui/widgets/TimeSelectionWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/VisitDateTimePicker.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'VisitUtils.dart';
 
@@ -47,6 +44,12 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
 
   @override
   void initState() {
+    try {
+      typeSelected[VISIT_METHOD] = widget.doctorEntity.plan.visitMethod.last;
+      typeSelected[VISIT_DURATION_PLAN] =
+          widget.doctorEntity.plan.visitDurationPlan.last;
+    } catch (e) {}
+
     _bloc.visitRequestStream.listen((data) {
       if (data.status == Status.COMPLETED) {
         showOneButtonDialog(context, Strings.visitRequestedMessage,
@@ -87,11 +90,30 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         child: Column(children: <Widget>[
           DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
           ALittleVerticalSpace(),
-          _visitTypeWidget(VISIT_METHOD, ["متنی", "صوتی", "تصویری"],
-              width: 120, height: 50, fontSize: 16),
+          _visitTypeWidget(
+              VISIT_METHOD,
+              {0: "متنی", 1: "صوتی", 2: "تصویری"}..removeWhere((key, value) {
+                  if (widget.doctorEntity.plan.visitMethod.contains(key)) {
+                    return false;
+                  }
+                  return true;
+                }),
+              width: 120,
+              height: 50,
+              fontSize: 16),
           ALittleVerticalSpace(),
-          _visitTypeWidget(VISIT_DURATION_PLAN, ["پایه", "تکمیلی", "طولانی"],
-              width: 100, height: 45, fontSize: 14),
+          _visitTypeWidget(
+              VISIT_DURATION_PLAN,
+              {0: "پایه", 1: "تکمیلی", 2: "طولانی"}..removeWhere((key, value) {
+                  if (widget.doctorEntity.plan.visitDurationPlan
+                      .contains(key)) {
+                    return false;
+                  }
+                  return true;
+                }),
+              width: 100,
+              height: 45,
+              fontSize: 14),
           ALittleVerticalSpace(),
           _visitDurationTimeWidget(),
           ALittleVerticalSpace(),
@@ -101,7 +123,11 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
             duration: Duration(milliseconds: 400),
             child: visitTimeChecked
                 ? VisitDateTimePicker(
-                    dateTextController, timeTextController, widget.doctorEntity)
+                    dateTextController,
+                    timeTextController,
+                    widget.doctorEntity,
+                    scrollableTimeSelectorType: true,
+                  )
                 : SizedBox(),
           ),
           ALittleVerticalSpace(),
@@ -122,53 +148,49 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
   }
 
-  _visitTypeWidget(String title, List<String> items,
-          {double width = 120, double height = 40, double fontSize = 17}) =>
-      Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                AutoText(
-                  title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
-          ),
-          ALittleVerticalSpace(),
-          Row(
+  _visitTypeWidget(String title, Map<int, String> items,
+      {double width = 120, double height = 40, double fontSize = 17}) {
+    List<Widget> res = [];
+    items.forEach((key, value) {
+      res.add(Padding(
+        padding: const EdgeInsets.only(right: 4.0, left: 4.0),
+        child: ActionButton(
+          width: width,
+          height: height,
+          fontSize: fontSize,
+          color: typeSelected[title] == key ? IColors.themeColor : Colors.grey,
+          title: items[key],
+          callBack: () {
+            setState(() {
+              typeSelected[title] = key;
+            });
+          },
+        ),
+      ));
+    });
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              for (var index = items.length - 1; index >= 0; index--)
-                Visibility(
-                  visible: title == VISIT_DURATION_PLAN ||
-                      index != VisitMethod.VOICE.index,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 4.0, left: 4.0),
-                    child: ActionButton(
-                      width: width,
-                      height: height,
-                      fontSize: fontSize,
-                      color: typeSelected[title] == index
-                          ? IColors.themeColor
-                          : Colors.grey,
-                      title: items[index],
-                      callBack: () {
-                        setState(() {
-                          typeSelected[title] = index;
-                        });
-                      },
-                    ),
-                  ),
-                ),
+              AutoText(
+                title,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                textAlign: TextAlign.right,
+              ),
             ],
-          )
-        ],
-      );
+          ),
+        ),
+        ALittleVerticalSpace(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: res,
+        )
+      ],
+    );
+  }
 
   _priceWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -263,24 +285,32 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     );
   }
 
-  _acceptPolicyWidget() => Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          AutoText(
-            Strings.virtualVisitPrivacyPolicyMessage,
-            textAlign: TextAlign.right,
-            style: TextStyle(fontSize: 10),
-          ),
-          Checkbox(
-            activeColor: IColors.themeColor,
-            value: policyChecked,
-            onChanged: (d) {
-              setState(() {
-                policyChecked = !policyChecked;
-              });
-            },
-          ),
-        ],
+  _acceptPolicyWidget() => Container(
+        width: MediaQuery.of(context).size.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width - 80,
+              child: AutoText(
+                Strings.virtualVisitPrivacyPolicyMessage,
+                textAlign: TextAlign.right,
+                style: TextStyle(fontSize: 10),
+                maxLines: 3,
+              ),
+            ),
+            Checkbox(
+              activeColor: IColors.themeColor,
+              value: policyChecked,
+              onChanged: (d) {
+                setState(() {
+                  policyChecked = !policyChecked;
+                });
+              },
+            ),
+          ],
+        ),
       );
 
   _submitWidget() => ActionButton(
@@ -330,7 +360,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   }
 
   void sendVisitRequest() {
-    /// TODO mosio: timeTextController.text should be used here later
+    /// TODO amir: timeTextController.text should be used here later
     String startTime = timeTextController.text.split("-")[0];
     int startMinute = getTimeMinute(startTime);
 

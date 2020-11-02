@@ -1,21 +1,17 @@
 import 'dart:convert';
 
 import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polygon_clipper/polygon_clipper.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class PartnerResultList extends StatefulWidget {
@@ -57,8 +53,9 @@ class _PartnerResultListState extends State<PartnerResultList> {
     return Expanded(
       flex: 2,
       child: ListView(
-        children:
-            widget.nextPageFetchLoader ? results + [APICallLoading()] : results,
+        children: widget.nextPageFetchLoader
+            ? results + [DocUpAPICallLoading2()]
+            : results,
         physics: BouncingScrollPhysics(),
       ),
     );
@@ -156,27 +153,37 @@ class _SearchResultDoctorItem extends StatelessWidget {
 
   Widget _tag(text) {
     return Container(
-      padding: EdgeInsets.only(right: 10, left: 10),
-      margin: EdgeInsets.symmetric(horizontal: 5),
+      padding: EdgeInsets.only(right: 0, left: 2.5),
       decoration: BoxDecoration(
-          color: IColors.themeColor,
+          color: Color.fromARGB(0, 0, 0, 0),
           borderRadius: BorderRadius.all(Radius.circular(7))),
       child: AutoText(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.white, fontSize: 10),
+        style: TextStyle(color: IColors.themeColor, fontSize: 10),
       ),
     );
   }
 
   Widget _tags() {
+    List<Widget> res = [];
+    entity.plan.visitMethod.forEach((element) {
+      if (element == 0) {
+        res.add(_tag('ویزیت متنی'));
+      } else if (element == 1) {
+        res.add(_tag('ویزیت صوتی'));
+      } else if (element == 2) {
+        res.add(_tag('ویزیت تصویری'));
+      }
+      if (entity.plan.visitMethod.indexOf(element) !=
+          entity.plan.visitMethod.length - 1) {
+        res.add(_tag("/"));
+      }
+    });
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          _tag('ویزیت متنی'),
-          _tag('ویزیت صوتی'),
-        ],
+        children: res,
       ),
     );
   }
@@ -222,6 +229,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(right: 10, left: 15),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[_nameAndExpertise(), _tags()],
         ),
       ),
@@ -331,7 +339,8 @@ class _SearchResultPatientItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _rating(),
+              // _rating(),
+              SizedBox(),
               AutoText(
                 utfName == "" ? " - " : utfName,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),

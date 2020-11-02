@@ -14,8 +14,9 @@ import 'package:polygon_clipper/polygon_clipper.dart';
 class PartnerInfo extends StatelessWidget {
   final Entity entity;
   final Function(String, UserEntity) onPush;
+  final Color bgColor;
 
-  PartnerInfo({Key key, this.entity, @required this.onPush}) : super(key: key);
+  PartnerInfo({Key key, this.entity, @required this.onPush,this.bgColor}) : super(key: key);
 
   Widget _isOnline() => Container(
         width: 15,
@@ -49,7 +50,7 @@ class PartnerInfo extends StatelessWidget {
                   )),
               Align(
                   alignment: Alignment(-.75, 1),
-                  child: (entity.partnerEntity.user.online??0 > 0
+                  child: ((entity.partnerEntity.user.online??0) > 0
                       ? _isOnline()
                       : Container()))
             ],
@@ -120,7 +121,7 @@ class PartnerInfo extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(top: 20, left: 30, right: 30, bottom: 10),
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-      color: Colors.white70,
+      color: bgColor??Colors.white70,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[

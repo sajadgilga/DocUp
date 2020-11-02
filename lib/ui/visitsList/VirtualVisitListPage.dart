@@ -33,7 +33,6 @@ class VirtualVisitList extends StatelessWidget {
   VirtualVisitList({@required this.onPush});
 
   void _search(context) {
-    var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
     searchBloc.add(SearchVisit(
         text: _controller.text,

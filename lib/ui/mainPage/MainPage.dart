@@ -2,14 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/NotificationBloc.dart';
+import 'package:docup/blocs/PanelBloc.dart';
+import 'package:docup/models/NewestNotificationResponse.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/networking/ApiProvider.dart';
 import 'package:docup/networking/CustomException.dart';
-import 'package:docup/services/FirebaseService.dart';
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/PanelBloc.dart';
-import 'package:docup/constants/assets.dart';
-import 'package:docup/models/UserEntity.dart';
 import 'package:docup/repository/NotificationRepository.dart';
+import 'package:docup/services/FirebaseService.dart';
+import 'package:docup/ui/mainPage/navigator_destination.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,10 +20,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polygon_clipper/polygon_clipper.dart';
-
-import 'package:docup/ui/mainPage/navigator_destination.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+
 import '../../constants/colors.dart';
 import 'CallRepo.dart';
 import 'NavigatorView.dart';
@@ -88,9 +88,25 @@ class _MainPageState extends State<MainPage> {
         _firebaseMessaging.configure(
           onMessage: (Map<String, dynamic> message) async {
             print("onMessage: $message");
+            String title = message['notification']['title'];
+            String bodyString = message['notification']['body'];
+            Map<String, dynamic> body = json.decode(bodyString);
+            NewestVisit visit = NewestVisit.fromJson(body['payload']);
+
             await _showNotificationWithDefaultSound(
-                message['notification']['title'],
-                message['notification']['body']);
+                visit.getNotificationTitle(),
+                visit.getNotificationDescription());
+
+            /// notification bloc events
+            // ignore: close_sinks
+            NotificationBloc notificationBloc =
+                BlocProvider.of<NotificationBloc>(context);
+            if ([5, 6].contains(body['type'])) {
+              /// TODO amir: this condition should check type of notification later
+              notificationBloc.add(AddNewestVisitNotification(newVisit: visit));
+            } else if (true) {
+              /// TODO amir: handling event type of notification
+            }
           },
           onBackgroundMessage:
               Platform.isIOS ? null : myBackgroundMessageHandler,

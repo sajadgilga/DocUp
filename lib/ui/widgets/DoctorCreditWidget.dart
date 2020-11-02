@@ -1,4 +1,5 @@
 import 'package:docup/constants/colors.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,10 @@ import 'AutoText.dart';
 
 class DoctorCreditWidget extends StatefulWidget {
   final String credit;
+  final DoctorEntity doctorEntity;
+  final Function onTakeMoney;
 
-  DoctorCreditWidget({this.credit});
+  DoctorCreditWidget({this.credit,this.doctorEntity,this.onTakeMoney});
 
   @override
   _DoctorCreditWidgetState createState() => _DoctorCreditWidgetState();
@@ -30,7 +33,7 @@ class _DoctorCreditWidgetState extends State<DoctorCreditWidget> {
           children: <Widget>[
             GestureDetector(
               onTap: () {
-                /// TODO
+                widget.onTakeMoney();
               },
               child: Container(
                 height: 60,

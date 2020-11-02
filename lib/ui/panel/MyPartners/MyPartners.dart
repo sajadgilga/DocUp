@@ -28,9 +28,12 @@ class MyPartners extends StatelessWidget {
         text: "",
       ));
     else if (_state.entity.isPatient)
-      searchBloc.add(SearchDoctor(
-          patientUsername: _state.entity.mEntity.user.username,
-          isMyDoctors: true));
+      if(_state.entity.mEntity != null){
+        searchBloc.add(SearchDoctor(
+            patientUsername: _state.entity.mEntity.user.username,
+            isMyDoctors: true));
+      }
+
   }
 
   @override

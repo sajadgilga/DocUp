@@ -1,5 +1,5 @@
-import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/models/NoronioService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,21 +7,28 @@ import 'AutoText.dart';
 import 'DocupHeader.dart';
 
 class SquareBoxNoronioClinicService extends StatelessWidget {
-  final String iconAsset;
-  final Function() onTap;
-  final String titleText;
-  final Color bgColor;
-  final double opacity;
+  final NoronioService noronioService;
+  double boxSize;
 
-  SquareBoxNoronioClinicService(this.iconAsset, this.onTap, this.titleText,
-      {Key key,
-      this.bgColor = const Color.fromRGBO(255, 255, 255, .8),
-      this.opacity = 1.0})
+  SquareBoxNoronioClinicService(this.noronioService, {Key key, this.boxSize})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double boxSize = MediaQuery.of(context).size.width * (40 / 100);
+    Color bgColor;
+    if (noronioService.isEmpty) {
+      bgColor = Color.fromARGB(0, 0, 0, 0);
+    } else {
+      bgColor = Color.fromRGBO(255, 255, 255, .8);
+    }
+    double opacity;
+    if (noronioService.enable) {
+      opacity = 1.0;
+    } else {
+      opacity = 0.5;
+    }
+
+    boxSize = boxSize ?? MediaQuery.of(context).size.width * (40 / 100);
     return GestureDetector(
       child: Opacity(
         opacity: opacity,
@@ -33,7 +40,7 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
               color: bgColor),
           width: boxSize,
           height: boxSize,
-          child: iconAsset == null
+          child: noronioService.iconAddress == null
               ? SizedBox()
               : Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -58,15 +65,15 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
                     ),
                     Container(
                         width: boxSize * (40 / 100),
-                        child: Image.asset(iconAsset)),
+                        child: Image.asset(noronioService.iconAddress)),
                     DocUpSubHeader(
-                      title: titleText,
+                      title: noronioService.title,
                     )
                   ],
                 ),
         ),
       ),
-      onTap: onTap != null ? onTap : () {},
+      onTap: noronioService.onTap != null ? noronioService.onTap : () {},
     );
   }
 }

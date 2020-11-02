@@ -1,13 +1,15 @@
+import 'package:docup/constants/colors.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
-import 'package:docup/constants/colors.dart';
-
 class HomeNotification extends StatelessWidget {
   int newNotificationCount;
+  final Function(String, dynamic) onPush;
 
-  HomeNotification({Key key, this.newNotificationCount}) : super(key: key);
+  HomeNotification({Key key, this.newNotificationCount=0, @required this.onPush})
+      : super(key: key);
 
   Widget _notificationIcon() {
     return Container(
@@ -30,7 +32,8 @@ class HomeNotification extends StatelessWidget {
         child: Wrap(children: <Widget>[
           Container(
               padding: EdgeInsets.only(left: 5, right: 5),
-              child: AutoText('${replaceFarsiNumber(newNotificationCount.toString())}',
+              child: AutoText(
+                  '${replaceFarsiNumber(newNotificationCount.toString())}',
                   style: TextStyle(color: Colors.white, fontSize: 12)),
               decoration: BoxDecoration(
                   color: IColors.themeColor,
@@ -47,11 +50,16 @@ class HomeNotification extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: 50,
-        height: 50,
-        child: Stack(
-          children: <Widget>[_notificationIcon(), _notificationCountCircle()],
-        ));
+    return GestureDetector(
+      onTap: () {
+        onPush(NavigatorRoutes.notificationView, null);
+      },
+      child: Container(
+          width: 50,
+          height: 50,
+          child: Stack(
+            children: <Widget>[_notificationIcon(), _notificationCountCircle()],
+          )),
+    );
   }
 }

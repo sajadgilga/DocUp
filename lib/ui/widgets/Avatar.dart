@@ -8,11 +8,11 @@ class PolygonAvatar extends StatelessWidget {
   final User user;
   double imageSize;
 
-  PolygonAvatar({Key key, this.user,this.imageSize}) : super(key: key);
+  PolygonAvatar({Key key, this.user, this.imageSize}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (imageSize==null){
+    if (imageSize == null) {
       imageSize = MediaQuery.of(context).size.width * 0.25;
     }
     return Stack(children: <Widget>[
@@ -25,9 +25,7 @@ class PolygonAvatar extends StatelessWidget {
             PolygonBoxShadow(color: Colors.black, elevation: 1.0),
             PolygonBoxShadow(color: Colors.grey, elevation: 5.0)
           ],
-          child: user.avatar != null
-              ? Image.network(user.avatar,width: imageSize,height: imageSize,)
-              : Image.asset("assets/avatar.png",width: imageSize,height: imageSize,),
+          child: imageHandler(),
         ),
       ),
       Visibility(
@@ -44,19 +42,46 @@ class PolygonAvatar extends StatelessWidget {
       ),
     ]);
   }
+
+  Widget imageHandler() {
+    Widget defaultImage() {
+      return Image.asset(
+        "assets/avatar.png",
+        width: imageSize,
+        height: imageSize,
+      );
+    }
+
+    if (user.avatar != null && user.avatar != "") {
+      Widget image;
+      try {
+        image = Image.network(
+          user.avatar,
+          errorBuilder: (context, error, stackTrace) {
+            return defaultImage();
+          },
+        );
+      } catch (e) {
+        image = defaultImage();
+      }
+      return image;
+    } else {
+      return defaultImage();
+    }
+  }
 }
 
-class CircularAvatar extends StatelessWidget {
+class EditingCircularAvatar extends StatelessWidget {
   final User user;
-  final Function onTap;
+  final double radius;
 
-  const CircularAvatar({Key key, this.user, this.onTap}) : super(key: key);
+  const EditingCircularAvatar({Key key, this.user,this.radius=120}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: <Widget>[
       Container(
-        width: MediaQuery.of(context).size.width * 0.25,
+        width: radius,
         child: user.avatar != null
             ? Image.network(user.avatar)
             : Image.asset("assets/avatar.png"),
@@ -65,22 +90,19 @@ class CircularAvatar extends StatelessWidget {
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 2)]),
       ),
-      GestureDetector(
-        onTap: onTap == null ? () {} : onTap(),
+      Container(
+        width: radius,
+        height: radius,
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.25,
-          height: MediaQuery.of(context).size.width * 0.25,
-          child: Container(
-            child: Icon(
-              Icons.camera_alt,
-              size: 35,
-              color: Colors.white,
-            ),
+          child: Icon(
+            Icons.camera_alt,
+            size: 35,
+            color: Colors.white,
           ),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Color.fromARGB(80, 0, 0, 20),
-          ),
+        ),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Color.fromARGB(80, 0, 0, 20),
         ),
       ),
       Visibility(

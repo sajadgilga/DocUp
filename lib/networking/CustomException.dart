@@ -33,7 +33,11 @@ class ApiException implements Exception {
   ApiException([this._code, this.message]);
 
   getCode(){
-    return int.parse(this._code);
+    try{
+      return int.parse(this._code);
+    }catch(e){
+      return _code;
+    }
   }
   String toString() {
     return message;

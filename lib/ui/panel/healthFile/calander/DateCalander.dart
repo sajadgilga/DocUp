@@ -120,7 +120,7 @@ class _DateCalenderState extends State<DateCalender> {
                     type: "date",
                     initial: getTomorrowInJalali(),
                     min: getTodayInJalali(),
-                    disable: [],
+                    disable: <int,String>{},
                     onSelect: (date) {},
                   ),
                 )
