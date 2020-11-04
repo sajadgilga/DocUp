@@ -51,10 +51,10 @@ class PanelTestList extends StatefulWidget {
 }
 
 class _PanelTestListState extends State<PanelTestList> {
-  Widget _label() => Container(
+  Widget _label(String text) => Container(
         padding: EdgeInsets.only(bottom: 15),
         child: AutoText(
-          widget.picLabel,
+          text,
           style: TextStyle(
               color: IColors.darkGrey,
               fontSize: 14,
@@ -261,10 +261,13 @@ class _PanelTestListState extends State<PanelTestList> {
     List<Widget> res = [];
     tests.forEach((element) {
       res.add(SquareBoxNoronioClinicService(
-        NoronioService(element.name, Assets.noronioServiceBrainTest, null,
+        NoronioServiceItem(element.name, Assets.noronioServiceBrainTest, null,
             NoronioClinicServiceType.MultipleChoiceTest, () {
-          element.patientEntity = widget.patient;
-          widget.globalOnPush(NavigatorRoutes.cognitiveTest, element);
+          MedicalTestPageData medicalTestPageData = MedicalTestPageData(
+              editableFlag: false,
+              medicalTestItem: element,
+              patientEntity: widget.patient);
+          widget.globalOnPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
         }, true),
         boxSize: 120,
       ));
@@ -284,7 +287,7 @@ class _PanelTestListState extends State<PanelTestList> {
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
               children: [
-                _label(),
+                _label(widget.picLabel),
               ],
             ),
             SingleChildScrollView(
@@ -311,7 +314,7 @@ class _PanelTestListState extends State<PanelTestList> {
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
               children: [
-                _label(),
+                _label(widget.recentLabel),
               ],
             ),
             SingleChildScrollView(

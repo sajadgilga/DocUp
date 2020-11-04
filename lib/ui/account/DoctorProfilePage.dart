@@ -20,6 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
+import 'EditProfileAvatarDialog.dart';
 import 'EditProfileDataDialog.dart';
 
 class DoctorProfilePage extends StatefulWidget {
@@ -57,7 +58,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
   Widget build(BuildContext context) {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
-        if (state is EntityLoaded || state!= null) {
+        if (state is EntityLoaded || state != null) {
           if (state.entity.mEntity != null) {
             DoctorEntity doctorEntity = state.entity.mEntity;
             return SingleChildScrollView(
@@ -119,19 +120,24 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                   ),
                 ),
                 ALittleVerticalSpace(),
-                PolygonAvatar(user: doctorEntity.user),
+                GestureDetector(
+                    onTap: () {
+                      EditProfileAvatarDialog dialog =
+                          EditProfileAvatarDialog(context, state.entity, () {});
+                      dialog.showEditableAvatarDialog();
+                    },
+                    child: EditingCircularAvatar(user: doctorEntity.user)),
                 ALittleVerticalSpace(),
                 DoctorData(
                     width: MediaQuery.of(context).size.width,
                     doctorEntity: doctorEntity),
                 ActionButton(
-                  title: "ویرایش اطلاعات",
+                  title: "اطلاعات",
                   color: IColors.themeColor,
                   callBack: () {
                     EditProfileDataDialog editProfileData =
-                    EditProfileDataDialog(context, state.entity, () {
-                      EntityBloc entityBloc = BlocProvider.of<EntityBloc>(context);
-                      entityBloc.add(EntityGet());
+                        EditProfileDataDialog(context, state.entity, () {
+                      BlocProvider.of<EntityBloc>(context).add(EntityGet());
                     });
                     editProfileData.showEditableDataDialog();
                   },

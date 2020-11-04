@@ -32,10 +32,10 @@ import 'package:rxdart/rxdart.dart';
 
 class MedicalTestPage extends StatefulWidget {
   final Function(String, dynamic) onPush;
-  final MedicalTestItem emptyMedicalTest;
+  final MedicalTestPageData medicalTestPageInitData;
 
   MedicalTestPage(
-      {Key key, @required this.onPush, @required this.emptyMedicalTest})
+      {Key key, @required this.onPush, @required this.medicalTestPageInitData})
       : super(key: key);
 
   @override
@@ -57,7 +57,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     // _bloc.add(GetTest(id: widget.emptyMedicalTest.id));
     if (_state.entity.isDoctor) {
-      _bloc.add(GetTest(id: widget.emptyMedicalTest.id));
+      _bloc.add(GetTest(id: widget.medicalTestPageInitData.medicalTestItem.id));
 
       /// TODO amir: api incomplete here doctor should have access to patient response
       // _bloc.add(GetPatientTestAndResponse(
@@ -65,7 +65,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
       //     patientId: widget.emptyMedicalTest.patientEntity.id));
     } else {
       _bloc.add(GetPatientTestAndResponse(
-          testId: widget.emptyMedicalTest.id,
+          testId: widget.medicalTestPageInitData.medicalTestItem.id,
           patientId: _state.entity.mEntity.id));
     }
     super.initState();
@@ -118,7 +118,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
                     topLeftFlag: Platform.isIOS,
                   ),
                   DocUpHeader(
-                    title: widget.emptyMedicalTest.name,
+                    title: widget.medicalTestPageInitData.medicalTestItem.name,
                     docUpLogo: false,
                     color: IColors.black,
                   ),
@@ -133,7 +133,8 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
               ALittleVerticalSpace(
                 height: 30,
               ),
-              state.entity.isDoctor
+              state.entity.isDoctor ||
+                      !widget.medicalTestPageInitData.editableFlag
                   ? SizedBox()
                   : _patientTestResultButton(test, state.entity.mEntity),
               MediumVerticalSpace()
@@ -167,9 +168,9 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
       ),
       Padding(
           padding: const EdgeInsets.only(right: 20),
-          child: widget.emptyMedicalTest.patientEntity == null
+          child: widget.medicalTestPageInitData.patientEntity == null
               ? SizedBox()
-              : _userInfoWidget(widget.emptyMedicalTest.patientEntity))
+              : _userInfoWidget(widget.medicalTestPageInitData.patientEntity))
     ]);
   }
 

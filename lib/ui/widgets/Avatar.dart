@@ -74,50 +74,70 @@ class PolygonAvatar extends StatelessWidget {
 class EditingCircularAvatar extends StatelessWidget {
   final User user;
   final double radius;
+  final bool editableFlag;
+  final Image defaultImage;
 
-  const EditingCircularAvatar({Key key, this.user,this.radius=120}) : super(key: key);
+  const EditingCircularAvatar(
+      {Key key,
+      this.user,
+      this.radius = 120,
+      this.editableFlag = true,
+      this.defaultImage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: <Widget>[
       Container(
-        width: radius,
-        child: user.avatar != null
-            ? Image.network(user.avatar)
-            : Image.asset("assets/avatar.png"),
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 2),
-            boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 2)]),
+        width: radius + 2,
+        height: radius + 2,
+        decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 2,
+          )
+        ]),
       ),
-      Container(
-        width: radius,
-        height: radius,
-        child: Container(
-          child: Icon(
-            Icons.camera_alt,
-            size: 35,
-            color: Colors.white,
-          ),
-        ),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Color.fromARGB(80, 0, 0, 20),
-        ),
+      CircleAvatar(
+        radius: radius / 2,
+        backgroundColor: Color.fromARGB(0, 0, 0, 0),
+        backgroundImage: user != null && user.avatar != null
+            ? NetworkImage(user.avatar)
+            : (defaultImage != null
+                ? defaultImage.image
+                : AssetImage("assets/avatar.png")),
       ),
-      Visibility(
-        /// TODO
-        visible: user.online == 1,
-        child: Positioned(
-          bottom: 0,
-          left: 16,
-          child: Icon(
-            Icons.brightness_1,
-            color: IColors.blue,
-            size: 16,
-          ),
-        ),
-      ),
+      editableFlag
+          ? Container(
+              width: radius,
+              height: radius,
+              child: Container(
+                child: Icon(
+                  Icons.camera_alt,
+                  size: 35,
+                  color: Colors.white,
+                ),
+              ),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color.fromARGB(80, 0, 0, 20),
+              ),
+            )
+          : SizedBox(),
+      editableFlag
+          ? Visibility(
+              visible: user.online >= 1,
+              child: Positioned(
+                bottom: 0,
+                left: 16,
+                child: Icon(
+                  Icons.brightness_1,
+                  color: IColors.blue,
+                  size: 16,
+                ),
+              ),
+            )
+          : SizedBox(),
     ]);
   }
 }

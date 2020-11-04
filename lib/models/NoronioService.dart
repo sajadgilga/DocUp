@@ -1,6 +1,8 @@
 enum NoronioClinicServiceType { MultipleChoiceTest, DoctorsList, Game }
 
-class NoronioService {
+
+
+class NoronioServiceItem {
   final String title;
   final String iconAddress;
   final String iconURL;
@@ -8,11 +10,11 @@ class NoronioService {
   final Function() onTap;
   final bool enable;
 
-  NoronioService(this.title, this.iconAddress, this.iconURL, this.serviceType,
-      this.onTap, this.enable);
+  NoronioServiceItem(this.title, this.iconAddress, this.iconURL,
+      this.serviceType, this.onTap, this.enable);
 
-  factory NoronioService.empty() {
-    return NoronioService(null, null, null, null, null, false);
+  factory NoronioServiceItem.empty() {
+    return NoronioServiceItem(null, null, null, null, null, false);
   }
 
   bool get isEmpty {

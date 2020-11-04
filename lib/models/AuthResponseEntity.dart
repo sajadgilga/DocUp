@@ -75,3 +75,9 @@ class LoginResponseEntity {
     return data;
   }
 }
+
+class UploadAvatarResponseEntity {
+  UploadAvatarResponseEntity();
+
+  UploadAvatarResponseEntity.fromJson(Map<String, dynamic> json) {}
+}

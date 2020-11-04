@@ -90,55 +90,73 @@ class _PicListState extends State<PicList> {
       return Container();
   }
 
-  Widget _picListBox(width, List<PictureEntity> pics) {
-//    return Container();
-    List<Widget> pictures = [];
-    for (PictureEntity pic in pics) {
-//    for (int i = 0; i < _calculatePossiblePicCount(width); i++) {
-      pictures.add(Container(
-        child: Column(
-          children: <Widget>[
-            GestureDetector(
-                onTap: () {
-                  Navigator.of(context, rootNavigator: true)
-                      .push(MaterialPageRoute(builder: (_) {
-                    return DetailScreen(
-                      url: pic.imageURL,
-                    );
-                  }));
-                },
-                child: Container(
-                  width: 150.0,
-                  height: 100.0,
-                  margin: EdgeInsets.only(left: 10, right: 10),
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover, image: NetworkImage(pic.imageURL)),
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                    child: Container(
-                      color: Colors.white.withOpacity(.4),
+  Widget _pictureItem(PictureEntity pic) {
+    return Column(
+      children: <Widget>[
+        GestureDetector(
+            onTap: () {
+              if (pic != null) {
+                Navigator.of(context, rootNavigator: true)
+                    .push(MaterialPageRoute(builder: (_) {
+                  return DetailScreen(
+                    url: pic.imageURL,
+                  );
+                }));
+              }
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * (40 / 100),
+              height: 100.0,
+              decoration: pic != null
+                  ? BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.cover, image: NetworkImage(pic.imageURL)),
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    )
+                  : BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
                     ),
-                  ),
-                )),
-            AutoText(
-              pic.title,
-              style: TextStyle(
-                fontSize: 8,
-                fontWeight: FontWeight.bold,
-                color: IColors.darkGrey,
-              ),
-            )
-          ],
+              child: pic != null
+                  ? BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                      child: Container(
+                          decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(.4),
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                      )),
+                    )
+                  : null,
+            )),
+        AutoText(
+          pic != null ? pic.title : "",
+          style: TextStyle(
+            fontSize: 8,
+            fontWeight: FontWeight.bold,
+            color: IColors.darkGrey,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _picListBox(width, List<PictureEntity> pics) {
+    List<Widget> pictures = [];
+    for (int i = 0; i < pics.length; i += 2) {
+      PictureEntity pic1 = pics[i];
+      PictureEntity pic2 = (i == pics.length - 1) ? null : pics[i + 1];
+
+      pictures.add(Container(
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [_pictureItem(pic2), _pictureItem(pic1)],
         ),
       ));
     }
     return Container(
-      margin: EdgeInsets.only(right: 15, top: 10),
-      child: Wrap(
-//        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
         children: pictures,
       ),
     );
@@ -192,29 +210,22 @@ class _PicListState extends State<PicList> {
         ),
       );
 
-  Widget _picList(width, pics) => Expanded(
-        flex: 2,
-        child: Container(
-          child: Column(
-            children: <Widget>[_picListHeader(), _picListBox(width, pics)],
-          ),
-        ),
-      );
+  Widget _picList(width, pics) {
+    return Container(
+      child: Column(
+        children: <Widget>[_picListHeader(), _picListBox(width, pics)],
+      ),
+    );
+  }
 
   Widget _recentPics() => BlocBuilder<PictureBloc, PictureState>(
         builder: (context, state) {
           if (widget.listId < 0) return Container();
           if (state is PicturesLoaded) {
-            if (state.section.id == widget.listId)
-              return Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    _picList(MediaQuery.of(context).size.width,
-                        (state as PicturesLoaded).section.pictures),
-                  ],
-                ),
-              );
+            if (state.section.id == widget.listId) {
+              return _picList(
+                  MediaQuery.of(context).size.width, state.section.pictures);
+            }
           }
           if (state is PictureLoading) {
             if (state.section == null)
@@ -222,15 +233,8 @@ class _PicListState extends State<PicList> {
                   margin: EdgeInsets.only(top: 40), child: Waiting());
 
             if (state.section.id == widget.listId)
-              return Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    _picList(MediaQuery.of(context).size.width,
-                        (state as PictureLoading).section.pictures),
-                  ],
-                ),
-              );
+              return _picList(
+                  MediaQuery.of(context).size.width, state.section.pictures);
             else
               return Container(
                   margin: EdgeInsets.only(top: 40), child: Waiting());

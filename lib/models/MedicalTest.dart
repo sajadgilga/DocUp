@@ -32,6 +32,15 @@ class MedicalTestResponse {
     return data;
   }
 }
+class MedicalTestPageData{
+  final MedicalTestItem medicalTestItem;
+  final PatientEntity patientEntity;
+  final bool editableFlag;
+
+  MedicalTestPageData({this.medicalTestItem, this.patientEntity, this.editableFlag});
+
+
+}
 
 class MedicalTestItem {
   /// this model is for loading test list from database and showing theme in
@@ -41,10 +50,9 @@ class MedicalTestItem {
   String description;
   String imageURL;
   bool done;
-  PatientEntity patientEntity;
 
   MedicalTestItem(this.id, this.name,
-      {this.description, this.imageURL, this.done,this.patientEntity});
+      {this.description, this.imageURL, this.done});
 
   MedicalTestItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];

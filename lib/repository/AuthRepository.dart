@@ -22,4 +22,12 @@ class AuthRepository {
         body: {"username": username, "user_type": userType}, withToken: false);
     return LoginResponseEntity.fromJson(response);
   }
+
+  Future<UploadAvatarResponseEntity> uploadUserProfile(
+      String base64ImageString, userId) async {
+    final response = await _provider.patch(
+        "api/auth/upload-profile-image/$userId",
+        body: {"avatar": base64ImageString});
+    return UploadAvatarResponseEntity.fromJson(response);
+  }
 }

@@ -7,7 +7,7 @@ import 'AutoText.dart';
 import 'DocupHeader.dart';
 
 class SquareBoxNoronioClinicService extends StatelessWidget {
-  final NoronioService noronioService;
+  final NoronioServiceItem noronioService;
   double boxSize;
 
   SquareBoxNoronioClinicService(this.noronioService, {Key key, this.boxSize})

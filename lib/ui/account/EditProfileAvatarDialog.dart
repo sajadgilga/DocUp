@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:docup/blocs/DoctorBloc.dart';
-import 'package:docup/blocs/PatientBloc.dart';
+import 'package:docup/blocs/AuthBloc.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/models/Picture.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
@@ -20,8 +19,7 @@ class EditProfileAvatarDialog {
   BuildContext dialogContext;
   BuildContext context;
   StateSetter alertStateSetter;
-  PictureEntity picture =
-      PictureEntity(picture: null, title: '', description: '');
+  File picture;
 
   final Function() onDone;
 
@@ -33,18 +31,10 @@ class EditProfileAvatarDialog {
 
   void showEditableAvatarDialog() {
     StreamSubscription streamSubscription;
-    var dataBloc;
-    if (entity.isPatient) {
-      dataBloc = PatientBloc();
-      streamSubscription = dataBloc.dataStream.listen((event) {
-        handleResponse(event);
-      });
-    } else if (entity.isDoctor) {
-      dataBloc = DoctorBloc();
-      streamSubscription = dataBloc.doctorStream.listen((event) {
-        handleResponse(event);
-      });
-    }
+    AuthBloc authBloc = AuthBloc();
+    streamSubscription = authBloc.uploadAvatarStream.listen((event) {
+      handleResponse(event);
+    });
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -86,10 +76,20 @@ class EditProfileAvatarDialog {
                                 onTap: () {
                                   _getImage(dialogStateSetter);
                                 },
-                                child: EditingCircularAvatar(
-                                  user: entity.mEntity.user,
-                                  radius: 140,
-                                )),
+                                child: picture == null
+                                    ? EditingCircularAvatar(
+                                        user: entity.mEntity.user,
+                                        radius: 140,
+                                        editableFlag: false,
+                                      )
+                                    : EditingCircularAvatar(
+                                        radius: 140,
+                                        editableFlag: false,
+                                        defaultImage: Image.file(
+                                          picture,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )),
                             ALittleVerticalSpace(
                               height: 100,
                             ),
@@ -102,7 +102,7 @@ class EditProfileAvatarDialog {
                               height: 45,
                               borderRadius: 10,
                               callBack: () {
-                                editData(dataBloc);
+                                updateAvatarImage(authBloc);
                               },
                             )
                           ],
@@ -156,21 +156,19 @@ class EditProfileAvatarDialog {
     } catch (e) {}
   }
 
-  void editData(dataBloc) {}
+  void updateAvatarImage(AuthBloc authBloc) async {
+    if (picture != null) {
+      authBloc.uploadAvatar(
+          base64Encode(picture.readAsBytesSync()), entity.mEntity.id);
+    } else {
+      showError();
+    }
+  }
 
   Future _getImage(StateSetter stateSetter) async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    var newPicture = PictureEntity(
-        picture: Image.file(
-          image,
-          fit: BoxFit.cover,
-        ),
-        description: '',
-        title: picture.description,
-        base64: base64Encode(image.readAsBytesSync()),
-        imagePath: image.path);
     stateSetter(() {
-      picture = newPicture;
+      picture = image;
     });
   }
 }

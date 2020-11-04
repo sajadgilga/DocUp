@@ -3,6 +3,7 @@ import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/blocs/SingleMedicalTestBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/MedicalTest.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitTime.dart';
@@ -68,61 +69,71 @@ class _IllnessPageState extends State<IllnessPage> {
   }
 
   Widget _IllnessPage(times) {
-    return MultiBlocProvider(
-        providers: [
-          BlocProvider<PictureBloc>.value(
-            value: _pictureBloc,
-          ),
-        ],
-        child: SingleChildScrollView(
-            child: Container(
-          child: Column(children: <Widget>[
-            PartnerInfo(
-              entity: widget.entity,
-              onPush: widget.onPush,
-              bgColor: IColors.background,
+    if (widget.entity.isDoctor &&
+        (widget.entity.doctor.clinic == null ||
+            widget.entity.doctor.clinic.id != NoronioClinic.ClinicId)) {
+      return Container(
+        padding: EdgeInsets.symmetric(vertical: 50,horizontal: 20),
+        alignment: Alignment.center,
+        child: AutoText(
+            "تست های ارسالی فقط برای دکتران کلینیک نورونیو در دسترس هستند."),
+      );
+    } else
+      return MultiBlocProvider(
+          providers: [
+            BlocProvider<PictureBloc>.value(
+              value: _pictureBloc,
             ),
-            VisitBox(
-              visitTimes: times,
-            ),
-            BlocBuilder<MedicalTestListBloc, MedicalTestListState>(
-                builder: (context, state) {
-              if (state is TestsListLoaded ||
-                  (state is TestsListLoading && state.result != null)) {
-                return PanelTestList(
-                  patient: widget.entity.patient,
-                  globalOnPush: widget.globalOnPush,
-                  previousTest: getTestsWithDone(state.result, true),
-                  waitingTest: getTestsWithDone(state.result, false),
-                  listId: widget.entity.sectionId(Strings.cognitiveTests),
-                  uploadAvailable: widget.entity.isPatient,
-                  picLabel: widget.entity.isPatient
-                      ? "تست های دریافتی"
-                      : "تست های ارسالی",
-                  recentLabel: Strings.illnessInfoLastPicsLabel,
-                  uploadLabel: "شما ۱ تست از سوی پزشک دارید",
-                  asset: SvgPicture.asset(
-                    "assets/cloud.svg",
-                    height: 35,
-                    width: 35,
-                    color: IColors.themeColor,
-                  ),
-                  tapCallback: () => widget.onPush(
-                      NavigatorRoutes.cognitiveTest,
-                      widget.entity.partnerEntity),
-                );
-              } else if (state is TestsListError) {
-                return APICallError(
-                  tightenPage: true,
-                );
-              } else {
-                return DocUpAPICallLoading2(
-                  height: MediaQuery.of(context).size.height / 2,
-                );
-              }
-            })
-          ]),
-        )));
+          ],
+          child: SingleChildScrollView(
+              child: Container(
+            child: Column(children: <Widget>[
+              PartnerInfo(
+                entity: widget.entity,
+                onPush: widget.onPush,
+                bgColor: IColors.background,
+              ),
+              VisitBox(
+                visitTimes: times,
+              ),
+              BlocBuilder<MedicalTestListBloc, MedicalTestListState>(
+                  builder: (context, state) {
+                if (state is TestsListLoaded ||
+                    (state is TestsListLoading && state.result != null)) {
+                  return PanelTestList(
+                    patient: widget.entity.patient,
+                    globalOnPush: widget.globalOnPush,
+                    previousTest: getTestsWithDone(state.result, true),
+                    waitingTest: getTestsWithDone(state.result, false),
+                    listId: widget.entity.sectionId(Strings.cognitiveTests),
+                    uploadAvailable: widget.entity.isPatient,
+                    picLabel: widget.entity.isPatient
+                        ? "تست های دریافتی"
+                        : "تست های ارسالی",
+                    recentLabel: Strings.illnessInfoLastPicsLabel,
+                    uploadLabel: "شما ۱ تست از سوی پزشک دارید",
+                    asset: SvgPicture.asset(
+                      "assets/cloud.svg",
+                      height: 35,
+                      width: 35,
+                      color: IColors.themeColor,
+                    ),
+                    tapCallback: () => widget.onPush(
+                        NavigatorRoutes.cognitiveTest,
+                        widget.entity.partnerEntity),
+                  );
+                } else if (state is TestsListError) {
+                  return APICallError(
+                    tightenPage: true,
+                  );
+                } else {
+                  return DocUpAPICallLoading2(
+                    height: MediaQuery.of(context).size.height / 2,
+                  );
+                }
+              })
+            ]),
+          )));
   }
 
   List<MedicalTestItem> getTestsWithDone(

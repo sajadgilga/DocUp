@@ -47,10 +47,10 @@ class DoctorEntity extends UserEntity {
         clinicNumber = json['clinic_number'];
       panels = [];
 
-      if (json.containsKey('panels')){
+      if (json.containsKey('panels')) {
         if (json['panels'].length != 0) {
           json['panels'].forEach((panel) {
-            if (panel != null){
+            if (panel != null) {
               panels.add(Panel.fromJson(panel));
               panelMap[panels.last.id] = panels.last;
             }
@@ -186,5 +186,12 @@ class Clinic {
     data['longitude'] = this.longitude;
     data['latitude'] = this.latitude;
     return data;
+  }
+}
+
+class NoronioClinic extends Clinic {
+  static const ClinicId = 4;
+  NoronioClinic() {
+    this.id = ClinicId;
   }
 }

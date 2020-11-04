@@ -87,9 +87,9 @@ class Strings {
   static final String illnessInfoLastPicsLabel = 'نتایج تست‌های پیشین';
 
 //
-  static final String panelDocumentsPicLabel = 'مدارک';
-  static final String panelDocumentsPicListLabel = 'مدارک سابق';
-  static final String panelDocumentsPicUploadLabel = 'ارسال مدرک';
+  static final String panelDoctorAdvicePicLabel = 'توصیه‌ها';
+  static final String panelDoctorAdvicePicListLabel = 'توصیه های پیشین';
+  static final String panelDoctorAdvicePicUploadLabel = 'ارسال توصیه';
   static final String panelPrescriptionsPicLabel = 'نسخه‌ها';
   static final String panelPrescriptionsUploadLabel = 'ارسال نسخه';
   static final String panelPrescriptionsPicListLabel = 'نسخه‌های پیشین';
@@ -128,7 +128,7 @@ class Strings {
   static final String testResults = "test_results";
   static final String prescriptions = "prescription";
   static final String cognitiveTests = "cognitive_tests";
-  static final String documents = "documents";
+  static final String doctorAdvice = "documents";
 
 //
   static final String visitRequestLabel = "درخواست ویزیت حضوری";

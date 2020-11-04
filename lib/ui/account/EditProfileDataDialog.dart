@@ -4,6 +4,7 @@ import 'package:docup/blocs/DoctorBloc.dart';
 import 'package:docup/blocs/PatientBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
@@ -23,6 +24,8 @@ class EditProfileDataDialog {
   final TextEditingController _nationalCodeController = TextEditingController();
   final TextEditingController _expertiseCodeController =
       TextEditingController();
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
 
   final Function() onDone;
 
@@ -37,6 +40,11 @@ class EditProfileDataDialog {
         replacePersianWithEnglishNumber(entity.mEntity.user.nationalId ?? "");
     if (entity.isDoctor) {
       _expertiseCodeController.text = (entity.mEntity as DoctorEntity).expert;
+    } else if (entity.isPatient) {
+      _weightController.text =
+          ((entity.mEntity as PatientEntity).weight ?? 0).toString();
+      _heightController.text =
+          ((entity.mEntity as PatientEntity).height ?? 0).toString();
     }
   }
 
@@ -118,7 +126,8 @@ class EditProfileDataDialog {
                                 controller: _nationalCodeController,
                                 textDirection: TextDirection.ltr,
                                 textAlign: TextAlign.center,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.numberWithOptions(
+                                    signed: false, decimal: false),
                                 maxLines: 1,
                                 decoration: InputDecoration(hintText: "کد ملی"),
                               ),
@@ -134,6 +143,38 @@ class EditProfileDataDialog {
                                       maxLines: 1,
                                       decoration:
                                           InputDecoration(hintText: "تخصص"),
+                                    ),
+                                  )
+                                : SizedBox(),
+                            entity.isPatient
+                                ? Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(
+                                      controller: _weightController,
+                                      textDirection: TextDirection.ltr,
+                                      textAlign: TextAlign.center,
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              signed: false, decimal: true),
+                                      maxLines: 1,
+                                      decoration:
+                                          InputDecoration(hintText: "وزن به کیلوگرم"),
+                                    ),
+                                  )
+                                : SizedBox(),
+                            entity.isPatient
+                                ? Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(
+                                      controller: _heightController,
+                                      textDirection: TextDirection.ltr,
+                                      textAlign: TextAlign.center,
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              signed: false, decimal: true),
+                                      maxLines: 1,
+                                      decoration:
+                                          InputDecoration(hintText: "قد به متر"),
                                     ),
                                   )
                                 : SizedBox(),
@@ -195,6 +236,11 @@ class EditProfileDataDialog {
           if (entity.isDoctor) {
             (entity.mEntity as DoctorEntity).expert =
                 _expertiseCodeController.text;
+          } else if (entity.isPatient) {
+            (entity.mEntity as PatientEntity).weight =
+                double.parse(_weightController.text);
+            (entity.mEntity as PatientEntity).height =
+                double.parse(_heightController.text);
           }
           try {
             onDone();
@@ -207,16 +253,30 @@ class EditProfileDataDialog {
   }
 
   void editData(dataBloc) {
+    bool isNumeric(String s) {
+      if (s == null) {
+        return false;
+      }
+      return double.parse(s, (e) => null) != null;
+    }
+
     if (_nationalCodeController.text == null ||
         _nationalCodeController.text == "" ||
         _nationalCodeController.text.length != 10) {
       showError();
     } else {
       if (entity.isPatient) {
-        (dataBloc as PatientBloc).updateProfile(
-            firstName: _firstNameController.text,
-            lastName: _lastNameController.text,
-            nationalCode: _nationalCodeController.text);
+        if (!isNumeric(_weightController.text) ||
+            !isNumeric(_heightController.text)) {
+          showError();
+        } else {
+          (dataBloc as PatientBloc).updateProfile(
+              firstName: _firstNameController.text,
+              lastName: _lastNameController.text,
+              nationalCode: _nationalCodeController.text,
+              weight: double.parse(_weightController.text),
+              height: double.parse(_heightController.text));
+        }
       } else if (entity.isDoctor) {
         if (_expertiseCodeController.text == null ||
             _expertiseCodeController.text == "") {

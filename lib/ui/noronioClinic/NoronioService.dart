@@ -1,8 +1,10 @@
 import 'package:docup/blocs/MedicalTestListBloc.dart';
 import 'package:docup/constants/assets.dart';
+import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/MedicalTest.dart';
 import 'package:docup/models/NoronioService.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/medicalTest/MedicalTestPage.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
@@ -16,7 +18,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class NoronioServicePage extends StatefulWidget {
   final Function(String, dynamic) onPush;
   final Function(String, dynamic) globalOnPush;
-  final int noronioClinicId = 4;
 
   NoronioServicePage(
       {Key key, @required this.onPush, @required this.globalOnPush})
@@ -27,36 +28,39 @@ class NoronioServicePage extends StatefulWidget {
 }
 
 class _NoronioServicePageState extends State<NoronioServicePage> {
-  List<NoronioServicePage> services = [];
 
-  List<NoronioService> convertToNoronioServiceList(
+  List<NoronioServiceItem> convertToNoronioServiceList(
       List<MedicalTestItem> tests) {
-    List<NoronioService> services = [];
-    NoronioService doctorList = NoronioService(
+    List<NoronioServiceItem> services = [];
+    NoronioServiceItem doctorList = NoronioServiceItem(
         "مشاهده پزشکان",
         Assets.noronioServiceDoctorList,
         null,
         NoronioClinicServiceType.DoctorsList, () {
       // TODO
 
-      widget.onPush(NavigatorRoutes.partnerSearchView, widget.noronioClinicId);
+      widget.onPush(NavigatorRoutes.partnerSearchView, NoronioClinic.ClinicId);
     }, true);
     services.insert(0, doctorList);
 
     tests.forEach((element) {
-      NoronioService cognitiveTest = NoronioService(
+      NoronioServiceItem cognitiveTest = NoronioServiceItem(
           element.name,
           Assets.noronioServiceBrainTest,
           null,
           NoronioClinicServiceType.MultipleChoiceTest, () {
         /// TODO
-        MedicalTestItem emptyTest = MedicalTestItem(element.id, element.name);
-        widget.globalOnPush(NavigatorRoutes.cognitiveTest, emptyTest);
+        MedicalTestPageData medicalTestPageData = MedicalTestPageData(
+            patientEntity: null,
+            medicalTestItem: MedicalTestItem(element.id, element.name),
+            editableFlag: true);
+
+        widget.globalOnPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
       }, true);
       services.insert(1, cognitiveTest);
     });
 
-    NoronioService cognitiveGames = NoronioService("بازی های شناختی",
+    NoronioServiceItem cognitiveGames = NoronioServiceItem("بازی های شناختی",
         Assets.noronioServiceGame, null, NoronioClinicServiceType.Game, () {
       // TODO
       toast(context, "در آینده آماده می شود");
@@ -116,12 +120,12 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
     ));
   }
 
-  Widget _services(List<NoronioService> serviceList) {
+  Widget _services(List<NoronioServiceItem> serviceList) {
     List<Widget> serviceRows = [];
     for (int i = 0; i < serviceList.length; i += 2) {
       Widget ch1 = SquareBoxNoronioClinicService(serviceList[i]);
       Widget ch2 = (i == serviceList.length - 1)
-          ? SquareBoxNoronioClinicService(NoronioService.empty())
+          ? SquareBoxNoronioClinicService(NoronioServiceItem.empty())
           : SquareBoxNoronioClinicService(serviceList[i + 1]);
 
       serviceRows.add(Row(

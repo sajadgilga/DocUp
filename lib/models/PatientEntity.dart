@@ -4,8 +4,11 @@ import 'UserEntity.dart';
 class PatientEntity extends UserEntity {
   PanelSection documents;
   int status;
+  double height;
+  double weight;
 
-  PatientEntity({this.documents, user, id, panels, vid})
+  PatientEntity(
+      {this.documents, this.height, this.weight, user, id, panels, vid})
       : super(user: user, id: id, panels: panels, vid: vid);
 
   PatientEntity.fromJson(Map<String, dynamic> json) {
@@ -26,12 +29,19 @@ class PatientEntity extends UserEntity {
             : null;
       if (!json.containsKey('panels')) return;
       panels = [];
-      if (json['panels'].length != 0)
+      if (json['panels'].length != 0) {
         json['panels'].forEach((panel) {
           if (panel == null) return;
           panels.add(Panel.fromJson(panel));
           panelMap[panels.last.id] = panels.last;
         });
+      }
+      if (json.containsKey('height')) {
+        height = double.parse(json['height'].toString());
+      }
+      if (json.containsKey('weight')) {
+        weight = double.parse(json['weight'].toString());
+      }
     } catch (_) {
       // TODO
     }
@@ -42,6 +52,12 @@ class PatientEntity extends UserEntity {
     if (id != null) data['id'] = this.id;
     if (this.user != null) {
       data['user'] = this.user.toJson();
+    }
+    if (height != null) {
+      data['height'] = height;
+    }
+    if (weight != null) {
+      data['weight'] = weight;
     }
     return data;
   }

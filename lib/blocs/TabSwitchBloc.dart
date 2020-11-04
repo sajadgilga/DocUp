@@ -119,7 +119,7 @@ Map<String, PanelTabState> tabs = {
   'events': SecondTab(text: Strings.panelEventPageLabel),
   'reminders': ThirdTab(text: Strings.panelReminderPageLabel),
   //
-  'documents': FirstTab(text: Strings.panelDocumentsPicLabel),
+  'documents': FirstTab(text: Strings.panelDoctorAdvicePicLabel),
   'medicines': SecondTab(text: Strings.panelPrescriptionsPicLabel),
   'results': ThirdTab(text: Strings.panelTestResultsPicLabel)
 };

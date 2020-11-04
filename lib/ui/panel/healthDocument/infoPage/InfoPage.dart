@@ -1,17 +1,12 @@
 import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
-import 'package:docup/ui/widgets/VisitBox.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:docup/ui/widgets/PicList.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'package:docup/ui/widgets/PicList.dart';
 
 class InfoPage extends StatelessWidget {
   final Entity entity;
@@ -62,7 +57,8 @@ class InfoPage extends StatelessWidget {
   }
 
   void _tapUpload() {
-    onPush(NavigatorRoutes.uploadFileDialogue, entity.sectionId(pageName), _fakeWidget());
+    onPush(NavigatorRoutes.uploadFileDialogue, entity.sectionId(pageName),
+        _fakeWidget());
   }
 
   @override

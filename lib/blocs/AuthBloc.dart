@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:docup/models/AuthResponseEntity.dart';
-import 'package:docup/networking/CustomException.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/AuthRepository.dart';
 import 'package:docup/ui/start/RoleType.dart';
@@ -11,6 +10,7 @@ class AuthBloc {
   AuthRepository _repository;
   StreamController _loginController;
   StreamController _verifyController;
+  StreamController _uploadAvatarController;
 
   StreamSink<Response<LoginResponseEntity>> get loginSink =>
       _loginController.sink;
@@ -18,15 +18,23 @@ class AuthBloc {
   StreamSink<Response<VerifyResponseEntity>> get verifySink =>
       _verifyController.sink;
 
+  StreamSink<Response<UploadAvatarResponseEntity>> get uploadAvatarSink =>
+      _uploadAvatarController.sink;
+
   Stream<Response<LoginResponseEntity>> get loginStream =>
       _loginController.stream;
 
   Stream<Response<VerifyResponseEntity>> get verifyStream =>
       _verifyController.stream;
 
+  Stream<Response<UploadAvatarResponseEntity>> get uploadAvatarStream =>
+      _uploadAvatarController.stream;
+
   AuthBloc() {
     _loginController = StreamController<Response<LoginResponseEntity>>();
     _verifyController = StreamController<Response<VerifyResponseEntity>>();
+    _uploadAvatarController = StreamController<Response<UploadAvatarResponseEntity>>();
+
     _repository = AuthRepository();
   }
 
@@ -61,6 +69,18 @@ class AuthBloc {
       verifySink.add(Response.completed(response));
     } catch (e) {
       verifySink.add(Response.error(e));
+      print(e);
+    }
+  }
+  
+  uploadAvatar(String base64ImageString,int userId)async {
+    uploadAvatarSink.add(Response.loading());
+    try {
+      UploadAvatarResponseEntity response =
+          await _repository.uploadUserProfile(base64ImageString, userId);
+      uploadAvatarSink.add(Response.completed(response));
+    } catch (e) {
+      uploadAvatarSink.add(Response.error(e));
       print(e);
     }
   }

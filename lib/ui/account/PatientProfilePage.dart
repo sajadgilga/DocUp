@@ -394,7 +394,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
             ),
             SizedBox(height: 10),
             ActionButton(
-              title: "ویرایش اطلاعات",
+              title: "اطلاعات",
               color: IColors.themeColor,
               callBack: () {
                 EditProfileDataDialog editProfileData =
@@ -410,9 +410,9 @@ class _PatientProfilePageState extends State<PatientProfilePage>
         SizedBox(width: 20),
         GestureDetector(
           onTap: () {
-            // EditProfileAvatarDialog dialog =
-            //     EditProfileAvatarDialog(context, entity, () {});
-            // dialog.showEditableAvatarDialog();
+            EditProfileAvatarDialog dialog =
+                EditProfileAvatarDialog(context, entity, () {});
+            dialog.showEditableAvatarDialog();
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),

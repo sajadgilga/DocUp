@@ -388,7 +388,7 @@ class NavigatorViewState extends State<NavigatorView> {
   Widget _cognitiveTest(context, detail) => BlocProvider.value(
         value: _searchBloc,
         child: MedicalTestPage(
-          emptyMedicalTest: detail,
+          medicalTestPageInitData: detail,
           onPush: (direction, entity) {
             push(context, direction, detail: entity);
           },
@@ -454,16 +454,16 @@ class NavigatorViewState extends State<NavigatorView> {
                   pages: [
                     [
                       InfoPage(
-                        uploadAvailable: entity.isPatient,
+                        uploadAvailable: entity.isDoctor,
                         entity: entity,
                         onPush: (direction, entity, widgetArg) {
                           push(context, direction,
                               detail: entity, widgetArg: widgetArg);
                         },
-                        pageName: Strings.documents,
-                        picListLabel: Strings.panelDocumentsPicLabel,
-                        lastPicsLabel: Strings.panelDocumentsPicListLabel,
-                        uploadLabel: Strings.panelDocumentsPicUploadLabel,
+                        pageName: Strings.doctorAdvice,
+                        picListLabel: Strings.panelDoctorAdvicePicLabel,
+                        lastPicsLabel: Strings.panelDoctorAdvicePicListLabel,
+                        uploadLabel: Strings.panelDoctorAdvicePicUploadLabel,
                       )
                     ],
                     [
@@ -482,7 +482,7 @@ class NavigatorViewState extends State<NavigatorView> {
                     ],
                     [
                       InfoPage(
-                        uploadAvailable: entity.isPatient,
+                        uploadAvailable: entity.isDoctor,
                         entity: entity,
                         onPush: (direction, entity, widgetArg) {
                           push(context, direction,
