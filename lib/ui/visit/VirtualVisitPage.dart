@@ -8,6 +8,7 @@ import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/ui/widgets/DescriptionAlertDialog.dart';
 import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/VisitDateTimePicker.dart';
@@ -285,37 +286,52 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     );
   }
 
-  _acceptPolicyWidget() => Container(
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width - 80,
-              child: AutoText(
-                Strings.virtualVisitPrivacyPolicyMessage,
-                textAlign: TextAlign.right,
-                style: TextStyle(fontSize: 10),
-                maxLines: 3,
+  _acceptPolicyWidget() => GestureDetector(
+        onTap: () {
+          showDescriptionAlertDialog(context,
+              title: Strings.privacyAndPolicy,
+              description: Strings.policyDescription, action: () {
+            setState(() {
+              policyChecked = !policyChecked;
+            });
+          });
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width - 80,
+                child: AutoText(
+                  Strings.virtualVisitPrivacyPolicyMessage,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(fontSize: 10),
+                  maxLines: 3,
+                ),
               ),
-            ),
-            Checkbox(
-              activeColor: IColors.themeColor,
-              value: policyChecked,
-              onChanged: (d) {
-                setState(() {
-                  policyChecked = !policyChecked;
-                });
-              },
-            ),
-          ],
+              Checkbox(
+                activeColor: IColors.themeColor,
+                value: policyChecked,
+                onChanged: (d) {
+                  showDescriptionAlertDialog(context,
+                      title: Strings.privacyAndPolicy,
+                      description: Strings.policyDescription, action: () {
+                    setState(() {
+                      policyChecked = !policyChecked;
+                    });
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       );
 
   _submitWidget() => ActionButton(
         color: policyChecked ? IColors.themeColor : Colors.grey,
-        title: _nowVisitCondition() ? "ویزیت مجازی هم‌اکنون" : "ویزیت مجازی",
+        title: !visitTimeChecked ? "ویزیت مجازی هم‌اکنون" : "ویزیت مجازی",
         callBack: _submit,
       );
 
@@ -324,17 +340,30 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   _isDoctorOnline() => widget.doctorEntity.user.online == 1;
 
   void _submit() {
+    /// TODO amir: clean this part. It is so messy;
     if (!policyChecked) return;
     if (visitTimeChecked) {
-      if (dateTextController.text.isEmpty || timeTextController.text.isEmpty) {
-        if (dateTextController.text.isEmpty) {
-          showOneButtonDialog(
-              context, Strings.enterVisitDateMessage, Strings.okAction, () {});
-        } else {
-          showOneButtonDialog(
-              context, Strings.enterVisitTimeMessage, Strings.okAction, () {});
-        }
+      String currentTime = DateTime.now().hour.toString() +
+          ":" +
+          DateTime.now().minute.toString();
+      if (dateTextController.text.isEmpty) {
+        /// empty date
+        showOneButtonDialog(
+            context, Strings.enterVisitDateMessage, Strings.okAction, () {});
+      } else if (timeTextController.text.isEmpty ||
+          timeTextController.text.split("-").length != 2 ||
+          timeTextController.text.split("-")[0] == "") {
+        /// empty time
+        showOneButtonDialog(context, Strings.emptyStartVisitTimeMessage,
+            Strings.okAction, () {});
+      } else if (getTimeMinute(timeTextController.text.split("-")[0]) <
+              getTimeMinute(currentTime) &&
+          getTodayInJalaliString() == dateTextController.text) {
+        /// invalid time
+        showOneButtonDialog(context, Strings.pastStartVisitTimeMessage,
+            Strings.okAction, () {});
       } else {
+        /// sending request
         sendVisitRequest();
       }
     } else {
@@ -353,7 +382,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         1,
         typeSelected[VISIT_METHOD],
         typeSelected[VISIT_DURATION_PLAN],
-        convertToGeorgianDate(getTodayInJalali()) +
+        convertToGeorgianDate(getTodayInJalaliString()) +
             "T" +
             "${DateTime.now().hour}:${DateTime.now().minute}" +
             "+04:30");
@@ -372,7 +401,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     int duration = getTimeMinute(endTime) - getTimeMinute(startTime);
 
     String visitDuration = "+" + convertMinuteToTimeString(duration);
-
+    String timeZone = "+03:30";
     _bloc.visitRequest(
         widget.doctorEntity.id,
         1,
@@ -381,14 +410,15 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         convertToGeorgianDate(dateTextController.text) +
             "T" +
             startTime +
-            visitDuration);
+            timeZone);
   }
 
   String getEnabledTimeString(DoctorPlan plan) {
-    String availableDays = "";
+    List<String> availableDaysList = [];
     for (int day in plan.availableDays) {
-      availableDays += WeekDay.values[day].name + " ";
+      availableDaysList.add(WeekDay.values[day].name);
     }
+    String availableDays = availableDaysList.join("، ") + " ";
     String workTimes = "";
     for (WorkTimes workTime in plan.workTimes) {
       workTimes += "از " +

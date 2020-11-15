@@ -2,6 +2,20 @@ import 'package:docup/models/DoctorEntity.dart';
 
 import 'PatientEntity.dart';
 
+class VisitItem {
+  int id;
+  int status;
+  String requestVisitTime;
+
+  VisitItem(this.id, this.status, this.requestVisitTime);
+
+  VisitItem.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    status = json['status'];
+    requestVisitTime = json['request_visit_time'];
+  }
+}
+
 class VisitEntity {
   int id;
   String createdDate;
@@ -56,18 +70,18 @@ class VisitEntity {
       try {
         doctorEntity = DoctorEntity.fromJson(json['doctor']);
         doctor = doctorEntity.id;
-      } catch(_) {
+      } catch (_) {
         doctor = json['doctor'];
       }
     }
-      if (json.containsKey('patient')) {
-        try {
-          patientEntity = PatientEntity.fromJson(json['patient']);
-          patient = patientEntity.id;
-        } catch(_) {
-          patient = json['patient'];
-        }
+    if (json.containsKey('patient')) {
+      try {
+        patientEntity = PatientEntity.fromJson(json['patient']);
+        patient = patientEntity.id;
+      } catch (_) {
+        patient = json['patient'];
       }
+    }
 
     if (json.containsKey('panel')) panel = json['panel'];
     if (json.containsKey('visit_type')) visitType = json['visit_type'];

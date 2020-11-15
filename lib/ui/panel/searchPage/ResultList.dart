@@ -167,7 +167,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
 
   Widget _tags() {
     List<Widget> res = [];
-    entity.plan.visitMethod.forEach((element) {
+    entity.plan?.visitMethod?.forEach((element) {
       if (element == 0) {
         res.add(_tag('ویزیت متنی'));
       } else if (element == 1) {
@@ -188,7 +188,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
     );
   }
 
-  Widget _nameAndExpertise() {
+  Widget _nameAndExpertise(context) {
     String utfName;
     String utfExpert;
     try {
@@ -198,39 +198,47 @@ class _SearchResultDoctorItem extends StatelessWidget {
       utfName = entity.user.name;
       utfExpert = entity.expert ?? "";
     }
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _rating(),
-              AutoText(
-                utfName == "" ? " - " : utfName,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
-                textAlign: TextAlign.right,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            _rating(),
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.35,
+                alignment: Alignment.centerRight,
+                child: AutoText(
+                  (utfName == "" ? " - " : utfName),
+                  style: TextStyle(fontWeight: FontWeight.w900),
+                  textAlign: TextAlign.right,
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                ),
               ),
-            ],
-          ),
-          AutoText(
-            utfExpert == "" ? " - " : utfExpert,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-            textAlign: TextAlign.right,
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+        AutoText(
+          utfExpert == "" ? " - " : utfExpert,
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+          textAlign: TextAlign.right,
+        ),
+      ],
     );
   }
 
-  Widget _info() {
+  Widget _info(context) {
     return Expanded(
       flex: 2,
       child: Container(
         margin: EdgeInsets.only(right: 10, left: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[_nameAndExpertise(), _tags()],
+          children: <Widget>[_nameAndExpertise(context), _tags()],
         ),
       ),
     );
@@ -247,7 +255,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
             BoxConstraints(minWidth: MediaQuery.of(context).size.width - 60),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[_info(), _image(context)],
+          children: <Widget>[_info(context), _image(context)],
         ),
       ),
     );

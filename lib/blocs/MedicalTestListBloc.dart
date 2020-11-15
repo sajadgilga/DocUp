@@ -38,7 +38,7 @@ class MedicalTestListBloc
   Stream<MedicalTestListState> _getAllPanelTests(
       GetPanelMedicalTest getPanelMedicalTest) async* {
     /// TODO amir
-    yield TestsListLoading(result: state.result);
+    yield TestsListLoading(result: null);
     try {
       final List<MedicalTestItem> result =
           await _repository.getPanelMedicalTests(getPanelMedicalTest.panelId);
@@ -56,7 +56,7 @@ class MedicalTestListBloc
       yield* _getEmptyMedicalList(event);
     } else if (event is GetPanelMedicalTest) {
       yield* _getAllPanelTests(event);
-    }else if (event is GetPatientFilledTests) {
+    } else if (event is GetPatientFilledTests) {
       /// TODO amir: api incomplete
     }
   }
@@ -105,5 +105,4 @@ class TestsListLoaded extends MedicalTestListState {
 
 class TestsListLoading extends MedicalTestListState {
   TestsListLoading({result}) : super(result: result);
-
 }

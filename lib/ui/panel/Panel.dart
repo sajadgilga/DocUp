@@ -86,7 +86,6 @@ class _PanelState extends State<Panel> {
       ));
 
   Widget _tabs() {
-    var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
     return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
       builder: (context, state) {
         if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE)

@@ -18,6 +18,7 @@ class EditProfileAvatarDialog {
   Entity entity;
   BuildContext dialogContext;
   BuildContext context;
+  StateSetter accountStateSetter;
   StateSetter alertStateSetter;
   File picture;
 
@@ -27,7 +28,8 @@ class EditProfileAvatarDialog {
 
   ///0 for done,1 for loading, 2 for error
 
-  EditProfileAvatarDialog(this.context, this.entity, this.onDone) {}
+  EditProfileAvatarDialog(
+      this.context, this.entity, this.onDone, this.accountStateSetter) {}
 
   void showEditableAvatarDialog() {
     StreamSubscription streamSubscription;
@@ -77,14 +79,12 @@ class EditProfileAvatarDialog {
                                   _getImage(dialogStateSetter);
                                 },
                                 child: picture == null
-                                    ? EditingCircularAvatar(
+                                    ? PolygonAvatar(
                                         user: entity.mEntity.user,
-                                        radius: 140,
-                                        editableFlag: false,
+                                        imageSize: 140,
                                       )
-                                    : EditingCircularAvatar(
-                                        radius: 140,
-                                        editableFlag: false,
+                                    : PolygonAvatar(
+                                        imageSize: 140,
                                         defaultImage: Image.file(
                                           picture,
                                           fit: BoxFit.cover,
@@ -144,6 +144,9 @@ class EditProfileAvatarDialog {
         case Status.COMPLETED:
           alertStateSetter(() {
             actionButtonStatus = 0;
+          });
+          accountStateSetter(() {
+            entity.mEntity.user.avatar = response.data.avatar;
           });
           Navigator.maybePop(dialogContext);
           try {

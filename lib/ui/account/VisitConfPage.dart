@@ -44,9 +44,15 @@ class _VisitConfPageState extends State<VisitConfPage>
 
   Offset tappedOffset;
   DoctorInfoBloc _bloc = DoctorInfoBloc();
+  bool isLoaded = false;
+
 
   @override
   void initState() {
+    if (!isLoaded) {
+      _bloc.getDoctor(widget.doctorEntity.id, true);
+    }
+
     _bloc.doctorPlanStream.listen((data) {
       if (data.status == Status.COMPLETED) {
         toast(context, "تغییرات با موفقیت ثبت شد");
@@ -89,9 +95,6 @@ class _VisitConfPageState extends State<VisitConfPage>
 
   @override
   Widget build(BuildContext context) {
-    if (!isLoaded) {
-      _bloc.getDoctor(widget.doctorEntity.id, true);
-    }
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => _bloc.getDoctor(widget.doctorEntity.id, true),
@@ -122,7 +125,6 @@ class _VisitConfPageState extends State<VisitConfPage>
     );
   }
 
-  bool isLoaded = false;
 
   GestureDetector _rootWidget(DoctorEntity doctorEntity) {
     if (!isLoaded) {

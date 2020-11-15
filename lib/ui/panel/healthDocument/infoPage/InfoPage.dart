@@ -14,6 +14,7 @@ class InfoPage extends StatelessWidget {
   final String picListLabel;
   final String lastPicsLabel;
   final String uploadLabel;
+  final String emptyFilesLabel;
   final String pageName;
   bool uploadAvailable;
 
@@ -25,6 +26,7 @@ class InfoPage extends StatelessWidget {
       this.lastPicsLabel,
       this.uploadAvailable = true,
       this.uploadLabel,
+      this.emptyFilesLabel,
       @required this.onPush})
       : super(key: key);
 
@@ -42,6 +44,7 @@ class InfoPage extends StatelessWidget {
             uploadAvailable: uploadAvailable,
             picLabel: picListLabel,
             recentLabel: lastPicsLabel,
+            emptyListLabel: emptyFilesLabel,
             uploadLabel: uploadLabel,
             asset: SvgPicture.asset(
               "assets/cloud.svg",
@@ -81,6 +84,7 @@ class InfoPage extends StatelessWidget {
             uploadAvailable: uploadAvailable,
             picLabel: picListLabel,
             recentLabel: lastPicsLabel,
+            emptyListLabel: emptyFilesLabel,
             uploadLabel: uploadLabel,
             asset: SvgPicture.asset(
               "assets/cloud.svg",

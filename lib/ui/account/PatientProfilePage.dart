@@ -45,7 +45,8 @@ class PatientProfilePage extends StatefulWidget {
 class _PatientProfilePageState extends State<PatientProfilePage>
     with WidgetsBindingObserver {
   CreditBloc _creditBloc = CreditBloc();
-  bool _tooltip = false;
+  bool _creditDescriptionTooltipToggle = false;
+  bool _creditErrorTooltipToggle = false;
 
   AlertDialog _loadingDialog = getLoadingDialog();
   bool _loadingEnable;
@@ -119,7 +120,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
     }
     prefs.setBool("patientBillingDescription", true);
     if (changeTooltip) {
-      _tooltip = !hasShown;
+      _creditDescriptionTooltipToggle = !hasShown;
     }
   }
 
@@ -180,17 +181,17 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                       checkPatientBillingDescription(changeTooltip: false);
 
                       setState(() {
-                        _tooltip = true;
+                        _creditDescriptionTooltipToggle = true;
                       });
 
                       /// TODO
                       Timer(Duration(seconds: 10), () {
-                        _tooltip = false;
+                        _creditDescriptionTooltipToggle = false;
                       });
                     },
                     child: SimpleTooltip(
                         hideOnTooltipTap: true,
-                        show: _tooltip,
+                        show: _creditDescriptionTooltipToggle,
                         animationDuration: Duration(milliseconds: 460),
                         tooltipDirection: TooltipDirection.down,
                         backgroundColor: IColors.whiteTransparent,
@@ -286,7 +287,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                     textDirection: TextDirection.rtl,
                   ),
                   AutoText(
-                    "ریال",
+                    "تومان",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white, fontSize: 14),
                     textDirection: TextDirection.rtl,
@@ -316,13 +317,23 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                 rtl: true,
                 color: IColors.themeColor,
                 callBack: () {
-                  if (_amountTextController.text.isEmpty) {
+                  String amountText = _amountTextController.text;
+                  if (amountText.isEmpty || amountText == null) {
                     toast(context, "لطفا مبلغ را وارد کنید");
+                  } else if (!isNumeric(amountText)) {
+                    toast(context, "لطفا مبلغ عددی را وارد کنید");
                   } else {
-                    _isRequestForPay = true;
-                    _creditBloc.add(AddCredit(
-                        mobile: entity.mEntity.user.phoneNumber,
-                        amount: int.parse(_amountTextController.text)));
+                    int amountToman = int.parse(amountText);
+                    if (amountToman < 2000) {
+                      setState(() {
+                        _creditErrorTooltipToggle = true;
+                      });
+                    } else {
+                      _isRequestForPay = true;
+                      _creditBloc.add(AddCredit(
+                          mobile: entity.mEntity.user.phoneNumber,
+                          amount: amountToman * 10));
+                    }
                   }
                 }),
           ),
@@ -332,23 +343,47 @@ class _PatientProfilePageState extends State<PatientProfilePage>
               SizedBox(
                 width: 10,
               ),
-              Container(
-                height: 50,
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: TextField(
-                  controller: _amountTextController,
+              SimpleTooltip(
+                hideOnTooltipTap: true,
+                show: _creditErrorTooltipToggle,
+                animationDuration: Duration(milliseconds: 460),
+                tooltipDirection: TooltipDirection.down,
+                backgroundColor: IColors.whiteTransparent,
+                borderColor: IColors.themeColor,
+                tooltipTap: () {
+                  setState(() {
+                    _creditErrorTooltipToggle = !_creditErrorTooltipToggle;
+                  });
+                },
+                content: AutoText(
+                  Strings.minimumRequestedCredit,
                   textAlign: TextAlign.center,
-                  decoration: new InputDecoration(
-                      border: new OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(20.0),
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 12,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+                child: Container(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: TextField(
+                    controller: _amountTextController,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.numberWithOptions(
+                        signed: false, decimal: false),
+                    decoration: new InputDecoration(
+                        border: new OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(20.0),
+                          ),
                         ),
-                      ),
-                      filled: true,
-                      hintStyle:
-                          new TextStyle(color: Colors.grey[800], fontSize: 12),
-                      hintText: "مبلغ را وارد نمایید",
-                      fillColor: Colors.white70),
+                        filled: true,
+                        hintStyle: new TextStyle(
+                            color: Colors.grey[800], fontSize: 12),
+                        hintText: "مبلغ را وارد نمایید",
+                        fillColor: Colors.white70),
+                  ),
                 ),
               ),
             ],
@@ -411,7 +446,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
         GestureDetector(
           onTap: () {
             EditProfileAvatarDialog dialog =
-                EditProfileAvatarDialog(context, entity, () {});
+                EditProfileAvatarDialog(context, entity, () {}, setState);
             dialog.showEditableAvatarDialog();
           },
           child: Padding(
@@ -442,7 +477,12 @@ class _PatientProfilePageState extends State<PatientProfilePage>
           showOneButtonDialog(
               context, "پرداخت با خطا مواجه شد", "متوجه شدم", () {});
         } else {
-          _amountTextController.text = query["credit"];
+          var _state = BlocProvider.of<EntityBloc>(context).state.entity;
+          setState(() {
+            _state.mEntity.user.credit = query["credit"];
+            _amountTextController.text = query["credit"];
+          });
+
           showOneButtonDialog(context, "شارژ حساب کاربری با موفقیت انجام شد",
               "متوجه شدم", () {});
         }

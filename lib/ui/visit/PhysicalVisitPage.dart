@@ -6,12 +6,10 @@ import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/networking/CustomException.dart';
 import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/ui/widgets/DescriptionAlertDialog.dart';
 import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
-import 'package:docup/ui/widgets/TimeSelectorHeaderWidget.dart';
-import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/VisitDateTimePicker.dart';
 import 'package:docup/utils/Utils.dart';
@@ -98,7 +96,11 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
               duration: Duration(milliseconds: 400),
               vsync: this,
               child: VisitDateTimePicker(
-                  dateTextController, timeTextController, widget.doctorEntity,scrollableTimeSelectorType: true,)),
+                dateTextController,
+                timeTextController,
+                widget.doctorEntity,
+                scrollableTimeSelectorType: true,
+              )),
           ALittleVerticalSpace(),
 //          _labelWidget(TIME_SELECTION),
 //          ALittleVerticalSpace(),
@@ -130,29 +132,43 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
         callBack: _sendVisitRequest,
       );
 
-  _acceptPolicyWidget() => Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width - 80,
-
-            child: AutoText(
-              Strings.physicalVisitPrivacyPolicyMessage,
-              textAlign: TextAlign.right,
-              style: TextStyle(fontSize: 10),
-              maxLines: 2,
+  _acceptPolicyWidget() => GestureDetector(
+        onTap: () {
+          showDescriptionAlertDialog(context,
+              title: Strings.privacyAndPolicy,
+              description: Strings.policyDescription, action: () {
+            setState(() {
+              policyChecked = !policyChecked;
+            });
+          });
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width - 80,
+              child: AutoText(
+                Strings.physicalVisitPrivacyPolicyMessage,
+                textAlign: TextAlign.right,
+                style: TextStyle(fontSize: 10),
+                maxLines: 2,
+              ),
             ),
-          ),
-          Checkbox(
-            activeColor: IColors.themeColor,
-            value: policyChecked,
-            onChanged: (d) {
-              setState(() {
-                policyChecked = !policyChecked;
-              });
-            },
-          ),
-        ],
+            Checkbox(
+              activeColor: IColors.themeColor,
+              value: policyChecked,
+              onChanged: (d) {
+                showDescriptionAlertDialog(context,
+                    title: Strings.privacyAndPolicy,
+                    description: Strings.policyDescription, action: () {
+                  setState(() {
+                    policyChecked = !policyChecked;
+                  });
+                });
+              },
+            ),
+          ],
+        ),
       );
 
   _timesWidget(String title, List<String> items) => Container(
@@ -202,15 +218,26 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
       );
 
   _sendVisitRequest() {
+    /// TODO amir: clean this part. It is so messy;
+    String currentTime =
+        DateTime.now().hour.toString() + ":" + DateTime.now().minute.toString();
     if (!policyChecked) return;
-    if (dateTextController.text.isEmpty || timeTextController.text.isEmpty) {
-      if (dateTextController.text.isEmpty) {
-        showOneButtonDialog(
-            context, Strings.enterVisitDateMessage, Strings.okAction, () {});
-      } else {
-        showOneButtonDialog(
-            context, Strings.enterVisitTimeMessage, Strings.okAction, () {});
-      }
+    if (dateTextController.text.isEmpty) {
+      /// empty date
+      showOneButtonDialog(
+          context, Strings.enterVisitDateMessage, Strings.okAction, () {});
+    } else if (timeTextController.text.isEmpty ||
+        timeTextController.text.split("-").length != 2 ||
+        timeTextController.text.split("-")[0] == "") {
+      /// empty time
+      showOneButtonDialog(
+          context, Strings.emptyStartVisitTimeMessage, Strings.okAction, () {});
+    } else if (getTimeMinute(timeTextController.text.split("-")[0]) <
+            getTimeMinute(currentTime) &&
+        getTodayInJalaliString() == dateTextController.text) {
+      /// invalid time
+      showOneButtonDialog(
+          context, Strings.pastStartVisitTimeMessage, Strings.okAction, () {});
     } else {
       sendVisitRequest();
     }
@@ -232,7 +259,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
     int duration = getTimeMinute(endTime) - getTimeMinute(startTime);
 
     String visitDuration = "+" + convertMinuteToTimeString(duration);
-
+    String timeZone = "+03:30";
     _bloc.visitRequest(
         widget.doctorEntity.id,
         0,
@@ -241,6 +268,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
         convertToGeorgianDate(dateTextController.text) +
             "T" +
             startTime +
-            visitDuration);
+            timeZone);
   }
 }

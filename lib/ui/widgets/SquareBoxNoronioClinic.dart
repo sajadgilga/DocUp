@@ -1,3 +1,4 @@
+import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/NoronioService.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,8 +10,10 @@ import 'DocupHeader.dart';
 class SquareBoxNoronioClinicService extends StatelessWidget {
   final NoronioServiceItem noronioService;
   double boxSize;
+  final Color defaultBgColor;
 
-  SquareBoxNoronioClinicService(this.noronioService, {Key key, this.boxSize})
+  SquareBoxNoronioClinicService(this.noronioService,
+      {Key key, this.boxSize, this.defaultBgColor})
       : super(key: key);
 
   @override
@@ -19,7 +22,7 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
     if (noronioService.isEmpty) {
       bgColor = Color.fromARGB(0, 0, 0, 0);
     } else {
-      bgColor = Color.fromRGBO(255, 255, 255, .8);
+      bgColor = defaultBgColor ?? Color.fromRGBO(255, 255, 255, .8);
     }
     double opacity;
     if (noronioService.enable) {
@@ -65,7 +68,7 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
                     ),
                     Container(
                         width: boxSize * (40 / 100),
-                        child: Image.asset(noronioService.iconAddress)),
+                        child: imageHandler()),
                     DocUpSubHeader(
                       title: noronioService.title,
                     )
@@ -75,5 +78,53 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
       ),
       onTap: noronioService.onTap != null ? noronioService.onTap : () {},
     );
+  }
+
+  Widget imageHandler() {
+    Widget defaultImage() {
+      return Image.asset(
+        Assets.noronioServiceBrainTest,
+        width: boxSize * (40 / 100),
+        height: boxSize * (40 / 100),
+      );
+    }
+
+    if (noronioService != null &&
+        noronioService.iconURL != null &&
+        noronioService.iconURL != "") {
+      Widget image;
+      try {
+        image = Image.network(
+          noronioService.iconURL,
+          width: boxSize * (40 / 100),
+          height: boxSize * (40 / 100),
+          errorBuilder: (context, error, stackTrace) {
+            return defaultImage();
+          },
+        );
+      } catch (e) {
+        image = defaultImage();
+      }
+      return image;
+    }
+    if (noronioService != null &&
+        noronioService.iconAddress != null &&
+        noronioService.iconAddress != "") {
+      Widget image;
+      try {
+        image = Image.asset(
+          noronioService.iconAddress,
+          width: boxSize * (40 / 100),
+          height: boxSize * (40 / 100),
+          errorBuilder: (context, error, stackTrace) {
+            return defaultImage();
+          },
+        );
+      } catch (e) {
+        image = defaultImage();
+      }
+      return image;
+    }
+    return defaultImage();
   }
 }

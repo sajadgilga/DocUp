@@ -307,7 +307,14 @@ class _StartPageState extends State<StartPage> {
                 SizedBox(height: 20),
                 _optionsWidget(),
                 SizedBox(height: 40),
-                _titleWidget(),
+                GestureDetector(
+                  child: _titleWidget(),
+                  onTap: () {
+                    showDescriptionAlertDialog(context,
+                        title: Strings.privacyAndPolicy,
+                        description: Strings.policyDescription);
+                  },
+                ),
                 SizedBox(height: 5),
                 _messageWidget(),
                 SizedBox(height: 50),

@@ -136,6 +136,7 @@ class TrackingBlock extends StatelessWidget {
         child:AutoText(
           label,
           textAlign: TextAlign.center,
+          maxLines: 2,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 9),
         ),
       );

@@ -89,6 +89,29 @@ class Panel {
       // TODO
     }
   }
+
+  String get statusDescription {
+    switch (status) {
+      case 0:
+        return "درخواست ویزیت حضوری";
+      case 1:
+        return "درخواست ویزیت مجازی";
+      case 2:
+        return "وریفای حضوری";
+      case 3:
+        return "وریفای مجازی";
+      case 4:
+        return "درحال درمان حضوری";
+      case 5:
+        return "در حال درمان مجازی";
+      case 6:
+        return "درمان شده";
+      case 7:
+        return "رد شده";
+      default:
+        return "وضعیت نامشخص";
+    }
+  }
 }
 
 class PanelSection {
@@ -103,7 +126,8 @@ class PanelSection {
     try {
       if (json.containsKey('id')) id = json['id'];
       if (json.containsKey('title')) title = utf8IfPossible(json['title']);
-      if (json.containsKey('description')) description = utf8IfPossible(json['description']);
+      if (json.containsKey('description'))
+        description = utf8IfPossible(json['description']);
       pictures = [];
 //      if (json['images'].value.length != 0) {
       json['images']

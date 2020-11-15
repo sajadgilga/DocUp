@@ -26,17 +26,17 @@ class DoctorDetailPage extends StatefulWidget {
 }
 
 class _DoctorDetailPageState extends State<DoctorDetailPage> {
-  DoctorInfoBloc _bloc;
+  DoctorInfoBloc _bloc = DoctorInfoBloc();
 
   @override
   void initState() {
-    _bloc = DoctorInfoBloc();
+    _bloc.getDoctor(widget.doctorEntity.id, false);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    _bloc.getDoctor(widget.doctorEntity.id, false);
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => _bloc.getDoctor(widget.doctorEntity.id, false),

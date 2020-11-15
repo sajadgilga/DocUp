@@ -123,7 +123,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                 GestureDetector(
                     onTap: () {
                       EditProfileAvatarDialog dialog =
-                          EditProfileAvatarDialog(context, state.entity, () {});
+                          EditProfileAvatarDialog(context, state.entity, () {},setState);
                       dialog.showEditableAvatarDialog();
                     },
                     child: EditingCircularAvatar(user: doctorEntity.user)),

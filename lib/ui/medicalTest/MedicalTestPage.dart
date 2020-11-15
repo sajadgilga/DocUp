@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/MedicalTestListBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/SingleMedicalTestBloc.dart';
 import 'package:docup/constants/assets.dart';
@@ -233,14 +234,23 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
       //       () => Navigator.pop(context));
       // }
       if (userEntity is PatientEntity) {
-        MedicalTestResponse response =
-            MedicalTestResponse(userEntity.id, test.id, this.patientAnswers);
+        MedicalTestResponse response = MedicalTestResponse(
+            userEntity.id, test.id, this.patientAnswers,
+            panelId: widget.medicalTestPageInitData.panelId);
         MedicalTestRepository medicalTestRepository = MedicalTestRepository();
         medicalTestRepository
             .addPatientResponse(response)
             .then((medicalTestResponseEntity) {
           if (medicalTestResponseEntity.success) {
-            showSnackBar(_scaffoldKey, medicalTestResponseEntity.msg);
+            showOneButtonDialog(context, medicalTestResponseEntity.msg, "باشه",
+                () {
+              Navigator.pop(context);
+              if (widget.medicalTestPageInitData.panelId != null) {
+                try {
+                  widget.medicalTestPageInitData.onDone();
+                }catch(e){}
+              }
+            });
           } else {
             showSnackBar(_scaffoldKey, medicalTestResponseEntity.msg);
           }
@@ -347,7 +357,12 @@ class _QuestionAnswersWidgetState extends State<QuestionAnswersWidget> {
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 boxShadowFlag: true,
-                callBack: () => answerClicked(widget.question.answers[index]))
+                callBack: () {
+                  var state = BlocProvider.of<EntityBloc>(context).state;
+                  if (state.entity.isPatient) {
+                    answerClicked(widget.question.answers[index]);
+                  }
+                })
         ]);
   }
 

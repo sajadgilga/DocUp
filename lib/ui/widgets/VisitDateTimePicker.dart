@@ -20,10 +20,11 @@ class VisitDateTimePicker extends StatefulWidget {
 
   DoctorEntity doctorEntity;
   final bool scrollableTimeSelectorType;
+  final bool endTimeWidget;
 
   VisitDateTimePicker(
       this.dateTextController, this.timeTextController, this.doctorEntity,
-      {this.scrollableTimeSelectorType = false});
+      {this.scrollableTimeSelectorType = false, this.endTimeWidget = false});
 
   @override
   _VisitDateTimePickerState createState() => _VisitDateTimePickerState();
@@ -36,12 +37,19 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
 
   @override
   void initState() {
-    widget.dateTextController.text = getTodayInJalali();
+    widget.dateTextController.text = getTodayInJalaliString();
+    widget.dateTextController.addListener(() {
+      print(widget.dateTextController.text);
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    Map<int, String> disableDays = getDisableDays(
+        (widget.doctorEntity == null || widget.doctorEntity.plan == null)
+            ? <int>[]
+            : widget.doctorEntity.plan.availableDays);
     return Container(
       child: Column(
         children: [
@@ -55,12 +63,11 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                   child: PersianDateTimePicker2(
                     color: IColors.themeColor,
                     type: "date",
-                    initial: getTodayInJalali(),
-                    min: getYesterdayInJalily(),
-                    disable: getDisableDays((widget.doctorEntity == null ||
-                            widget.doctorEntity.plan == null)
-                        ? <int>[]
-                        : widget.doctorEntity.plan.availableDays),
+                    initial: ['', null].contains(widget.dateTextController.text)
+                        ? getInitialDate(disableDays)
+                        : widget.dateTextController.text,
+                    min: getYesterdayInJalilyString(),
+                    disable: disableDays,
                     onSelect: (date) {
                       widget.dateTextController.text = date;
                     },
@@ -83,47 +90,49 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
       height: 150,
       child: Row(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: widget.endTimeWidget?MainAxisAlignment.spaceAround:MainAxisAlignment.center,
         children: [
-          GestureDetector(
-            onTap: () {
-              int hour = 0;
-              if (![null, ""].contains(startTimeController.text)) {
-                hour = int.parse(startTimeController.text.split(":")[0]);
-              } else {
-                DateTime now = DateTime.now();
-                hour = now.hour;
-              }
-              DateTime startDateTime = DateTime(2020, 1, 1, hour, 0, 0);
-              showTime(endTimeController, startDateTime);
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(15),
-                  ),
-                  border: Border.all(width: 1, color: IColors.darkGrey)),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  AutoText("پایان"),
-                  SizedBox(
-                    width: min(70, xSize * 0.3),
-                    child: TextField(
-                      controller: endTimeController,
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.center,
-                      enabled: false,
-                      maxLines: 1,
-                      decoration: InputDecoration(hintText: "۰۰ : ۰۰"),
+          widget.endTimeWidget
+              ? GestureDetector(
+                  onTap: () {
+                    int hour = 0;
+                    if (![null, ""].contains(startTimeController.text)) {
+                      hour = int.parse(startTimeController.text.split(":")[0]);
+                    } else {
+                      DateTime now = DateTime.now();
+                      hour = now.hour;
+                    }
+                    DateTime startDateTime = DateTime(2020, 1, 1, hour, 0, 0);
+                    showTime(endTimeController, startDateTime);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
+                        ),
+                        border: Border.all(width: 1, color: IColors.darkGrey)),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        AutoText("پایان"),
+                        SizedBox(
+                          width: min(70, xSize * 0.3),
+                          child: TextField(
+                            controller: endTimeController,
+                            textDirection: TextDirection.rtl,
+                            textAlign: TextAlign.center,
+                            enabled: false,
+                            maxLines: 1,
+                            decoration: InputDecoration(hintText: "۰۰ : ۰۰"),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
+                )
+              : SizedBox(),
           GestureDetector(
             onTap: () {
               DateTime now = DateTime.now();
@@ -162,6 +171,23 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
     );
   }
 
+  String correctTimeFormat(String text) {
+    if (text.split(":").length == 3) {
+      /// TODO amir: we don't user second so maybe later
+    } else if (text.split(":").length == 2) {
+      String hour = text.split(":")[0];
+      String minute = text.split(":")[1];
+      if (hour.length == 1) {
+        hour = "0" + hour;
+      }
+      if (minute.length == 1) {
+        minute = "0" + minute;
+      }
+      return hour + ":" + minute;
+    }
+    return text;
+  }
+
   void showTime(
       TextEditingController textEditingController, DateTime startDateTime) {
     DatePicker.showTimePicker(context,
@@ -172,10 +198,11 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
             itemStyle: TextStyle(
                 fontWeight: FontWeight.w700, color: Color(0xFF000046))),
         onChanged: (date) {}, onConfirm: (date) {
-      textEditingController.text =
-          date.hour.toString() + ':' + date.minute.toString();
+      textEditingController.text =correctTimeFormat(date.hour.toString() + ':' + date.minute.toString());
       widget.timeTextController.text =
-          startTimeController.text + "-" + endTimeController.text;
+          correctTimeFormat(startTimeController.text) +
+              "-" +
+              correctTimeFormat(endTimeController.text);
     }, currentTime: startDateTime, locale: LocaleType.fa);
   }
 

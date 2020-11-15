@@ -92,18 +92,34 @@ class Entity {
   }
 
   Panel get panelByPartnerId {
-    for (int i = 0; i < mEntity.panels.length; i++) {
-      Panel element = mEntity.panels[i];
-      if (isDoctor) {
-        if (element.patientId == partnerEntity.id) {
-          return element;
+    if (mEntity != null) {
+      for (int i = 0; i < mEntity.panels.length; i++) {
+        Panel element = mEntity.panels[i];
+        if (isDoctor) {
+          if (element.patientId == partnerEntity.id) {
+            return element;
+          }
+        } else {
+          if (element.doctorId == partnerEntity.id) {
+            return element;
+          }
         }
-      } else {
-        if (element.doctorId == partnerEntity.id) {
+      }
+    }
+
+    return null;
+  }
+
+  Panel getPanelByPatientId(int patientId) {
+    if (mEntity != null) {
+      for (int i = 0; i < mEntity.panels.length; i++) {
+        Panel element = mEntity.panels[i];
+        if (element.patientId == patientId) {
           return element;
         }
       }
     }
+
     return null;
   }
 
@@ -113,6 +129,13 @@ class Entity {
     } catch (_) {
       return -1;
     }
+  }
+
+  int sectionIdByNameAndPatientEntityId(String name, int patientId) {
+    try {
+      return getPanelByPatientId(patientId).sections[name].id;
+    } catch (e) {}
+    return null;
   }
 
   bool isActivePanel(panelId) {

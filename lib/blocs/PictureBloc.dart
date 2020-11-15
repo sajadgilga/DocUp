@@ -11,7 +11,7 @@ class PictureBloc extends Bloc<PictureEvent, PictureState> {
 
   Stream<PictureState> _get(PictureListGet event) async* {
     if (state is PicturesLoaded)
-      yield PictureLoading(section: (state as PicturesLoaded).section);
+      yield PictureLoading();
     else
       yield PictureLoading();
 

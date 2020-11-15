@@ -39,11 +39,11 @@ class Strings {
   static const String requestAction = "درخواست";
   static const String enterAction = "ورود";
   static const String accountQuestion = "حساب کاربری دارید؟";
-  static final String searchBoxHint = 'جستجو';
-  static final String PatientSearchBoxHint = 'جستجوی پزشک';
+  static final String searchBoxHint = 'جست‌و‌جو';
+  static final String PatientSearchBoxHint = 'جست‌وجوی متخصص';
   static final String PatientSearchBoxTooltip =
-      'برای جستجو و اتصال به پزشک، کلیک کنید';
-  static final String DoctorSearchBoxHint = 'جستجوی بیماران شما';
+      'برای جست‌و‌جو و اتصال به پزشک، کلیک کنید';
+  static final String DoctorSearchBoxHint = 'جست‌و‌جوی بیماران شما';
   static final String docupIntroHomePart1 = 'داک‌ آپ،';
 
 //
@@ -90,12 +90,19 @@ class Strings {
   static final String panelDoctorAdvicePicLabel = 'توصیه‌ها';
   static final String panelDoctorAdvicePicListLabel = 'توصیه های پیشین';
   static final String panelDoctorAdvicePicUploadLabel = 'ارسال توصیه';
+  static final String emptyPanelDoctorAdviceFiles = 'فایل توصیه‌ای موجود نمی باشد.';
+
   static final String panelPrescriptionsPicLabel = 'نسخه‌ها';
   static final String panelPrescriptionsUploadLabel = 'ارسال نسخه';
   static final String panelPrescriptionsPicListLabel = 'نسخه‌های پیشین';
+  static final String emptyPrescriptionFiles = 'فایل نسخه‌ای موجود نمی باشد.';
+
   static final String panelTestResultsPicLabel = 'آزمایش‌ها';
   static final String panelTestResultsPicUploadLabel = 'ارسال آزمایش';
   static final String panelTestResultsPicListLabel = 'نتایج آزمایش‌های پیشین';
+  static final String emptyTestFiles = 'فایل آزمایشی موجود نمی باشد.';
+
+
 
 //
   static final String panelEventPageLabel = 'رویدادها';
@@ -105,7 +112,7 @@ class Strings {
   static final String panelIllnessInfoLabel = 'اطلاعات بیماری';
   static final String panelChatLabel = 'چت';
   static final String panelDoctorChatLabel = 'چت با بیمار';
-  static final String panelVideoCallLabel = 'تماس تصویری';
+  static final String panelVideoCallLabel = 'تماس';
 
 //
   static final String physicalReservationLabel = 'رزرو ویزیت حضوری';
@@ -152,19 +159,19 @@ class Strings {
   static final String waitLabel = 'منتظر بمانید';
 
 //
-  static final String resultSearchLabel = 'نتایج جستجو';
+  static final String resultSearchLabel = 'نتایج جست‌و‌جو';
   static final String requestsSearchLabel = 'درخواست ها';
 
 //
   static final String emptyDoctorLabel = 'شما به پزشکی متصل نیستید '
       '\n'
-      ' لطفا از صفحه جستجو پزشکان به پزشک مورد نظر وصل شوید';
+      ' لطفا از صفحه جست‌و‌جو متخصصان به پزشک مورد نظر وصل شوید';
   static final String emptyPatientLabel = 'شما به بیماری متصل نیستید '
       '\n'
       ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
 
   /// TODO
-  static final String learningVideosLink = "http://www.google.com";
+  static final String learningVideosLink = "http://neuronio.ir";
 
 //
   static final String emptyWaitDoctorLabel = 'منتظر بمانید';
@@ -199,7 +206,9 @@ class Strings {
       "من همه قوانین و مقررات رزرو ویزیت مجازی را خوانده و موافقت میکنم";
   static final String physicalVisitPrivacyPolicyMessage =
       "من همه قوانین و مقررات رزرو ویزیت حضوری را خوانده و موافقت میکنم";
-  static final String enterVisitTimeMessage = "لطفا زمان ویزیت را وارد کنید";
+  static final String emptyStartVisitTimeMessage =
+      "لطفا زمان ویزیت مناسبی را وارد کنید";
+  static final String pastStartVisitTimeMessage = "شما نمی توانید ساعتی که گذشته است را به عنوان زمان شروع ویزیت انتخاب کنید.";
   static final String enterVisitDateMessage = "لطفا تاریخ ویزیت را وارد کنید";
   static final String offlineDoctorMessage =
       " پزشک آنلاین نیست لطفا زمانی را برای ویزیت مشخص کنید";
@@ -246,6 +255,7 @@ class Strings {
       ".پس از افزایش اعتبار، پس از هر ویزیت با دکتر هزینه ویزیت از اعتبار شما کسر می شود" +
           "\n" +
           "هزینه ویزیت توسط خود دکتر و با توجه به نوع ویزیت (مجازی، حضوری) تعیین می شود.";
+  static final String minimumRequestedCredit = "مبلغ درخواست شده کمتر از حد مجاز دو هزار تومان است.";
   static final bankCodes = {
     '207177': 'بانک توسعه صادرات ایران',
     '502229': 'بانک پاسارگاد',

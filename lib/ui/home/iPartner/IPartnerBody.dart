@@ -44,7 +44,7 @@ class IPartnerBody extends StatelessWidget {
     if (entity.isPatient)
       return (entity.partnerEntity as DoctorEntity).expert;
     else
-      return (entity.partnerEntity as PatientEntity).user.firstName; //TODO
+      return entity.panel.statusDescription; //TODO
   }
 
   String _getLocation(context) {
@@ -54,7 +54,7 @@ class IPartnerBody extends StatelessWidget {
       final clinic = (entity.partnerEntity as DoctorEntity).clinic;
       if (clinic != null) return clinic.clinicName; else return '';
     } else {
-      return (entity.partnerEntity as PatientEntity).user.firstName; //TODO
+      return ""; //TODO
     }
   }
 
@@ -63,7 +63,7 @@ class IPartnerBody extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        ChatBox(selectPage: selectPage, color: color),
+        ChatBox(selectPage: selectPage, color: color,onPush: this.onPush,),
         SizedBox(
           height: 60,
           child: VerticalDivider(

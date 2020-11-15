@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:ui' as ui;
 
 enum WeekDay { SATURDAY, SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY }
 
@@ -48,7 +47,7 @@ String replaceFarsiNumber(String input) {
   return input;
 }
 
-String normalizeDateAndTime(String str, {bool cutSeconds=false}) {
+String normalizeDateAndTime(String str, {bool cutSeconds = false}) {
   String date = str.split("T")[0];
   String time = str.split("T")[1].split("+")[0];
   if (cutSeconds && time.split(":").length == 3) {
@@ -106,11 +105,13 @@ String convertToGeorgianDate(String jalaliDate) {
 
 void hideKeyboard(context) => FocusScope.of(context).unfocus();
 
-class LoadingAlertDialog{
+class LoadingAlertDialog {
   BuildContext dialogContext;
   BuildContext context;
+
   LoadingAlertDialog(this.context);
-  void showLoading(){
+
+  void showLoading() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -118,10 +119,12 @@ class LoadingAlertDialog{
           return getLoadingDialog();
         });
   }
-  void disposeDialog(){
+
+  void disposeDialog() {
     Navigator.maybePop(dialogContext);
   }
 }
+
 AlertDialog getLoadingDialog() => AlertDialog(
     backgroundColor: Colors.white,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -135,8 +138,8 @@ void showDatePickerDialog(
       return PersianDateTimePicker(
         color: IColors.themeColor,
         type: "date",
-        initial: getTodayInJalali(),
-        min: getTodayInJalali(),
+        initial: getTodayInJalaliString(),
+        min: getTodayInJalaliString(),
         disable: getDisableDays(availableDays),
         onSelect: (date) {
           controller.text = date;
@@ -146,22 +149,38 @@ void showDatePickerDialog(
   );
 }
 
-Map<int,String> getDisableDays(List<int> availableDays) {
-  Map<int,String> disableDays = {};
+Map<int, String> getDisableDays(List<int> availableDays) {
+  Map<int, String> disableDays = {};
   for (int i = 0; i < 7; i++) {
     if (!availableDays.contains(i)) disableDays[i] = WeekDay.values[i].name;
   }
   return disableDays;
 }
 
-String getTodayInJalali() {
+String getTodayInJalaliString() {
   final jalali = Jalali.fromDateTime(DateTime.now());
   final now = "${jalali.year}/${jalali.month}/${jalali.day}";
   return now;
 }
 
+Jalali getTodayInJalali() {
+  return Jalali.fromDateTime(DateTime.now());
+}
 
-String getYesterdayInJalily(){
+String getInitialDate(Map<int, String> disableDays) {
+  DateTime now = DateTime.now();
+  for (int i = 0; i < 7; i++) {
+    DateTime date = now.add(Duration(days: i));
+    Jalali dateJ = Jalali.fromDateTime(date);
+    if (!(disableDays.keys.toList()).contains(dateJ.weekDay-1)) {
+      return "${dateJ.year}/${dateJ.month}/${dateJ.day}";
+    }
+  }
+  Jalali dateJ = Jalali.fromDateTime(now.add(Duration(days: 7)));
+  return "${dateJ.year}/${dateJ.month}/${dateJ.day}";
+}
+
+String getYesterdayInJalilyString() {
   DateTime dt = DateTime.now();
   dt = dt.subtract(Duration(days: 1));
   Jalali jalali = Jalali.fromDateTime(dt);
@@ -187,6 +206,7 @@ void showOneButtonDialog(
       message,
       style: TextStyle(fontSize: 14),
       textAlign: TextAlign.center,
+      textDirection: TextDirection.rtl,
     ),
     content: Container(
       width: 10,
@@ -384,4 +404,11 @@ String utf8IfPossible(String text) {
     text = utf8.decode(text.codeUnits);
   } catch (e) {}
   return text;
+}
+
+bool isNumeric(String s) {
+  if (s == null) {
+    return false;
+  }
+  return double.parse(s, (e) => null) != null;
 }

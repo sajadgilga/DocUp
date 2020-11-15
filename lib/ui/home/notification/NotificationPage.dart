@@ -1,4 +1,5 @@
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/blocs/NotificationBlocV2.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/NewestNotificationResponse.dart';
@@ -171,20 +172,29 @@ class _NotificationPageState extends State<NotificationPage> {
                           color: notifications.newestVisits[index]
                               .getNotificationColor(),
                           onTap: () {
-                            /// TODO amir: loading is not working here check it out later
-                            LoadingAlertDialog loadingAlertDialog =
-                                LoadingAlertDialog(context);
-                            loadingAlertDialog.showLoading();
-                            getPartnerEntity(notifications.newestVisits[index])
-                                .then((partner) {
-                              loadingAlertDialog.disposeDialog();
-                              widget.onPush(NavigatorRoutes.panel, partner);
-                            });
+                            onItemTap(notifications.newestVisits[index]);
                           },
                         )),
               ),
             ),
           );
+  }
+
+  void onItemTap(NewestVisit notification) {
+    /// Set message to seen
+    NewestNotificationResponse.addNotifToSeen(notification);
+
+    /// update notif counts in home page
+    BlocProvider.of<NotificationBloc>(context).add(GetNewestNotifications());
+
+    /// change page
+    LoadingAlertDialog loadingAlertDialog = LoadingAlertDialog(context);
+    loadingAlertDialog.showLoading();
+    getPartnerEntity(notification).then((partner) {
+      loadingAlertDialog.disposeDialog();
+      partner.vid = notification.id;
+      widget.onPush(NavigatorRoutes.panel, partner);
+    });
   }
 
   Future<UserEntity> getPartnerEntity(NewestVisit visit) async {

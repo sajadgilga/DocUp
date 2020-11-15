@@ -7,13 +7,21 @@ import 'package:polygon_clipper/polygon_clipper.dart';
 class PolygonAvatar extends StatelessWidget {
   final User user;
   double imageSize;
+  final Image defaultImage;
 
-  PolygonAvatar({Key key, this.user, this.imageSize}) : super(key: key);
+  PolygonAvatar({Key key,
+    this.user,
+    this.imageSize,
+    this.defaultImage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (imageSize == null) {
-      imageSize = MediaQuery.of(context).size.width * 0.25;
+      imageSize = MediaQuery
+          .of(context)
+          .size
+          .width * 0.25;
     }
     return Stack(children: <Widget>[
       Container(
@@ -28,7 +36,7 @@ class PolygonAvatar extends StatelessWidget {
           child: imageHandler(),
         ),
       ),
-      Visibility(
+      user!=null?Visibility(
         visible: user.online == 1,
         child: Positioned(
           bottom: 0,
@@ -39,7 +47,7 @@ class PolygonAvatar extends StatelessWidget {
             size: 16,
           ),
         ),
-      ),
+      ):SizedBox(),
     ]);
   }
 
@@ -52,7 +60,7 @@ class PolygonAvatar extends StatelessWidget {
       );
     }
 
-    if (user.avatar != null && user.avatar != "") {
+    if (user != null && user.avatar != null && user.avatar != "") {
       Widget image;
       try {
         image = Image.network(
@@ -66,7 +74,10 @@ class PolygonAvatar extends StatelessWidget {
       }
       return image;
     } else {
-      return defaultImage();
+      if (this.defaultImage == null)
+        return defaultImage();
+      else
+        return this.defaultImage;
     }
   }
 }
@@ -77,12 +88,11 @@ class EditingCircularAvatar extends StatelessWidget {
   final bool editableFlag;
   final Image defaultImage;
 
-  const EditingCircularAvatar(
-      {Key key,
-      this.user,
-      this.radius = 120,
-      this.editableFlag = true,
-      this.defaultImage})
+  const EditingCircularAvatar({Key key,
+    this.user,
+    this.radius = 120,
+    this.editableFlag = true,
+    this.defaultImage})
       : super(key: key);
 
   @override
@@ -104,39 +114,39 @@ class EditingCircularAvatar extends StatelessWidget {
         backgroundImage: user != null && user.avatar != null
             ? NetworkImage(user.avatar)
             : (defaultImage != null
-                ? defaultImage.image
-                : AssetImage("assets/avatar.png")),
+            ? defaultImage.image
+            : AssetImage("assets/avatar.png")),
       ),
       editableFlag
           ? Container(
-              width: radius,
-              height: radius,
-              child: Container(
-                child: Icon(
-                  Icons.camera_alt,
-                  size: 35,
-                  color: Colors.white,
-                ),
-              ),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color.fromARGB(80, 0, 0, 20),
-              ),
-            )
+        width: radius,
+        height: radius,
+        child: Container(
+          child: Icon(
+            Icons.camera_alt,
+            size: 35,
+            color: Colors.white,
+          ),
+        ),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Color.fromARGB(80, 0, 0, 20),
+        ),
+      )
           : SizedBox(),
       editableFlag
           ? Visibility(
-              visible: user.online >= 1,
-              child: Positioned(
-                bottom: 0,
-                left: 16,
-                child: Icon(
-                  Icons.brightness_1,
-                  color: IColors.blue,
-                  size: 16,
-                ),
-              ),
-            )
+        visible: user.online >= 1,
+        child: Positioned(
+          bottom: 0,
+          left: 16,
+          child: Icon(
+            Icons.brightness_1,
+            color: IColors.blue,
+            size: 16,
+          ),
+        ),
+      )
           : SizedBox(),
     ]);
   }

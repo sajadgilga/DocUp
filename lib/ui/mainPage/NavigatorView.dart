@@ -34,6 +34,7 @@ import 'package:docup/ui/panel/healthFile/medicinePage/MedicinePage.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/ChatPage.dart';
 import 'package:docup/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
+import 'package:docup/ui/panel/partnerContact/illnessPage/SendTestPage.dart';
 import 'package:docup/ui/panel/partnerContact/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
 import 'package:docup/ui/patientDetail/PatientRequestPage.dart';
@@ -56,7 +57,8 @@ class NavigatorRoutes {
   static const String patientDialogue = '/patientDialogue';
   static const String root = '/';
   static const String notificationView = '/notification';
-  static const String panelMenu = '/panelMenu';
+
+  // static const String panelMenu = '/panelMenu';
   static const String panel = '/panel';
   static const String myPartnerDialog = '/myPartnerDialog';
 
@@ -202,7 +204,7 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.root: (context) => _myDoctorsList(context),
           NavigatorRoutes.myPartnerDialog: (context) =>
               _myPartnerDialog(context, detail),
-          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+
           NavigatorRoutes.panel: (context) => _panel(context, detail: detail),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail),
@@ -233,7 +235,6 @@ class NavigatorViewState extends State<NavigatorView> {
       case 2:
         return {
           NavigatorRoutes.root: (context) => _noronioClinic(context),
-          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.partnerSearchView: (context) =>
               _partnerSearchPage(context, detail: detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
@@ -246,7 +247,7 @@ class NavigatorViewState extends State<NavigatorView> {
       case 3:
         return {
           NavigatorRoutes.root: (context) => _account(context),
-          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
+          // NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
           NavigatorRoutes.uploadFileDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
@@ -385,8 +386,14 @@ class NavigatorViewState extends State<NavigatorView> {
     );
   }
 
-  Widget _cognitiveTest(context, detail) => BlocProvider.value(
-        value: _searchBloc,
+
+  Widget _cognitiveTest(context, detail) => MultiBlocProvider(
+        providers: [
+          BlocProvider<SearchBloc>.value(
+            value: _searchBloc,
+          ),
+          BlocProvider<MedicalTestListBloc>.value(value: _medicalTestListBloc)
+        ],
         child: MedicalTestPage(
           medicalTestPageInitData: detail,
           onPush: (direction, entity) {
@@ -435,7 +442,13 @@ class NavigatorViewState extends State<NavigatorView> {
                   )
                 ],
                 [
-                  VideoCallPage(
+                  VideoOrVoiceCallPage(
+                    entity: entity,
+                    onPush: (direction, entity) {
+                      push(context, direction, detail: entity);
+                    },
+                  ),
+                  VideoOrVoiceCallPage(
                     entity: entity,
                     onPush: (direction, entity) {
                       push(context, direction, detail: entity);
@@ -463,6 +476,7 @@ class NavigatorViewState extends State<NavigatorView> {
                         pageName: Strings.doctorAdvice,
                         picListLabel: Strings.panelDoctorAdvicePicLabel,
                         lastPicsLabel: Strings.panelDoctorAdvicePicListLabel,
+                        emptyFilesLabel: Strings.emptyPanelDoctorAdviceFiles,
                         uploadLabel: Strings.panelDoctorAdvicePicUploadLabel,
                       )
                     ],
@@ -477,12 +491,13 @@ class NavigatorViewState extends State<NavigatorView> {
                         pageName: Strings.prescriptions,
                         picListLabel: Strings.panelPrescriptionsPicLabel,
                         lastPicsLabel: Strings.panelPrescriptionsPicListLabel,
+                        emptyFilesLabel: Strings.emptyPrescriptionFiles,
                         uploadLabel: Strings.panelPrescriptionsUploadLabel,
                       )
                     ],
                     [
                       InfoPage(
-                        uploadAvailable: entity.isDoctor,
+                        uploadAvailable: entity.isDoctor || entity.isPatient,
                         entity: entity,
                         onPush: (direction, entity, widgetArg) {
                           push(context, direction,
@@ -491,6 +506,7 @@ class NavigatorViewState extends State<NavigatorView> {
                         pageName: Strings.testResults,
                         picListLabel: Strings.panelTestResultsPicLabel,
                         lastPicsLabel: Strings.panelTestResultsPicListLabel,
+                        emptyFilesLabel: Strings.emptyTestFiles,
                         uploadLabel: Strings.panelTestResultsPicUploadLabel,
                       )
                     ],
@@ -576,18 +592,18 @@ class NavigatorViewState extends State<NavigatorView> {
           BlocProvider<MedicalTestListBloc>.value(value: _medicalTestListBloc)
         ],
         child: BlocBuilder<PanelBloc, PanelState>(builder: (context, state) {
-          if (state is PanelsLoaded || state is PanelLoading) {
-            // if (state.panels.length > 0)
-            return _panelPages(context, detail);
-          }
-          return PanelMenu(
-            () {
-              _pop(context);
-            },
-            onPush: (direction) {
-              push(context, direction);
-            },
-          );
+          // if (state is PanelsLoaded || state is PanelLoading || true) {
+          // if (state.panels.length > 0)
+          return _panelPages(context, detail);
+          // }
+          // return PanelMenu(
+          //   () {
+          //     _pop(context);
+          //   },
+          //   onPush: (direction) {
+          //     push(context, direction);
+          //   },
+          // );
         }));
   }
 
@@ -608,7 +624,7 @@ class NavigatorViewState extends State<NavigatorView> {
     return MultiBlocProvider(
         providers: [
           BlocProvider<SearchBloc>.value(value: _searchBloc),
-//            BlocProvider<VisitBloc>.value(value: _visitBloc),
+          BlocProvider<PictureBloc>.value(value: _pictureBloc),
         ],
         child: PatientRequestPage(
           patientEntity: _patient,

@@ -12,8 +12,11 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   Stream<NotificationState> _get() async* {
     yield NotificationLoading(notifications: state.notifications);
     try {
-      final NewestNotificationResponse notifications =
+      NewestNotificationResponse notifications =
           await _repository.getNewestNotifications();
+      notifications = await NewestNotificationResponse.removeSeenNotifications(
+          notifications);
+
       yield NotificationsLoaded(notifications: notifications);
     } catch (e) {
       yield NotificationError(notifications: state.notifications);
@@ -26,7 +29,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     yield NotificationLoading(notifications: notifications);
 
     try {
-    notifications.addOrUpdateNewVisitPushNotification(visit);
+      notifications.addOrUpdateNewVisitPushNotification(visit);
+      notifications = await NewestNotificationResponse.removeSeenNotifications(
+          notifications);
+
       yield NotificationsLoaded(notifications: notifications);
     } catch (e) {
       yield NotificationError(notifications: state.notifications);

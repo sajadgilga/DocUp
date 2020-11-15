@@ -49,7 +49,6 @@ class MedicalTestRepository {
   }
 
   Future<List<MedicalTest>> getPanelTests() async {
-    /// TODO amir: need to test
     final response =
         await _provider.get("medical-test/cognitive-tests/", utf8Support: true);
     List<MedicalTest> res = [];
@@ -62,8 +61,12 @@ class MedicalTestRepository {
   Future<MedicalTestResponseEntity> addPatientResponse(
       MedicalTestResponse testResponse) async {
     /// TODO amir: need to test
+    String params = "";
+    if (testResponse.panelId != null) {
+      params = "?panel_id=${testResponse.panelId}";
+    }
     final response = await _provider.post(
-        "medical-test/cognitive-tests-add-response/",
+        "medical-test/cognitive-tests-add-response/" + params,
         utf8Support: true,
         body: testResponse.toJson());
     return MedicalTestResponseEntity.fromJson(response);

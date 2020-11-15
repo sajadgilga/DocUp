@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:docup/constants/strings.dart';
-import 'package:docup/ui/panel/Panel.dart';
 import 'package:flutter/material.dart';
 
 //
@@ -21,11 +20,14 @@ class TabSwitchBloc extends Bloc<PanelTabState, PanelTabState> {
   @override
   Stream<PanelTabState> mapEventToState(PanelTabState event) async* {
     if (event is FirstTab)
-      yield FirstTab(subtabs: event.subtabs, index: event.index, text: event.text);
+      yield FirstTab(
+          subtabs: event.subtabs, index: event.index, text: event.text);
     else if (event is SecondTab)
-      yield SecondTab(subtabs: event.subtabs, index: event.index, text: event.text);
+      yield SecondTab(
+          subtabs: event.subtabs, index: event.index, text: event.text);
     else if (event is ThirdTab)
-      yield ThirdTab(subtabs: event.subtabs, index: event.index, text: event.text);
+      yield ThirdTab(
+          subtabs: event.subtabs, index: event.index, text: event.text);
 //    yield event;
   }
 }
@@ -53,11 +55,9 @@ abstract class PanelTabState extends Object {
 }
 
 class LoadingTab extends PanelTabState {
-
   bool isSame(PanelTabState other) {
     return false;
   }
-
 }
 
 class FirstTab extends PanelTabState {
@@ -72,14 +72,12 @@ class FirstTab extends PanelTabState {
   bool operator ==(other) {
     return (other is FirstTab && other.index == index);
   }
-
-
 }
 
 class SecondTab extends PanelTabState {
-  SecondTab({List<SubTab> subtabs = const <SubTab>[], int index = 0, String text})
+  SecondTab(
+      {List<SubTab> subtabs = const <SubTab>[], int index = 0, String text})
       : super(subtabs: subtabs, index: index, text: text);
-
 
   bool isSame(PanelTabState other) {
     return (other is SecondTab);
@@ -91,7 +89,8 @@ class SecondTab extends PanelTabState {
 }
 
 class ThirdTab extends PanelTabState {
-  ThirdTab({List<SubTab> subtabs = const <SubTab>[], int index = 0, String text})
+  ThirdTab(
+      {List<SubTab> subtabs = const <SubTab>[], int index = 0, String text})
       : super(subtabs: subtabs, index: index, text: text);
 
   bool isSame(PanelTabState other) {
@@ -106,11 +105,13 @@ class ThirdTab extends PanelTabState {
 Map<String, PanelTabState> tabs = {
   "info": FirstTab(text: Strings.panelIllnessInfoLabel),
   "chat": SecondTab(text: Strings.panelChatLabel),
-  "call": ThirdTab(text: Strings.panelVideoCallLabel),
-//  "call": ThirdTab(subtabs: [
-//    SubTab(id: 'video', text: 'تصویری'),
-//    SubTab(id: 'voice', text: 'صوتی')
-//  ], index: 0),
+  "call": ThirdTab(
+      text: Strings.panelVideoCallLabel,
+      subtabs: [
+        SubTab(id: 'video', text: 'تصویری', widget: Icons.video_call),
+        SubTab(id: 'voice', text: 'صوتی', widget: Icons.record_voice_over)
+      ],
+      index: 0),
   //
   'calendar': FirstTab(subtabs: [
     SubTab(id: 'calendar', text: 'تقویم', widget: Icons.calendar_today),

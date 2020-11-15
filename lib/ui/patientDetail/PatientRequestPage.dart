@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
 import 'package:docup/blocs/DoctorInfoBloc.dart';
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
+import 'package:docup/blocs/PictureBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
@@ -17,12 +20,14 @@ import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
+import 'package:docup/ui/widgets/PicList.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PatientRequestPage extends StatefulWidget {
   final PatientEntity patientEntity;
@@ -35,8 +40,10 @@ class PatientRequestPage extends StatefulWidget {
 
 class _PatientRequestPageState extends State<PatientRequestPage> {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
-  int patientVisitStatus =
-      0; //TODO amir: make it and enum, here and now 0 means physical visit
+
+  //TODO amir: make it and enum, here and now 0 means physical visit
+  int patientVisitStatus = 0;
+  int sectionId;
 
   void _updateSearch() {
     var searchBloc = BlocProvider.of<SearchBloc>(context);
@@ -52,6 +59,15 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
 
   @override
   void initState() {
+    _bloc.getVisit(widget.patientEntity.vid);
+
+    var _state = BlocProvider.of<EntityBloc>(context).state;
+    this.sectionId = _state.entity.sectionIdByNameAndPatientEntityId(
+        Strings.testResults, widget.patientEntity.id);
+    if (sectionId != null)
+      BlocProvider.of<PictureBloc>(context)
+          .add(PictureListGet(listId: this.sectionId));
+
     _bloc.responseVisitStream.listen((data) {
       if (data.status == Status.COMPLETED) {
         String span = data.data.status == 1 ? "تایید" : "رد";
@@ -67,7 +83,6 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    _bloc.getVisit(widget.patientEntity.vid);
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => _bloc.getVisit(widget.patientEntity.vid),
@@ -123,7 +138,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                       Navigator.pop(context, 'Nope.');
                     },
                     topRightFlag: false,
-                    topLeftFlag: true,
+                    topLeftFlag: Platform.isIOS,
                   ),
                 ],
               ),
@@ -226,11 +241,11 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   Widget descriptionBox(String title, Widget titleIcon, {Widget child}) {
     double minHeight =
         min(MediaQuery.of(context).size.height * (15 / 100), 250);
-    double maxHeight =
-        max(MediaQuery.of(context).size.height * (15 / 100), 250);
+    // double maxHeight =
+    //     max(MediaQuery.of(context).size.height * (15 / 100), 250);
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-      constraints: BoxConstraints(maxHeight: maxHeight, minHeight: minHeight),
+      constraints: BoxConstraints(minHeight: minHeight),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15))),
@@ -265,54 +280,20 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   }
 
   Widget _picListBox(width) {
-    Widget _prevVisitHealthFileItem() {
-      return Container(
-        child: Column(
-          children: <Widget>[
-            Container(
-              width: 150.0,
-              height: 100.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.cover, image: AssetImage('assets/hand1.jpg')),
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                child: Container(
-                  color: Colors.white.withOpacity(.1),
-                ),
-              ),
-            ),
-            AutoText(
-              'تصویر',
-              style: TextStyle(
-                fontSize: 8,
-                fontWeight: FontWeight.bold,
-                color: IColors.darkGrey,
-              ),
-            )
-          ],
-        ),
-      );
-    }
-
-    List<Widget> pictures = [];
-
-    /// TODO amir: Here we should fetch prev image visit health file
-    return Container(
-      margin: EdgeInsets.only(right: 15, top: 10),
-      child: pictures.isEmpty
-          ? AutoText(
-              "پرونده ای موجود نمی باشد",
-              style: TextStyle(fontSize: 14, color: IColors.darkGrey),
-              textDirection: TextDirection.rtl,
-              textAlign: TextAlign.right,
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: pictures,
-            ),
+    return PicList(
+      listId: this.sectionId,
+      uploadAvailable: false,
+      picLabel: Strings.panelTestResultsPicLabel,
+      recentLabel: Strings.panelTestResultsPicListLabel,
+      emptyListLabel: Strings.emptyTestFiles,
+      uploadLabel: "",
+      asset: SvgPicture.asset(
+        "assets/cloud.svg",
+        height: 35,
+        width: 35,
+        color: IColors.themeColor,
+      ),
+      tapCallback: () {},
     );
   }
 
@@ -333,9 +314,10 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   color: IColors.green,
                 ),
                 Container(
-                  width: 60,
+                  width: 65,
                   child: AutoText(
-                    replaceFarsiNumber(normalizeDateAndTime(entity.visitTime)),
+                    replaceFarsiNumber(normalizeDateAndTime(entity.visitTime,
+                        cutSeconds: true)),
                     style: TextStyle(fontSize: 12, color: IColors.green),
                     textAlign: TextAlign.end,
                     maxLines: 4,

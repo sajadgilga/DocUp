@@ -9,10 +9,12 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/repository/ChatMessageRepository.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
+import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,6 +34,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   TextEditingController _controller = TextEditingController();
+  bool chatPageLoading = false;
 
   void _submitMsg() {
     if (_controller.text == '') {
@@ -41,6 +44,7 @@ class _ChatPageState extends State<ChatPage> {
         panelId: widget.entity.iPanelId, message: _controller.text);
 
     _controller.text = '';
+    setState(() {});
   }
 
   Widget _submitButton() => GestureDetector(
@@ -90,10 +94,6 @@ class _ChatPageState extends State<ChatPage> {
         ],
       ));
 
-  Widget _chatBox() {
-    return _ChatBox(entity: widget.entity);
-  }
-
   Widget _ChatPage() {
 //    var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
 //    _chatMessageBloc.add(ChatMessageGet(
@@ -113,7 +113,7 @@ class _ChatPageState extends State<ChatPage> {
             entity: widget.entity,
             onPush: widget.onPush,
           ),
-          _chatBox(),
+          _ChatBox(entity: widget.entity),
           _sendBox(),
         ],
       ),
@@ -202,7 +202,7 @@ class _ChatPageState extends State<ChatPage> {
 class _ChatBox extends StatefulWidget {
   final Entity entity;
   final ChatMessage message;
-  static final int size = 20;
+  final int chatSizeChunk = 50;
 
   _ChatBox({Key key, this.entity, this.message}) : super(key: key);
 
@@ -216,7 +216,8 @@ class _ChatBoxState extends State<_ChatBox> {
   ChatMessageRepository _repository = ChatMessageRepository();
   List<ChatMessage> _messages = [];
   int length = 0;
-  bool _isLoading = false;
+  bool _isFetchingLoading = false;
+  bool _chatPageLoading = true;
 
   @override
   void setState(fn) {
@@ -250,41 +251,94 @@ class _ChatBoxState extends State<_ChatBox> {
     _messages.removeWhere((element) => removes.contains(element));
   }
 
-  Widget _msgList({messages}) {
+  Widget _msgList() {
     return StreamBuilder(
         stream: SocketHelper().stream,
         builder: (context, snapshot) {
           var data = json.decode(snapshot.data.toString());
-          if (data != null) if (data['request_type'] == 'NEW_MESSAGE') {
-            if (isUnique(data['id']))
-              _messages.insert(
-                  0, ChatMessage.fromSocket(data, widget.entity.isPatient));
+          if (data != null) {
+            print(data);
+            if (data['request_type'] == 'NEW_MESSAGE') {
+              if (isUnique(data['id']))
+                _messages.insert(
+                    0, ChatMessage.fromSocket(data, widget.entity.isPatient));
+            }
           }
           uniqueMaker();
           return Container(
               child: NotificationListener<ScrollNotification>(
                   onNotification: (ScrollNotification info) {
-                    if (!_isLoading &&
-                        info.metrics.pixels == info.metrics.minScrollExtent &&
-                        info.metrics.axisDirection == AxisDirection.down) {
-                      _loadData(up: 0);
+                    if (info is ScrollStartNotification) {
+                    } else if (info is UserScrollNotification) {
+                    } else if (info is OverscrollNotification) {
+                    } else if (info is ScrollEndNotification) {
+                      /// direction is ok but api info TODO
+                      if (!_isFetchingLoading &&
+                          info.metrics.pixels == info.metrics.minScrollExtent) {
+                        // _loadData(down: 0);
+                      }
+                      if (!_isFetchingLoading &&
+                          info.metrics.pixels == info.metrics.maxScrollExtent) {
+                        /// TODO amir: incomplete api
+                        _loadData(down: 0);
+                      }
                     }
-                    if (!_isLoading &&
-                        info.metrics.pixels == info.metrics.maxScrollExtent &&
-                        info.metrics.axisDirection == AxisDirection.up) {
-                      _loadData(down: 0);
-                    }
+
                     return false;
                   },
-                  child: ListView.builder(
-                      reverse: true,
-                      itemCount: _messages.length,
-                      itemBuilder: (context, index) {
-                        return ChatBubble(
-                          message: _messages[index],
-                          isHomePageChat: false,
-                        );
-                      })));
+                  child: (_messages == null || _messages.length == 0)
+                      ? Center(
+                        child: AutoText(
+                          Strings.emptyChatPage,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: IColors.darkGrey),
+                        ),
+                      )
+                      : ListView.builder(
+                          reverse: true,
+                          itemCount: _messages.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index == _messages.length) {
+                              if (_isFetchingLoading) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: CircleAvatar(
+                                        backgroundColor:
+                                            Color.fromARGB(0, 0, 0, 0),
+                                        maxRadius: 10,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  IColors.themeColor),
+                                        )),
+                                  ),
+                                );
+                              } else {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 40,
+                                      height: 20,
+                                      child: Text(
+                                        "",
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold,
+                                            color: IColors.darkGrey),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                            return ChatBubble(
+                              message: _messages[index],
+                              isHomePageChat: false,
+                            );
+                          })));
         });
   }
 
@@ -295,7 +349,7 @@ class _ChatBoxState extends State<_ChatBox> {
 
   Future _loadData({up = 1, down = 1, unidirectional = true}) async {
     setState(() {
-      _isLoading = true;
+      _isFetchingLoading = true;
     });
     int mid;
     if (_messages.length > 0) {
@@ -307,32 +361,33 @@ class _ChatBoxState extends State<_ChatBox> {
     }
     final List<ChatMessage> response = await _repository.getMessages(
         panel: widget.entity.iPanelId,
-        size: _ChatBox.size,
+        size: widget.chatSizeChunk,
         up: up,
         down: down,
         messageId: mid,
         isPatient: widget.entity.isPatient);
     setState(() {
-      if (down == 1 && mid != null)
-        _messages.insertAll(0, response.reversed.toList());
-      else
+      if (mid == null) {
         _messages.addAll(response);
-      _isLoading = false;
+      } else if (up == 1)
+        _messages.addAll(response);
+      else if (down == 1) {
+        _messages.insertAll(0, response.reversed.toList());
+      }
+      _chatPageLoading = false;
+      _isFetchingLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_messages == null || _messages.length == 0)
+    if (_chatPageLoading) {
       return Expanded(
-          flex: 2,
-          child: Center(
-            child: AutoText(
-              Strings.emptyChatPage,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: IColors.darkGrey),
-            ),
-          ));
+        child: DocUpAPICallLoading2(
+          height: MediaQuery.of(context).size.height / 2,
+        ),
+      );
+    }
 
     length = _messages.length;
     return Expanded(

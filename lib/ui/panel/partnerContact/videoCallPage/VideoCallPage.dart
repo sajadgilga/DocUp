@@ -18,23 +18,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class VideoCallPage extends StatefulWidget {
+class VideoOrVoiceCallPage extends StatefulWidget {
   final Entity entity;
   final Function(String, UserEntity) onPush;
 
-  VideoCallPage({Key key, this.entity, @required this.onPush})
+  VideoOrVoiceCallPage({Key key, this.entity, @required this.onPush})
       : super(key: key);
 
   @override
-  _VideoCallPageState createState() {
-    return _VideoCallPageState();
+  _VideoOrVoiceCallPageState createState() {
+    return _VideoOrVoiceCallPageState();
   }
 }
 
-class _VideoCallPageState extends State<VideoCallPage> {
+class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
   AlertDialog _loadingDialog = getLoadingDialog();
 
-  Widget _VideoCallPage() {
+  Widget _VideoOrVoiceCallPage() {
     return Container(
       margin: EdgeInsets.only(top: 20),
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
@@ -58,7 +58,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
     if (widget.entity.panel.status == 0 || widget.entity.panel.status == 1) {
       if (widget.entity.isPatient) {
         return Stack(children: <Widget>[
-          _VideoCallPage(),
+          _VideoOrVoiceCallPage(),
           PanelAlert(
             label: Strings.requestSentLabel,
             buttonLabel: Strings.waitingForApproval,
@@ -67,7 +67,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
         ]);
       } else {
         return Stack(children: <Widget>[
-          _VideoCallPage(),
+          _VideoOrVoiceCallPage(),
           PanelAlert(
             label: Strings.requestSentLabelDoctorSide,
             buttonLabel: Strings.waitingForApprovalDoctorSide,
@@ -87,7 +87,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
             _visitTime = replaceFarsiNumber(
                 normalizeDateAndTime(_visitTimeState.visit.visitTime));
           return Stack(children: <Widget>[
-            _VideoCallPage(),
+            _VideoOrVoiceCallPage(),
             PanelAlert(
               label: 'ویزیت شما '
                   '\n'
@@ -106,7 +106,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
     else if (widget.entity.panel.status == 6 ||
         widget.entity.panel.status == 7) if (widget.entity.isPatient)
       return Stack(children: <Widget>[
-        _VideoCallPage(),
+        _VideoOrVoiceCallPage(),
         PanelAlert(
           label: Strings.noAvailableVirtualVisit,
           buttonLabel: Strings.reserveVirtualVisit,
@@ -118,7 +118,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
       ]);
     else
       return Stack(children: <Widget>[
-        _VideoCallPage(),
+        _VideoOrVoiceCallPage(),
         PanelAlert(
           label: Strings.noAvailableVirtualVisit,
           buttonLabel: Strings.reserveVirtualVisitDoctorSide,
@@ -126,7 +126,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
         )
       ]);
     else
-      return _VideoCallPage();
+      return _VideoOrVoiceCallPage();
   }
 
   _videoCallPane() => Column(

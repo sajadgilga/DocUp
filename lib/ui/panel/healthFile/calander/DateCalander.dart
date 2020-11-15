@@ -119,7 +119,7 @@ class _DateCalenderState extends State<DateCalender> {
                     color: IColors.themeColor,
                     type: "date",
                     initial: getTomorrowInJalali(),
-                    min: getTodayInJalali(),
+                    min: getTodayInJalaliString(),
                     disable: <int,String>{},
                     onSelect: (date) {},
                   ),

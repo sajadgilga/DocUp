@@ -157,8 +157,8 @@ class EditProfileDataDialog {
                                           TextInputType.numberWithOptions(
                                               signed: false, decimal: true),
                                       maxLines: 1,
-                                      decoration:
-                                          InputDecoration(hintText: "وزن به کیلوگرم"),
+                                      decoration: InputDecoration(
+                                          hintText: "وزن به کیلوگرم"),
                                     ),
                                   )
                                 : SizedBox(),
@@ -173,8 +173,8 @@ class EditProfileDataDialog {
                                           TextInputType.numberWithOptions(
                                               signed: false, decimal: true),
                                       maxLines: 1,
-                                      decoration:
-                                          InputDecoration(hintText: "قد به متر"),
+                                      decoration: InputDecoration(
+                                          hintText: "قد به متر"),
                                     ),
                                   )
                                 : SizedBox(),
@@ -253,13 +253,6 @@ class EditProfileDataDialog {
   }
 
   void editData(dataBloc) {
-    bool isNumeric(String s) {
-      if (s == null) {
-        return false;
-      }
-      return double.parse(s, (e) => null) != null;
-    }
-
     if (_nationalCodeController.text == null ||
         _nationalCodeController.text == "" ||
         _nationalCodeController.text.length != 10) {

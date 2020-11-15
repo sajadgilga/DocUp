@@ -7,13 +7,14 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
-  static const String URL_IP = "185.252.30.163:8001";
+  static const String URL_IP = "185.252.30.163";
   final String _BASE_URL = "http://$URL_IP/";
 
   Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {
     var responseJson;
     try {
       final headers = await getHeaders();
+      print(_BASE_URL + url);
       final response = await http.get(_BASE_URL + url, headers: headers);
       responseJson =
           _response(httpResponse: response, utf8Support: utf8Support);
@@ -32,6 +33,7 @@ class ApiProvider {
       if (token != null && token.isNotEmpty) {
         headers.addAll({HttpHeaders.authorizationHeader: "JWT " + token});
       }
+      print(_BASE_URL + url);
       final response = await Dio().post(_BASE_URL + url,
           data: data, options: Options(headers: headers));
       responseJson = _response(dioResponse: response);
@@ -46,6 +48,7 @@ class ApiProvider {
     var responseJson;
     try {
       final headers = await getHeaders(withToken: withToken);
+      print(_BASE_URL + url);
       final response = await http.post(baseUrl + url,
           body: jsonEncode(body), headers: headers);
       responseJson =
@@ -81,6 +84,7 @@ class ApiProvider {
     var responseJson;
     try {
       final headers = await getHeaders();
+      print(_BASE_URL + url);
       final response = await http.patch(_BASE_URL + url,
           body: jsonEncode(body), headers: headers);
       responseJson = _response(httpResponse: response);
@@ -105,12 +109,11 @@ class ApiProvider {
     } catch (e) {
       body = response.body.toString();
     }
-    print("API RESPONSE -->>>> code:${response.statusCode} - ${body}");
+    // print("API RESPONSE -->>>> code:${response.statusCode} - ${body}");
     switch (response.statusCode) {
       case 200:
       case 201:
         var responseJson = decodeResponse(utf8Support, response);
-        print(responseJson);
         return responseJson;
       case 403:
       case 400:
@@ -123,7 +126,7 @@ class ApiProvider {
                 responseJson['msg'] ??
                 (responseJson['non_field_errors']!=null
                     ? responseJson['non_field_errors'][0]
-                    : "unknown"));
+                    : responseJson.toString()));
       default:
         throw ApiException(
             response.statusCode, "مشکلی در برقراری ارتباط وجود دارد");

@@ -33,7 +33,7 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
       List<MedicalTestItem> tests) {
     List<NoronioServiceItem> services = [];
     NoronioServiceItem doctorList = NoronioServiceItem(
-        "مشاهده پزشکان",
+        "مشاهده متخصصان",
         Assets.noronioServiceDoctorList,
         null,
         NoronioClinicServiceType.DoctorsList, () {
@@ -47,7 +47,7 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
       NoronioServiceItem cognitiveTest = NoronioServiceItem(
           element.name,
           Assets.noronioServiceBrainTest,
-          null,
+          element.imageURL,
           NoronioClinicServiceType.MultipleChoiceTest, () {
         /// TODO
         MedicalTestPageData medicalTestPageData = MedicalTestPageData(
@@ -72,7 +72,6 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
 
   @override
   void initState() {
-    // var _state = BlocProvider.of<EntityBloc>(context).state;
     // if(_state.entity.isPatient){
     BlocProvider.of<MedicalTestListBloc>(context).add(GetClinicMedicalTest());
     // }else if(_state.entity.isDoctor){

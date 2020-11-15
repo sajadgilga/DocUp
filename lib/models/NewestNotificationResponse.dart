@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:docup/constants/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NewestNotificationResponse {
   int newestEventsCounts;
@@ -66,6 +67,30 @@ class NewestNotificationResponse {
       data['newest_visits'] = this.newestVisits.map((v) => v.toJson()).toList();
     }
     return data;
+  }
+
+  static Future<NewestNotificationResponse> removeSeenNotifications(NewestNotificationResponse notifs) async{
+    /// TODO for other kind of notifications later
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> seenNotif = prefs.getStringList("seenNotificationIds");
+    List<NewestVisit> filteredNotifs = [];
+    notifs.newestVisits.forEach((element) {
+      if (!seenNotif.contains(element.getNotificationKey())) {
+        filteredNotifs.add(element);
+      }
+    });
+    notifs.newestVisits = filteredNotifs;
+    notifs.newestVisitsCounts = filteredNotifs.length;
+    return notifs;
+  }
+
+  static void addNotifToSeen(NewestVisit visit) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> seenNotif = prefs.getStringList("seenNotificationIds")??<String>[];
+    if (!seenNotif.contains(visit.getNotificationKey())){
+      seenNotif.add(visit.getNotificationKey());
+    }
+    prefs.setStringList("seenNotificationIds", seenNotif);
   }
 }
 
@@ -178,7 +203,7 @@ class NewestVisit {
   String createdDate;
   String modifiedDate;
   bool enabled;
-  Null doctorMessage;
+  String doctorMessage;
   String title;
   int visitType;
   int visitMethod;
@@ -186,6 +211,7 @@ class NewestVisit {
   String patientMessage;
   String requestVisitTime;
   int status;
+
   int doctor;
   int patient;
   int panel;
@@ -212,12 +238,12 @@ class NewestVisit {
     createdDate = json['created_date'];
     modifiedDate = json['modified_date'];
     enabled = json['enabled'];
-    doctorMessage = json['doctor_message'];
-    title = json['title'];
+    doctorMessage = json['doctor_message']??"";
+    title = json['title']??"";
     visitType = json['visit_type'];
     visitMethod = json['visit_method'];
     visitDurationPlan = json['visit_duration_plan'];
-    patientMessage = json['patient_message'];
+    patientMessage = json['patient_message']??"";
     requestVisitTime = json['request_visit_time'];
     status = json['status'];
     doctor = json['doctor'];
@@ -272,5 +298,9 @@ class NewestVisit {
     return status == 0
         ? IColors.darkGrey
         : (status == 1 ? IColors.themeColor : IColors.red);
+  }
+
+  String getNotificationKey() {
+    return id.toString() + "-" + status.toString() + "-" + panel.toString();
   }
 }

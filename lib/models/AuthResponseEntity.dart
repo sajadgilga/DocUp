@@ -77,7 +77,11 @@ class LoginResponseEntity {
 }
 
 class UploadAvatarResponseEntity {
-  UploadAvatarResponseEntity();
+  String avatar;
 
-  UploadAvatarResponseEntity.fromJson(Map<String, dynamic> json) {}
+  UploadAvatarResponseEntity(this.avatar);
+
+  UploadAvatarResponseEntity.fromJson(Map<String, dynamic> json) {
+    this.avatar = json['avatar'];
+  }
 }

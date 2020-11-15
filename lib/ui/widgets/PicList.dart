@@ -15,6 +15,7 @@ class PicList extends StatefulWidget {
   final String picLabel;
   final String uploadLabel;
   final String recentLabel;
+  final String emptyListLabel;
   final Widget asset;
   final bool uploadAvailable;
   final int listId;
@@ -24,6 +25,7 @@ class PicList extends StatefulWidget {
       {Key key,
       this.picLabel,
       this.recentLabel,
+      this.emptyListLabel = "فایلی موجود نمی باشد.",
       this.asset,
       @required this.listId,
       this.uploadAvailable = true,
@@ -91,51 +93,57 @@ class _PicListState extends State<PicList> {
   }
 
   Widget _pictureItem(PictureEntity pic) {
-    return Column(
-      children: <Widget>[
-        GestureDetector(
-            onTap: () {
-              if (pic != null) {
-                Navigator.of(context, rootNavigator: true)
-                    .push(MaterialPageRoute(builder: (_) {
-                  return DetailScreen(
-                    url: pic.imageURL,
-                  );
-                }));
-              }
-            },
-            child: Container(
-              width: MediaQuery.of(context).size.width * (40 / 100),
-              height: 100.0,
-              decoration: pic != null
-                  ? BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.cover, image: NetworkImage(pic.imageURL)),
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                    )
-                  : BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                    ),
-              child: pic != null
-                  ? BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                      child: Container(
-                          decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(.4),
+    return Container(
+      width: MediaQuery.of(context).size.width * (40 / 100),
+      height: 140.0,
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+              onTap: () {
+                if (pic != null) {
+                  Navigator.of(context, rootNavigator: true)
+                      .push(MaterialPageRoute(builder: (_) {
+                    return DetailScreen(
+                      url: pic.imageURL,
+                    );
+                  }));
+                }
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width * (40 / 100),
+                height: 100,
+                decoration: pic != null
+                    ? BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(pic.imageURL)),
                         borderRadius: BorderRadius.all(Radius.circular(15)),
-                      )),
-                    )
-                  : null,
-            )),
-        AutoText(
-          pic != null ? pic.title : "",
-          style: TextStyle(
-            fontSize: 8,
-            fontWeight: FontWeight.bold,
-            color: IColors.darkGrey,
-          ),
-        )
-      ],
+                      )
+                    : BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                      ),
+                child: pic != null
+                    ? BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                        child: Container(
+                            decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(.4),
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                        )),
+                      )
+                    : null,
+              )),
+          AutoText(
+            pic != null ? pic.title : "",
+            maxLines: 2,
+            style: TextStyle(
+              fontSize: 8,
+              fontWeight: FontWeight.bold,
+              color: IColors.darkGrey,
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -210,17 +218,25 @@ class _PicListState extends State<PicList> {
         ),
       );
 
-  Widget _picList(width, pics) {
+  Widget _picList(width, List<PictureEntity> pics) {
     return Container(
       child: Column(
-        children: <Widget>[_picListHeader(), _picListBox(width, pics)],
+        children: <Widget>[
+          widget.uploadAvailable ? _picListHeader() : SizedBox(),
+          pics.length == 0
+              ? Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: AutoText(widget.emptyListLabel),
+                )
+              : _picListBox(width, pics)
+        ],
       ),
     );
   }
 
   Widget _recentPics() => BlocBuilder<PictureBloc, PictureState>(
         builder: (context, state) {
-          if (widget.listId < 0) return Container();
+          if (widget.listId == null || widget.listId < 0) return Container();
           if (state is PicturesLoaded) {
             if (state.section.id == widget.listId) {
               return _picList(

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -14,6 +13,7 @@ class SocketHelper {
   StreamController _broadcastStreamer = StreamController.broadcast();
   final int _maxRetryTimeout = 32;
   int _retryCount = 0;
+  final List<Map<String, dynamic>> messageQueue = [];
 
   factory SocketHelper() {
     return _helper;
@@ -46,6 +46,7 @@ class SocketHelper {
         await Future.delayed(Duration(seconds: _retryTimeout));
         connect(url);
       });
+      retryingMessageQueue();
     } else
       print('no token set for websocket to connect');
   }
@@ -68,6 +69,16 @@ class SocketHelper {
     _channel.sink.close(code, reason);
   }
 
+  void retryingMessageQueue() {
+    try {
+      for (int i = messageQueue.length - 1; i >= 0; i--) {
+        Map<String, dynamic> data = messageQueue[i];
+        _channel.sink.add(jsonEncode(data));
+        messageQueue.removeAt(i);
+      }
+    } catch (e) {}
+  }
+
   void sendMessage(
       {type = 'NEW_MESSAGE', panelId, message, msgType = 0, file}) {
     Map data = Map<String, dynamic>();
@@ -77,7 +88,11 @@ class SocketHelper {
     data['type'] = msgType;
     data['file'] = file;
     data['isMe'] = '';
-    _channel.sink.add(jsonEncode(data));
+    // try {
+      _channel.sink.add(jsonEncode(data));
+    // } catch (e) {
+    //   this.messageQueue.add(data);
+    // }
   }
 
   void checkMessageAsSeen({type = 'SEND_SEEN', panelId, msgId}) {
@@ -85,7 +100,11 @@ class SocketHelper {
     data['request_type'] = type;
     data['panel_id'] = panelId;
     data['message_id'] = msgId;
-    _channel.sink.add(jsonEncode(data));
+    // try {
+      _channel.sink.add(jsonEncode(data));
+    // } catch (e) {
+    //   this.messageQueue.add(data);
+    // }
   }
 
   void onReceive(data) {

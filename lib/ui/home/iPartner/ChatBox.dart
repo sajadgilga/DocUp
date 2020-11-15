@@ -1,16 +1,19 @@
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/models/ChatMessage.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:flutter/material.dart';
-
 import 'package:docup/ui/widgets/ChatBubble.dart';
-import 'package:docup/constants/colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ChatBox extends StatefulWidget {
   final Function(int) selectPage;
+  final Function(String, dynamic) onPush;
   Color color;
 
-  ChatBox({Key key, this.color, this.selectPage}) : super(key: key);
+  ChatBox({Key key, this.color, this.selectPage, this.onPush})
+      : super(key: key);
 
   @override
   _ChatBoxState createState() {
@@ -19,24 +22,23 @@ class ChatBox extends StatefulWidget {
 }
 
 class _ChatBoxState extends State<ChatBox> {
-
   Widget _myMessages() => Container(
-          margin: EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _myMessagesIcon(),
-                SizedBox(
-                  height: 5,
-                ),
-                AutoText(
-                  'پیام‌های اخیر',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w900,
-                  ),
-                )
-              ]));
+      margin: EdgeInsets.only(left: 20, right: 20),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _myMessagesIcon(),
+            SizedBox(
+              height: 5,
+            ),
+            AutoText(
+              'پیام‌های اخیر',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+              ),
+            )
+          ]));
 
   Widget _myMessagesIcon() =>
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
@@ -76,15 +78,22 @@ class _ChatBoxState extends State<ChatBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-//        Expanded(
-//          child: _chatList(),
-//          flex: 2,
-//        ),
-        _myMessages(),
-      ],
+    return GestureDetector(
+      onTap: () {
+        /// TODO
+        // var _state = BlocProvider.of<EntityBloc>(context).state;
+        // widget.onPush(NavigatorRoutes.panel, _state.entity.partnerEntity);
+      },
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          // Expanded(
+          //   child: _chatList(),
+          //   flex: 2,
+          // ),
+          _myMessages(),
+        ],
+      ),
     );
   }
 }

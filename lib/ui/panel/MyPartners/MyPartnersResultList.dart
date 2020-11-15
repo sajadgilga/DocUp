@@ -55,7 +55,7 @@ class _MyPartnersResultListState extends State<MyPartnersResultList> {
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 title:
-                    widget.isDoctor ? "جست و جو پزشکان" : "جست و جوی بیماران",
+                    widget.isDoctor ? "جست‌و‌جو متخصصان" : "جست‌و‌جوی بیماران",
                 callBack: () {
                   widget.onPush(NavigatorRoutes.partnerSearchView, null);
                 },

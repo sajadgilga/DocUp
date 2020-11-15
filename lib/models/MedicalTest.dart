@@ -12,8 +12,9 @@ class MedicalTestResponse {
   final int patientId;
   final int cognitiveTestId;
   final Map<int, Answer> answers;
+  final int panelId;
 
-  MedicalTestResponse(this.patientId, this.cognitiveTestId, this.answers);
+  MedicalTestResponse(this.patientId, this.cognitiveTestId, this.answers,{this.panelId});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -36,8 +37,10 @@ class MedicalTestPageData{
   final MedicalTestItem medicalTestItem;
   final PatientEntity patientEntity;
   final bool editableFlag;
+  final int panelId;
+  final Function onDone;
 
-  MedicalTestPageData({this.medicalTestItem, this.patientEntity, this.editableFlag});
+  MedicalTestPageData({this.medicalTestItem, this.patientEntity, this.editableFlag,this.panelId,this.onDone});
 
 
 }
@@ -60,7 +63,7 @@ class MedicalTestItem {
     description = json['description'];
 
     /// TODO amir: incomplete api
-    imageURL = json['imageURL'];
+    imageURL = json['logo'];
     done = json['done'] ?? false;
   }
 }
