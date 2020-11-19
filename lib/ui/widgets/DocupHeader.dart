@@ -42,8 +42,15 @@ class DocUpSubHeader extends StatelessWidget {
   final String title;
   final Color color;
   final double fontSize;
+  final TextAlign textAlign;
 
-  DocUpSubHeader({Key key, this.title, this.color,this.fontSize}) : super(key: key);
+  DocUpSubHeader(
+      {Key key,
+      this.title,
+      this.color,
+      this.fontSize,
+      this.textAlign = TextAlign.right})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +62,12 @@ class DocUpSubHeader extends StatelessWidget {
   _headerWidget() => Visibility(
         visible: title != null,
         child: Center(
-            child: AutoText(title == null ? "" : title,
-                style: TextStyle(
-                    fontSize: fontSize??14, color: color ?? IColors.black))),
+            child: AutoText(
+          title == null ? "" : title,
+          style: TextStyle(
+              fontSize: fontSize ?? 14, color: color ?? IColors.black),
+          textAlign: TextAlign.center,
+        )),
       );
 }
 

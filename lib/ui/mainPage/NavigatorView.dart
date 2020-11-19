@@ -6,7 +6,7 @@ import 'package:docup/blocs/MedicalTestListBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/PatientTrackerBloc.dart';
-import 'package:docup/blocs/PictureBloc.dart';
+import 'package:docup/blocs/FileBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/blocs/VisitBloc.dart';
@@ -71,7 +71,6 @@ class NavigatorRoutes {
   static const String virtualVisitPage = '/virtualVisitPage';
   static const String physicalVisitPage = '/physicalVisitPage';
   static const String uploadFileDialogue = '/uploadFileDialogue';
-  static const String uploadUserProfileDialogue = '/uploadUserProfileDialogue';
   static const String cognitiveTest = '/cognitiveTest';
 
   static const String visitConfig = '/visitConfig';
@@ -105,7 +104,7 @@ class NavigatorViewState extends State<NavigatorView> {
   final ChatMessageBloc _chatMessageBloc = ChatMessageBloc();
   final SearchBloc _searchBloc = SearchBloc();
   final VisitBloc _visitBloc = VisitBloc();
-  final PictureBloc _pictureBloc = PictureBloc();
+  final FileBloc _pictureBloc = FileBloc();
   final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
   final VisitTimeBloc _visitTimeBloc = VisitTimeBloc();
   MedicalTestListBloc _medicalTestListBloc = MedicalTestListBloc();
@@ -255,9 +254,6 @@ class NavigatorViewState extends State<NavigatorView> {
                 listId: detail,
                 body: widgetArg,
               )),
-          NavigatorRoutes.uploadUserProfileDialogue: (context) =>
-              BlocProvider.value(
-                  value: _pictureBloc, child: UploadUserProfileSlider()),
           NavigatorRoutes.doctorProfileMenuPage: (context) =>
               _doctorProfileMenuPage(context, detail),
           NavigatorRoutes.patientProfileMenuPage: (context) =>
@@ -624,7 +620,7 @@ class NavigatorViewState extends State<NavigatorView> {
     return MultiBlocProvider(
         providers: [
           BlocProvider<SearchBloc>.value(value: _searchBloc),
-          BlocProvider<PictureBloc>.value(value: _pictureBloc),
+          BlocProvider<FileBloc>.value(value: _pictureBloc),
         ],
         child: PatientRequestPage(
           patientEntity: _patient,

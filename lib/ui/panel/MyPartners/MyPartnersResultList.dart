@@ -31,37 +31,39 @@ class MyPartnersResultList extends StatefulWidget {
 
 class _MyPartnersResultListState extends State<MyPartnersResultList> {
   Widget _list(List<Widget> results) {
-    if (results.length == 0) {
+    if (results.length == 0 || true) {
       return Expanded(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
-              child: AutoText(
-                Strings.noVirtualAppointment,
-                style: TextStyle(fontSize: 14, color: IColors.darkGrey),
-                textAlign: TextAlign.center,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
+                child: AutoText(
+                  Strings.noVirtualAppointment,
+                  style: TextStyle(fontSize: 14, color: IColors.darkGrey),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
-              child: ActionButton(
-                width: 170,
-                height: 60,
-                color: IColors.themeColor,
-                textColor: IColors.whiteTransparent,
-                borderRadius: 10,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                title:
-                    widget.isDoctor ? "جست‌و‌جو متخصصان" : "جست‌و‌جوی بیماران",
-                callBack: () {
-                  widget.onPush(NavigatorRoutes.partnerSearchView, null);
-                },
-              ),
-            )
-          ],
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
+                child: ActionButton(
+                  width: 185,
+                  height: 60,
+                  color: IColors.themeColor,
+                  textColor: IColors.whiteTransparent,
+                  borderRadius: 10,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  title:
+                      widget.isDoctor ? "جست‌و‌جو متخصصان" : "جست‌و‌جوی بیماران",
+                  callBack: () {
+                    widget.onPush(NavigatorRoutes.partnerSearchView, null);
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       );
     } else {
@@ -108,22 +110,6 @@ class _MyPartnerItem extends StatelessWidget {
   _MyPartnerItem({Key key, @required this.entity, this.onPush})
       : super(key: key);
 
-  void _showDoctorDialogue(context) {
-//    showDialog(
-//        context: context,
-//        builder: (BuildContext context) {
-//          return AlertDialog(
-//            title: AutoText(
-//              "منتظر ما باشید",
-//              textAlign: TextAlign.center,
-//              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//            ),
-//            content: AutoText("این امکان در نسخه‌های بعدی اضافه خواهد شد",
-//                textAlign: TextAlign.right, style: TextStyle(fontSize: 12)),
-//          );
-//        });
-    onPush(NavigatorRoutes.doctorDialogue, entity);
-  }
 
   Widget _image(context) => Container(
         child: Container(
@@ -197,10 +183,13 @@ class _MyPartnerItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _location(),
-              AutoText(
-                utfName,
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900),
-                textAlign: TextAlign.right,
+              Expanded(
+                child: AutoText(
+                  utfName,
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900),
+                  textAlign: TextAlign.right,
+                  maxLines: 1,
+                ),
               ),
             ],
           ),

@@ -1,10 +1,38 @@
 import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BasePage extends StatelessWidget {
+class BasePage extends StatefulWidget {
+  @override
+  _BasePageState createState() => _BasePageState();
+}
+
+class _BasePageState extends State<BasePage> with WidgetsBindingObserver {
   final NotificationBloc _notificationBloc = NotificationBloc();
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      SocketHelper().appIsPaused = false;
+    } else if (state == AppLifecycleState.paused) {
+      SocketHelper().appIsPaused = true;
+    }
+    print("Base Page => App State Changed: " + state.toString());
+  }
+
+  @override
+  initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,11 +30,11 @@ class WholeIntoChild1 extends StatelessWidget {
           _buildImage(imageAddress, 1.8,
               EdgeInsets.only(top: y * (260 / 640), right: x * (15 / 100))),
           getIntro(
-              padding: EdgeInsets.only(top: y * (102 / 640)),
+              padding: EdgeInsets.only(top: y * (95 / 640)),
               height: y * (155 / 640),
               width: x * (286 / 360),
-              headerFontSize: 22,
-              subHeaderFontSize: 17,
+              headerFontSize: 22 * getFontSizeCoeff(y),
+              subHeaderFontSize: 17 * getFontSizeCoeff(y),
               header: header,
               subHeader: subHeader,
               headerColor: IColors.black,
@@ -62,14 +64,14 @@ class WholeIntoChild2 extends StatelessWidget {
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          _buildImage(imageAddress, 1.5,
-              EdgeInsets.only(top: y * (44 / 640), left: x * (10 / 100))),
+          _buildImage(imageAddress, 1.45,
+              EdgeInsets.only(top: y * (30 / 640), left: x * (10 / 100))),
           getIntro(
-              padding: EdgeInsets.only(top: y * (454 / 640)),
-              height: y * (115 / 640),
+              padding: EdgeInsets.only(top: y * (445 / 640)),
+              height: y * (125 / 640),
               width: x * (305 / 360),
-              headerFontSize: 22,
-              subHeaderFontSize: 17,
+              headerFontSize: 22 * getFontSizeCoeff(y),
+              subHeaderFontSize: 17 * getFontSizeCoeff(y),
               header: header,
               subHeader: subHeader,
               headerColor: IColors.whiteTransparent,
@@ -105,24 +107,27 @@ class WholeIntoChild3 extends StatelessWidget {
           _buildImage(imageAddress, 1.4,
               EdgeInsets.only(top: y * (246 / 640), right: x * (10 / 100))),
           getIntro(
-              padding: EdgeInsets.only(top: y * (101 / 640)),
-              height: y * (115 / 640),
+              padding: EdgeInsets.only(top: y * (85 / 640)),
+              height: y * (125 / 640),
               width: x * (305 / 360),
-              headerFontSize: 22,
-              subHeaderFontSize: 17,
+              headerFontSize: 22 * getFontSizeCoeff(y),
+              subHeaderFontSize: 17 * getFontSizeCoeff(y),
               header: header,
               subHeader: subHeader,
               headerColor: IColors.whiteTransparent,
               subHeaderColor: IColors.whiteTransparent),
-          _loginOrRegister(x * (286 / 360), y * (49 / 640),
-              EdgeInsets.only(top: y * (521 / 640)))
+          Positioned(
+            child: _loginOrRegister(x, y, EdgeInsets.only(bottom: 0)),
+            bottom: y * (90 / 640),
+          )
         ],
       ),
     );
   }
 
-  Widget _loginOrRegister(
-      double width, double height, EdgeInsetsGeometry padding) {
+  Widget _loginOrRegister(double x, double y, EdgeInsetsGeometry padding) {
+    double width = x * (286 / 360);
+    double height = y * (49 / 640);
     return Padding(
       padding: padding,
       child: ActionButton(
@@ -132,13 +137,22 @@ class WholeIntoChild3 extends StatelessWidget {
           Icons.arrow_forward_ios,
           color: bgColor,
         ),
-        height: height,
+        height: max(height, 40),
         title: "ورود یا ثبت نام",
         borderRadius: 25,
         textColor: bgColor,
+        fontSize: 17 * getFontSizeCoeff(y),
         color: Colors.white,
       ),
     );
+  }
+}
+
+double getFontSizeCoeff(double height) {
+  if (height > 695) {
+    return 1;
+  } else {
+    return height / 695;
   }
 }
 

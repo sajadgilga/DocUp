@@ -1,4 +1,3 @@
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/constants/assets.dart';
@@ -11,11 +10,8 @@ import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Panel extends StatefulWidget {
@@ -253,8 +249,10 @@ class TabState extends State<Tab> {
 
   @override
   Widget build(BuildContext context) {
+    double maxXSize = MediaQuery.of(context).size.width;
+    double tabWidth = (maxXSize-40)/3;
     return Container(
-      constraints: BoxConstraints.tightFor(width: 110),
+      constraints: BoxConstraints.tightFor(width: tabWidth),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
         color: Colors.white,
@@ -273,7 +271,8 @@ class TabState extends State<Tab> {
             _switchTab(widget.tabState, context);
           },
           child: Container(
-              constraints: BoxConstraints.expand(width: 110, height: 40),
+              constraints:
+                  BoxConstraints.expand(width: tabWidth, height: 40),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),

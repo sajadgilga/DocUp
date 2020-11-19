@@ -1,9 +1,10 @@
 import 'dart:ui';
 
 import 'package:dashed_container/dashed_container.dart';
-import 'package:docup/blocs/PictureBloc.dart';
+import 'package:docup/blocs/FileBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/Picture.dart';
+import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
@@ -92,66 +93,63 @@ class _PicListState extends State<PicList> {
       return Container();
   }
 
-  Widget _pictureItem(PictureEntity pic) {
-    return Container(
-      width: MediaQuery.of(context).size.width * (40 / 100),
-      height: 140.0,
-      child: Column(
-        children: <Widget>[
-          GestureDetector(
-              onTap: () {
-                if (pic != null) {
-                  Navigator.of(context, rootNavigator: true)
-                      .push(MaterialPageRoute(builder: (_) {
-                    return DetailScreen(
-                      url: pic.imageURL,
-                    );
-                  }));
-                }
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width * (40 / 100),
-                height: 100,
-                decoration: pic != null
-                    ? BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(pic.imageURL)),
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                      )
-                    : BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                      ),
-                child: pic != null
-                    ? BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                        child: Container(
-                            decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(.4),
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                        )),
-                      )
-                    : null,
-              )),
-          AutoText(
-            pic != null ? pic.title : "",
-            maxLines: 2,
-            style: TextStyle(
-              fontSize: 8,
-              fontWeight: FontWeight.bold,
-              color: IColors.darkGrey,
+  Widget _pictureItem(FileEntity fileEntity) {
+    return GestureDetector(
+      onTap: () {
+        if (fileEntity != null) {
+          if (AllowedFile.getFileType(fileEntity.extension) ==
+              AllowedFileType.image) {
+            Navigator.of(context, rootNavigator: true)
+                .push(MaterialPageRoute(builder: (_) {
+              return DetailScreen(
+                imageURL: fileEntity.fileURL,
+                description: fileEntity.description,
+                title: fileEntity.title,
+              );
+            }));
+          } else {}
+        }
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width * (40 / 100),
+        height: 140.0,
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width * (40 / 100),
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                child: FittedBox(
+                  child: fileEntity.defaultFileWidget,
+                  fit: BoxFit.cover,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                ),
+              ),
             ),
-          )
-        ],
+            AutoText(
+              fileEntity != null ? fileEntity.title : "",
+              maxLines: 2,
+              style: TextStyle(
+                fontSize: 8,
+                fontWeight: FontWeight.bold,
+                color: IColors.darkGrey,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget _picListBox(width, List<PictureEntity> pics) {
+  Widget _picListBox(width, List<FileEntity> pics) {
     List<Widget> pictures = [];
     for (int i = 0; i < pics.length; i += 2) {
-      PictureEntity pic1 = pics[i];
-      PictureEntity pic2 = (i == pics.length - 1) ? null : pics[i + 1];
+      FileEntity pic1 = pics[i];
+      FileEntity pic2 = (i == pics.length - 1) ? null : pics[i + 1];
 
       pictures.add(Container(
         child: Row(
@@ -218,7 +216,7 @@ class _PicListState extends State<PicList> {
         ),
       );
 
-  Widget _picList(width, List<PictureEntity> pics) {
+  Widget _picList(width, List<FileEntity> pics) {
     return Container(
       child: Column(
         children: <Widget>[
@@ -234,16 +232,16 @@ class _PicListState extends State<PicList> {
     );
   }
 
-  Widget _recentPics() => BlocBuilder<PictureBloc, PictureState>(
+  Widget _recentPics() => BlocBuilder<FileBloc, FileState>(
         builder: (context, state) {
           if (widget.listId == null || widget.listId < 0) return Container();
-          if (state is PicturesLoaded) {
+          if (state is FilesLoaded) {
             if (state.section.id == widget.listId) {
               return _picList(
                   MediaQuery.of(context).size.width, state.section.pictures);
             }
           }
-          if (state is PictureLoading) {
+          if (state is FileLoading) {
             if (state.section == null)
               return Container(
                   margin: EdgeInsets.only(top: 40), child: Waiting());
@@ -298,24 +296,122 @@ class _PicListState extends State<PicList> {
   }
 }
 
-class DetailScreen extends StatelessWidget {
-  final String url;
+class DetailScreen extends StatefulWidget {
+  String imageURL;
+  final String title;
+  final String description;
 
-  DetailScreen({Key key, this.url}) : super(key: key);
+  DetailScreen({Key key, this.imageURL, this.title, this.description})
+      : super(key: key);
 
   @override
+  _DetailScreenState createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen>
+    with TickerProviderStateMixin {
+  int textToggle = 1;
+
+  /// 1 show 0 hide
+  @override
   Widget build(BuildContext context) {
+    widget.imageURL = null;
+    double maxX = MediaQuery.of(context).size.width;
+    double maxY = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: GestureDetector(
-        child: Center(
-            child: PhotoView(
-          imageProvider: NetworkImage(
-            url,
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Container(
+            width: maxX,
+            height: maxY,
+            color: Colors.black,
           ),
-        )),
-        onTap: () {
-          Navigator.of(context, rootNavigator: true).maybePop();
-        },
+          widget.imageURL != null
+              ? GestureDetector(
+                  child: Center(
+                      child: PhotoView(
+                    imageProvider: NetworkImage(
+                      widget.imageURL,
+                    ),
+                  )),
+                  onTap: () {
+                    setState(() {
+                      textToggle = textToggle == 1 ? 0 : 1;
+                    });
+                  },
+                )
+              : SizedBox(),
+          AnimatedSize(
+            duration: Duration(milliseconds: 100),
+            vsync: this,
+            child: Container(
+                width: maxX,
+                constraints: BoxConstraints(
+                    maxHeight: widget.imageURL != null
+                        ? textToggle * maxY / 3
+                        : textToggle * maxY * 0.9,
+                    minHeight: 0),
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(100, 150, 150, 150),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SingleChildScrollView(
+                      child: Container(
+                        width: maxX,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              child: AutoText(
+                                widget.title,
+                                color: Colors.white,
+                                textAlign: TextAlign.center,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              child: AutoText(
+                                widget.description,
+                                color: Colors.white,
+                                textAlign: TextAlign.center,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+          Positioned(
+            top: 10,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context, rootNavigator: true).maybePop();
+              },
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                decoration:
+                    BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                child: Icon(
+                  Icons.close,
+                  size: 20,
+                  color: IColors.darkGrey,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

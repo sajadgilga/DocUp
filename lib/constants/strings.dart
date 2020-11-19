@@ -124,7 +124,9 @@ class Strings {
   static final String patientTrackingRequestVisitLabel = 'درخواست های ویزیت';
 
 //
-  static final String uploadPicTextFieldHint = 'توضیح...';
+  static final String uploadPicTextFieldTitleHint = 'عنوان';
+  static final String uploadPicTextFieldDescriptionHint = 'توضیحات';
+
 
 //
   static final String iDoctorLabel = 'پزشک من';

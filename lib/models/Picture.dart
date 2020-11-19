@@ -1,29 +1,36 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:docup/ui/widgets/UploadSlider.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
-class PictureEntity {
+class FileEntity {
   int id;
   int parent;
   String title;
   String description;
   DateTime created_date;
-  String imageURL;
-  Image picture;
-  String imagePath;
+  String fileURL;
+  File file;
+  String filePath;
   String base64;
+  String extension;
 
-  PictureEntity({this.picture,
-    this.title,
-    this.description,
-    this.base64,
-    this.imagePath,
-    this.imageURL});
+  FileEntity(
+      {this.file,
+      this.title,
+      this.description,
+      this.base64,
+      this.filePath,
+      this.fileURL,
+      this.extension});
 
   FormData toFormData() {
     FormData data = FormData.fromMap({
       "title": title,
       "description": description,
-      "image": MultipartFile.fromFile(imagePath)
+      "file": MultipartFile.fromFile(filePath)
     });
     return data;
   }
@@ -32,23 +39,54 @@ class PictureEntity {
     Map json = Map<String, dynamic>();
     json['title'] = title;
     json['description'] = description;
-    json['image'] = base64;
+    json['file'] = base64;
     return json;
   }
 
-  PictureEntity.fromJson(Map<dynamic, dynamic> json) {
+  FileEntity.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
-    if (json.containsKey('title')) title = json['title'];
-    if (json.containsKey('description')) description = json['description'];
-    if (json.containsKey('image')) imageURL = json['image'];
-    if (json.containsKey('created_at')) created_date =
-    (json['created_at'] != null ? DateTime.parse(json['created_at']) : null);
+    if (json.containsKey('title')) title = utf8IfPossible(json['title']);
+    if (json.containsKey('description'))
+      description = utf8IfPossible(json['description']);
+    if (json.containsKey('file')) fileURL = json['file'];
+    if (json.containsKey('created_at'))
+      created_date = (json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null);
     if (json.containsKey('parent')) parent = json['parent'];
+    if (json.containsKey('extension'))
+      extension = json['extension'].toString().replaceAll(".", "");
   }
 
   Image get image {
-    return (picture == null
-        ? (imageURL == null ? null : NetworkImage(imageURL))
-        : picture);
+    if (AllowedFile.getFileType(extension) == AllowedFileType.image) {
+      if (file != null) {
+        return Image.file(file);
+      }
+      if (fileURL != null) {
+        return Image.network(fileURL);
+      }
+    }
+    return null;
+  }
+
+  Widget get defaultFileWidget {
+    if (file == null) {
+      if (fileURL != null) {
+        return Image.network(fileURL);
+      }
+    } else if (AllowedFile.getFileType(
+            AllowedFile.getFormatFromFilePath(file.path)) ==
+        AllowedFileType.image) {
+      return Image.file(file);
+    } else if (AllowedFile.getFileType(
+            AllowedFile.getFormatFromFilePath(file.path)) ==
+        AllowedFileType.doc) {
+      return Icon(
+        Icons.insert_drive_file,
+        size: 100,
+      );
+    }
+    return null;
   }
 }

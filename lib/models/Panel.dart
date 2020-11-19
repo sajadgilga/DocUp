@@ -53,12 +53,12 @@ class Panel {
       section = [];
       if (json.containsKey('panel_image_sets')) {
         var sets = json['panel_image_sets'];
-        List<PictureEntity> pictures;
+        List<FileEntity> pictures;
         sets.forEach((String key, value) {
           pictures = [];
           if (value.length != 0)
             value.forEach(
-                (image) => pictures.add(PictureEntity.fromJson(image)));
+                (image) => pictures.add(FileEntity.fromJson(image)));
           section.add(PanelSection(
               id: json['panel_image_list_name_id'][key],
               title: key,
@@ -118,7 +118,7 @@ class PanelSection {
   int id;
   String title;
   String description;
-  List<PictureEntity> pictures;
+  List<FileEntity> pictures;
 
   PanelSection({this.id, this.title, this.description, this.pictures});
 
@@ -130,8 +130,8 @@ class PanelSection {
         description = utf8IfPossible(json['description']);
       pictures = [];
 //      if (json['images'].value.length != 0) {
-      json['images']
-          .forEach((image) => pictures.add(PictureEntity.fromJson(image)));
+      json['files']
+          .forEach((image) => pictures.add(FileEntity.fromJson(image)));
 //      }
     } catch (e) {
       print(e);

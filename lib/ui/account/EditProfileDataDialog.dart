@@ -77,123 +77,197 @@ class EditProfileDataDialog {
                     width: MediaQuery.of(context).size.width * 0.8,
                     height: MediaQuery.of(context).size.height),
                 alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SingleChildScrollView(
-                      child: Container(
-                        constraints: BoxConstraints.tightFor(
-                            width: MediaQuery.of(context).size.width * 0.8),
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            ALittleVerticalSpace(),
-                            AutoText(
-                              "ویرایش اطلاعات",
-                              color: IColors.black,
-                              fontSize: 19,
-                            ),
-                            ALittleVerticalSpace(),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                controller: _firstNameController,
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                decoration: InputDecoration(hintText: "نام"),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                controller: _lastNameController,
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                decoration:
-                                    InputDecoration(hintText: "نام خانوادگی"),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                controller: _nationalCodeController,
-                                textDirection: TextDirection.ltr,
-                                textAlign: TextAlign.center,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    signed: false, decimal: false),
-                                maxLines: 1,
-                                decoration: InputDecoration(hintText: "کد ملی"),
-                              ),
-                            ),
-                            entity.isDoctor
-                                ? Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SingleChildScrollView(
+                        child: Container(
+                          constraints: BoxConstraints.tightFor(
+                              width: MediaQuery.of(context).size.width * 0.8),
+                          padding: const EdgeInsets.all(12.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                ALittleVerticalSpace(),
+                                AutoText(
+                                  "ویرایش اطلاعات",
+                                  color: IColors.black,
+                                  fontSize: 19,
+                                ),
+                                ALittleVerticalSpace(),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    height: 50,
                                     child: TextField(
-                                      controller: _expertiseCodeController,
-                                      textDirection: TextDirection.ltr,
+                                      controller: _firstNameController,
+                                      textDirection: TextDirection.rtl,
                                       textAlign: TextAlign.center,
-                                      keyboardType: TextInputType.text,
                                       maxLines: 1,
-                                      decoration:
-                                          InputDecoration(hintText: "تخصص"),
+                                      style: TextStyle(fontSize: 16),
+                                      decoration: InputDecoration(
+                                        labelText: "نام",
+                                        isDense: true,
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            borderSide: new BorderSide(
+                                                color: IColors.darkGrey,
+                                                width: 1)),
+                                      ),
                                     ),
-                                  )
-                                : SizedBox(),
-                            entity.isPatient
-                                ? Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    height: 50,
                                     child: TextField(
-                                      controller: _weightController,
+                                      controller: _lastNameController,
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                      style: TextStyle(fontSize: 16),
+                                      decoration: InputDecoration(
+                                        labelText: "نام خانوادگی",
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            borderSide: new BorderSide(
+                                                color: IColors.darkGrey,
+                                                width: 1)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    height: 50,
+                                    child: TextField(
+                                      controller: _nationalCodeController,
                                       textDirection: TextDirection.ltr,
                                       textAlign: TextAlign.center,
                                       keyboardType:
                                           TextInputType.numberWithOptions(
-                                              signed: false, decimal: true),
+                                              signed: false, decimal: false),
                                       maxLines: 1,
+                                      style: TextStyle(fontSize: 16),
                                       decoration: InputDecoration(
-                                          hintText: "وزن به کیلوگرم"),
+                                        labelText: "کد ملی",
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            borderSide: new BorderSide(
+                                                color: IColors.darkGrey,
+                                                width: 1)),
+                                      ),
                                     ),
-                                  )
-                                : SizedBox(),
-                            entity.isPatient
-                                ? Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      controller: _heightController,
-                                      textDirection: TextDirection.ltr,
-                                      textAlign: TextAlign.center,
-                                      keyboardType:
-                                          TextInputType.numberWithOptions(
-                                              signed: false, decimal: true),
-                                      maxLines: 1,
-                                      decoration: InputDecoration(
-                                          hintText: "قد به متر"),
-                                    ),
-                                  )
-                                : SizedBox(),
-                            ActionButton(
-                              title: "ویرایش",
-                              color: actionButtonStatus == 2
-                                  ? IColors.red
-                                  : IColors.themeColor,
-                              loading: actionButtonStatus == 1,
-                              height: 45,
-                              callBack: () {
-                                editData(dataBloc);
-                              },
-                            )
-                          ],
+                                  ),
+                                ),
+                                entity.isDoctor
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 50,
+                                          child: TextField(
+                                            controller: _expertiseCodeController,
+                                            textDirection: TextDirection.ltr,
+                                            textAlign: TextAlign.center,
+                                            keyboardType: TextInputType.text,
+                                            maxLines: 1,
+                                            style: TextStyle(fontSize: 16),
+                                            decoration: InputDecoration(
+                                              labelText: "تخصص",
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  borderSide: new BorderSide(
+                                                      color: IColors.darkGrey,
+                                                      width: 1)),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                entity.isPatient
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 50,
+                                          child: TextField(
+                                            controller: _weightController,
+                                            textDirection: TextDirection.ltr,
+                                            textAlign: TextAlign.center,
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    signed: false, decimal: true),
+                                            maxLines: 1,
+                                            style: TextStyle(fontSize: 16),
+                                            decoration: InputDecoration(
+                                              labelText: "وزن به کیلوگرم",
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  borderSide: new BorderSide(
+                                                      color: IColors.darkGrey,
+                                                      width: 1)),
+                                            ),
+                                          ),
+                                        ))
+                                    : SizedBox(),
+                                entity.isPatient
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 50,
+                                          child: TextField(
+                                            controller: _heightController,
+                                            textDirection: TextDirection.ltr,
+                                            textAlign: TextAlign.center,
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    signed: false, decimal: true),
+                                            maxLines: 1,
+                                            style: TextStyle(fontSize: 16),
+                                            decoration: InputDecoration(
+                                              labelText: "قد به متر",
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  borderSide: new BorderSide(
+                                                      color: IColors.darkGrey,
+                                                      width: 1)),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                ActionButton(
+                                  title: "ویرایش",
+                                  color: actionButtonStatus == 2
+                                      ? IColors.red
+                                      : IColors.themeColor,
+                                  loading: actionButtonStatus == 1,
+                                  height: 45,
+                                  callBack: () {
+                                    editData(dataBloc);
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }),

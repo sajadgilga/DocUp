@@ -5,7 +5,6 @@ class ChatMessageRepository {
   ApiProvider _provider = ApiProvider();
 
   List<ChatMessage> _getList(json, isPatient) {
-    var messages = [];
     return (json as List).map((message) {
       return ChatMessage.fromJson(message, isPatient);
     }).toList();

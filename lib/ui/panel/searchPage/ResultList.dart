@@ -141,7 +141,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
             user: entity.user,
           )));
 
-  Widget _rating() => RatingBar(
+  Widget _rating() => RatingBar.builder(
         itemCount: 5,
         initialRating: 3.5,
         direction: Axis.horizontal,
@@ -151,9 +151,9 @@ class _SearchResultDoctorItem extends StatelessWidget {
         onRatingUpdate: (rating) {},
       );
 
-  Widget _tag(text) {
+  Widget _tag(text, context) {
     return Container(
-      padding: EdgeInsets.only(right: 0, left: 2.5),
+      padding: EdgeInsets.only(right: 0, left: 0),
       decoration: BoxDecoration(
           color: Color.fromARGB(0, 0, 0, 0),
           borderRadius: BorderRadius.all(Radius.circular(7))),
@@ -165,23 +165,29 @@ class _SearchResultDoctorItem extends StatelessWidget {
     );
   }
 
-  Widget _tags() {
+  Widget _tags(context) {
     List<Widget> res = [];
+    if(entity.plan== null || entity.plan.visitMethod==null || entity.plan.visitMethod.length==0){
+      res.add(_tag("ویزیتی ثبت نشده", context));
+    }
     entity.plan?.visitMethod?.forEach((element) {
       if (element == 0) {
-        res.add(_tag('ویزیت متنی'));
+        res.add(_tag('متنی', context));
       } else if (element == 1) {
-        res.add(_tag('ویزیت صوتی'));
+        res.add(_tag('صوتی', context));
       } else if (element == 2) {
-        res.add(_tag('ویزیت تصویری'));
+        res.add(_tag('تصویری', context));
       }
       if (entity.plan.visitMethod.indexOf(element) !=
           entity.plan.visitMethod.length - 1) {
-        res.add(_tag("/"));
+        res.add(_tag("/", context));
       }
     });
+    res.add(_tag("ویزیت ها: ", context));
     return Container(
+      width: 200,
       child: Row(
+        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.end,
         children: res,
       ),
@@ -205,18 +211,19 @@ class _SearchResultDoctorItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
           children: [
-            _rating(),
-            Directionality(
-              textDirection: TextDirection.rtl,
+            Container(child: _rating()),
+            Expanded(
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.35,
                 alignment: Alignment.centerRight,
-                child: AutoText(
-                  (utfName == "" ? " - " : utfName),
-                  style: TextStyle(fontWeight: FontWeight.w900),
-                  textAlign: TextAlign.right,
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: AutoText(
+                    (utfName == "" ? " - " : utfName),
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                  ),
                 ),
               ),
             ),
@@ -238,7 +245,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
         margin: EdgeInsets.only(right: 10, left: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[_nameAndExpertise(context), _tags()],
+          children: <Widget>[_nameAndExpertise(context), _tags(context)],
         ),
       ),
     );
@@ -295,15 +302,16 @@ class _SearchResultPatientItem extends StatelessWidget {
             user: entity.user,
           )));
 
-  Widget _rating() => RatingBar(
-        itemCount: 5,
-        initialRating: 3.5,
-        direction: Axis.horizontal,
-        allowHalfRating: true,
-        itemSize: 15,
-        itemBuilder: (context, _) => Icon(Icons.star, color: Colors.amber),
-        onRatingUpdate: (rating) {},
-      );
+  //
+  // Widget _rating() => RatingBar.builder(
+  //       itemCount: 5,
+  //       initialRating: 3.5,
+  //       direction: Axis.horizontal,
+  //       allowHalfRating: true,
+  //       itemSize: 15,
+  //       itemBuilder: (context, _) => Icon(Icons.star, color: Colors.amber),
+  //       onRatingUpdate: (rating) {},
+  //     );
 
   Widget _tag(text) {
     return Container(

@@ -11,8 +11,8 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
   Stream<InfoState> _get() async* {
     yield InfoLoading();
     try {
-      final PanelSection Infos = await _repository.get();
-      yield InfoLoaded(panelSection: Infos);
+      final PanelSection informations = await _repository.get();
+      yield InfoLoaded(panelSection: informations);
     } catch (e) {
       yield InfoError();
     }

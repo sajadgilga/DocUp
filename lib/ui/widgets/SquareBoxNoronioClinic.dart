@@ -71,6 +71,7 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
                         child: imageHandler()),
                     DocUpSubHeader(
                       title: noronioService.title,
+                      textAlign: TextAlign.center,
                     )
                   ],
                 ),

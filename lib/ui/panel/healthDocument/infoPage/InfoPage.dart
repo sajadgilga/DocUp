@@ -1,4 +1,4 @@
-import 'package:docup/blocs/PictureBloc.dart';
+import 'package:docup/blocs/FileBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-class InfoPage extends StatelessWidget {
+class InfoPage extends StatefulWidget {
   final Entity entity;
   final Function(String, dynamic, Widget) onPush;
   final String picListLabel;
@@ -30,22 +30,34 @@ class InfoPage extends StatelessWidget {
       @required this.onPush})
       : super(key: key);
 
+  @override
+  _InfoPageState createState() => _InfoPageState();
+}
+
+class _InfoPageState extends State<InfoPage> {
+  @override
+  void initState() {
+    BlocProvider.of<FileBloc>(context)
+        .add(FileListGet(listId: widget.entity.sectionId(widget.pageName)));
+    super.initState();
+  }
+
   Widget _fakeWidget() {
     return SingleChildScrollView(
         child: Container(
       child: Column(
         children: <Widget>[
           PartnerInfo(
-            entity: entity,
+            entity: widget.entity,
             onPush: (route, detail) {},
           ),
           PicList(
-            listId: entity.sectionId(pageName),
-            uploadAvailable: uploadAvailable,
-            picLabel: picListLabel,
-            recentLabel: lastPicsLabel,
-            emptyListLabel: emptyFilesLabel,
-            uploadLabel: uploadLabel,
+            listId: widget.entity.sectionId(widget.pageName),
+            uploadAvailable: widget.uploadAvailable,
+            picLabel: widget.picListLabel,
+            recentLabel: widget.lastPicsLabel,
+            emptyListLabel: widget.emptyFilesLabel,
+            uploadLabel: widget.uploadLabel,
             asset: SvgPicture.asset(
               "assets/cloud.svg",
               height: 35,
@@ -60,32 +72,29 @@ class InfoPage extends StatelessWidget {
   }
 
   void _tapUpload() {
-    onPush(NavigatorRoutes.uploadFileDialogue, entity.sectionId(pageName),
-        _fakeWidget());
+    widget.onPush(NavigatorRoutes.uploadFileDialogue,
+        widget.entity.sectionId(widget.pageName), _fakeWidget());
   }
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<PictureBloc>(context)
-        .add(PictureListGet(listId: entity.sectionId(pageName)));
-
     return SingleChildScrollView(
         child: Container(
       child: Column(
         children: <Widget>[
           PartnerInfo(
-            entity: entity,
+            entity: widget.entity,
             onPush: (route, detail) {
-              onPush(route, detail, null);
+              widget.onPush(route, detail, null);
             },
           ),
           PicList(
-            listId: entity.sectionId(pageName),
-            uploadAvailable: uploadAvailable,
-            picLabel: picListLabel,
-            recentLabel: lastPicsLabel,
-            emptyListLabel: emptyFilesLabel,
-            uploadLabel: uploadLabel,
+            listId: widget.entity.sectionId(widget.pageName),
+            uploadAvailable: widget.uploadAvailable,
+            picLabel: widget.picListLabel,
+            recentLabel: widget.lastPicsLabel,
+            emptyListLabel: widget.emptyFilesLabel,
+            uploadLabel: widget.uploadLabel,
             asset: SvgPicture.asset(
               "assets/cloud.svg",
               height: 35,

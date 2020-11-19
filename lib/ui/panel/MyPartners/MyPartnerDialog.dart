@@ -110,37 +110,41 @@ class MyPartnerDialog extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 7),
-                      child: AutoText(
-                        header,
-                        textDirection: TextDirection.rtl,
-                        overflow: TextOverflow.fade,
-                        softWrap: true,
-                        style: TextStyle(
-                            fontSize: 13.5,
-                            color: headerColor,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Padding(
-                        padding: EdgeInsets.symmetric(vertical: 5),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 7),
                         child: AutoText(
-                          subHeader,
+                          header,
                           textDirection: TextDirection.rtl,
                           overflow: TextOverflow.fade,
                           softWrap: true,
-                          style:
-                              TextStyle(fontSize: 12, color: IColors.darkGrey),
-                        ))
-                  ],
+                          style: TextStyle(
+                              fontSize: 13.5,
+                              color: headerColor,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: AutoText(
+                              subHeader,
+                              textDirection: TextDirection.rtl,
+                              overflow: TextOverflow.fade,
+                              softWrap: true,
+                              style:
+                                  TextStyle(fontSize: 12, color: IColors.darkGrey),
+                            )),
+                      )
+                    ],
+                  ),
                 ),
               ),
               Padding(

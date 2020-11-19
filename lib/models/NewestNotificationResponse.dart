@@ -72,7 +72,7 @@ class NewestNotificationResponse {
   static Future<NewestNotificationResponse> removeSeenNotifications(NewestNotificationResponse notifs) async{
     /// TODO for other kind of notifications later
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> seenNotif = prefs.getStringList("seenNotificationIds");
+    List<String> seenNotif = prefs.getStringList("seenNotificationIds")??<String>[];
     List<NewestVisit> filteredNotifs = [];
     notifs.newestVisits.forEach((element) {
       if (!seenNotif.contains(element.getNotificationKey())) {
@@ -280,9 +280,9 @@ class NewestVisit {
     } else if (status == 2) {
       title = "رد درخواست ویزیت";
     }
-    if (this.title != null) {
-      title = this.title + ": " + title;
-    }
+    // if (this.title != null && this.title!="") {
+    //   title = this.title +": " + title;
+    // }
     return title;
   }
 
@@ -301,6 +301,6 @@ class NewestVisit {
   }
 
   String getNotificationKey() {
-    return id.toString() + "-" + status.toString() + "-" + panel.toString();
+    return id.toString() + "-" + status.toString() + "-" + panel.toString() + "-" + requestVisitTime??"";
   }
 }

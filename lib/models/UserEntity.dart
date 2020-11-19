@@ -88,12 +88,12 @@ class Entity {
   }
 
   Panel get panel {
-    return (mEntity.panelMap[iPanelId] ?? panelByPartnerId);
+    return (mEntity?.panelMap[iPanelId] ?? panelByPartnerId);
   }
 
   Panel get panelByPartnerId {
     if (mEntity != null) {
-      for (int i = 0; i < mEntity.panels.length; i++) {
+      for (int i = 0; i < mEntity?.panels?.length; i++) {
         Panel element = mEntity.panels[i];
         if (isDoctor) {
           if (element.patientId == partnerEntity.id) {

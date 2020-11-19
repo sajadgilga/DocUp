@@ -1,33 +1,24 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
-import 'package:docup/models/NewestNotificationResponse.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/networking/ApiProvider.dart';
-import 'package:docup/networking/CustomException.dart';
-import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/ui/mainPage/navigator_destination.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 import '../../constants/colors.dart';
-import 'CallRepo.dart';
 import 'NavigatorView.dart';
 
 class MainPage extends StatefulWidget {
-  Function(String, dynamic) pushOnBase;
+  final Function(String, dynamic) pushOnBase;
 
   MainPage({Key key, this.pushOnBase}) : super(key: key);
 
@@ -38,11 +29,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
-  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
-  bool _isFCMConfiged = false;
-
   ProgressDialog _progressDialogue;
   Map<int, GlobalKey<NavigatorViewState>> _children = {
     0: GlobalKey<NavigatorViewState>(),
@@ -73,119 +59,14 @@ class _MainPageState extends State<MainPage> {
     _panelBloc.add(GetMyPanels());
     _entityBloc.listen((data) {
       if (_timer == null)
-        _timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
+        _timer = Timer.periodic(Duration(seconds: 25), (Timer t) {
           _entityBloc.add(EntityUpdate());
           _panelBloc.add(GetMyPanels());
         });
     });
-    _enableFCM();
+
+    NotificationAndFirebaseService.initFCM(context);
     super.initState();
-  }
-
-  Future _enableFCM() async {
-    if (!_isFCMConfiged) {
-      try {
-        _firebaseMessaging.configure(
-          onMessage: (Map<String, dynamic> message) async {
-            print("onMessage: $message");
-            String title = message['notification']['title'];
-            String bodyString = message['notification']['body'];
-            Map<String, dynamic> body = json.decode(bodyString);
-            NewestVisit visit = NewestVisit.fromJson(body['payload']);
-
-            await _showNotificationWithDefaultSound(
-                visit.getNotificationTitle(),
-                visit.getNotificationDescription());
-
-            /// notification bloc events
-            // ignore: close_sinks
-            NotificationBloc notificationBloc =
-                BlocProvider.of<NotificationBloc>(context);
-            if ([5, 6].contains(body['type'])) {
-              /// TODO amir: this condition should check type of notification later
-              notificationBloc.add(AddNewestVisitNotification(newVisit: visit));
-            } else if (true) {
-              /// TODO amir: handling event type of notification
-            }
-          },
-          onBackgroundMessage:
-              Platform.isIOS ? null : myBackgroundMessageHandler,
-          onLaunch: (Map<String, dynamic> message) async {
-            print("onLaunch: $message");
-          },
-          onResume: (Map<String, dynamic> message) async {
-            print("onResume: $message");
-          },
-        );
-
-        if (Platform.isIOS) {
-          _firebaseMessaging.requestNotificationPermissions(
-              const IosNotificationSettings(
-                  sound: true, badge: true, alert: true, provisional: true));
-          _firebaseMessaging.onIosSettingsRegistered
-              .listen((IosNotificationSettings settings) {
-            print("Settings registered: $settings");
-          });
-        }
-
-        _firebaseMessaging.getToken().then((String fcmToken) {
-          assert(fcmToken != null);
-          print("FCM " + fcmToken);
-          try {
-            NotificationRepository().registerDevice(fcmToken);
-          } on BadRequestException {
-            print('kooooooft');
-            _isFCMConfiged = true;
-            return;
-          } catch (_) {
-            print('register device failed fcm');
-            _isFCMConfiged = true;
-            return;
-          }
-        });
-
-        var initializationSettingsAndroid =
-            new AndroidInitializationSettings('mipmap/ic_launcher');
-        var initializationSettingsIOS = new IOSInitializationSettings();
-
-        var initializationSettings = new InitializationSettings(
-            initializationSettingsAndroid, initializationSettingsIOS);
-
-        flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-        flutterLocalNotificationsPlugin.initialize(initializationSettings,
-            onSelectNotification: onSelectNotification);
-      } catch (_) {
-        print("oh oh");
-        _isFCMConfiged = true;
-        return;
-      }
-    }
-  }
-
-  Future _showNotificationWithDefaultSound(String title, String body) async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'channel_id', 'channel_name', 'channel_description',
-        importance: Importance.Max, priority: Priority.High);
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      title,
-      title,
-      platformChannelSpecifics,
-      payload: body,
-    );
-  }
-
-  Future onSelectNotification(String body) async {
-    var jsonBody = json.decode(body);
-
-    int type = jsonBody['type'];
-    String payload = jsonBody['payload'];
-    if (type == 1) {
-      joinVideoCall(context, payload);
-    }
   }
 
   @override

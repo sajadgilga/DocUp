@@ -36,6 +36,16 @@ class _ChatPageState extends State<ChatPage> {
   TextEditingController _controller = TextEditingController();
   bool chatPageLoading = false;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    SocketHelper().webSocketStatusController.addListener(() {
+      setState(() {});
+    });
+  }
+
   void _submitMsg() {
     if (_controller.text == '') {
       return;
@@ -49,7 +59,9 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _submitButton() => GestureDetector(
       onTap: () {
-        _submitMsg();
+        if (SocketHelper().webSocketStatusController.text == "1") {
+          _submitMsg();
+        }
       },
       child: Container(
         width: 50,
@@ -63,11 +75,23 @@ class _ChatPageState extends State<ChatPage> {
                   color: IColors.themeColor, blurRadius: 10, spreadRadius: 1)
             ]),
         padding: EdgeInsets.all(5),
-        child: Icon(
-          Icons.send,
-          color: Colors.white,
-          size: 20,
-        ),
+        child: SocketHelper().webSocketStatusController.text == "1"
+            ? Icon(
+                Icons.send,
+                color: Colors.white,
+                size: 20,
+              )
+            : Container(
+                width: 20,
+                height: 20,
+                child: CircleAvatar(
+                  backgroundColor: Color.fromARGB(0, 0, 0, 0),
+                  child: CircularProgressIndicator(
+                    strokeWidth: (20) * (10 / 100),
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              ),
       ));
 
   Widget _sendBox() => Container(
@@ -212,12 +236,28 @@ class _ChatBox extends StatefulWidget {
   }
 }
 
-class _ChatBoxState extends State<_ChatBox> {
+class _ChatBoxState extends State<_ChatBox> with WidgetsBindingObserver {
   ChatMessageRepository _repository = ChatMessageRepository();
   List<ChatMessage> _messages = [];
   int length = 0;
   bool _isFetchingLoading = false;
   bool _chatPageLoading = true;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _messages = [];
+    _loadData(unidirectional: false);
+
+    if (state == AppLifecycleState.resumed) {
+      setState(() {
+        print("App State Changed: "  + state.toString());
+      });
+    } else {
+      setState(() {
+        print("App State Changed: "  + state.toString());
+      });
+    }
+  }
 
   @override
   void setState(fn) {
@@ -230,6 +270,7 @@ class _ChatBoxState extends State<_ChatBox> {
   initState() {
     _loadData(unidirectional: false);
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   bool isUnique(msgId) {
@@ -237,6 +278,12 @@ class _ChatBoxState extends State<_ChatBox> {
       if (m.id == msgId) return false;
     }
     return true;
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   void uniqueMaker() {
@@ -288,12 +335,12 @@ class _ChatBoxState extends State<_ChatBox> {
                   },
                   child: (_messages == null || _messages.length == 0)
                       ? Center(
-                        child: AutoText(
-                          Strings.emptyChatPage,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: IColors.darkGrey),
-                        ),
-                      )
+                          child: AutoText(
+                            Strings.emptyChatPage,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: IColors.darkGrey),
+                          ),
+                        )
                       : ListView.builder(
                           reverse: true,
                           itemCount: _messages.length + 1,

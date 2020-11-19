@@ -37,6 +37,7 @@ class PartnerSummary extends StatelessWidget {
                 (name != null ? name : ''),
                 textDirection: TextDirection.rtl,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                maxLines: 1,
               )),
           AutoText(
             (speciality != null ? speciality : ' - '),

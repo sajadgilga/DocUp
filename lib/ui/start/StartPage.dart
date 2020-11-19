@@ -484,10 +484,13 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
-  _messageWidget() => AutoText(
-        getMessageText(),
-        style: TextStyle(fontSize: 13),
-        textAlign: TextAlign.center,
+  _messageWidget() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: AutoText(
+          getMessageText(),
+          style: TextStyle(fontSize: 13),
+          textAlign: TextAlign.center,
+        ),
       );
 
   _titleWidget() => Visibility(

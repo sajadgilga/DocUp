@@ -14,7 +14,6 @@ import 'package:docup/ui/home/notification/Notification.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
-import 'package:docup/ui/widgets/VisitDateTimePicker.dart';
 import 'package:docup/ui/widgets/medicines/ReminderList.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -166,7 +165,9 @@ class _HomeState extends State<Home> {
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(right: 40),
+                  padding: EdgeInsets.only(
+                    right: MediaQuery.of(context).size.width * 0.10,
+                  ),
                   child: AutoText("ویدیو های آموزشی",
                       style: TextStyle(fontSize: 17)),
                 ),
@@ -174,7 +175,9 @@ class _HomeState extends State<Home> {
                   height: 20,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 100, bottom: 15),
+                  padding: EdgeInsets.only(
+                      right: MediaQuery.of(context).size.width * 0.20,
+                      bottom: 15),
                   child: AutoText(
                     "مراقبت از خود با آگاهی بیشتر",
                     style: TextStyle(fontSize: 10),

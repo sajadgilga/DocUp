@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
-import 'package:docup/blocs/PictureBloc.dart';
+import 'package:docup/blocs/FileBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
@@ -65,8 +65,8 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
     this.sectionId = _state.entity.sectionIdByNameAndPatientEntityId(
         Strings.testResults, widget.patientEntity.id);
     if (sectionId != null)
-      BlocProvider.of<PictureBloc>(context)
-          .add(PictureListGet(listId: this.sectionId));
+      BlocProvider.of<FileBloc>(context)
+          .add(FileListGet(listId: this.sectionId));
 
     _bloc.responseVisitStream.listen((data) {
       if (data.status == Status.COMPLETED) {

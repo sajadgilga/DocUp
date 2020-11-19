@@ -12,6 +12,7 @@ import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileAvatarDialog {
@@ -21,7 +22,7 @@ class EditProfileAvatarDialog {
   StateSetter accountStateSetter;
   StateSetter alertStateSetter;
   File picture;
-
+  bool emptyFlag = false;
   final Function() onDone;
 
   int actionButtonStatus = 0;
@@ -78,20 +79,44 @@ class EditProfileAvatarDialog {
                                 onTap: () {
                                   _getImage(dialogStateSetter);
                                 },
-                                child: picture == null
+                                child: emptyFlag
                                     ? PolygonAvatar(
-                                        user: entity.mEntity.user,
                                         imageSize: 140,
                                       )
-                                    : PolygonAvatar(
-                                        imageSize: 140,
-                                        defaultImage: Image.file(
-                                          picture,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )),
-                            ALittleVerticalSpace(
-                              height: 100,
+                                    : (picture == null
+                                        ? PolygonAvatar(
+                                            user: entity.mEntity.user,
+                                            imageSize: 140,
+                                          )
+                                        : PolygonAvatar(
+                                            imageSize: 140,
+                                            defaultImage: Image.file(
+                                              picture,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ))),
+                            Padding(
+                              padding: EdgeInsets.only(top: 10, bottom: 20),
+                              child: GestureDetector(
+                                onTap: () {
+                                  alertStateSetter(() {
+                                    emptyFlag = true;
+                                    picture = null;
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          width: 1, color: IColors.darkGrey)),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: IColors.themeColor,
+                                    size: 30,
+                                  ),
+                                ),
+                              ),
                             ),
                             ActionButton(
                               title: "ذخیره",
@@ -160,18 +185,31 @@ class EditProfileAvatarDialog {
   }
 
   void updateAvatarImage(AuthBloc authBloc) async {
-    if (picture != null) {
-      authBloc.uploadAvatar(
-          base64Encode(picture.readAsBytesSync()), entity.mEntity.id);
-    } else {
-      showError();
-    }
+    /// TODO amir: incomplete api. it should accept null image as if user don't want to have and avatar
+    authBloc.uploadAvatar(
+        picture == null ? "" : base64Encode(picture.readAsBytesSync()),
+        entity.mEntity.id);
   }
 
   Future _getImage(StateSetter stateSetter) async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: image.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: IColors.themeColor,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: true),
+        iosUiSettings: IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ));
     stateSetter(() {
-      picture = image;
+      emptyFlag = false;
+      picture = croppedFile;
     });
   }
 }
