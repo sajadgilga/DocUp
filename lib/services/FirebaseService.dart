@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class NotificationAndFirebaseService {
+class NotificationAndFirebaseService{
   static final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   static BuildContext context;
@@ -110,24 +110,33 @@ class NotificationAndFirebaseService {
   }
 
   static Future<dynamic> onMessage(Map<String, dynamic> message) async {
-    print("onMessage: $message");
-    String title = message['notification']['title'];
-    String bodyString = message['notification']['body'];
-    Map<String, dynamic> body = json.decode(bodyString);
-    NewestVisit visit = NewestVisit.fromJson(body['payload']);
+    try {
+      print("onMessage: $message");
+      String title = message['notification']['title'];
+      String body = message['notification']['body'];
+      await _showNotificationWithDefaultSound(title, body);
 
-    await _showNotificationWithDefaultSound(
-        visit.getNotificationTitle(), visit.getNotificationDescription());
-
-    /// notification bloc events
-    // ignore: close_sinks
-    NotificationBloc notificationBloc =
-        BlocProvider.of<NotificationBloc>(context);
-    if ([5, 6].contains(body['type'])) {
-      /// TODO amir: this condition should check type of notification later
-      notificationBloc.add(AddNewestVisitNotification(newVisit: visit));
-    } else if (true) {
-      /// TODO amir: handling event type of notification
+      // Map<String, dynamic> data =
+      //     new Map<String, dynamic>.from(message['data']);
+      // NewestVisit visit;
+      // if (data.containsKey('json')) {
+      //   visit = NewestVisit.fromJson(data);
+      //
+      //   /// notification bloc events
+      //   // ignore: close_sinks
+      //   NotificationBloc notificationBloc =
+      //       BlocProvider.of<NotificationBloc>(context);
+      //   if ([5, 6].contains(data['type'])) {
+      //     /// TODO amir: this condition should check type of notification later
+      //     notificationBloc.add(AddNewestVisitNotification(newVisit: visit));
+      //   } else if (true) {
+      //     /// TODO amir: handling event type of notification
+      //   }
+      // }
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      BlocProvider.of<NotificationBloc>(context).add(GetNewestNotifications());
     }
   }
 

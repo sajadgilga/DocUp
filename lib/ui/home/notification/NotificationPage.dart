@@ -35,6 +35,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   initState() {
+    BlocProvider.of<NotificationBloc>(context).add(GetNewestNotifications());
     _notificationBloc.get();
     super.initState();
   }

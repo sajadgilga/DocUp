@@ -37,8 +37,6 @@ class InfoPage extends StatefulWidget {
 class _InfoPageState extends State<InfoPage> {
   @override
   void initState() {
-    BlocProvider.of<FileBloc>(context)
-        .add(FileListGet(listId: widget.entity.sectionId(widget.pageName)));
     super.initState();
   }
 
@@ -78,6 +76,22 @@ class _InfoPageState extends State<InfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    /// if we put this line in init state it will get mixed up with prescription tests and advices
+    FileBloc bloc = BlocProvider.of<FileBloc>(context);
+    var state = bloc.state;
+    int panelSectionId = widget.entity.sectionId(widget.pageName);
+    if (state != null) {
+      if (((state is FileLoading && state.section!=null && state.section.id == panelSectionId) ||
+          (state is FilesLoaded && state.section!=null && state.section.id == panelSectionId))) {
+        /// do nothing
+      }else{
+        bloc.add(FileListGet(listId: panelSectionId));
+
+      }
+    } else {
+      bloc.add(FileListGet(listId: panelSectionId));
+    }
+
     return SingleChildScrollView(
         child: Container(
       child: Column(

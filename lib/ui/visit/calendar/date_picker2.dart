@@ -1,4 +1,3 @@
-
 import 'package:docup/ui/visit/calendar/utils/consts.dart';
 import 'package:docup/ui/visit/calendar/widget/render_table2.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
@@ -28,7 +27,8 @@ class DatePicker2 extends StatefulWidget {
   _DatePicker2State createState() => _DatePicker2State();
 }
 
-class _DatePicker2State extends State<DatePicker2> with TickerProviderStateMixin {
+class _DatePicker2State extends State<DatePicker2>
+    with TickerProviderStateMixin {
   AnimationController controller;
   Animation<double> animation;
 
@@ -76,9 +76,10 @@ class _DatePicker2State extends State<DatePicker2> with TickerProviderStateMixin
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    try {
+      controller.dispose();
+    } catch (e) {}
     super.dispose();
-    controller.dispose();
   }
 
   @override
@@ -356,8 +357,7 @@ class _DatePicker2State extends State<DatePicker2> with TickerProviderStateMixin
       widget.onConfirmedDate(
           '${outPutFormat(startSelectedDate)} # ${outPutFormat(endSelectedDate)}');
     } else {
-      widget.onConfirmedDate(
-          '${outPutFormat(startSelectedDate)}');
+      widget.onConfirmedDate('${outPutFormat(startSelectedDate)}');
     }
   }
 }

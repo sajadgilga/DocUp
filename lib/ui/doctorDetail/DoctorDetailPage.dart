@@ -121,7 +121,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
 
   @override
   void dispose() {
-    _bloc.dispose();
+    try {
+      _bloc.dispose();
+    } catch (e) {}
     super.dispose();
   }
 }

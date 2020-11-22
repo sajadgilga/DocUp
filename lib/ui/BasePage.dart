@@ -30,7 +30,9 @@ class _BasePageState extends State<BasePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    try{
+      WidgetsBinding.instance.removeObserver(this);
+    }catch(e){}
     super.dispose();
   }
 

@@ -46,7 +46,6 @@ class _VisitConfPageState extends State<VisitConfPage>
   DoctorInfoBloc _bloc = DoctorInfoBloc();
   bool isLoaded = false;
 
-
   @override
   void initState() {
     if (!isLoaded) {
@@ -124,7 +123,6 @@ class _VisitConfPageState extends State<VisitConfPage>
       ),
     );
   }
-
 
   GestureDetector _rootWidget(DoctorEntity doctorEntity) {
     if (!isLoaded) {
@@ -315,7 +313,9 @@ class _VisitConfPageState extends State<VisitConfPage>
 
   @override
   void dispose() {
-    controller.close();
+    try {
+      controller.close();
+    } catch (e) {}
     super.dispose();
   }
 }

@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:docup/blocs/ChatMessageBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
+import 'package:docup/blocs/FileBloc.dart';
 import 'package:docup/blocs/MedicalTestListBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
 import 'package:docup/blocs/PatientTrackerBloc.dart';
-import 'package:docup/blocs/FileBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/blocs/VisitBloc.dart';
@@ -34,7 +34,6 @@ import 'package:docup/ui/panel/healthFile/medicinePage/MedicinePage.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/ChatPage.dart';
 import 'package:docup/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
-import 'package:docup/ui/panel/partnerContact/illnessPage/SendTestPage.dart';
 import 'package:docup/ui/panel/partnerContact/videoCallPage/VideoCallPage.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
 import 'package:docup/ui/patientDetail/PatientRequestPage.dart';
@@ -111,14 +110,16 @@ class NavigatorViewState extends State<NavigatorView> {
 
   @override
   dispose() {
-    _tabSwitchBloc.close();
-    _panelSectionBloc.close();
-    _chatMessageBloc.close();
-    _searchBloc.close();
-    _visitBloc.close();
-    _pictureBloc.close();
-    _trackerBloc.close();
-    _visitTimeBloc.close();
+    try {
+      _tabSwitchBloc.close();
+      _panelSectionBloc.close();
+      _chatMessageBloc.close();
+      _searchBloc.close();
+      _visitBloc.close();
+      _pictureBloc.close();
+      _trackerBloc.close();
+      _visitTimeBloc.close();
+    } catch (e) {}
     super.dispose();
   }
 
@@ -203,7 +204,6 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.root: (context) => _myDoctorsList(context),
           NavigatorRoutes.myPartnerDialog: (context) =>
               _myPartnerDialog(context, detail),
-
           NavigatorRoutes.panel: (context) => _panel(context, detail: detail),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail),
@@ -382,7 +382,6 @@ class NavigatorViewState extends State<NavigatorView> {
     );
   }
 
-
   Widget _cognitiveTest(context, detail) => MultiBlocProvider(
         providers: [
           BlocProvider<SearchBloc>.value(
@@ -550,7 +549,11 @@ class NavigatorViewState extends State<NavigatorView> {
                   ],
                 ));
           }
-          return Panel(); //TODO
+          return Panel(
+            onPush: (direction, entity) {
+              push(context, direction, detail: entity);
+            },
+          ); //TODO
         },
       );
     });

@@ -1,8 +1,10 @@
 import 'dart:async';
+
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:docup/ui/mainPage/CallRepo.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
+
 import 'utils/settings.dart';
 
 class CallPage extends StatefulWidget {
@@ -23,11 +25,13 @@ class _CallPageState extends State<CallPage> {
 
   @override
   void dispose() {
-    // clear users
-    _users.clear();
-    // destroy sdk
-    AgoraRtcEngine.leaveChannel();
-    AgoraRtcEngine.destroy();
+    try {
+      // clear users
+      _users.clear();
+      // destroy sdk
+      AgoraRtcEngine.leaveChannel();
+      AgoraRtcEngine.destroy();
+    } catch (e) {}
     super.dispose();
   }
 

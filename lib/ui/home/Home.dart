@@ -55,7 +55,9 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    _medicineBloc.close();
+    try {
+      _medicineBloc.close();
+    } catch (e) {}
     super.dispose();
   }
 

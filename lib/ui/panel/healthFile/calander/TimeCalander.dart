@@ -1,4 +1,3 @@
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/MedicineBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
@@ -11,7 +10,6 @@ import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TimeCalender extends StatefulWidget {
   final Entity entity;
@@ -41,7 +39,9 @@ class _TimeCalenderState extends State<TimeCalender> {
 
   @override
   dispose() {
-    _createMedicineBloc.close();
+    try {
+      _createMedicineBloc.close();
+    } catch (e) {}
     super.dispose();
   }
 
@@ -98,7 +98,6 @@ class _TimeCalenderState extends State<TimeCalender> {
       showAlertDialog(context, 'ساعت تکرار دارو خالی است', () {});
       return;
     }
-
 
     if (_createMedicineBloc.state == MedicineCreationStates.SENDING) return;
     _createMedicineBloc.add(MedicineCreate(

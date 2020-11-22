@@ -56,7 +56,9 @@ class _CreateMedicinePageState extends State<CreateMedicinePage> {
 
   @override
   dispose() {
-    _createMedicineBloc.close();
+    try {
+      _createMedicineBloc.close();
+    } catch (e) {}
     super.dispose();
   }
 

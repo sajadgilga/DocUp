@@ -53,28 +53,33 @@ class SocketHelper {
             webSocketStatusController.text = "1";
           }).then((value) {
             print("websocket listening");
-            channel.stream.asBroadcastStream().listen((event) {
-              _retryCount = 0;
-              onReceive(event);
-            }, onDone: () {
-              print('websocket got done');
-              webSocketStatusController.text = "0";
+            try{
+              channel.stream.asBroadcastStream().listen((event) {
+                _retryCount = 0;
+                onReceive(event);
+              }, onDone: () {
+                print('websocket got done');
+                webSocketStatusController.text = "0";
 
-              /// as disconnected status
-              final _retryTimeout = min(_maxRetryTimeout, 2 ^ (_retryCount++));
-              Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
-                connect(url);
-              });
-            }, onError: (err) {
-              webSocketStatusController.text = "0";
+                /// as disconnected status
+                final _retryTimeout = min(_maxRetryTimeout, 2 ^ (_retryCount++));
+                Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
+                  connect(url);
+                });
+              }, onError: (err) {
+                webSocketStatusController.text = "0";
 
-              /// as disconnected status
-              print('websocket error');
-              final _retryTimeout = min(_maxRetryTimeout, 2 ^ (_retryCount++));
-              Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
-                connect(url);
+                /// as disconnected status
+                print('websocket error');
+                final _retryTimeout = min(_maxRetryTimeout, 2 ^ (_retryCount++));
+                Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
+                  connect(url);
+                });
               });
-            });
+            }catch(e){
+
+            }
+
 
             /// as connected status
             retryingMessageQueue();

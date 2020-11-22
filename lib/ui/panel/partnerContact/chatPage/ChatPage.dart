@@ -250,11 +250,11 @@ class _ChatBoxState extends State<_ChatBox> with WidgetsBindingObserver {
 
     if (state == AppLifecycleState.resumed) {
       setState(() {
-        print("App State Changed: "  + state.toString());
+        print("App State Changed: " + state.toString());
       });
     } else {
       setState(() {
-        print("App State Changed: "  + state.toString());
+        print("App State Changed: " + state.toString());
       });
     }
   }
@@ -282,7 +282,9 @@ class _ChatBoxState extends State<_ChatBox> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    try {
+      WidgetsBinding.instance.removeObserver(this);
+    } catch (e) {}
     super.dispose();
   }
 

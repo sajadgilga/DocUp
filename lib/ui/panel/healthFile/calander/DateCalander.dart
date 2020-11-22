@@ -33,7 +33,9 @@ class _DateCalenderState extends State<DateCalender> {
 
   @override
   void dispose() {
-    _medicineBloc.close();
+    try {
+      _medicineBloc.close();
+    } catch (e) {}
     super.dispose();
   }
 
@@ -120,7 +122,7 @@ class _DateCalenderState extends State<DateCalender> {
                     type: "date",
                     initial: getTomorrowInJalali(),
                     min: getTodayInJalaliString(),
-                    disable: <int,String>{},
+                    disable: <int, String>{},
                     onSelect: (date) {},
                   ),
                 )

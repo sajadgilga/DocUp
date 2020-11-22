@@ -304,3 +304,111 @@ class NewestVisit {
     return id.toString() + "-" + status.toString() + "-" + panel.toString() + "-" + requestVisitTime??"";
   }
 }
+
+class NewestMedicalTest {
+  /// TODO amir: check data json of notification to build it's model
+  int id;
+  String createdDate;
+  String modifiedDate;
+  bool enabled;
+  String doctorMessage;
+  String title;
+  int visitType;
+  int visitMethod;
+  int visitDurationPlan;
+  String patientMessage;
+  String requestVisitTime;
+  int status;
+
+  int doctor;
+  int patient;
+  int panel;
+
+  NewestMedicalTest(
+      {this.id,
+        this.createdDate,
+        this.modifiedDate,
+        this.enabled,
+        this.doctorMessage,
+        this.title,
+        this.visitType,
+        this.visitMethod,
+        this.visitDurationPlan,
+        this.patientMessage,
+        this.requestVisitTime,
+        this.status,
+        this.doctor,
+        this.patient,
+        this.panel});
+
+  NewestMedicalTest.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    createdDate = json['created_date'];
+    modifiedDate = json['modified_date'];
+    enabled = json['enabled'];
+    doctorMessage = json['doctor_message']??"";
+    title = json['title']??"";
+    visitType = json['visit_type'];
+    visitMethod = json['visit_method'];
+    visitDurationPlan = json['visit_duration_plan'];
+    patientMessage = json['patient_message']??"";
+    requestVisitTime = json['request_visit_time'];
+    status = json['status'];
+    doctor = json['doctor'];
+    patient = json['patient'];
+    panel = json['panel'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['created_date'] = this.createdDate;
+    data['modified_date'] = this.modifiedDate;
+    data['enabled'] = this.enabled;
+    data['doctor_message'] = this.doctorMessage;
+    data['title'] = this.title;
+    data['visit_type'] = this.visitType;
+    data['visit_method'] = this.visitMethod;
+    data['visit_duration_plan'] = this.visitDurationPlan;
+    data['patient_message'] = this.patientMessage;
+    data['request_visit_time'] = this.requestVisitTime;
+    data['status'] = this.status;
+    data['doctor'] = this.doctor;
+    data['patient'] = this.patient;
+    data['panel'] = this.panel;
+    return data;
+  }
+
+  String getNotificationTitle() {
+    String title = "عنوان";
+    if (status == 0) {
+      title = "در انتظار تایید ویزیت";
+    } else if (status == 1) {
+      title = "تایید درخواست ویزیت";
+    } else if (status == 2) {
+      title = "رد درخواست ویزیت";
+    }
+    // if (this.title != null && this.title!="") {
+    //   title = this.title +": " + title;
+    // }
+    return title;
+  }
+
+  String getNotificationDescription() {
+    return (visitType == 0 ? "ویزیت حضوری" : "ویزیت مجازی");
+  }
+
+  String getNotificationTime() {
+    return requestVisitTime;
+  }
+
+  Color getNotificationColor() {
+    return status == 0
+        ? IColors.darkGrey
+        : (status == 1 ? IColors.themeColor : IColors.red);
+  }
+
+  String getNotificationKey() {
+    return id.toString() + "-" + status.toString() + "-" + panel.toString() + "-" + requestVisitTime??"";
+  }
+}

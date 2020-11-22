@@ -25,19 +25,19 @@ class FileBloc extends Bloc<FileEvent, FileState> {
 
 
   Stream<FileState> _upload(FileUpload event) async* {
-    if (state is PictureUploading)
+    if (state is FileUploading)
       return;
     if (state is FilesLoaded)
-      yield PictureUploading(section: (state as FilesLoaded).section);
+      yield FileUploading(section: (state as FilesLoaded).section);
     if (state is FileLoading)
-      yield PictureUploading(section: (state as FileLoading).section);
+      yield FileUploading(section: (state as FileLoading).section);
     try {
       final response = await _repository.uploadFile(
           event.file, event.listId);
-      yield PictureUploaded();
-      yield FilesLoaded(section: (state as PictureUploading).section);
+      yield FileUploaded();
+      yield FilesLoaded(section: (state as FileUploading).section);
     } catch (e) {
-      yield PictureError();
+      yield PictureError(section: (this.state as FileUploading).section);
     print(e.toString());
     }
   }
@@ -75,7 +75,11 @@ abstract class FileState {}
 
 class FileUnloaded extends FileState {}
 
-class PictureError extends FileState {}
+class PictureError extends FileState {
+  PanelSection section;
+
+  PictureError({this.section});
+}
 
 class FileLoading extends FileState {
   PanelSection section;
@@ -89,10 +93,10 @@ class FilesLoaded extends FileState {
   FilesLoaded({this.section});
 }
 
-class PictureUploaded extends FileState {}
+class FileUploaded extends FileState {}
 
-class PictureUploading extends FileState {
+class FileUploading extends FileState {
   PanelSection section;
 
-  PictureUploading({this.section});
+  FileUploading({this.section});
 }

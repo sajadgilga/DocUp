@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,12 @@ class FileEntity {
     Map json = Map<String, dynamic>();
     json['title'] = title;
     json['description'] = description;
-    json['file'] = base64;
+    if (file != null)
+      json['file'] = "data:file/" +
+          AllowedFile.getFormatFromFilePath(file.path) +
+          ";base64," +
+          base64;
+
     return json;
   }
 
@@ -70,21 +76,59 @@ class FileEntity {
     return null;
   }
 
+  AllowedFileType get fileType {
+    extension = extension ??
+        AllowedFile.getFormatFromFilePath(file.path) ??
+        AllowedFile.getFormatFromFilePath(fileURL);
+    return AllowedFile.getFileType(extension);
+  }
+
   Widget get defaultFileWidget {
     if (file == null) {
       if (fileURL != null) {
-        return Image.network(fileURL);
+        if (fileType == AllowedFileType.image) {
+          return Image.network(fileURL);
+        } else {
+          return Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(
+                Icons.picture_as_pdf,
+                size: 80,
+                color: IColors.red,
+              ),
+            ),
+          );
+        }
+      } else {
+        return Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Icon(
+              Icons.text_fields,
+              size: 80,
+              color: IColors.themeColor,
+            ),
+          ),
+        );
       }
-    } else if (AllowedFile.getFileType(
-            AllowedFile.getFormatFromFilePath(file.path)) ==
-        AllowedFileType.image) {
+    } else if (fileType == AllowedFileType.image) {
       return Image.file(file);
     } else if (AllowedFile.getFileType(
             AllowedFile.getFormatFromFilePath(file.path)) ==
         AllowedFileType.doc) {
-      return Icon(
-        Icons.insert_drive_file,
-        size: 100,
+      return Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Icon(
+            Icons.picture_as_pdf,
+            size: 80,
+            color: IColors.red,
+          ),
+        ),
       );
     }
     return null;

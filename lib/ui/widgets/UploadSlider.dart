@@ -57,8 +57,8 @@ class UploadFileSliderState extends State<UploadFileSlider> {
   @override
   void initState() {
     BlocProvider.of<FileBloc>(context).listen((data) {
-      if (data is PictureUploaded) {
-        showPicUploadedDialog(context, "تصویر ارسال شد", () {
+      if (data is FileUploaded) {
+        showPicUploadedDialog(context, "فایل ارسال شد", () {
           BlocProvider.of<FileBloc>(context)
               .add(FileListGet(listId: widget.listId));
           Navigator.of(context).maybePop();
@@ -75,8 +75,9 @@ class UploadFileSliderState extends State<UploadFileSlider> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
-    _titleController.dispose();
+    try {
+      _titleController.dispose();
+    } catch (e) {}
     super.dispose();
   }
 
@@ -165,14 +166,18 @@ class UploadFileSliderState extends State<UploadFileSlider> {
       );
 
   void _uploadPic() {
-    if (file.file == null) {
-      showAlertDialog(context, 'تصویری انتخاب نشده است', () {});
+    if (file != null &&
+        file.file != null &&
+        file.file.lengthSync() > 5 * 1024 * 1024) {
+      showAlertDialog(
+          context, 'حداکثر اندازه فایلی ارسالی ۵ ماگابایت است.', () {});
       return;
     }
 
-    if (BlocProvider.of<FileBloc>(context).state is PictureUploading) return;
+    if (BlocProvider.of<FileBloc>(context).state is FileUploading) return;
     if (_titleController.text != '') file.title = _titleController.text;
-    if (_descriptionController.text != '') file.description = _descriptionController.text;
+    if (_descriptionController.text != '')
+      file.description = _descriptionController.text;
     BlocProvider.of<FileBloc>(context)
         .add(FileUpload(listId: widget.listId, file: file));
     showDialog(

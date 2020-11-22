@@ -221,7 +221,7 @@ class Strings {
   static final String periodTextFieldHint = 'هر چند ساعت';
   static final String submitDrugLabel = 'ارسال برای بیمار';
 
-  static final String supportWhatsAppPhoneNumber = "+989335705997";
+  static final String supportWhatsAppPhoneNumber = "+989128123351";
   static final String supportTelegramId = "amirmosio";
 
   static final String noVirtualAppointment =

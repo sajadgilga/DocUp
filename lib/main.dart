@@ -1,22 +1,24 @@
-import 'package:docup/blocs/PanelBloc.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/ui/start/OnBoardingPage.dart';
+import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/ui/start/SplashPage.dart';
-import 'package:docup/ui/start/StartPage.dart';
-
+// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'constants/colors.dart';
 import 'constants/strings.dart';
 
-import 'ui/mainPage/MainPage.dart';
-
-void main() => runApp(MyApp());
+void main()async {
+  // /// to initialize shared preference after cleaning packages.
+  // SharedPreferences.setMockInitialValues({});
+  WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> globalNavigator =

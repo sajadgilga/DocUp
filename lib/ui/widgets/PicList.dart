@@ -8,6 +8,7 @@ import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'AutoText.dart';
 import 'Waiting.dart';
@@ -94,11 +95,12 @@ class _PicListState extends State<PicList> {
   }
 
   Widget _pictureItem(FileEntity fileEntity) {
+    double width = MediaQuery.of(context).size.width * (40 / 100);
     return GestureDetector(
       onTap: () {
         if (fileEntity != null) {
-          if (AllowedFile.getFileType(fileEntity.extension) ==
-              AllowedFileType.image) {
+          if (fileEntity.fileType == AllowedFileType.image ||
+              fileEntity.fileURL == null) {
             Navigator.of(context, rootNavigator: true)
                 .push(MaterialPageRoute(builder: (_) {
               return DetailScreen(
@@ -107,11 +109,13 @@ class _PicListState extends State<PicList> {
                 title: fileEntity.title,
               );
             }));
-          } else {}
+          } else if (fileEntity.fileType == AllowedFileType.doc) {
+            launch(fileEntity.fileURL);
+          }
         }
       },
       child: Container(
-        width: MediaQuery.of(context).size.width * (40 / 100),
+        width: width,
         height: 140.0,
         child: Column(
           children: <Widget>[
@@ -124,7 +128,14 @@ class _PicListState extends State<PicList> {
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(8.0)),
                 child: FittedBox(
-                  child: fileEntity.defaultFileWidget,
+                  child: fileEntity != null
+                      ? fileEntity.defaultFileWidget
+                      : Container(
+                          height: 140,
+                          width: width,
+                          child: Container(
+                            color: Color.fromARGB(0, 0, 0, 0),
+                          )),
                   fit: BoxFit.cover,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                 ),
@@ -146,6 +157,12 @@ class _PicListState extends State<PicList> {
   }
 
   Widget _picListBox(width, List<FileEntity> pics) {
+    pics.removeWhere((element) {
+      if (element == null) {
+        return true;
+      }
+      return false;
+    });
     List<Widget> pictures = [];
     for (int i = 0; i < pics.length; i += 2) {
       FileEntity pic1 = pics[i];
@@ -315,7 +332,6 @@ class _DetailScreenState extends State<DetailScreen>
   /// 1 show 0 hide
   @override
   Widget build(BuildContext context) {
-    widget.imageURL = null;
     double maxX = MediaQuery.of(context).size.width;
     double maxY = MediaQuery.of(context).size.height;
     return Scaffold(

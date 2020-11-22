@@ -46,7 +46,8 @@ class InPlaceEditableTextState extends State<InPlaceEditableText> {
     super.initState();
     if (!widget.enable) {
       if (widget.bloc is PatientBloc) {
-        streamSubscription = (widget.bloc as PatientBloc).dataStream.listen((response) {
+        streamSubscription =
+            (widget.bloc as PatientBloc).dataStream.listen((response) {
           handleResponse(response);
         });
       }
@@ -126,7 +127,7 @@ class InPlaceEditableTextState extends State<InPlaceEditableText> {
             textDirection: TextDirection.rtl,
             style: TextStyle(fontSize: widget.fontSize),
           ),
-          if (status == 1 || status==3)
+          if (status == 1 || status == 3)
             GestureDetector(
               onTap: widget.onSaveTap,
               child: Container(
@@ -175,8 +176,10 @@ class InPlaceEditableTextState extends State<InPlaceEditableText> {
   }
 
   @override
-  void dispose(){
-    streamSubscription.cancel();
+  void dispose() {
+    try {
+      streamSubscription.cancel();
+    } catch (e) {}
     super.dispose();
   }
 }

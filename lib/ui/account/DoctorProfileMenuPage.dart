@@ -558,7 +558,9 @@ class _CreditCardState extends State<CreditCard> {
 
   @override
   void dispose() {
-    _doctorBloc.dispose();
+    try{
+      _doctorBloc.dispose();
+    }catch(e){}
     super.dispose();
   }
 }

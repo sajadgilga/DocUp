@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/MedicalTestListBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/SingleMedicalTestBloc.dart';
 import 'package:docup/constants/assets.dart';
@@ -248,7 +247,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
               if (widget.medicalTestPageInitData.panelId != null) {
                 try {
                   widget.medicalTestPageInitData.onDone();
-                }catch(e){}
+                } catch (e) {}
               }
             });
           } else {
@@ -269,7 +268,9 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   }
 
   void dispose() {
-    answeringController.close();
+    try {
+      answeringController.close();
+    } catch (e) {}
     super.dispose();
   }
 }

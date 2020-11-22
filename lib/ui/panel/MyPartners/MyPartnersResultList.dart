@@ -31,7 +31,7 @@ class MyPartnersResultList extends StatefulWidget {
 
 class _MyPartnersResultListState extends State<MyPartnersResultList> {
   Widget _list(List<Widget> results) {
-    if (results.length == 0 || true) {
+    if (results.length == 0) {
       return Expanded(
         child: SingleChildScrollView(
           child: Column(

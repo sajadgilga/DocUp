@@ -57,7 +57,9 @@ class _SearchBoxState extends State<SearchBox> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    widget.controller?.dispose();
+    try{
+      widget.controller?.dispose();
+    }catch(e){}
     super.dispose();
   }
 

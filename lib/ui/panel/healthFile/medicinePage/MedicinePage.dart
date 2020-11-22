@@ -1,4 +1,3 @@
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/MedicineBloc.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
@@ -37,7 +36,9 @@ class _MedicinePageState extends State<MedicinePage> {
 
   @override
   void dispose() {
-    _medicineBloc.close();
+    try {
+      _medicineBloc.close();
+    } catch (e) {}
     super.dispose();
   }
 
@@ -88,7 +89,7 @@ class _MedicinePageState extends State<MedicinePage> {
   }
 
   Widget _floatingButton() {
-    var _isPatient =widget.entity.isPatient;
+    var _isPatient = widget.entity.isPatient;
     if (_isPatient || _currentPage != _MedicinePage.MAIN) return Container();
     return FloatingButton(
       label: 'داروی جدید',

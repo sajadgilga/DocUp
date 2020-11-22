@@ -71,7 +71,8 @@ class _StartPageState extends State<StartPage> {
       case Status.LOADING:
         showDialog(
             context: context,
-            builder: (BuildContext context) => _loadingDialog);
+            builder: (BuildContext context) => _loadingDialog,
+            barrierDismissible: false);
         _loadingEnable = true;
         return false;
       case Status.ERROR:
@@ -226,7 +227,8 @@ class _StartPageState extends State<StartPage> {
   }
 
   void submit({bool resend}) {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState.validate() &&
+        !(_loadingEnable != null && _loadingEnable)) {
       setState(() {
         switch (startType) {
           case StartType.SIGN_UP:
@@ -334,14 +336,16 @@ class _StartPageState extends State<StartPage> {
 
   @override
   void dispose() {
-    _controller.close();
-    _usernameController.dispose();
-    _doctorIdController.dispose();
-    _verificationController.dispose();
-    _firstNameController.dispose();
-    _authBloc.dispose();
-    _patientBloc.dispose();
-    _doctorBloc.dispose();
+    try {
+      _controller.close();
+      _usernameController.dispose();
+      _doctorIdController.dispose();
+      _verificationController.dispose();
+      _firstNameController.dispose();
+      _authBloc.dispose();
+      _patientBloc.dispose();
+      _doctorBloc.dispose();
+    } catch (e) {}
     super.dispose();
   }
 

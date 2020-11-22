@@ -126,8 +126,10 @@ class _PatientProfilePageState extends State<PatientProfilePage>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _sub.cancel();
+    try {
+      WidgetsBinding.instance.removeObserver(this);
+      _sub.cancel();
+    } catch (e) {}
     super.dispose();
   }
 
