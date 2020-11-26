@@ -6,30 +6,45 @@ import 'AutoText.dart';
 
 class PriceWidget extends StatefulWidget {
   final String title;
-  final String price;
+  final TextEditingController priceController;
 
-  PriceWidget({this.title, this.price});
+  PriceWidget({this.title, this.priceController});
 
   @override
   _PriceWidgetState createState() => _PriceWidgetState();
-
 }
 
-class _PriceWidgetState extends State<PriceWidget>{
+class _PriceWidgetState extends State<PriceWidget> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment:CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         AutoText("تومان", style: TextStyle(fontSize: 16)),
-        Padding(
-          padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-          child: AutoText(widget.price, style: TextStyle(fontSize: 18, color: IColors.themeColor, fontWeight: FontWeight.bold)),
+        Container(
+          width: 100,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+            child: TextField(
+                expands: false,
+                controller: widget.priceController,
+                textAlign: TextAlign.center,
+                keyboardType: TextInputType.numberWithOptions(
+                    signed: false, decimal: false),
+                style: TextStyle(
+                    fontSize: 17,
+                    color: IColors.themeColor,
+                    fontWeight: FontWeight.bold)),
+          ),
         ),
         AutoText(widget.title, style: TextStyle(fontSize: 16)),
       ],
     );
   }
-
 }

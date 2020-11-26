@@ -7,8 +7,9 @@ import 'AutoText.dart';
 class TimeSelectorHeaderWidget extends StatefulWidget {
   final Function(bool) callback;
   final bool initialTimeIsSelected;
+  final bool timeDateWidgetsFlag;
 
-  TimeSelectorHeaderWidget({this.callback, this.initialTimeIsSelected=false});
+  TimeSelectorHeaderWidget({this.callback, this.initialTimeIsSelected=false,this.timeDateWidgetsFlag=true});
 
   @override
   _TimeSelectorHeaderWidgetState createState() =>
@@ -26,7 +27,7 @@ class _TimeSelectorHeaderWidgetState extends State<TimeSelectorHeaderWidget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Row(
+        widget.timeDateWidgetsFlag?Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(width: 20),
@@ -51,7 +52,7 @@ class _TimeSelectorHeaderWidgetState extends State<TimeSelectorHeaderWidget> {
                 }),
             SizedBox(width: 20),
           ],
-        ),
+        ):SizedBox(),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[

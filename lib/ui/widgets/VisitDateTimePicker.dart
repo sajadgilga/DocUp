@@ -4,6 +4,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/ui/widgets/DailyTimeTable.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,17 +15,28 @@ import 'FlutterDateTimePickerCustom/src/i18n_model.dart';
 import 'TimeSelectorHeaderWidget.dart';
 import 'TimeSelectorWidget.dart';
 
+enum TimeSelectorType { Scrollable, Circular, Table }
+
 class VisitDateTimePicker extends StatefulWidget {
-  TextEditingController dateTextController;
-  TextEditingController timeTextController;
+  final TextEditingController dateTextController;
+  final TextEditingController timeTextController;
 
   DoctorEntity doctorEntity;
-  final bool scrollableTimeSelectorType;
+  final TimeSelectorType timeSelectorType;
+
+  /// scrollable widget
   final bool endTimeWidget;
+
+  /// table widget
+  final TextEditingController planDurationInMinute;
+  final Function onBlocTap;
 
   VisitDateTimePicker(
       this.dateTextController, this.timeTextController, this.doctorEntity,
-      {this.scrollableTimeSelectorType = false, this.endTimeWidget = false});
+      {this.timeSelectorType = TimeSelectorType.Table,
+      this.endTimeWidget = false,
+      this.planDurationInMinute,
+      this.onBlocTap});
 
   @override
   _VisitDateTimePickerState createState() => _VisitDateTimePickerState();
@@ -32,24 +44,29 @@ class VisitDateTimePicker extends StatefulWidget {
 
 class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
   bool timeIsSelected = false;
-  TextEditingController startTimeController = TextEditingController();
-  TextEditingController endTimeController = TextEditingController();
+  int selectedDay = 0;
+  String initialDate;
+  Map<int, String> disableDays = {};
 
   @override
   void initState() {
-    widget.dateTextController.text = getTodayInJalaliString();
-    widget.dateTextController.addListener(() {
-      print(widget.dateTextController.text);
-    });
+    disableDays = getDisableDays(
+        (widget.doctorEntity == null || widget.doctorEntity.plan == null)
+            ? {}
+            : widget.doctorEntity.plan.availableDays);
+    initialDate = ['', null].contains(widget.dateTextController.text)
+        ? getInitialDate(disableDays)
+        : widget.dateTextController.text;
+    widget.dateTextController.text = initialDate;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Map<int, String> disableDays = getDisableDays(
-        (widget.doctorEntity == null || widget.doctorEntity.plan == null)
-            ? <int>[]
-            : widget.doctorEntity.plan.availableDays);
+    var jalali = getJalalyDateFromJalilyString(widget.dateTextController.text);
+    if (jalali != null) {
+      selectedDay = jalali.weekDay - 1;
+    }
     return Container(
       child: Column(
         children: [
@@ -63,24 +80,71 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                   child: PersianDateTimePicker2(
                     color: IColors.themeColor,
                     type: "date",
-                    initial: ['', null].contains(widget.dateTextController.text)
-                        ? getInitialDate(disableDays)
-                        : widget.dateTextController.text,
+                    initial: initialDate,
                     min: getYesterdayInJalilyString(),
                     disable: disableDays,
                     onSelect: (date) {
                       widget.dateTextController.text = date;
+                      initialDate = date;
                     },
                   ),
                 )
-              : (widget.scrollableTimeSelectorType
-                  ? scrollableTimeSelector()
-                  : TimeSelectorWidget(
-                      timeController: widget.timeTextController,
-                    ))
+              : (widget.timeSelectorType == TimeSelectorType.Scrollable
+                  ? ScrollableTimeSelector(
+                      endTimeWidget: widget.endTimeWidget,
+                      timeTextController: widget.timeTextController,
+                    )
+                  : (widget.timeSelectorType == TimeSelectorType.Circular
+                      ? CircularTimeSelector(
+                          timeController: widget.timeTextController,
+                        )
+                      : DailyAvailableVisitTime(
+                          startTableHour: widget.doctorEntity.plan
+                              .getMinWorkTimeHour(selectedDay),
+                          endTableHour: widget.doctorEntity.plan
+                              .getMaxWorkTimeHour(selectedDay),
+
+                          /// TODO
+                          dayUnAvailableTimeTable: null,
+                          planDurationInMinute: widget.planDurationInMinute,
+                          selectedDateController: widget.dateTextController,
+                          selectedTimeController: widget.timeTextController,
+                          dailyDoctorWorkTime: widget.doctorEntity.plan
+                              .getDailyWorkTimeTable(selectedDay),
+                          onBlocTap: widget.onBlocTap,
+                        )))
         ],
       ),
     );
+  }
+
+  void changeBetweenTimeAndDate(bool timeIsSelected) {
+    setState(() {
+      this.timeIsSelected = timeIsSelected;
+    });
+  }
+}
+
+class ScrollableTimeSelector extends StatefulWidget {
+  final bool endTimeWidget;
+  final TextEditingController timeTextController;
+
+  const ScrollableTimeSelector(
+      {Key key, this.endTimeWidget, this.timeTextController})
+      : super(key: key);
+
+  @override
+  _ScrollableTimeSelectorState createState() => _ScrollableTimeSelectorState();
+}
+
+class _ScrollableTimeSelectorState extends State<ScrollableTimeSelector> {
+  TextEditingController startTimeController = TextEditingController();
+  TextEditingController endTimeController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
   }
 
   Widget scrollableTimeSelector() {
@@ -90,7 +154,9 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
       height: 150,
       child: Row(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: widget.endTimeWidget?MainAxisAlignment.spaceAround:MainAxisAlignment.center,
+        mainAxisAlignment: widget.endTimeWidget
+            ? MainAxisAlignment.spaceAround
+            : MainAxisAlignment.center,
         children: [
           widget.endTimeWidget
               ? GestureDetector(
@@ -198,17 +264,12 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
             itemStyle: TextStyle(
                 fontWeight: FontWeight.w700, color: Color(0xFF000046))),
         onChanged: (date) {}, onConfirm: (date) {
-      textEditingController.text =correctTimeFormat(date.hour.toString() + ':' + date.minute.toString());
+      textEditingController.text = correctTimeFormat(
+          date.hour.toString() + ':' + date.minute.toString());
       widget.timeTextController.text =
           correctTimeFormat(startTimeController.text) +
               "-" +
               correctTimeFormat(endTimeController.text);
     }, currentTime: startDateTime, locale: LocaleType.fa);
-  }
-
-  void changeBetweenTimeAndDate(bool timeIsSelected) {
-    setState(() {
-      this.timeIsSelected = timeIsSelected;
-    });
   }
 }

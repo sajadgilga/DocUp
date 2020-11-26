@@ -25,13 +25,13 @@ extension VisitDurationPlanExtension on VisitDurationPlan {
   String get title {
     switch (this) {
       case VisitDurationPlan.BASE:
-        return "پایه ۳۰دقیقه";
+        return "پایه ۱۵ دقیقه";
       case VisitDurationPlan.SUPPLEMENTARY:
-        return "تکمیلی ۶۰دقیقه";
+        return "تکمیلی ۳۰ دقیقه";
       case VisitDurationPlan.LONG:
-        return "طولانی ۹۰دقیقه";
+        return "طولانی ۴۵ دقیقه";
       default:
-        return "پایه";
+        return "پایه ۱۵ دقیقه";
     }
   }
 

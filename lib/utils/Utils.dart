@@ -72,7 +72,8 @@ DateTime getDateAndTimeFromWS(String str) {
       int.parse(timeArray[2]));
 }
 
-DateTime getDateAndTimeFromJalali(String jalaiDateStr, String timeStr) {
+DateTime getDateAndTimeFromJalali(String jalaiDateStr,
+    {String timeStr = "00:00"}) {
   var array = jalaiDateStr.split("/");
   var georgianDate =
       Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
@@ -80,6 +81,15 @@ DateTime getDateAndTimeFromJalali(String jalaiDateStr, String timeStr) {
   var timeArray = timeStr.split(":");
   return DateTime(georgianDate.year, georgianDate.month, georgianDate.day,
       int.parse(timeArray[0]), int.parse(timeArray[1]));
+}
+
+Jalali getJalalyDateFromJalilyString(String jalalyDate) {
+  try {
+    var array = jalalyDate.split("/");
+    return Jalali(
+        int.parse(array[0]), int.parse(array[1]), int.parse(array[2]));
+  } catch (e) {}
+  return null;
 }
 
 bool validatePhoneNumber(String value) {
@@ -172,7 +182,7 @@ String getInitialDate(Map<int, String> disableDays) {
   for (int i = 0; i < 7; i++) {
     DateTime date = now.add(Duration(days: i));
     Jalali dateJ = Jalali.fromDateTime(date);
-    if (!(disableDays.keys.toList()).contains(dateJ.weekDay-1)) {
+    if (!(disableDays.keys.toList()).contains(dateJ.weekDay - 1)) {
       return "${dateJ.year}/${dateJ.month}/${dateJ.day}";
     }
   }

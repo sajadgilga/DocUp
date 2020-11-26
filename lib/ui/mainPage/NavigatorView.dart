@@ -765,7 +765,7 @@ class NavigatorViewState extends State<NavigatorView> {
 
   _visitConf(BuildContext context, entity) {
     return VisitConfPage(
-      doctorEntity: (entity as DoctorEntity),
+      doctorId: (entity as DoctorEntity).id,
       onPush: (direction, entity) {
         push(context, direction);
       },

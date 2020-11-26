@@ -159,7 +159,7 @@ class _TimeCalenderState extends State<TimeCalender> {
                 ALittleVerticalSpace(
                   height: 15,
                 ),
-                TimeSelectorWidget()
+                CircularTimeSelector()
               ]),
         ),
       ),

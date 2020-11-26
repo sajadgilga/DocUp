@@ -1,156 +1,216 @@
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
+import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/ui/widgets/SnackBar.dart';
+import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
-class BlueTable2Data {
-  List<B2DayPlan> daysSchedule = [
-    B2DayPlan(0),
-    B2DayPlan(1),
-    B2DayPlan(2),
-    B2DayPlan(3),
-    B2DayPlan(4),
-    B2DayPlan(5),
-    B2DayPlan(6)
-  ];
+class WeeklyTimeTable extends StatefulWidget {
+  final List<List<List<int>>> daysPlanTable;
+  final int startTableHour;
+  final int endTableHour;
+  final bool editable;
 
-  BlueTable2Data();
+  WeeklyTimeTable(this.daysPlanTable,
+      {this.startTableHour = 0, this.endTableHour = 24, this.editable = true});
 
-  factory BlueTable2Data.fromJson(Map<String, dynamic> jsonData) {
-    BlueTable2Data c = BlueTable2Data();
-    for (int i = 0; i < jsonData['daysSchedule'].length; i++) {
-      c.daysSchedule[i] = B2DayPlan.fromJson(jsonData['daysSchedule'][i]);
-    }
-    return c;
-  }
-
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> res = {};
-    List<Map<String, dynamic>> days = [];
-    for (int i = 0; i < daysSchedule.length; i++) {
-      days.add(daysSchedule[i].toJson());
-    }
-    res['daysSchedule'] = days;
-    return res;
-  }
-
-  BlueTable2Data.initialData(this.daysSchedule);
-}
-
-class B2DayPlan {
-  int dayNumber;
-  List<List<String>> dayPlan = []; //put the day lesson keys in there
-
-  B2DayPlan(this.dayNumber);
-
-  B2DayPlan.initialData(this.dayNumber);
-
-  B2DayPlan.getEmptyInitial(this.dayNumber) {
-    setEmptyDayPlan();
-  }
-
-  void setEmptyDayPlan() {
-    List<List<String>> res = [];
-    for (int hour = 0; hour < 24; hour++) {
-      List<String> emptyHour = [];
-      for (int tenMin = 0; tenMin < 4; tenMin++) {
-        emptyHour.add(null);
-      }
-      res.add(emptyHour);
-    }
-    dayPlan = res;
-  }
-
-  Map<String, double> getDedicatedTimeForAllLessons() {
-    Map<String, double> result = {};
-    for (int hour = 0; hour < dayPlan.length; hour++) {
-      for (int hourPart = 0; hourPart < dayPlan[hourPart].length; hourPart++) {
-        if (dayPlan[hour][hourPart] != null) {
-          result[dayPlan[hour][hourPart]] =
-              (result[dayPlan[hour][hourPart]] ?? 0) + 15;
-        }
-      }
-    }
-    return result;
-  }
-
-  factory B2DayPlan.fromJson(dynamic json) {
-    B2DayPlan d = B2DayPlan(json['dayNumber']);
-    List<List<String>> daysLesson = [];
-    for (int hour = 0; hour < json['dayPlan'].length; hour++) {
-      List<String> emptyHour = [];
-      for (int tenMin = 0; tenMin < json['dayPlan'][hour].length; tenMin++) {
-        emptyHour.add(json['dayPlan'][hour][tenMin]);
-      }
-      daysLesson.add(emptyHour);
-    }
-    d.dayPlan = daysLesson;
-    return d;
-  }
-
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> res = {'dayNumber': dayNumber, 'dayPlan': dayPlan};
-    return res;
-  }
-}
-
-class DailyTimeTable extends StatefulWidget {
   @override
-  _DailyTimeTableState createState() => _DailyTimeTableState();
+  _WeeklyTimeTableState createState() => _WeeklyTimeTableState();
 }
 
-class _DailyTimeTableState extends State<DailyTimeTable> {
+class _WeeklyTimeTableState extends State<WeeklyTimeTable>
+    with TickerProviderStateMixin {
   double cellWidth;
   double cellHeight;
-  BlueTable2Data blueTable2Data;
-  int selectedDay;
+  TabController tabController;
+
+  @override
+  void initState() {
+    tabController = TabController(
+      length: 7, //TODO
+      initialIndex: 6,
+      vsync: this,
+    );
+    tabController.addListener(() {
+      try {
+        /// TODO
+      } catch (e) {}
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     cellWidth = MediaQuery.of(context).size.width * (19 / 100);
-    cellHeight = MediaQuery.of(context).size.width * (13 / 100);
-    return getColoredTable();
-  }
-
-  Widget getColoredTable() {
-    List<Widget> allRows = [];
-    List<List<String>> dayPlan =
-        blueTable2Data.daysSchedule[selectedDay].dayPlan;
-    for (int i = 0; i < dayPlan.length; i++) {
-      allRows.add(getColoredRow(i, dayPlan[i]));
-    }
-    return Expanded(
-        child: new SingleChildScrollView(
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: allRows,
+    cellHeight = MediaQuery.of(context).size.width * (8 / 100);
+    int cellRows = widget.endTableHour - widget.startTableHour;
+    List<Widget> coloredTableList = [
+      for (int i = DoctorPlan.daysCount - 1; i >= 0; i--)
+        DailyWorkTimesTable(
+          cellHeight: cellHeight,
+          cellWidth: cellWidth,
+          endTableHour: widget.endTableHour,
+          startTableHour: widget.startTableHour,
+          dayPlanTable: widget.daysPlanTable[i],
+          editable: widget.editable,
+        )
+    ];
+    List<Widget> tabsTable = [
+      for (int i = DoctorPlan.daysCount - 1; i >= 0; i--)
+        Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: AutoText(
+            Strings.persianDaysSigns[i],
+            style: TextStyle(fontSize: 18, color: IColors.themeColor),
+            maxLines: 1,
+          ),
         ),
+    ];
+
+    return DefaultTabController(
+      length: 2,
+      initialIndex: 1,
+      child: Column(
+        children: [
+          Container(
+            height: 50,
+            child: TabBar(
+              controller: tabController,
+              tabs: tabsTable,
+              isScrollable: true,
+            ),
+          ),
+          ALittleVerticalSpace(),
+          Container(
+            height: cellRows * cellHeight + 55,
+            alignment: Alignment.center,
+            child: TabBarView(
+              controller: tabController,
+              children: coloredTableList,
+            ),
+          ),
+        ],
       ),
-      scrollDirection: Axis.vertical,
-    ));
+    );
+  }
+}
+
+class DailyWorkTimesTable extends StatefulWidget {
+  final List<List<int>> dayPlanTable;
+  final int startTableHour;
+  final int endTableHour;
+  final bool editable;
+  final double cellWidth;
+  final double cellHeight;
+
+  const DailyWorkTimesTable(
+      {Key key,
+      this.dayPlanTable,
+      this.startTableHour,
+      this.endTableHour,
+      this.editable,
+      this.cellHeight,
+      this.cellWidth})
+      : super(key: key);
+
+  @override
+  _DailyWorkTimesTableState createState() => _DailyWorkTimesTableState();
+}
+
+class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> allRows = [];
+    for (int i = 0; i < widget.dayPlanTable.length; i++) {
+      if (widget.startTableHour <= i && widget.endTableHour - 1 >= i) {
+        allRows.add(getColoredRow(i, widget.dayPlanTable[i]));
+      }
+    }
+    return Container(
+      child: Column(
+        children: [
+          _legend(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: allRows,
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget getColoredRow(int rowNumber, List<String> hourPlanList) {
+  Widget _legend() {
+    Widget legendItem(String title, Widget widget) {
+      return Row(children: [
+        AutoText(
+          title,
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        widget
+      ]);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          legendItem(
+            "غیرفعال",
+            Container(
+              width: 20,
+              height: 20,
+              child: Icon(
+                Icons.circle,
+                color: IColors.darkGrey,
+              ),
+              color: Color.fromARGB(0, 0, 0, 0),
+            ),
+          ),
+          SizedBox(
+            width: 15,
+          ),
+          legendItem(
+            "فعال",
+            Container(
+              width: 20,
+              height: 20,
+              child: Icon(
+                Icons.circle,
+                color: IColors.themeColor,
+              ),
+              color: Color.fromARGB(0, 0, 0, 0),
+            ),
+          ),
+          SizedBox(
+            width: 30,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getColoredRow(int rowNumber, List<int> hourPlanList) {
     List<Widget> res = [];
-    B2DayPlan b2dayPlan = blueTable2Data.daysSchedule[selectedDay];
-    List<List<String>> dayPlan = b2dayPlan.dayPlan;
     res.add(getRowNumberText(rowNumber));
     for (int i = 0; i < hourPlanList.length; i++) {
-      /// TODO amir
-      // Widget w = GestureDetector(
-      //   key: ValueKey(selectedDay.toString() +
-      //       "-" +
-      //       (rowNumber).toString() +
-      //       i.toString()),
-      //   child: null,
-      //   onTap: () {
-      //     /// TODO amir
-      //   },
-      //   onLongPress: () {
-      //     /// TODO amir
-      //   },
-      // );
-      // res.add(w);
+      Widget w = GestureDetector(
+        key: ValueKey((rowNumber).toString() + i.toString()),
+        child: getOneCell(rowNumber, i, hourPlanList[i]),
+        onTap: () {
+          setState(() {
+            widget.dayPlanTable[rowNumber][i] =
+                widget.dayPlanTable[rowNumber][i] == 0 ? 1 : 0;
+          });
+        },
+      );
+      res.add(w);
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -158,32 +218,41 @@ class _DailyTimeTableState extends State<DailyTimeTable> {
     );
   }
 
-  void setCellValue(int rowIndex, int columnIndex, cellValue) async {
-    //TODO amir
-  }
-
-  Widget getOneCell(int rowNumber, int columnNumber, key) {
-    BorderRadius tr = BorderRadius.only(topLeft: Radius.circular(25));
-    BorderRadius br = BorderRadius.only(bottomLeft: Radius.circular(25));
+  Widget getOneCell(int rowNumber, int columnNumber, int key) {
+    BorderRadius tl = BorderRadius.only(topLeft: Radius.circular(25));
+    BorderRadius bl = BorderRadius.only(bottomLeft: Radius.circular(25));
+    BorderRadius tbl = BorderRadius.only(
+        bottomLeft: Radius.circular(25), topLeft: Radius.circular(25));
 
     BorderRadius res;
-    if (rowNumber == 0 && columnNumber == 3) {
-      res = tr;
-    } else if (rowNumber == 23 && columnNumber == 3) {
-      res = br;
+    if (rowNumber == widget.startTableHour &&
+        rowNumber == widget.endTableHour - 1 &&
+        columnNumber == DoctorPlan.hourParts - 1) {
+      res = tbl;
+    } else if (rowNumber == widget.startTableHour &&
+        columnNumber == DoctorPlan.hourParts - 1) {
+      res = tl;
+    } else if (rowNumber == widget.endTableHour - 1 &&
+        columnNumber == DoctorPlan.hourParts - 1) {
+      res = bl;
     } else {
-      res = new BorderRadius.only();
+      res = BorderRadius.only();
     }
 
     ///  TODO amir: color
-    Color lessonColor = IColors.red;
+    Color lessonColor;
+    if (key == 1) {
+      lessonColor = IColors.themeColor;
+    } else {
+      lessonColor = Color.fromARGB(255, 180, 180, 180);
+    }
     return Container(
-      width: cellWidth,
-      height: cellHeight,
-      child: key == "..."
+      width: widget.cellWidth,
+      height: widget.cellHeight,
+      child: ![0, 1].contains(key)
           ? Container(
-              width: cellHeight,
-              height: cellHeight,
+              width: widget.cellHeight,
+              height: widget.cellHeight,
               child: Padding(
                 padding: EdgeInsets.all(10),
                 child: CircleAvatar(
@@ -201,8 +270,8 @@ class _DailyTimeTableState extends State<DailyTimeTable> {
           borderRadius: res,
           color: lessonColor,
           border: BoxBorder.lerp(
-              Border.all(color: IColors.darkGrey, width: 0.1),
-              Border.all(color: IColors.darkGrey, width: 0.1),
+              Border.all(color: IColors.background, width: 0.5),
+              Border.all(color: IColors.background, width: 0.5),
               1)),
     );
   }
@@ -210,18 +279,409 @@ class _DailyTimeTableState extends State<DailyTimeTable> {
   Widget getRowNumberText(int rowNumber) {
     BorderRadius tl = BorderRadius.only(topRight: Radius.circular(25));
     BorderRadius bl = BorderRadius.only(bottomRight: Radius.circular(25));
+    BorderRadius tbl = BorderRadius.only(
+        bottomRight: Radius.circular(25), topRight: Radius.circular(25));
+
     BorderRadius res;
-    if (rowNumber == 0) {
+    if (rowNumber == widget.startTableHour &&
+        rowNumber == widget.endTableHour - 1) {
+      res = tbl;
+    } else if (rowNumber == widget.startTableHour) {
       res = tl;
-    } else if (rowNumber == 23) {
+    } else if (rowNumber == widget.endTableHour - 1) {
       res = bl;
     } else {
       res = BorderRadius.only();
     }
 
     return Container(
-      width: cellHeight,
-      height: cellHeight,
+      width: widget.cellHeight,
+      height: widget.cellHeight,
+      alignment: Alignment.center,
+      child: AutoText(
+        rowNumber < 10 ? "0" + rowNumber.toString() : rowNumber.toString(),
+        style: TextStyle(fontSize: 15, color: IColors.darkGrey),
+      ),
+      decoration: BoxDecoration(
+          color: IColors.background,
+          borderRadius: res,
+          border: BoxBorder.lerp(
+              Border.all(color: IColors.darkGrey, width: 0.1),
+              Border.all(color: IColors.darkGrey, width: 0.01),
+              0)),
+    );
+  }
+}
+
+class DailyAvailableVisitTime extends StatefulWidget {
+  final List<List<int>> dayUnAvailableTimeTable;
+  final List<List<int>> dailyDoctorWorkTime;
+  final int startTableHour;
+  final int endTableHour;
+  double cellWidth;
+  double cellHeight;
+  final TextEditingController planDurationInMinute;
+  final TextEditingController selectedDateController;
+  final TextEditingController selectedTimeController;
+  final Function onBlocTap;
+
+  /// 0 for allowing selecting just one part,1 for two and 2 for three part
+
+  DailyAvailableVisitTime(
+      {Key key,
+      this.dayUnAvailableTimeTable,
+      this.dailyDoctorWorkTime,
+      this.startTableHour,
+      this.endTableHour,
+      this.cellHeight,
+      this.cellWidth,
+      this.planDurationInMinute,
+      this.selectedDateController,
+      this.selectedTimeController,
+      this.onBlocTap})
+      : super(key: key);
+
+  @override
+  _DailyAvailableVisitTimeTableState createState() =>
+      _DailyAvailableVisitTimeTableState();
+}
+
+class _DailyAvailableVisitTimeTableState
+    extends State<DailyAvailableVisitTime> {
+  List<int> selectedPartNumbers = [];
+  List<int> errorSelectedPartNumber = [];
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.cellWidth == null) {
+      widget.cellWidth = MediaQuery.of(context).size.width * (19 / 100);
+    }
+    if (widget.cellHeight == null) {
+      widget.cellHeight = MediaQuery.of(context).size.width * (8 / 100);
+    }
+    List<Widget> allRows = [];
+    for (int i = 0; i < widget.dailyDoctorWorkTime.length; i++) {
+      if (widget.startTableHour <= i && widget.endTableHour - 1 >= i) {
+        allRows.add(getColoredRow(i));
+      }
+    }
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextField(
+            controller: widget.selectedDateController,
+            maxLines: 1,
+            enabled: false,
+            textAlign: TextAlign.center,
+            textDirection: TextDirection.rtl,
+            decoration: InputDecoration(border: InputBorder.none),
+          ),
+          // TextField(
+          //   controller: widget.selectedTimeController,
+          //   maxLines: 1,
+          //   enabled: false,
+          //   textAlign: TextAlign.center,
+          //   textDirection: TextDirection.rtl,
+          //   decoration: InputDecoration(border: InputBorder.none),
+          // ),
+          _legend(),
+          allRows.length != 0
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: allRows,
+                )
+              : emptyAvailableTime(),
+        ],
+      ),
+    );
+  }
+
+  Widget _legend() {
+    Widget legendItem(String title, Widget widget) {
+      return Row(children: [
+        AutoText(
+          title,
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        widget
+      ]);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              legendItem(
+                "غیرفعال",
+                Container(
+                  width: 20,
+                  height: 20,
+                  child: Icon(
+                    Icons.circle,
+                    color: IColors.darkGrey,
+                  ),
+                  color: Color.fromARGB(0, 0, 0, 0),
+                ),
+              ),
+              legendItem(
+                "فعال",
+                Container(
+                  width: 20,
+                  height: 20,
+                  child: Icon(
+                    Icons.circle,
+                    color: IColors.themeColor,
+                  ),
+                  color: Color.fromARGB(0, 0, 0, 0),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            width: 30,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              legendItem(
+                "بازه نامناسب",
+                Container(
+                  width: 20,
+                  height: 20,
+                  child: Icon(
+                    Icons.circle,
+                    color: IColors.red,
+                  ),
+                  color: Color.fromARGB(0, 0, 0, 0),
+                ),
+              ),
+              legendItem(
+                "انتخاب شده",
+                Container(
+                  width: 20,
+                  height: 20,
+                  color: Color.fromARGB(0, 0, 0, 0),
+                  child: Icon(
+                    Icons.check_circle,
+                    color: IColors.darkBlue,
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget emptyAvailableTime() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 15),
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15),
+          ),
+          border: Border.all(width: 1, color: IColors.darkGrey)),
+      child: AutoText("زمان مناسبی برای روز انتخاب شده موجود نیست."),
+    );
+  }
+
+  Widget getColoredRow(int rowNumber) {
+    List<int> hourPlanList = widget.dailyDoctorWorkTime[rowNumber];
+    List<Widget> res = [];
+    res.add(getRowNumberText(rowNumber));
+    for (int columnIndex = 0;
+        columnIndex < hourPlanList.length;
+        columnIndex++) {
+      Widget w = GestureDetector(
+        key: ValueKey((rowNumber).toString() + columnIndex.toString()),
+        child: getOneCell(rowNumber, columnIndex, hourPlanList[columnIndex]),
+        onTap: () {
+          handleOnCellTap(rowNumber, columnIndex);
+        },
+      );
+      res.add(w);
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: res.reversed.toList(),
+    );
+  }
+
+  void handleOnCellTap(int r, int c) {
+    int currentBloc = DoctorPlan.getPartNumberWithIndex(r, c);
+    selectedPartNumbers.sort();
+    if (selectedPartNumbers.contains(currentBloc)) {
+      /// removing tapped bloc
+      if (selectedPartNumbers.length == 3 &&
+          selectedPartNumbers.indexOf(currentBloc) == 1) {
+        setState(() {
+          selectedPartNumbers = [selectedPartNumbers[0]];
+        });
+      } else {
+        setState(() {
+          selectedPartNumbers.remove(currentBloc);
+        });
+      }
+    } else if (selectedPartNumbers.length >= 3) {
+      /// TODO max bloc per visit exceeded
+      /// show snack bar
+      showSnackBar(null, "حداکثر زمان برای هر ویزیت ۴۵ دقیقه است",
+          context: context);
+    } else if (selectedPartNumbers.length == 0 ||
+        selectedPartNumbers.last + 1 == currentBloc ||
+        selectedPartNumbers.first - 1 == currentBloc) {
+      if (selectedPartNumbers.length == 0) {
+        setState(() {
+          selectedPartNumbers.add(currentBloc);
+        });
+      } else {
+        /// checking next cell to be available
+        bool checkDurationPlan = true;
+        if ((widget.dayUnAvailableTimeTable != null &&
+                widget.dayUnAvailableTimeTable[r][c] == 1) ||
+            widget.dailyDoctorWorkTime[r][c] == 0) {
+          checkDurationPlan = false;
+        }
+        if (checkDurationPlan) {
+          setState(() {
+            selectedPartNumbers.add(DoctorPlan.getPartNumberWithIndex(r, c));
+          });
+        } else {
+          showErrorOnCells(r, c, 1);
+          showSnackBar(null, "زمان انتخاب شده در بازه های مناسب نیست.",
+              context: context);
+        }
+      }
+    } else {
+      /// show snack bar error discrete
+      /// TODO amir
+      showSnackBar(null, "زمان های انتخاب شده باید پشت سر هم باشند.",
+          context: context);
+    }
+    selectedPartNumbers.sort();
+    if (selectedPartNumbers.length == 0) {
+      widget.selectedTimeController.text = "";
+    } else {
+      widget.selectedTimeController.text = convertMinuteToTimeString(
+          selectedPartNumbers.first * DoctorPlan.hourMinutePart);
+    }
+    widget.planDurationInMinute.text =
+        (selectedPartNumbers.length * 15).toString();
+
+    /// calling on bloc tap to update parent widget
+    try {
+      widget.onBlocTap();
+    } catch (e) {}
+  }
+
+  void showErrorOnCells(int r, int c, int cellCount) {
+    setState(() {
+      for (int i = 0; i < cellCount; i++) {
+        int x = r + (c + i) ~/ (DoctorPlan.hourParts);
+        int y = (c + i) % DoctorPlan.hourParts;
+        errorSelectedPartNumber.add(DoctorPlan.getPartNumberWithIndex(x, y));
+      }
+    });
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        errorSelectedPartNumber = [];
+      });
+    });
+  }
+
+  void setCellValue(int rowIndex, int columnIndex, cellValue) async {
+    //TODO amir
+  }
+
+  Widget getOneCell(int rowNumber, int columnNumber, int key) {
+    BorderRadius tl = BorderRadius.only(topLeft: Radius.circular(25));
+    BorderRadius bl = BorderRadius.only(bottomLeft: Radius.circular(25));
+    BorderRadius tbl = BorderRadius.only(
+        bottomLeft: Radius.circular(25), topLeft: Radius.circular(25));
+
+    BorderRadius res;
+    if (rowNumber == widget.startTableHour &&
+        rowNumber == widget.endTableHour - 1 &&
+        columnNumber == DoctorPlan.hourParts - 1) {
+      res = tbl;
+    } else if (rowNumber == widget.startTableHour &&
+        columnNumber == DoctorPlan.hourParts - 1) {
+      res = tl;
+    } else if (rowNumber == widget.endTableHour - 1 &&
+        columnNumber == DoctorPlan.hourParts - 1) {
+      res = bl;
+    } else {
+      res = BorderRadius.only();
+    }
+
+    /// part number
+    int partNumber = DoctorPlan.getPartNumberWithIndex(rowNumber, columnNumber);
+
+    ///  TODO amir: color
+    Color lessonColor;
+    if (errorSelectedPartNumber.contains(partNumber)) {
+      lessonColor = IColors.red;
+    } else if (key == 1) {
+      if (widget.dayUnAvailableTimeTable != null &&
+          widget.dayUnAvailableTimeTable[rowNumber][columnNumber] == 1) {
+        lessonColor = IColors.disabledButton;
+      } else {
+        lessonColor = IColors.themeColor;
+      }
+    } else {
+      lessonColor = Color.fromARGB(255, 180, 180, 180);
+    }
+
+    return Container(
+      width: widget.cellWidth,
+      height: widget.cellHeight,
+      child: selectedPartNumbers.contains(partNumber)
+          ? Icon(
+              Icons.check_circle,
+              color: IColors.darkBlue,
+            )
+          : SizedBox(),
+      decoration: BoxDecoration(
+          borderRadius: res,
+          color: lessonColor,
+          border: BoxBorder.lerp(
+              Border.all(color: IColors.background, width: 0.5),
+              Border.all(color: IColors.background, width: 0.5),
+              1)),
+    );
+  }
+
+  Widget getRowNumberText(int rowNumber) {
+    BorderRadius tl = BorderRadius.only(topRight: Radius.circular(25));
+    BorderRadius bl = BorderRadius.only(bottomRight: Radius.circular(25));
+    BorderRadius tbl = BorderRadius.only(
+        bottomRight: Radius.circular(25), topRight: Radius.circular(25));
+
+    BorderRadius res;
+    if (rowNumber == widget.startTableHour &&
+        rowNumber == widget.endTableHour - 1) {
+      res = tbl;
+    } else if (rowNumber == widget.startTableHour) {
+      res = tl;
+    } else if (rowNumber == widget.endTableHour - 1) {
+      res = bl;
+    } else {
+      res = BorderRadius.only();
+    }
+
+    return Container(
+      width: widget.cellHeight,
+      height: widget.cellHeight,
       alignment: Alignment.center,
       child: AutoText(
         rowNumber < 10 ? "0" + rowNumber.toString() : rowNumber.toString(),

@@ -37,18 +37,22 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
 
   Map<String, int> typeSelected = {
     VISIT_METHOD: VisitMethod.TEXT.index,
-    VISIT_DURATION_PLAN: VisitDurationPlan.BASE.index
+    // VISIT_DURATION_PLAN: VisitDurationPlan.BASE.index
   };
 
   bool visitTimeChecked = false;
   bool policyChecked = false;
 
+  /// plan duration: visit time in minute
+  final TextEditingController _planMinuteDurationController =
+      TextEditingController();
+
   @override
   void initState() {
     try {
-      typeSelected[VISIT_METHOD] = widget.doctorEntity.plan.visitMethod.last;
-      typeSelected[VISIT_DURATION_PLAN] =
-          widget.doctorEntity.plan.visitDurationPlan.last;
+      typeSelected[VISIT_METHOD] = widget.doctorEntity.plan.visitMethod.first;
+      // typeSelected[VISIT_DURATION_PLAN] =
+      //     widget.doctorEntity.plan.visitDurationPlan.first;
     } catch (e) {}
 
     _bloc.visitRequestStream.listen((data) {
@@ -103,21 +107,21 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
               height: 50,
               fontSize: 16),
           ALittleVerticalSpace(),
-          _visitTypeWidget(
-              VISIT_DURATION_PLAN,
-              {0: "پایه", 1: "تکمیلی", 2: "طولانی"}..removeWhere((key, value) {
-                  if (widget.doctorEntity.plan.visitDurationPlan
-                      .contains(key)) {
-                    return false;
-                  }
-                  return true;
-                }),
-              width: 100,
-              height: 45,
-              fontSize: 14),
-          ALittleVerticalSpace(),
-          _visitDurationTimeWidget(),
-          ALittleVerticalSpace(),
+          // _visitTypeWidget(
+          //     VISIT_DURATION_PLAN,
+          //     {0: "پایه ۱۵ دقیقه", 1: "تکمیلی ۳۰ دقیقه", 2: "طولانی ۴۵ دقیقه"}..removeWhere((key, value) {
+          //         if (widget.doctorEntity.plan.visitDurationPlan
+          //             .contains(key)) {
+          //           return false;
+          //         }
+          //         return true;
+          //       }),
+          //     width: 160,
+          //     height: 50,
+          //     fontSize: 14),
+          // ALittleVerticalSpace(),
+          // _visitDurationTimeWidget(),
+          // ALittleVerticalSpace(),
           _enableVisitTimeWidget(),
           AnimatedSize(
             vsync: this,
@@ -127,12 +131,18 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
                     dateTextController,
                     timeTextController,
                     widget.doctorEntity,
-                    scrollableTimeSelectorType: true,
+                    timeSelectorType: TimeSelectorType.Table,
+                    planDurationInMinute: _planMinuteDurationController,
+                    onBlocTap: () {
+                      setState(() {
+                        /// to update cost every time duration changes
+                      });
+                    },
                   )
                 : SizedBox(),
           ),
           ALittleVerticalSpace(),
-          _priceWidget(),
+          _priceAndDurationWidget(),
           ALittleVerticalSpace(),
           _acceptPolicyWidget(),
           ALittleVerticalSpace(),
@@ -143,11 +153,11 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     );
   }
 
-  AutoText _visitDurationTimeWidget() {
-    return AutoText(
-        "ویزیت مجازی حداکثر ${replaceFarsiNumber((VisitDurationPlan.values[typeSelected[VISIT_DURATION_PLAN]].duration).toString())} دقیقه می‌باشد",
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
-  }
+  // AutoText _visitDurationTimeWidget() {
+  //   return AutoText(
+  //       "ویزیت مجازی حداکثر ${replaceFarsiNumber((VisitDurationPlan.values[typeSelected[VISIT_DURATION_PLAN]].duration).toString())} دقیقه می‌باشد",
+  //       style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
+  // }
 
   _visitTypeWidget(String title, Map<int, String> items,
       {double width = 120, double height = 40, double fontSize = 17}) {
@@ -193,20 +203,47 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     );
   }
 
-  _priceWidget() => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          AutoText("ریال", style: TextStyle(fontSize: 16)),
-          SizedBox(width: 5),
-          AutoText(replaceFarsiNumber(_calculateVisitCost()),
-              style: TextStyle(
-                  color: IColors.themeColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600)),
-          SizedBox(width: 5),
-          AutoText("قیمت نهایی", style: TextStyle(fontSize: 16))
+  _priceAndDurationWidget() => Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              AutoText("دقیقه", style: TextStyle(fontSize: 16)),
+              SizedBox(width: 5),
+              AutoText(replaceFarsiNumber(_calculateTime()),
+                  style: TextStyle(
+                      color: IColors.themeColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600)),
+              SizedBox(width: 5),
+              AutoText("مدت زمان ویزیت", style: TextStyle(fontSize: 16))
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              AutoText("ریال", style: TextStyle(fontSize: 16)),
+              SizedBox(width: 5),
+              AutoText(replaceFarsiNumber(_calculateVisitCost()),
+                  style: TextStyle(
+                      color: IColors.themeColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600)),
+              SizedBox(width: 5),
+              AutoText("قیمت نهایی", style: TextStyle(fontSize: 16))
+            ],
+          ),
         ],
       );
+
+  int getVisitDurationPlanFromVisitSelectedMinutes() {
+    try {
+      int minutes = int.parse(_planMinuteDurationController.text);
+      int planDuration = minutes ~/ DoctorPlan.hourMinutePart;
+      return planDuration - 1;
+    } catch (e) {}
+    return null;
+  }
 
   String _calculateVisitCost() {
     int cost = 0;
@@ -217,8 +254,16 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     } else if (typeSelected[VISIT_METHOD] == VisitMethod.VIDEO.index) {
       cost = widget.doctorEntity.plan.baseVideoPrice;
     }
-    cost *= (typeSelected[VISIT_DURATION_PLAN] + 1);
+    // cost *= (typeSelected[VISIT_DURATION_PLAN] + 1);
+    cost *= ((getVisitDurationPlanFromVisitSelectedMinutes() ?? -1) + 1);
+
     return cost.toString();
+  }
+
+  String _calculateTime() {
+    return _planMinuteDurationController.text == ""
+        ? "0"
+        : _planMinuteDurationController.text;
   }
 
 //  _timeSelectionWidget() => Visibility(
@@ -351,12 +396,11 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         showOneButtonDialog(
             context, Strings.enterVisitDateMessage, Strings.okAction, () {});
       } else if (timeTextController.text.isEmpty ||
-          timeTextController.text.split("-").length != 2 ||
-          timeTextController.text.split("-")[0] == "") {
+          timeTextController.text == "") {
         /// empty time
         showOneButtonDialog(context, Strings.emptyStartVisitTimeMessage,
             Strings.okAction, () {});
-      } else if (getTimeMinute(timeTextController.text.split("-")[0]) <
+      } else if (getTimeMinute(timeTextController.text) <
               getTimeMinute(currentTime) &&
           getTodayInJalaliString() == dateTextController.text) {
         /// invalid time
@@ -381,7 +425,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         widget.doctorEntity.id,
         1,
         typeSelected[VISIT_METHOD],
-        typeSelected[VISIT_DURATION_PLAN],
+        // typeSelected[VISIT_DURATION_PLAN],
+        getVisitDurationPlanFromVisitSelectedMinutes(),
         convertToGeorgianDate(getTodayInJalaliString()) +
             "T" +
             "${DateTime.now().hour}:${DateTime.now().minute}" +
@@ -393,20 +438,21 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     String startTime = timeTextController.text.split("-")[0];
     int startMinute = getTimeMinute(startTime);
 
-    String endTime = timeTextController.text.split("-")[1];
-    int endMinute = getTimeMinute(endTime);
-    if (endMinute < startMinute) {
-      endMinute += 24 * 60;
-    }
-    int duration = getTimeMinute(endTime) - getTimeMinute(startTime);
+    // String endTime = timeTextController.text.split("-")[1];
+    // int endMinute = getTimeMinute(endTime);
+    // if (endMinute < startMinute) {
+    //   endMinute += 24 * 60;
+    // }
+    // int duration = getTimeMinute(endTime) - getTimeMinute(startTime);
 
-    String visitDuration = "+" + convertMinuteToTimeString(duration);
+    // String visitDuration = "+" + convertMinuteToTimeString(duration);
     String timeZone = "+03:30";
     _bloc.visitRequest(
         widget.doctorEntity.id,
         1,
         typeSelected[VISIT_METHOD],
-        typeSelected[VISIT_DURATION_PLAN],
+        // typeSelected[VISIT_DURATION_PLAN],
+        getVisitDurationPlanFromVisitSelectedMinutes(),
         convertToGeorgianDate(dateTextController.text) +
             "T" +
             startTime +
@@ -415,18 +461,22 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
 
   String getEnabledTimeString(DoctorPlan plan) {
     List<String> availableDaysList = [];
-    for (int day in plan.availableDays) {
-      availableDaysList.add(WeekDay.values[day].name);
-    }
+
+    /// TODO amir DoctorPlan Incomplete
+    // for (int day in plan.availableDays) {
+    //   availableDaysList.add(WeekDay.values[day].name);
+    // }
     String availableDays = availableDaysList.join("، ") + " ";
     String workTimes = "";
-    for (WorkTimes workTime in plan.workTimes) {
-      workTimes += "از " +
-          workTime.startTime.split(":")[0] +
-          " تا " +
-          (int.parse(workTime.endTime.split(":")[0]) + 1).toString() +
-          "\n";
-    }
+
+    /// TODO DoctorPlan Incomplete
+    // for (WorkTimes workTime in plan.weeklyWorkTimes) {
+    //   workTimes += "از " +
+    //       workTime.startTime.split(":")[0] +
+    //       " تا " +
+    //       (int.parse(workTime.endTime.split(":")[0]) + 1).toString() +
+    //       "\n";
+    // }
     return replaceFarsiNumber("درخواست ویزیت به پزشک مورد نظر در روزهای " +
         availableDays +
         "امکان پذیر است " +

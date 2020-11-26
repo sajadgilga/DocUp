@@ -1,4 +1,3 @@
-import 'package:docup/models/AuthResponseEntity.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/models/ListResult.dart';
@@ -27,8 +26,9 @@ class DoctorRepository {
   }
 
   Future<VisitEntity> getVisit(int patientId) async {
-    final response = await _provider
-        .get("api/visit-related/" + patientId.toString() + "/", utf8Support: true);
+    final response = await _provider.get(
+        "api/visit-related/" + patientId.toString() + "/",
+        utf8Support: true);
     return VisitEntity.fromJson(response);
   }
 
@@ -39,26 +39,23 @@ class DoctorRepository {
   }
 
   Future<DoctorPlan> getDoctorPlan() async {
-    final response = await _provider
-        .get("api/doctor-plan/");
+    final response = await _provider.get("api/doctor-plan/");
     return DoctorPlan.fromJson(response);
   }
 
   Future<DoctorPlan> getDoctorPlanById(int doctorId) async {
-    final response = await _provider
-        .get("api/doctor-plan/$doctorId" );
+    final response = await _provider.get("api/doctor-plan/$doctorId");
     return DoctorPlan.fromJson(response);
   }
 
-    Future<DoctorPlan> updatePlan(DoctorPlan plan) async {
-    final response = await _provider
-        .patch("api/doctor-plan/", body: plan.toJson());
+  Future<DoctorPlan> updatePlan(DoctorPlan plan) async {
+    final response =
+        await _provider.patch("api/doctor-plan/", body: plan.toJson());
     return DoctorPlan.fromJson(response);
   }
 
-
-  Future<VisitEntity> responseVisit(
-      int patientId, VisitEntity visitEntity, {isVisitAcceptance= false}) async {
+  Future<VisitEntity> responseVisit(int patientId, VisitEntity visitEntity,
+      {isVisitAcceptance = false}) async {
     final response = await _provider.patch(
         "api/response-visit/" + patientId.toString() + "/",
         body: visitEntity.toJson(isAcceptance: isVisitAcceptance));
@@ -67,13 +64,15 @@ class DoctorRepository {
 
   Future<VisitEntity> visitRequest(int doctorId, int visitType, int visitMethod,
       int durationPlan, String visitTime) async {
-    final response = await _provider.post("api/visits/", body: {
-      "doctor": doctorId,
-      "visit_type": visitType,
-      "visit_method": visitMethod,
-      "visit_duration_plan": durationPlan,
-      "request_visit_time": visitTime
-    }, utf8Support: true);
+    final response = await _provider.post("api/visits/",
+        body: {
+          "doctor": doctorId,
+          "visit_type": visitType,
+          "visit_method": visitMethod,
+          "visit_duration_plan": durationPlan,
+          "request_visit_time": visitTime
+        },
+        utf8Support: true);
     return VisitEntity.fromJson(response);
   }
 
@@ -86,6 +85,4 @@ class DoctorRepository {
     final response = await _provider.get("api/visits/", utf8Support: true);
     return ListResult.fromJson(response);
   }
-
-
 }

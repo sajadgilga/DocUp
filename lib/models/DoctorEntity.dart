@@ -15,6 +15,7 @@ class DoctorEntity extends UserEntity {
 
   DoctorPlan plan;
 
+
   DoctorEntity(
       {this.councilCode,
       this.expert,
@@ -60,6 +61,8 @@ class DoctorEntity extends UserEntity {
 
       if (json['plan'] != null) {
         plan = DoctorPlan.fromJson(json['plan']);
+      }else{
+        plan = DoctorPlan();
       }
     } catch (_) {
       // TODO

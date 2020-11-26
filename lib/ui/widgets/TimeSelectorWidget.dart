@@ -10,13 +10,13 @@ import 'package:rxdart/rxdart.dart';
 
 import 'AutoText.dart';
 
-class TimeSelectorWidget extends StatefulWidget {
+class CircularTimeSelector extends StatefulWidget {
   Offset tappedOffset;
   StreamController<Set<int>> controller = BehaviorSubject();
   Set<int> initTimes;
   TextEditingController timeController;
 
-  TimeSelectorWidget(
+  CircularTimeSelector(
       {this.tappedOffset,
       this.controller,
       this.initTimes,
@@ -37,10 +37,10 @@ class TimeSelectorWidget extends StatefulWidget {
   }
 
   @override
-  _TimeSelectorWidgetState createState() => _TimeSelectorWidgetState();
+  _CircularTimeSelectorState createState() => _CircularTimeSelectorState();
 }
 
-class _TimeSelectorWidgetState extends State<TimeSelectorWidget> {
+class _CircularTimeSelectorState extends State<CircularTimeSelector> {
   Set<int> selectedNumbers = Set.of([]);
   int AM_PM = 0; //0 stands for am and 1 stands for pm
 
