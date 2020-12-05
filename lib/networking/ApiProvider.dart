@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
-  static const String URL_IP = "185.252.30.163:8001";
+  static const String URL_IP = "185.252.30.163";
   final String _BASE_URL = "http://$URL_IP/";
 
   Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {
@@ -93,6 +93,19 @@ class ApiProvider {
     }
     return responseJson;
   }
+  Future<dynamic> delete(String url) async {
+    var responseJson;
+    try {
+      final headers = await getHeaders();
+      print(_BASE_URL + url);
+      final response = await http.delete(_BASE_URL + url,headers: headers);
+      responseJson = _response(httpResponse: response);
+    } on SocketException {
+      throw FetchDataException('اتصال به اینترنت را بررسی کنید');
+    }
+    return responseJson;
+  }
+
 
   dynamic _response(
       {http.Response httpResponse,
@@ -109,7 +122,6 @@ class ApiProvider {
     } catch (e) {
       body = response.body.toString();
     }
-    print("API RESPONSE -->>>> code:${response.statusCode} - ${body}");
     switch (response.statusCode) {
       case 200:
       case 201:
@@ -118,16 +130,17 @@ class ApiProvider {
       case 403:
       case 400:
         var responseJson = decodeResponse(utf8Support, response);
-
-        /// some changes happend in backend and error_code became code and detail became msg
+        print("API RESPONSE -->>>> code:${response.statusCode} - ${body}");
+        /// some changes happened in backend and error_code became code and detail became msg
         throw ApiException(
             responseJson['error_code'] ?? responseJson['code'],
             responseJson['detail'] ??
                 responseJson['msg'] ??
-                (responseJson['non_field_errors']!=null
+                (responseJson['non_field_errors'] != null
                     ? responseJson['non_field_errors'][0]
                     : responseJson.toString()));
       default:
+        print("API RESPONSE -->>>> code:${response.statusCode} - ${body}");
         throw ApiException(
             response.statusCode, "مشکلی در برقراری ارتباط وجود دارد");
     }

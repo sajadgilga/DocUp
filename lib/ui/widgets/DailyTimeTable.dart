@@ -203,11 +203,13 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
       Widget w = GestureDetector(
         key: ValueKey((rowNumber).toString() + i.toString()),
         child: getOneCell(rowNumber, i, hourPlanList[i]),
+        onHorizontalDragUpdate: (DragUpdateDetails dragUpdateDetails) {
+          print("fffffffff");
+          print(i);
+          print(dragUpdateDetails);
+        },
         onTap: () {
-          setState(() {
-            widget.dayPlanTable[rowNumber][i] =
-                widget.dayPlanTable[rowNumber][i] == 0 ? 1 : 0;
-          });
+          cellToggle(rowNumber, i);
         },
       );
       res.add(w);
@@ -216,6 +218,13 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: res.reversed.toList(),
     );
+  }
+
+  void cellToggle(int rowNumber, int index) {
+    setState(() {
+      widget.dayPlanTable[rowNumber][index] =
+          widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
+    });
   }
 
   Widget getOneCell(int rowNumber, int columnNumber, int key) {
@@ -452,13 +461,13 @@ class _DailyAvailableVisitTimeTableState
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               legendItem(
-                "بازه نامناسب",
+                "زمان های رزرو شده",
                 Container(
                   width: 20,
                   height: 20,
                   child: Icon(
                     Icons.circle,
-                    color: IColors.red,
+                    color: IColors.disabledButton,
                   ),
                   color: Color.fromARGB(0, 0, 0, 0),
                 ),
@@ -540,27 +549,21 @@ class _DailyAvailableVisitTimeTableState
     } else if (selectedPartNumbers.length == 0 ||
         selectedPartNumbers.last + 1 == currentBloc ||
         selectedPartNumbers.first - 1 == currentBloc) {
-      if (selectedPartNumbers.length == 0) {
+      /// checking next cell to be available
+      bool checkDurationPlan = true;
+      if ((widget.dayUnAvailableTimeTable != null &&
+              widget.dayUnAvailableTimeTable[r][c] == 1) ||
+          widget.dailyDoctorWorkTime[r][c] == 0) {
+        checkDurationPlan = false;
+      }
+      if (checkDurationPlan) {
         setState(() {
           selectedPartNumbers.add(currentBloc);
         });
       } else {
-        /// checking next cell to be available
-        bool checkDurationPlan = true;
-        if ((widget.dayUnAvailableTimeTable != null &&
-                widget.dayUnAvailableTimeTable[r][c] == 1) ||
-            widget.dailyDoctorWorkTime[r][c] == 0) {
-          checkDurationPlan = false;
-        }
-        if (checkDurationPlan) {
-          setState(() {
-            selectedPartNumbers.add(DoctorPlan.getPartNumberWithIndex(r, c));
-          });
-        } else {
-          showErrorOnCells(r, c, 1);
-          showSnackBar(null, "زمان انتخاب شده در بازه های مناسب نیست.",
-              context: context);
-        }
+        showErrorOnCells(r, c, 1);
+        showSnackBar(null, "زمان انتخاب شده در بازه های مناسب نیست.",
+            context: context);
       }
     } else {
       /// show snack bar error discrete

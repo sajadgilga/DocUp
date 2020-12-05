@@ -14,6 +14,7 @@ import 'package:docup/blocs/visit_time/visit_time_bloc.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/DoctorProfileMenuPage.dart';
 import 'package:docup/ui/account/DoctorProfilePage.dart';
 import 'package:docup/ui/account/PatientProfileMenuPage.dart';
@@ -34,9 +35,9 @@ import 'package:docup/ui/panel/healthFile/medicinePage/MedicinePage.dart';
 import 'package:docup/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/ChatPage.dart';
 import 'package:docup/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
-import 'package:docup/ui/panel/partnerContact/videoCallPage/VideoCallPage.dart';
+import 'package:docup/ui/panel/partnerContact/videoOrVoiceCallPage/VideoOrVoiceCallPage.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
-import 'package:docup/ui/patientDetail/PatientRequestPage.dart';
+import 'package:docup/ui/patientVisitDetail/PatientRequestPage.dart';
 import 'package:docup/ui/visit/PhysicalVisitPage.dart';
 import 'package:docup/ui/visit/VirtualVisitPage.dart';
 import 'package:docup/ui/visitsList/PhysicalVisitListPage.dart';
@@ -133,6 +134,8 @@ class NavigatorViewState extends State<NavigatorView> {
                   push(context, direction, detail: entity);
                 },
               ),
+          NavigatorRoutes.panel: (context) =>
+              Scaffold(body: _panel(context, detail: detail)),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
@@ -412,6 +415,7 @@ class NavigatorViewState extends State<NavigatorView> {
           entity.partnerEntity = partner;
           entity.iPanelId = entity.panelByPartnerId.id;
           _visitTimeBloc.add(VisitTimeGet(partnerId: entity.pId));
+          Entity copyEntity = entity.copy();
           if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE) {
             return Panel(
               onPush: (direction, entity) {
@@ -420,7 +424,7 @@ class NavigatorViewState extends State<NavigatorView> {
               pages: [
                 [
                   IllnessPage(
-                    entity: entity,
+                    entity: copyEntity,
                     globalOnPush: widget.pushOnBase,
                     selectPage: widget.selectPage,
                     onPush: (direction, entity) {
@@ -430,7 +434,7 @@ class NavigatorViewState extends State<NavigatorView> {
                 ],
                 [
                   ChatPage(
-                    entity: entity,
+                    entity: copyEntity,
                     onPush: (direction, entity) {
                       push(context, direction, detail: entity);
                     },
@@ -438,16 +442,20 @@ class NavigatorViewState extends State<NavigatorView> {
                 ],
                 [
                   VideoOrVoiceCallPage(
-                    entity: entity,
+                    key: ValueKey("Video"),
+                    entity: copyEntity,
                     onPush: (direction, entity) {
                       push(context, direction, detail: entity);
                     },
+                    videoCall: true,
                   ),
                   VideoOrVoiceCallPage(
-                    entity: entity,
+                    key: ValueKey("voice"),
+                    entity: copyEntity,
                     onPush: (direction, entity) {
                       push(context, direction, detail: entity);
                     },
+                    videoCall: false,
                   )
                 ]
               ],
@@ -463,7 +471,7 @@ class NavigatorViewState extends State<NavigatorView> {
                     [
                       InfoPage(
                         uploadAvailable: entity.isDoctor,
-                        entity: entity,
+                        entity: copyEntity,
                         onPush: (direction, entity, widgetArg) {
                           push(context, direction,
                               detail: entity, widgetArg: widgetArg);
@@ -478,7 +486,7 @@ class NavigatorViewState extends State<NavigatorView> {
                     [
                       InfoPage(
                         uploadAvailable: entity.isDoctor,
-                        entity: entity,
+                        entity: copyEntity,
                         onPush: (direction, entity, widgetArg) {
                           push(context, direction,
                               detail: entity, widgetArg: widgetArg);
@@ -493,7 +501,7 @@ class NavigatorViewState extends State<NavigatorView> {
                     [
                       InfoPage(
                         uploadAvailable: entity.isDoctor || entity.isPatient,
-                        entity: entity,
+                        entity: copyEntity,
                         onPush: (direction, entity, widgetArg) {
                           push(context, direction,
                               detail: entity, widgetArg: widgetArg);
@@ -518,13 +526,13 @@ class NavigatorViewState extends State<NavigatorView> {
                   pages: [
                     [
                       DateCalender(
-                        entity: entity,
+                        entity: copyEntity,
                         onPush: (direction, entity) {
                           push(context, direction, detail: entity);
                         },
                       ),
                       TimeCalender(
-                        entity: entity,
+                        entity: copyEntity,
                         onPush: (direction, entity) {
                           push(context, direction, detail: entity);
                         },
@@ -532,7 +540,7 @@ class NavigatorViewState extends State<NavigatorView> {
                     ],
                     [
                       EventPage(
-                        entity: entity,
+                        entity: copyEntity,
                         onPush: (direction, entity) {
                           push(context, direction, detail: entity);
                         },
@@ -540,7 +548,7 @@ class NavigatorViewState extends State<NavigatorView> {
                     ],
                     [
                       MedicinePage(
-                        entity: entity,
+                        entity: copyEntity,
                         onPush: (direction, entity) {
                           push(context, direction, detail: entity);
                         },

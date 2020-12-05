@@ -1,30 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
-import 'package:docup/blocs/SearchBloc.dart';
-import 'package:docup/blocs/VisitBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
+import 'package:docup/constants/settings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
-import 'package:docup/ui/widgets/Waiting.dart';
-import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:polygon_clipper/polygon_clipper.dart';
-
-import 'MyPartnersResultList.dart';
 
 class MyPartnerDialog extends StatelessWidget {
   final Function(String, UserEntity) onPush;
@@ -139,8 +130,8 @@ class MyPartnerDialog extends StatelessWidget {
                               textDirection: TextDirection.rtl,
                               overflow: TextOverflow.fade,
                               softWrap: true,
-                              style:
-                                  TextStyle(fontSize: 12, color: IColors.darkGrey),
+                              style: TextStyle(
+                                  fontSize: 12, color: IColors.darkGrey),
                             )),
                       )
                     ],
@@ -238,17 +229,22 @@ class MyPartnerDialog extends StatelessWidget {
           /// #
         }, Assets.panelDoctorDialogPatientIcon, "پرونده سلامت",
             "پرونده سلامت اتان را بررسی کنید", IColors.green),
-        _myPartnerItem(() {
-          /// navigation
 
-          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
-          _panelSectionBloc.add(PanelSectionSelect(
-              patientSection: PatientPanelSection.HEALTH_CALENDAR));
-          onPush(NavigatorRoutes.panel, partner);
+        /// TODO amir: incomplete widget tree for bazaar
+        Settings.bazaarBuild
+            ? SizedBox()
+            : _myPartnerItem(() {
+                /// navigation
 
-          /// #
-        }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
-            "رویداد های سلامت اتان را پیگیری کنید", IColors.black),
+                var _panelSectionBloc =
+                    BlocProvider.of<PanelSectionBloc>(context);
+                _panelSectionBloc.add(PanelSectionSelect(
+                    patientSection: PatientPanelSection.HEALTH_CALENDAR));
+                onPush(NavigatorRoutes.panel, partner);
+
+                /// #
+              }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
+                "رویداد های سلامت اتان را پیگیری کنید", IColors.black),
       ],
     );
     ;
@@ -272,24 +268,30 @@ class MyPartnerDialog extends StatelessWidget {
           /// navigation
 
           var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
-          _panelSectionBloc.add(
-              PanelSectionSelect(patientSection: PatientPanelSection.HEALTH_FILE));
+          _panelSectionBloc.add(PanelSectionSelect(
+              patientSection: PatientPanelSection.HEALTH_FILE));
           onPush(NavigatorRoutes.panel, partner);
 
           /// #
         }, Assets.panelDoctorDialogPatientIcon, "پرونده سلامت",
             "پرونده سلامت اتان را بررسی کنید", IColors.black),
-        _myPartnerItem(() {
-          /// navigation
 
-          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
-          _panelSectionBloc.add(PanelSectionSelect(
-              patientSection: PatientPanelSection.HEALTH_CALENDAR));
-          onPush(NavigatorRoutes.panel, partner);
+        /// TODO amir: incomplete widget tree for bazaar
 
-          /// #
-        }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
-            "رویداد های سلامت اتان را پیگیری کنید", IColors.red),
+        Settings.bazaarBuild
+            ? SizedBox()
+            : _myPartnerItem(() {
+                /// navigation
+
+                var _panelSectionBloc =
+                    BlocProvider.of<PanelSectionBloc>(context);
+                _panelSectionBloc.add(PanelSectionSelect(
+                    patientSection: PatientPanelSection.HEALTH_CALENDAR));
+                onPush(NavigatorRoutes.panel, partner);
+
+                /// #
+              }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
+                "رویداد های سلامت اتان را پیگیری کنید", IColors.red),
       ],
     );
   }

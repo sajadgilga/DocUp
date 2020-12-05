@@ -105,12 +105,14 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                               .getMaxWorkTimeHour(selectedDay),
 
                           /// TODO
-                          dayUnAvailableTimeTable: null,
                           planDurationInMinute: widget.planDurationInMinute,
                           selectedDateController: widget.dateTextController,
                           selectedTimeController: widget.timeTextController,
                           dailyDoctorWorkTime: widget.doctorEntity.plan
                               .getDailyWorkTimeTable(selectedDay),
+                          dayUnAvailableTimeTable: widget.doctorEntity.plan
+                              .getTakenVisitDailyTimeTable(
+                                  widget.dateTextController.text),
                           onBlocTap: widget.onBlocTap,
                         )))
         ],

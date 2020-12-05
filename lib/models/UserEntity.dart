@@ -15,7 +15,7 @@ abstract class UserEntity {
   UserEntity({this.user, this.id, this.panels, this.vid});
 
   String get fullName {
-    return (user.firstName ?? "") + " " + (user.lastName ?? "");
+    return (user?.firstName ?? "") + " " + (user?.lastName ?? "");
   }
 }
 
@@ -156,6 +156,10 @@ class User {
   int type;
   String password;
   int online;
+
+  String get fullName {
+    return (firstName ?? "") + " " + (lastName ?? "");
+  }
 
   User(
       {this.username,

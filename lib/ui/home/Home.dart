@@ -79,18 +79,18 @@ class _HomeState extends State<Home> {
         ],
       ));
 
-  Widget _reminderList() {
-    return BlocBuilder<MedicineBloc, MedicineState>(
-        bloc: _medicineBloc,
-        builder: (context, state) {
-          return ReminderList(
-            medicines: state.medicines,
-          );
-        });
-  }
+  // Widget _reminderList() {
+  //   return BlocBuilder <MedicineBloc, MedicineState>(
+  //       bloc: _medicineBloc,
+  //       builder: (context, state) {
+  //         return ReminderList(
+  //           medicines: state.medicines,
+  //         );
+  //       });
+  // }
 
   Widget _trackingList() {
-    return BlocBuilder<PatientTrackerBloc, TrackerState>(
+    return BlocBuilder <PatientTrackerBloc, TrackerState>(
         builder: (context, state) {
       return Column(
         children: [
@@ -211,7 +211,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _iPartner() {
-    return BlocBuilder<EntityBloc, EntityState>(
+    return BlocBuilder <EntityBloc, EntityState>(
       builder: (context, state) {
         if (state is EntityLoaded) {
           if (state.entity.partnerEntity != null) {
@@ -264,7 +264,7 @@ class _HomeState extends State<Home> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
-            BlocBuilder<NotificationBloc, NotificationState>(
+            BlocBuilder <NotificationBloc, NotificationState>(
                 builder: (context, state) {
               if (state.notifications != null &&
                   state.notifications.newestEventsCounts != null)

@@ -367,7 +367,8 @@ class _DetailScreenState extends State<DetailScreen>
                     maxHeight: widget.imageURL != null
                         ? textToggle * maxY / 3
                         : textToggle * maxY * 0.9,
-                    minHeight: 0),
+                    minHeight:
+                        widget.imageURL == null ? textToggle * maxY * 0.9 : 0),
                 decoration: BoxDecoration(
                     color: Color.fromARGB(100, 150, 150, 150),
                     borderRadius: BorderRadius.only(

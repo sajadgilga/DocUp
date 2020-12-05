@@ -12,6 +12,7 @@ import 'package:docup/ui/widgets/MapWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../constants/colors.dart';
 
@@ -53,9 +54,8 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   break;
                 case Status.ERROR:
                   return APICallError(
+                    () => _bloc.getDoctor(widget.doctorEntity.id, false),
                     errorMessage: snapshot.data.error.toString(),
-                    onRetryPressed: () =>
-                        _bloc.getDoctor(widget.doctorEntity.id, false),
                   );
                   break;
               }

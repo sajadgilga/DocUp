@@ -1,3 +1,4 @@
+import 'DoctorPlan.dart';
 import 'Panel.dart';
 import 'UserEntity.dart';
 import 'VisitResponseEntity.dart';
@@ -73,10 +74,10 @@ class PatientEntity extends UserEntity {
   }
 
   int get vid {
-    return super.vid ?? currentPatientVisit?.id;
+    return super.vid ?? nearestPendingPatientVisit?.id;
   }
 
-  VisitItem get currentPatientVisit {
+  VisitItem get nearestPendingPatientVisit {
     try {
       DateTime now = DateTime.now();
       for (int i = 0; i < visits?.length; i++) {
@@ -84,6 +85,24 @@ class PatientEntity extends UserEntity {
         DateTime date =
             DateTime.parse(visitItem.requestVisitTime.split("+")[0]);
         if (date.compareTo(now) > 0 && visitItem.status == 0) {
+          return visitItem;
+        }
+      }
+    } catch (e) {}
+
+    return null;
+  }
+
+  VisitItem get currentAcceptedVisit {
+    try {
+      DateTime now = DateTime.now();
+      for (int i = 0; i < visits?.length; i++) {
+        VisitItem visitItem = visits[i];
+        DateTime date =
+            DateTime.parse(visitItem.requestVisitTime.split("+")[0]);
+        /// TODO amir: add duration plan in visits for better accuracy
+        date = date.add(Duration(minutes: DoctorPlan.hourMinutePart * 3));
+        if (date.compareTo(now) > 0 && visitItem.status == 1) {
           return visitItem;
         }
       }

@@ -95,11 +95,11 @@ class SendNoronioTestDialog {
                             return _widget(state.result, medicalTestBloc);
                           } else if (state is TestsListError) {
                             return APICallError(
-                              tightenPage: true,
-                              onRetryPressed: () {
+                              () {
                                 BlocProvider.of<MedicalTestListBloc>(context)
                                     .add(GetClinicMedicalTest());
                               },
+                              tightenPage: true,
                             );
                           }
                           return DocUpAPICallLoading2(
@@ -194,24 +194,30 @@ class SendNoronioTestDialog {
     for (int i = 0; i < serviceList.length; i += 2) {
       Widget ch1 = SquareBoxNoronioClinicService(
         serviceList[i],
-        boxSize: 100,
+        boxSize: 110,
         defaultBgColor:
             selectedTest != null && selectedTest.id == testsList[i].id
                 ? IColors.darkGrey
                 : Colors.white,
+        bFontSize: 9,
+        lFontSize: 7,
       );
       Widget ch2 = (i == serviceList.length - 1)
           ? SquareBoxNoronioClinicService(
               NoronioServiceItem.empty(),
-              boxSize: 100,
+              boxSize: 110,
+              bFontSize: 9,
+              lFontSize: 7,
             )
           : SquareBoxNoronioClinicService(
               serviceList[i + 1],
-              boxSize: 100,
+              boxSize: 110,
               defaultBgColor:
                   selectedTest != null && selectedTest.id == testsList[i + 1].id
                       ? IColors.darkGrey
                       : Colors.white,
+              bFontSize: 9,
+              lFontSize: 7,
             );
 
       serviceRows.add(Row(

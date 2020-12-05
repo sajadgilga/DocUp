@@ -84,6 +84,17 @@ class AuthBloc {
       print(e);
     }
   }
+  deleteAvatar(int userId)async {
+    uploadAvatarSink.add(Response.loading());
+    try {
+      UploadAvatarResponseEntity response =
+      await _repository.deleteUserProfile(userId);
+      uploadAvatarSink.add(Response.completed(response));
+    } catch (e) {
+      uploadAvatarSink.add(Response.error(e));
+      print(e);
+    }
+  }
 
   saveUserName(String userName) async {
     final prefs = await SharedPreferences.getInstance();

@@ -80,8 +80,8 @@ class _NotificationPageState extends State<NotificationPage> {
                 break;
               case Status.ERROR:
                 return APICallError(
+                  () => _notificationBloc.get(),
                   errorMessage: snapshot.data.error.toString(),
-                  onRetryPressed: () => _notificationBloc.get(),
                 );
                 break;
             }

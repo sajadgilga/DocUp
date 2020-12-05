@@ -2,33 +2,37 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/models/NewestNotificationResponse.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/networking/CustomException.dart';
 import 'package:docup/repository/NotificationRepository.dart';
-import 'package:docup/ui/mainPage/CallRepo.dart';
+import 'package:docup/ui/mainPage/NotifNavigationRepo.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class NotificationAndFirebaseService{
+class NotificationAndFirebaseService {
   static final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   static BuildContext context;
   static bool _isFCMConfigured = false;
+  static NotificationNavigationRepo notifNavRepo;
 
-  static Future initFCM(context) async {
+  static Future initFCM(context, Function onPush) async {
     NotificationAndFirebaseService.context = context;
+    NotificationAndFirebaseService.notifNavRepo =
+        NotificationNavigationRepo(onPush);
     if (!_isFCMConfigured) {
       try {
         _firebaseMessaging.configure(
           onMessage: onMessage,
           onBackgroundMessage: myBackgroundMessageHandler,
           onLaunch: onLaunch,
-          onResume: (Map<String, dynamic> message) async {
-            print("onResume: $message");
-          },
+          onResume: onResume,
         );
 
         if (Platform.isIOS) {
@@ -47,7 +51,7 @@ class NotificationAndFirebaseService{
           try {
             NotificationRepository().registerDevice(fcmToken);
           } on BadRequestException {
-            print('kooooooft');
+            print('error');
             _isFCMConfigured = true;
             return;
           } catch (_) {
@@ -75,36 +79,25 @@ class NotificationAndFirebaseService{
     }
   }
 
-  static Future onSelectNotification(String body) async {
-    var jsonBody = json.decode(body);
-
-    int type = jsonBody['type'];
-    String payload = jsonBody['payload'];
-    if (type == 1) {
-      joinVideoCall(context, payload);
-    }
-  }
-
   static Future<dynamic> onResume(Map<String, dynamic> message) async {
-    print("onLaunch: $message");
+    print("onResume: $message");
+
+    Map<String, dynamic> data = new Map<String, dynamic>.from(message['data']);
+    handleNotifNavigation(data['payload'], intPossible(data['type']));
   }
 
   static Future<dynamic> onLaunch(Map<String, dynamic> message) async {
     print("onLaunch: $message");
+
+    Map<String, dynamic> data = new Map<String, dynamic>.from(message['data']);
+    handleNotifNavigation(data['payload'], intPossible(data['type']));
   }
 
   static Future<dynamic> myBackgroundMessageHandler(
       Map<String, dynamic> message) {
-    if (Platform.isIOS) return null;
-    if (message.containsKey('data')) {
-      // Handle data message
-      final dynamic data = message['data'];
-    }
-
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      final dynamic notification = message['notification'];
-    }
+    print("onBackgroundMessageHandler: $message");
+    Map<String, dynamic> data = new Map<String, dynamic>.from(message['data']);
+    handleNotifNavigation(data['payload'], intPossible(data['type']));
 
     // Or do other work.
   }
@@ -114,25 +107,26 @@ class NotificationAndFirebaseService{
       print("onMessage: $message");
       String title = message['notification']['title'];
       String body = message['notification']['body'];
-      await _showNotificationWithDefaultSound(title, body);
+      String dataJson = json.encode(message['data']);
+      await _showNotificationWithDefaultSound(title, body, dataJson);
 
-      // Map<String, dynamic> data =
-      //     new Map<String, dynamic>.from(message['data']);
-      // NewestVisit visit;
-      // if (data.containsKey('json')) {
-      //   visit = NewestVisit.fromJson(data);
-      //
-      //   /// notification bloc events
-      //   // ignore: close_sinks
-      //   NotificationBloc notificationBloc =
-      //       BlocProvider.of<NotificationBloc>(context);
-      //   if ([5, 6].contains(data['type'])) {
-      //     /// TODO amir: this condition should check type of notification later
-      //     notificationBloc.add(AddNewestVisitNotification(newVisit: visit));
-      //   } else if (true) {
-      //     /// TODO amir: handling event type of notification
-      //   }
-      // }
+      Map<String, dynamic> data =
+          new Map<String, dynamic>.from(message['data']);
+      if (data.containsKey('payload')) {
+        if ([5, 6].contains(data['type'])) {
+          NewestVisit visit = NewestVisit.fromJson(data['payload']);
+
+          /// notification bloc events
+          // ignore: close_sinks
+          NotificationBloc notificationBloc =
+              BlocProvider.of<NotificationBloc>(context);
+
+          /// TODO amir: this condition should check type of notification later
+          notificationBloc.add(AddNewestVisitNotification(newVisit: visit));
+        } else if (true) {
+          /// TODO amir: handling event type of notification
+        }
+      }
     } catch (e) {
       print(e.toString());
     } finally {
@@ -140,8 +134,63 @@ class NotificationAndFirebaseService{
     }
   }
 
+  static Future onSelectNotification(String payload) async {
+    try {
+      print("OnSelection: $payload");
+      var jsonBody = json.decode(payload);
+
+      int type = jsonBody['type'] is int
+          ? jsonBody['type']
+          : int.parse(jsonBody['type']);
+      String pPayload = jsonBody['payload'];
+      handleNotifNavigation(pPayload, type);
+    } catch (e) {
+      print("OnNotification Tap Error:" + e.toString());
+    }
+  }
+
+  static void handleNotifNavigation(String payload, int type) {
+    void navigate() {
+      if (type == 1) {
+        /// voice or video call
+        var data = json.decode(payload);
+        User user = User.fromJson(data['partner_info']);
+        int visitType = intPossible(data['visit_type']);
+        String channelName = data['channel_name'];
+        NotificationAndFirebaseService.notifNavRepo
+            .joinVideoOrVoiceCall(context, channelName, visitType, user);
+      } else if (type == 2) {
+        /// test send and response
+        NewestMedicalTest medicalTest =
+            NewestMedicalTest.fromJson(json.decode(payload));
+        NotificationAndFirebaseService.notifNavRepo
+            .navigateToTestPage(medicalTest, context);
+      } else if ([5, 6].contains(type)) {
+        /// visit
+        NewestVisit visit = NewestVisit.fromJson(json.decode(payload));
+        NotificationAndFirebaseService.notifNavRepo
+            .navigateToPanel(visit, context);
+      }
+    }
+
+    EntityBloc _bloc = BlocProvider.of<EntityBloc>(context);
+    print(_bloc.state);
+    if (_bloc.state is EntityLoaded || _bloc.state.entity != null) {
+      navigate();
+    } else {
+      StreamSubscription streamSubscription;
+      streamSubscription = _bloc.listen((data) {
+        print(data);
+        if (data is EntityLoaded) {
+          navigate();
+          streamSubscription.cancel();
+        }
+      });
+    }
+  }
+
   static Future _showNotificationWithDefaultSound(
-      String title, String body) async {
+      String title, String body, String payload) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'channel_id', 'channel_name', 'channel_description',
         importance: Importance.Max, priority: Priority.High);
@@ -149,11 +198,11 @@ class NotificationAndFirebaseService{
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-      0,
+      payload.hashCode,
       title,
       body,
       platformChannelSpecifics,
-      payload: body,
+      payload: payload,
     );
   }
 }

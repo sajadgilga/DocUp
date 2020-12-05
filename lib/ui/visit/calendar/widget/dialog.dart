@@ -728,7 +728,7 @@ Future<T> showCDialog<T>({
   assert(child == null || builder == null);
   assert(debugCheckHasMaterialLocalizations(context));
 
-  final ThemeData theme = Theme.of(context, shadowThemeOnly: true);
+  // final ThemeData theme = Theme.of(context, shadowThemeOnly: true);
   return showGeneralDialog(
     context: context,
     pageBuilder: (BuildContext buildContext, Animation<double> animation,
@@ -736,9 +736,12 @@ Future<T> showCDialog<T>({
       final Widget pageChild = child ?? Builder(builder: builder);
       return SafeArea(
         child: Builder(builder: (BuildContext context) {
-          return theme != null
-              ? Theme(data: theme, child: pageChild)
-              : pageChild;
+          ///  TODO amir: this lines has changed because of a version conflict but it should be tested if needed
+
+          return InheritedTheme.captureAll(context, pageChild);
+          // return theme != null
+          //     ? Theme(data: theme, child: pageChild)
+          //     : pageChild;
         }),
       );
     },

@@ -176,9 +176,9 @@ class PatientPanelMenu extends StatelessWidget {
         mDoctor = (entity.partnerEntity as PatientEntity);
     }
     var isActive = mDoctor != null;
-    return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
+    return BlocBuilder <PanelSectionBloc, PanelSectionSelected>(
       builder: (context, state) {
-        return BlocBuilder<TabSwitchBloc, PanelTabState>(
+        return BlocBuilder <TabSwitchBloc, PanelTabState>(
           builder: (context, tabstate) {
             return Stack(children: <Widget>[
               Container(

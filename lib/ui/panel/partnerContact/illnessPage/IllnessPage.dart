@@ -49,6 +49,18 @@ class _IllnessPageState extends State<IllnessPage> {
 
   @override
   void initState() {
+    _initialApiCallBack();
+    times = [];
+    times.add(VisitTime(Month.ESF, '۷', '۱۳۹۸', true));
+    times.add(VisitTime(Month.DAY, '۱۶', '۱۳۹۸', false));
+    times.add(VisitTime(Month.ABN, '۷', '۱۳۹۸', false));
+    times.add(VisitTime(Month.TIR, '۱۲', '۱۳۹۸', false));
+    times.add(VisitTime(Month.FAR, '۲۱', '۱۳۹۸', false));
+
+    super.initState();
+  }
+
+  void _initialApiCallBack() {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     if (_state.entity.isDoctor) {
       if (_state.entity.doctor.clinic == null ||
@@ -70,14 +82,6 @@ class _IllnessPageState extends State<IllnessPage> {
         toast(context, "خطایی رخ داده است");
       }
     });
-    times = [];
-    times.add(VisitTime(Month.ESF, '۷', '۱۳۹۸', true));
-    times.add(VisitTime(Month.DAY, '۱۶', '۱۳۹۸', false));
-    times.add(VisitTime(Month.ABN, '۷', '۱۳۹۸', false));
-    times.add(VisitTime(Month.TIR, '۱۲', '۱۳۹۸', false));
-    times.add(VisitTime(Month.FAR, '۲۱', '۱۳۹۸', false));
-
-    super.initState();
   }
 
   Widget _IllnessPage(times) {
@@ -130,6 +134,9 @@ class _IllnessPageState extends State<IllnessPage> {
               );
             } else if (state is TestsListError) {
               return APICallError(
+                () {
+                  _initialApiCallBack();
+                },
                 tightenPage: true,
               );
             } else {
@@ -193,30 +200,31 @@ class _IllnessPageState extends State<IllnessPage> {
   }
 
   Widget body(times) {
-    if (widget.entity.panel.status == 0 ||
-        widget.entity.panel.status == 1) if (widget.entity.isPatient) {
-      return Stack(children: <Widget>[
-        _IllnessPage(times),
-        PanelAlert(
-          label: Strings.requestSentLabel,
-          buttonLabel: Strings.waitingForApproval,
-          btnColor: IColors.disabledButton,
-        )
-      ]);
+    if ((widget.entity.panel.status == 0 || widget.entity.panel.status == 1) &&
+        false) {
+      if (widget.entity.isPatient) {
+        return Stack(children: <Widget>[
+          _IllnessPage(times),
+          PanelAlert(
+            label: Strings.requestSentLabel,
+            buttonLabel: Strings.waitingForApproval,
+            btnColor: IColors.disabledButton,
+          )
+        ]);
+      } else {
+        return Stack(children: <Widget>[
+          _IllnessPage(times),
+          PanelAlert(
+            label: Strings.requestSentLabelDoctorSide,
+            buttonLabel: Strings.waitingForApprovalDoctorSide,
+            callback: () {
+              widget.onPush(
+                  NavigatorRoutes.patientDialogue, widget.entity.partnerEntity);
+            },
+          )
+        ]);
+      }
     } else {
-      return Stack(children: <Widget>[
-        _IllnessPage(times),
-        PanelAlert(
-          label: Strings.requestSentLabelDoctorSide,
-          buttonLabel: Strings.waitingForApprovalDoctorSide,
-          callback: () {
-            widget.onPush(
-                NavigatorRoutes.patientDialogue, widget.entity.partnerEntity);
-          },
-        )
-      ]);
-    }
-    else {
       return _IllnessPage(times);
     }
   }

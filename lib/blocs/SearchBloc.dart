@@ -74,6 +74,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield* _searchCount(event);
     } else if (event is SearchLoadingEvent) {
       yield SearchLoading();
+    }else if(event is ErrorEvent){
+      yield SearchError();
     }
   }
 }
@@ -108,7 +110,9 @@ class SearchDoctor extends SearchEvent {
       this.patientUsername,
       this.isMyDoctors = false});
 }
+class ErrorEvent extends SearchEvent{
 
+}
 class SearchVisit extends SearchEvent {
   String text;
   int acceptStatus;

@@ -1,20 +1,14 @@
 import 'dart:convert';
 
-import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polygon_clipper/polygon_clipper.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class MyPartnersResultList extends StatefulWidget {
   final Function(String, UserEntity) onPush;
@@ -55,8 +49,9 @@ class _MyPartnersResultListState extends State<MyPartnersResultList> {
                   borderRadius: 10,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  title:
-                      widget.isDoctor ? "جست‌و‌جو متخصصان" : "جست‌و‌جوی بیماران",
+                  title: widget.isDoctor
+                      ? "جست‌و‌جو متخصصان"
+                      : "جست‌و‌جوی بیماران",
                   callBack: () {
                     widget.onPush(NavigatorRoutes.partnerSearchView, null);
                   },
@@ -109,7 +104,6 @@ class _MyPartnerItem extends StatelessWidget {
 
   _MyPartnerItem({Key key, @required this.entity, this.onPush})
       : super(key: key);
-
 
   Widget _image(context) => Container(
         child: Container(
@@ -169,7 +163,7 @@ class _MyPartnerItem extends StatelessWidget {
             ((entity as DoctorEntity).expert ?? " - ").toString().codeUnits);
       }
     } catch (_) {
-      utfName = entity.user.name;
+      utfName = entity.user?.name ?? "";
       if (this.entity is DoctorEntity) {
         utfExpert = (entity as DoctorEntity).expert ?? " - ";
       }

@@ -80,18 +80,23 @@ class _ChatBoxState extends State<ChatBox> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        /// TODO
-        // var _state = BlocProvider.of<EntityBloc>(context).state;
-        // widget.onPush(NavigatorRoutes.panel, _state.entity.partnerEntity);
+        var _state = BlocProvider.of<EntityBloc>(context).state;
+        widget.onPush(NavigatorRoutes.panel, _state.entity.partnerEntity);
       },
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          // Expanded(
-          //   child: _chatList(),
-          //   flex: 2,
-          // ),
-          _myMessages(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              // Expanded(
+              //   child: _chatList(),
+              //   flex: 2,
+              // ),
+              _myMessages(),
+            ],
+          ),
         ],
       ),
     );

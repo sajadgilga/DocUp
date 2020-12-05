@@ -9,6 +9,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/repository/ChatMessageRepository.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/PanelAlert.dart';
+import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
@@ -35,6 +36,13 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   TextEditingController _controller = TextEditingController();
   bool chatPageLoading = false;
+
+  @override
+  void setState(fn) {
+    if (this.mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   void initState() {
@@ -174,22 +182,30 @@ class _ChatPageState extends State<ChatPage> {
         return BlocBuilder<VisitTimeBloc, VisitTimeState>(
           builder: (context, _visitTimeState) {
             String _visitTime;
-            if (_visitTimeState is VisitTimeLoadedState)
+            if (_visitTimeState is VisitTimeLoadedState) {
               _visitTime = replaceFarsiNumber(
                   normalizeDateAndTime(_visitTimeState.visit.visitTime));
-            return Stack(children: <Widget>[
-              _ChatPage(),
-              PanelAlert(
-                label: 'ویزیت شما '
-                    '\n'
-                    '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
-                    '\n'
-                    'است' /* Strings.notRequestTimeDoctorSide*/,
-                buttonLabel: Strings.waitLabel,
-                btnColor: IColors.disabledButton,
-                size: AlertSize.LG,
-              ) //TODO: change to timer
-            ]);
+              return Stack(children: <Widget>[
+                _ChatPage(),
+                PanelAlert(
+                  label: 'ویزیت شما '
+                      '\n'
+                      '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
+                      '\n'
+                      'است' /* Strings.notRequestTimeDoctorSide*/,
+                  buttonLabel: Strings.waitLabel,
+                  btnColor: IColors.disabledButton,
+                  size: AlertSize.LG,
+                ) //TODO: change to timer
+              ]);
+            } else if (_visitTimeState is VisitTimeErrorState) {
+              return APICallError(() {
+                BlocProvider.of<VisitTimeBloc>(context)
+                    .add(VisitTimeGet(partnerId: widget.entity.pId));
+              });
+            } else {
+              return DocUpAPICallLoading2();
+            }
           },
         );
       } else if (widget.entity.panel.status == 6 ||
@@ -216,7 +232,32 @@ class _ChatPageState extends State<ChatPage> {
             )
           ]);
       } else
-        return _ChatPage();
+        return BlocBuilder<VisitTimeBloc, VisitTimeState>(
+          builder: (context, _visitTimeState) {
+            if (_visitTimeState is VisitTimeLoadedState) {
+              if (_visitTimeState.visit.visitMethod == 0) {
+                return _ChatPage();
+              } else {
+                return Stack(children: <Widget>[
+                  _ChatPage(),
+                  PanelAlert(
+                    label: "ویزیت متنی در حال حاضر ندارید.",
+                    buttonLabel: Strings.waitLabel,
+                    btnColor: IColors.disabledButton,
+                    size: AlertSize.LG,
+                  ) //TODO: change to timer
+                ]);
+              }
+            } else if (_visitTimeState is VisitTimeErrorState) {
+              return APICallError(() {
+                BlocProvider.of<VisitTimeBloc>(context)
+                    .add(VisitTimeGet(partnerId: widget.entity.pId));
+              });
+            } else {
+              return DocUpAPICallLoading2();
+            }
+          },
+        );
     } catch (_) {
       return Container();
     }

@@ -10,6 +10,7 @@ import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/EditProfileDataDialog.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
@@ -143,89 +144,95 @@ class _PatientProfilePageState extends State<PatientProfilePage>
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
-        if (state is EntityLoaded || state != null) {
-          if (state.entity.mEntity != null) {
-            PatientEntity patientEntity = state.entity.mEntity as PatientEntity;
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      PageTopLeftIcon(
-                        topLeft: Icon(
-                          Icons.menu,
-                          size: 25,
-                        ),
-                        onTap: () {
-                          /// TODO
-                          widget.onPush(NavigatorRoutes.patientProfileMenuPage,
-                              patientEntity);
-                        },
-                        topRightFlag: false,
-                        topLeftFlag: true,
-                      ),
-                      DocUpHeader(
-                        title: "پروفایل من",
-                        docUpLogo: false,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  _userInfoLabelWidget(),
-                  _userInfoWidget(state.entity),
-                  _changePasswordWidget(context),
-                  SizedBox(height: 10),
-                  _userCreditLabelWidget(),
-                  GestureDetector(
-                    onTap: () {
-                      checkPatientBillingDescription(changeTooltip: false);
-
-                      setState(() {
-                        _creditDescriptionTooltipToggle = true;
-                      });
-
-                      /// TODO
-                      Timer(Duration(seconds: 10), () {
-                        _creditDescriptionTooltipToggle = false;
-                      });
-                    },
-                    child: SimpleTooltip(
-                        hideOnTooltipTap: true,
-                        show: _creditDescriptionTooltipToggle,
-                        animationDuration: Duration(milliseconds: 460),
-                        tooltipDirection: TooltipDirection.down,
-                        backgroundColor: IColors.whiteTransparent,
-                        borderColor: IColors.themeColor,
-                        tooltipTap: () {
-                          checkPatientBillingDescription();
-                        },
-                        content: AutoText(
-                          Strings.patientBillingDescription,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 12,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                        child: _userCreditWidget()),
-                  ),
-                  SizedBox(height: 30),
-                  _addCreditWidget(),
-                  SizedBox(height: 10),
-                  _supportWidget()
-                ],
-              ),
-            );
-          } else {
-            return Waiting();
-          }
+        if ((state is EntityLoaded || state.entity.mEntity != null) &&
+            !(state is EntityError)) {
+          return _widget(state);
+        } else if (state is EntityError) {
+          return APICallError(() {
+            EntityBloc entityBloc = BlocProvider.of<EntityBloc>(context);
+            entityBloc.add(EntityGet());
+          });
         } else {
           return Waiting();
         }
       });
+
+  _widget(EntityState state) {
+    PatientEntity patientEntity = state.entity.mEntity as PatientEntity;
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              PageTopLeftIcon(
+                topLeft: Icon(
+                  Icons.menu,
+                  size: 25,
+                ),
+                onTap: () {
+                  /// TODO
+                  widget.onPush(
+                      NavigatorRoutes.patientProfileMenuPage, patientEntity);
+                },
+                topRightFlag: false,
+                topLeftFlag: true,
+              ),
+              DocUpHeader(
+                title: "پروفایل من",
+                docUpLogo: false,
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          _userInfoLabelWidget(),
+          _userInfoWidget(state.entity),
+          _changePasswordWidget(context),
+          SizedBox(height: 10),
+          _userCreditLabelWidget(),
+          GestureDetector(
+            onTap: () {
+              checkPatientBillingDescription(changeTooltip: false);
+
+              setState(() {
+                _creditDescriptionTooltipToggle = true;
+              });
+
+              /// TODO
+              Timer(Duration(seconds: 10), () {
+                _creditDescriptionTooltipToggle = false;
+              });
+            },
+            child: SimpleTooltip(
+                hideOnTooltipTap: true,
+                show: _creditDescriptionTooltipToggle,
+                animationDuration: Duration(milliseconds: 460),
+                tooltipDirection: TooltipDirection.down,
+                backgroundColor: IColors.whiteTransparent,
+                borderColor: IColors.themeColor,
+                tooltipTap: () {
+                  checkPatientBillingDescription();
+                },
+                content: AutoText(
+                  Strings.patientBillingDescription,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 12,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+                child: _userCreditWidget()),
+          ),
+          SizedBox(height: 30),
+          _addCreditWidget(),
+          SizedBox(height: 10),
+          _supportWidget()
+        ],
+      ),
+    );
+  }
 
   _supportWidget() {
     double iconsSize = 60;
@@ -426,7 +433,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             AutoText(
-              "${entity.mEntity.user.firstName == null ? "" : entity.mEntity.user.firstName} ${entity.mEntity.user.lastName == null ? "" : entity.mEntity.user.lastName}",
+              "${entity.mEntity?.user?.firstName == null ? "" : entity.mEntity.user.firstName} ${entity.mEntity?.user?.lastName == null ? "" : entity.mEntity.user.lastName}",
               fontSize: 16,
             ),
             SizedBox(height: 10),
@@ -454,7 +461,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: EditingCircularAvatar(
-              user: entity.mEntity.user,
+              user: entity.mEntity?.user,
             ),
           ),
         ),

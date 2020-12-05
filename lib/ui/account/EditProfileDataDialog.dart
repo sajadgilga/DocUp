@@ -105,7 +105,7 @@ class EditProfileDataDialog {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                                    height: 50,
+                                    height: 70,
                                     child: TextField(
                                       controller: _firstNameController,
                                       textDirection: TextDirection.rtl,
@@ -128,7 +128,7 @@ class EditProfileDataDialog {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                                    height: 50,
+                                    height: 70,
                                     child: TextField(
                                       controller: _lastNameController,
                                       textDirection: TextDirection.rtl,
@@ -176,13 +176,13 @@ class EditProfileDataDialog {
                                     ? Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
-                                          height: 50,
+                                          height: 70,
                                           child: TextField(
                                             controller: _expertiseCodeController,
                                             textDirection: TextDirection.ltr,
                                             textAlign: TextAlign.center,
                                             keyboardType: TextInputType.text,
-                                            maxLines: 1,
+                                            maxLines: 2,
                                             style: TextStyle(fontSize: 16),
                                             decoration: InputDecoration(
                                               labelText: "تخصص",

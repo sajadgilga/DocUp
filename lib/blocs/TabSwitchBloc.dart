@@ -98,7 +98,7 @@ class ThirdTab extends PanelTabState {
   }
 
   bool operator ==(other) {
-    return (other is ThirdTab);
+    return (other is ThirdTab && other.index == index);
   }
 }
 

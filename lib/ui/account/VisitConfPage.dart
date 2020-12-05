@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/networking/Response.dart';
@@ -23,6 +24,7 @@ import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:simple_tooltip/simple_tooltip.dart';
 
 class VisitConfPage extends StatefulWidget {
   final Function(String, dynamic) onPush;
@@ -59,6 +61,8 @@ class _VisitConfPageState extends State<VisitConfPage>
   bool isLoaded = false;
   final TextEditingController _startTimeController = TextEditingController();
   final TextEditingController _endTimeController = TextEditingController();
+
+  bool _toolTipVisitTime = false;
 
   List<List<List<int>>> daysPlanTable = [];
 
@@ -120,9 +124,8 @@ class _VisitConfPageState extends State<VisitConfPage>
                   break;
                 case Status.ERROR:
                   return APICallError(
+                    () => _bloc.getDoctor(widget.doctorId, true),
                     errorMessage: snapshot.data.error.toString(),
-                    onRetryPressed: () =>
-                        _bloc.getDoctor(widget.doctorId, true),
                   );
                   break;
               }
@@ -248,13 +251,40 @@ class _VisitConfPageState extends State<VisitConfPage>
                 )
               : SizedBox(),
           ALittleVerticalSpace(),
-          TimeSelectorHeaderWidget(
-            callback: (timeIsSelected) {
+          GestureDetector(
+            onTap: () {
               setState(() {
-                this.timeIsSelected = timeIsSelected;
+                _toolTipVisitTime = !_toolTipVisitTime;
               });
             },
-            timeDateWidgetsFlag: false,
+            child: SimpleTooltip(
+              show: _toolTipVisitTime,
+              hideOnTooltipTap: true,
+              borderColor: IColors.themeColor,
+              tooltipDirection: TooltipDirection.down,
+              content: AutoText(Strings.doctorPlanVisitTimeHelp),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0, left: 10, bottom: 10),
+                    child: Icon(
+                      Icons.help_outline_sharp,
+                      color: IColors.darkGrey,
+                      size: 22,
+                    ),
+                  ),
+                  TimeSelectorHeaderWidget(
+                    callback: (timeIsSelected) {
+                      setState(() {
+                        this.timeIsSelected = timeIsSelected;
+                      });
+                    },
+                    timeDateWidgetsFlag: false,
+                  ),
+                ],
+              ),
+            ),
           ),
           WeeklyTimeTable(
             this.daysPlanTable,

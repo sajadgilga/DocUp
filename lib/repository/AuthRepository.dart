@@ -30,4 +30,10 @@ class AuthRepository {
         body: {"avatar": base64ImageString});
     return UploadAvatarResponseEntity.fromJson(response);
   }
+
+  Future<UploadAvatarResponseEntity> deleteUserProfile(int userId) async {
+    final response =
+        await _provider.delete("api/auth/upload-profile-image/$userId");
+    return UploadAvatarResponseEntity.fromJson(response);
+  }
 }

@@ -105,6 +105,15 @@ String normalizeCredit(String credit) {
     return credit;
 }
 
+String getJalaliDateStringFromJalali(Jalali jalali) {
+  return "${jalali.year}/${jalali.month}/${jalali.day}";
+}
+
+String getTimeStringFromDateTime(DateTime dateTime, {bool withSeconds = true}) {
+  return "${dateTime.hour}:${dateTime.minute}" +
+      (withSeconds ? ":${dateTime.second}" : "");
+}
+
 String convertToGeorgianDate(String jalaliDate) {
   var array = jalaliDate.split("/");
   var georgianDate =
@@ -414,6 +423,17 @@ String utf8IfPossible(String text) {
     text = utf8.decode(text.codeUnits);
   } catch (e) {}
   return text;
+}
+
+int intPossible(var text) {
+  try {
+    if (text is int) {
+      return text;
+    } else if (text is String) {
+      return int.parse(text);
+    }
+  } catch (e) {}
+  return null;
 }
 
 bool isNumeric(String s) {

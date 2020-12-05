@@ -99,22 +99,33 @@ class UploadFileSliderState extends State<UploadFileSlider> {
   }
 
   Widget _pictureHolder(width, height) {
-    return Container(
-      margin: EdgeInsets.only(top: 20, bottom: 40),
-      constraints: BoxConstraints.expand(
-        width: width,
-        height: (height * .3 < 200 ? height * .3 : 200),
-      ),
-      child: GestureDetector(
-        child: file.defaultFileWidget ??
-            Image(
-              image: AssetImage('assets/uploadpic.png'),
-              fit: BoxFit.fitHeight,
-            ),
-        onTap: () {
-          _getFile();
-        },
-      ),
+    return Column(
+      children: [
+        AutoText(
+          "برای انتخاب فایل بر روی شکل زیر بزنید.",
+          style: TextStyle(
+              color: IColors.darkGrey,
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 10, bottom: 40),
+          constraints: BoxConstraints.expand(
+            width: width,
+            height: (height * .3 < 200 ? height * .3 : 200),
+          ),
+          child: GestureDetector(
+            child: file.defaultFileWidget ??
+                Image(
+                  image: AssetImage('assets/uploadpic.png'),
+                  fit: BoxFit.fitHeight,
+                ),
+            onTap: () {
+              _getFile();
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -168,7 +179,7 @@ class UploadFileSliderState extends State<UploadFileSlider> {
   void _uploadPic() {
     if (file != null &&
         file.file != null &&
-        file.file.lengthSync() > 5 * 1024 * 1024) {
+        file.file.lengthSync() / (1000 * 1000) > 5) {
       showAlertDialog(
           context, 'حداکثر اندازه فایلی ارسالی ۵ ماگابایت است.', () {});
       return;

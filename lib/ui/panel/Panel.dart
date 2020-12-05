@@ -35,8 +35,16 @@ class _PanelState extends State<Panel> {
   _PanelState({this.patient}) : super();
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   initState() {
     BlocProvider.of<TabSwitchBloc>(context).listen((data) {
+      print("helloooooooooooooooooooooooooooooooooooooooo");
       setState(() {});
     });
     super.initState();
@@ -250,7 +258,7 @@ class TabState extends State<Tab> {
   @override
   Widget build(BuildContext context) {
     double maxXSize = MediaQuery.of(context).size.width;
-    double tabWidth = (maxXSize-40)/3;
+    double tabWidth = (maxXSize - 40) / 3;
     return Container(
       constraints: BoxConstraints.tightFor(width: tabWidth),
       decoration: BoxDecoration(
@@ -271,8 +279,7 @@ class TabState extends State<Tab> {
             _switchTab(widget.tabState, context);
           },
           child: Container(
-              constraints:
-                  BoxConstraints.expand(width: tabWidth, height: 40),
+              constraints: BoxConstraints.expand(width: tabWidth, height: 40),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),

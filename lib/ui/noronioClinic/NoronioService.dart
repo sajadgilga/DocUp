@@ -4,7 +4,6 @@ import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/MedicalTest.dart';
 import 'package:docup/models/NoronioService.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/medicalTest/MedicalTestPage.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
@@ -28,7 +27,6 @@ class NoronioServicePage extends StatefulWidget {
 }
 
 class _NoronioServicePageState extends State<NoronioServicePage> {
-
   List<NoronioServiceItem> convertToNoronioServiceList(
       List<MedicalTestItem> tests) {
     List<NoronioServiceItem> services = [];
@@ -92,7 +90,7 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
         return _widget(state.result);
       } else if (state is TestsListError) {
         return APICallError(
-          onRetryPressed: () {
+          () {
             BlocProvider.of<MedicalTestListBloc>(context)
                 .add(GetClinicMedicalTest());
           },

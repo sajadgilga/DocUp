@@ -1,6 +1,7 @@
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -10,12 +11,11 @@ class APICallError extends StatelessWidget {
   final String errorMessage;
   final Function onRetryPressed;
   final bool tightenPage;
+  final String defaultMessage =
+      "بار دیگر تلاش کنید.";
 
-  const APICallError(
-      {Key key,
-      this.errorMessage = "error",
-      this.onRetryPressed,
-      this.tightenPage = false})
+  const APICallError(this.onRetryPressed,
+      {Key key, this.errorMessage, this.tightenPage = false})
       : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class APICallError extends StatelessWidget {
     /// TODO
     double x = MediaQuery.of(context).size.width;
     double y = MediaQuery.of(context).size.height;
-    double imageWidth = x * (130 / 360);
+    double imageWidth = x * (120 / 360);
     return Container(
         height: tightenPage ? null : y,
         width: x,
@@ -68,7 +68,9 @@ class APICallError extends StatelessWidget {
                   ),
                 ),
                 AutoText(
-                  errorMessage,
+                  kReleaseMode
+                      ? defaultMessage
+                      : (errorMessage ?? defaultMessage),
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: Colors.black,

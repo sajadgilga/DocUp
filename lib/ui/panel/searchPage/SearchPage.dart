@@ -1,20 +1,13 @@
 import 'dart:collection';
-import 'dart:io';
 
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
-import 'package:docup/blocs/VisitBloc.dart';
-import 'package:docup/constants/assets.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
 import 'package:docup/models/SearchResult.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/home/SearchBox.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/PopupMenues/PopUpMenus.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
-import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -102,10 +95,9 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    try{
+    try {
       _controller?.dispose();
-
-    }catch(e){}
+    } catch (e) {}
   }
 
 //  Widget _docupIcon() => Container(
@@ -191,8 +183,10 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
           );
         }
         if (state is SearchError)
-          APICallError(
-            errorMessage: "",
+          return APICallError(
+            () {
+              _initialSearch(context);
+            },
           );
         if (state is SearchLoading) {
           if (state.result == null ||

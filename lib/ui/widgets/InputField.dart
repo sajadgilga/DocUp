@@ -36,9 +36,7 @@ class _InputFieldState extends State<InputField> {
 
   @override
   void initState() {
-    setState(() {
-      isValid = widget.validationCallback(widget.controller.text);
-    });
+    isValid = widget.validationCallback(widget.controller.text);
     super.initState();
   }
 

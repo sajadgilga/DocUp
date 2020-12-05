@@ -4,8 +4,8 @@ import 'dart:ui';
 
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/FileBloc.dart';
+import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
@@ -44,6 +44,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   //TODO amir: make it and enum, here and now 0 means physical visit
   int patientVisitStatus = 0;
   int sectionId;
+  bool submitLoadingToggle = false;
 
   void _updateSearch() {
     var searchBloc = BlocProvider.of<SearchBloc>(context);
@@ -69,11 +70,15 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
           .add(FileListGet(listId: this.sectionId));
 
     _bloc.responseVisitStream.listen((data) {
+      submitLoadingToggle = false;
       if (data.status == Status.COMPLETED) {
         String span = data.data.status == 1 ? "تایید" : "رد";
-        toast(context, 'درخواست بیمار با موفقیت $span شد');
-        _updateSearch();
-        Navigator.pop(context);
+        showOneButtonDialog(
+            context, 'درخواست بیمار با موفقیت $span شد', "تایید", () {
+          _updateSearch();
+          BlocProvider.of<EntityBloc>(context).add(EntityGet());
+          Navigator.pop(context);
+        });
       } else if (data.status == Status.ERROR) {
         toast(context, data.error.toString());
       }
@@ -105,9 +110,10 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   break;
                 case Status.ERROR:
                   return APICallError(
+                    () {
+                      _bloc.getVisit(widget.patientEntity.vid);
+                    },
                     errorMessage: Strings.notFoundRequest,
-                    onRetryPressed: () =>
-                        _bloc.getVisit(widget.patientEntity.vid),
                   );
                   break;
               }
@@ -202,7 +208,10 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                           icon: Icon(Icons.close),
                           color: IColors.red,
                           callBack: () {
-                            _bloc.responseVisit(visitEntity, false);
+                            if (!submitLoadingToggle) {
+                              submitLoadingToggle = true;
+                              _bloc.responseVisit(visitEntity, false);
+                            }
                           },
                         ),
                         ActionButton(
@@ -211,7 +220,10 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                           icon: Icon(Icons.check),
                           color: IColors.green,
                           callBack: () {
-                            _bloc.responseVisit(visitEntity, true);
+                            if (!submitLoadingToggle) {
+                              submitLoadingToggle = true;
+                              _bloc.responseVisit(visitEntity, true);
+                            }
                           },
                         ),
                       ],
@@ -226,9 +238,13 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                       icon: Icon(Icons.close),
                       color: IColors.red,
                       callBack: () {
-                        _bloc.responseVisit(visitEntity, false);
+                        if (!submitLoadingToggle) {
+                          submitLoadingToggle = true;
+                          _bloc.responseVisit(visitEntity, false);
+                        }
                       },
                     ),
+              ALittleVerticalSpace(),
             ],
           ),
         ),

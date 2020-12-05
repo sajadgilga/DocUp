@@ -1,25 +1,19 @@
 import 'dart:io';
 
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
-import 'package:docup/blocs/VisitBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
-import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/home/SearchBox.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/panel/searchPage/ResultList.dart';
 import 'package:docup/ui/visitsList/visitSearchResult/VisitResult.dart';
+import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
-import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class VisitRequestsPage extends StatelessWidget {
   final Function(String, UserEntity) onPush;
@@ -31,7 +25,7 @@ class VisitRequestsPage extends StatelessWidget {
 
   void _search(context) {
     var searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchBloc.add(SearchVisit(text: _controller.text,acceptStatus: 0));
+    searchBloc.add(SearchVisit(text: _controller.text, acceptStatus: 0));
 
 //    FocusScope.of(context).unfocus();
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -40,7 +34,7 @@ class VisitRequestsPage extends StatelessWidget {
   void _initialSearch(context) {
     var searchBloc = BlocProvider.of<SearchBloc>(context);
     searchBloc.add(SearchLoadingEvent());
-    searchBloc.add(SearchVisit(text: _controller.text,acceptStatus: 0));
+    searchBloc.add(SearchVisit(text: _controller.text, acceptStatus: 0));
   }
 
   @override
@@ -176,8 +170,22 @@ class VisitRequestsPage extends StatelessWidget {
               ));
         }
         if (state is SearchError)
-          return Container(
-            child: AutoText('error!'),
+          return Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(
+                  height: 30,
+                ),
+                APICallError(
+                  () {
+                    _initialSearch(context);
+                  },
+                  tightenPage: true,
+                ),
+              ],
+            ),
           );
         if (state is SearchLoading) {
           if (state.result == null || state.result.visit_results == null)

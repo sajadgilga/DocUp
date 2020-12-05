@@ -1,4 +1,5 @@
 import 'package:docup/blocs/DoctorInfoBloc.dart';
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
@@ -17,6 +18,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'VisitUtils.dart';
 
@@ -34,6 +36,7 @@ class PhysicalVisitPage extends StatefulWidget {
 class _PhysicalVisitPageState extends State<PhysicalVisitPage>
     with TickerProviderStateMixin {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
+  bool submitLoadingToggle = false;
 
   Map<String, int> typeSelected = {
     VISIT_METHOD: VisitMethod.TEXT.index,
@@ -57,7 +60,16 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
     // } catch (e) {}
 
     _bloc.visitRequestStream.listen((data) {
+      setState(() {
+        submitLoadingToggle = false;
+      });
       if (data.status == Status.COMPLETED) {
+        /// update user credit
+        BlocProvider.of<EntityBloc>(context).add(EntityUpdate());
+
+        /// update doctor plan if needed
+
+        /// pop to prev page
         showOneButtonDialog(context, Strings.physicalVisitRequestedMessage,
             "در انتظار تایید پزشک", () => Navigator.pop(context),
             color: Colors.black54);
@@ -267,6 +279,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
         color: policyChecked ? IColors.themeColor : Colors.grey,
         title: "رزرو نوبت",
         callBack: _sendVisitRequest,
+        loading: this.submitLoadingToggle,
       );
 
   _acceptPolicyWidget() => GestureDetector(
@@ -357,9 +370,10 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
 
   _sendVisitRequest() {
     /// TODO amir: clean this part. It is so messy;
+    if (this.submitLoadingToggle) return;
+    if (!policyChecked) return;
     String currentTime =
         DateTime.now().hour.toString() + ":" + DateTime.now().minute.toString();
-    if (!policyChecked) return;
     if (dateTextController.text.isEmpty) {
       /// empty date
       showOneButtonDialog(
@@ -408,5 +422,8 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
             "T" +
             startTime +
             timeZone);
+    setState(() {
+      submitLoadingToggle = true;
+    });
   }
 }

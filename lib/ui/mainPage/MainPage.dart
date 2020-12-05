@@ -65,7 +65,7 @@ class _MainPageState extends State<MainPage> {
         });
     });
 
-    NotificationAndFirebaseService.initFCM(context);
+    NotificationAndFirebaseService.initFCM(context,widget.pushOnBase);
     super.initState();
   }
 

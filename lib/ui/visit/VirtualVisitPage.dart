@@ -1,4 +1,5 @@
 import 'package:docup/blocs/DoctorInfoBloc.dart';
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
@@ -16,6 +17,7 @@ import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'VisitUtils.dart';
 
@@ -34,6 +36,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   DoctorInfoBloc _bloc = DoctorInfoBloc();
   TextEditingController timeTextController = TextEditingController();
   TextEditingController dateTextController = TextEditingController();
+  bool submitLoadingToggle = false;
 
   Map<String, int> typeSelected = {
     VISIT_METHOD: VisitMethod.TEXT.index,
@@ -56,7 +59,16 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     } catch (e) {}
 
     _bloc.visitRequestStream.listen((data) {
+      setState(() {
+        submitLoadingToggle = false;
+      });
       if (data.status == Status.COMPLETED) {
+        /// update user credit
+        BlocProvider.of<EntityBloc>(context).add(EntityUpdate());
+
+        /// update doctor plan if needed
+
+        /// pop to prev page
         showOneButtonDialog(context, Strings.visitRequestedMessage,
             Strings.understandAction, () => Navigator.pop(context));
       } else if (data.status == Status.ERROR) {
@@ -378,6 +390,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         color: policyChecked ? IColors.themeColor : Colors.grey,
         title: !visitTimeChecked ? "ویزیت مجازی هم‌اکنون" : "ویزیت مجازی",
         callBack: _submit,
+        loading: this.submitLoadingToggle,
       );
 
   _nowVisitCondition() => _isDoctorOnline() && !visitTimeChecked;
@@ -385,7 +398,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   _isDoctorOnline() => widget.doctorEntity.user.online == 1;
 
   void _submit() {
-    /// TODO amir: clean this part. It is so messy;
+    /// TODO amir: clean this part. It is so messy;'
+    if (this.submitLoadingToggle) return;
     if (!policyChecked) return;
     if (visitTimeChecked) {
       String currentTime = DateTime.now().hour.toString() +
@@ -431,12 +445,15 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
             "T" +
             "${DateTime.now().hour}:${DateTime.now().minute}" +
             "+04:30");
+    setState(() {
+      submitLoadingToggle = true;
+    });
   }
 
   void sendVisitRequest() {
     /// TODO amir: timeTextController.text should be used here later
     String startTime = timeTextController.text.split("-")[0];
-    int startMinute = getTimeMinute(startTime);
+    // int startMinute = getTimeMinute(startTime);
 
     // String endTime = timeTextController.text.split("-")[1];
     // int endMinute = getTimeMinute(endTime);
@@ -457,6 +474,9 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
             "T" +
             startTime +
             timeZone);
+    setState(() {
+      submitLoadingToggle = true;
+    });
   }
 
   String getEnabledTimeString(DoctorPlan plan) {

@@ -47,6 +47,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   StreamController<QuestionAnswerPair> answeringController = BehaviorSubject();
   Map<int, Answer> patientAnswers = HashMap();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  bool firstInitialized = false;
 
   @override
   void initState() {
@@ -54,21 +55,29 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
       patientAnswers[questionAnswerPair.question.id] =
           questionAnswerPair.answer;
     });
-    var _state = BlocProvider.of<EntityBloc>(context).state;
-    // _bloc.add(GetTest(id: widget.emptyMedicalTest.id));
-    if (_state.entity.isDoctor) {
-      _bloc.add(GetTest(id: widget.medicalTestPageInitData.medicalTestItem.id));
-
-      /// TODO amir: api incomplete here doctor should have access to patient response
-      // _bloc.add(GetPatientTestAndResponse(
-      //     testId: widget.emptyMedicalTest.id,
-      //     patientId: widget.emptyMedicalTest.patientEntity.id));
-    } else {
-      _bloc.add(GetPatientTestAndResponse(
-          testId: widget.medicalTestPageInitData.medicalTestItem.id,
-          patientId: _state.entity.mEntity.id));
-    }
+    _initialApiCall();
     super.initState();
+  }
+
+  void _initialApiCall() {
+    var _state = BlocProvider.of<EntityBloc>(context).state;
+    try {
+      if (_state.entity.isDoctor) {
+        if (widget.medicalTestPageInitData.patientEntity == null) {
+          _bloc.add(
+              GetTest(id: widget.medicalTestPageInitData.medicalTestItem.id));
+        } else {
+          _bloc.add(GetPatientTestAndResponse(
+              testId: widget.medicalTestPageInitData.medicalTestItem.id,
+              patientId: widget.medicalTestPageInitData.patientEntity.id));
+        }
+      } else {
+        _bloc.add(GetPatientTestAndResponse(
+            testId: widget.medicalTestPageInitData.medicalTestItem.id,
+            patientId: _state.entity.mEntity.id));
+      }
+      this.firstInitialized = true;
+    } catch (e) {}
   }
 
   @override
@@ -77,19 +86,45 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
       home: Scaffold(
         key: _scaffoldKey,
         body: SingleChildScrollView(
-          child: BlocBuilder<SingleMedicalTestBloc, MedicalTestState>(
-              bloc: _bloc,
-              builder: (context, state) {
-                if (state is GetTestLoaded)
-                  return _medicalTestWidget(state.result);
-                else if (state is GetTestLoading)
-                  return DocUpAPICallLoading2();
-                else
-                  return APICallError();
-              }),
+          /// to check that mEntity is Loaded Successfully
+          child: firstInitialized
+              ? _widget()
+              : BlocBuilder<EntityBloc, EntityState>(
+                  builder: (context, state) {
+                    if (state is EntityLoaded) {
+                      if (!firstInitialized) {
+                        _initialApiCall();
+                      }
+                      return _widget();
+                    } else if (state is EntityError) {
+                      return APICallError(() {
+                        BlocProvider.of<EntityBloc>(context).add(EntityGet());
+                      });
+                    } else {
+                      return DocUpAPICallLoading2();
+                    }
+                  },
+                ),
         ),
       ),
     );
+  }
+
+  _widget() {
+    return BlocBuilder<SingleMedicalTestBloc, MedicalTestState>(
+        bloc: _bloc,
+        builder: (context, state) {
+          if (state is GetTestLoaded)
+            return _medicalTestWidget(state.result);
+          else if (state is GetTestLoading)
+            return DocUpAPICallLoading2();
+          else
+            return APICallError(
+              () {
+                _initialApiCall();
+              },
+            );
+        });
   }
 
   _medicalTestWidget(MedicalTest test) {

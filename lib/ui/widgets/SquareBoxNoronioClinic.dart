@@ -10,10 +10,12 @@ import 'DocupHeader.dart';
 class SquareBoxNoronioClinicService extends StatelessWidget {
   final NoronioServiceItem noronioService;
   double boxSize;
+  double bFontSize;
+  double lFontSize;
   final Color defaultBgColor;
 
   SquareBoxNoronioClinicService(this.noronioService,
-      {Key key, this.boxSize, this.defaultBgColor})
+      {Key key, this.boxSize, this.defaultBgColor, this.bFontSize,this.lFontSize})
       : super(key: key);
 
   @override
@@ -56,7 +58,7 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
                           AutoText(
                             'نورونیو',
                             style: TextStyle(
-                                color: IColors.themeColor, fontSize: 10),
+                                color: IColors.themeColor, fontSize: this.lFontSize??10),
                           ),
                           Icon(
                             Icons.add_location,
@@ -67,11 +69,11 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
                       ),
                     ),
                     Container(
-                        width: boxSize * (40 / 100),
-                        child: imageHandler()),
+                        width: boxSize * (40 / 100), child: imageHandler()),
                     DocUpSubHeader(
                       title: noronioService.title,
                       textAlign: TextAlign.center,
+                      fontSize: this.bFontSize,
                     )
                   ],
                 ),

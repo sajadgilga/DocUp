@@ -185,10 +185,13 @@ class EditProfileAvatarDialog {
   }
 
   void updateAvatarImage(AuthBloc authBloc) async {
-    /// TODO amir: incomplete api. it should accept null image as if user don't want to have and avatar
-    authBloc.uploadAvatar(
-        picture == null ? "" : base64Encode(picture.readAsBytesSync()),
-        entity.mEntity.id);
+    /// TODO amir: incomplete api. it should accept null image as if users don't want to have and avatar
+    if (picture == null) {
+      authBloc.deleteAvatar(entity.mEntity.id);
+    } else {
+      authBloc.uploadAvatar(
+          base64Encode(picture.readAsBytesSync()), entity.mEntity.id);
+    }
   }
 
   Future _getImage(StateSetter stateSetter) async {

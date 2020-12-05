@@ -19,6 +19,7 @@ class _BasePageState extends State<BasePage> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.paused) {
       SocketHelper().appIsPaused = true;
     }
+    // setState(() {});
     print("Base Page => App State Changed: " + state.toString());
   }
 
@@ -30,9 +31,9 @@ class _BasePageState extends State<BasePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    try{
+    try {
       WidgetsBinding.instance.removeObserver(this);
-    }catch(e){}
+    } catch (e) {}
     super.dispose();
   }
 

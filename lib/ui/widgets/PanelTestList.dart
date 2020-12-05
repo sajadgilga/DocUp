@@ -80,7 +80,7 @@ class _PanelTestListState extends State<PanelTestList> {
           widget.globalOnPush(
               NavigatorRoutes.cognitiveTest, medicalTestPageData);
         }, true),
-        boxSize: 120,
+        boxSize: 130,
       ));
     });
     return res;

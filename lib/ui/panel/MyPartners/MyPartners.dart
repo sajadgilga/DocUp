@@ -3,6 +3,7 @@ import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
@@ -27,13 +28,14 @@ class MyPartners extends StatelessWidget {
       searchBloc.add(SearchPatient(
         text: "",
       ));
-    else if (_state.entity.isPatient)
-      if(_state.entity.mEntity != null){
-        searchBloc.add(SearchDoctor(
-            patientUsername: _state.entity.mEntity.user.username,
-            isMyDoctors: true));
-      }
-
+    else if (_state.entity.isPatient) if (_state.entity.mEntity != null) {
+      searchBloc.add(SearchDoctor(
+          patientUsername: _state.entity.mEntity.user.username,
+          isMyDoctors: true));
+    } else {
+      BlocProvider.of<EntityBloc>(context).add(EntityGet());
+      searchBloc.add(ErrorEvent());
+    }
   }
 
   @override
@@ -70,14 +72,14 @@ class MyPartners extends StatelessWidget {
   }
 
   Widget _resultList() {
-//      BlocBuilder<VisitBloc, VisitState>(builder: (context, visitState) {
+//      BlocBuilder <VisitBloc, VisitState>(builder: (context, visitState) {
 //      var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
 //      if (_entity.isDoctor) {
 //        if (visitState is VisitLoaded) {
 //          return ResultList(onPush: onPush, isDoctor: _entity.isDoctor, results: visitState.result.results,)
 //        }
 //      }
-    return BlocBuilder<SearchBloc, SearchState>(
+    return BlocBuilder <SearchBloc, SearchState>(
       builder: (context, state) {
         if (state is SearchLoaded) {
           return MyPartnersResultList(
@@ -88,12 +90,23 @@ class MyPartners extends StatelessWidget {
                 : state.result.patient_results),
             isRequestsOnly: false,
           );
-        }
-        if (state is SearchError)
-          return Container(
-            child: AutoText('error!'),
+        } else if (state is SearchError) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              SizedBox(
+                height: 30,
+              ),
+              APICallError(
+                () {
+                  _initialSearch(context);
+                },
+                tightenPage: true,
+              ),
+            ],
           );
-        if (state is SearchLoading) {
+        } else if (state is SearchLoading) {
           if (state.result == null)
             return Container(
               child: Waiting(),
@@ -108,7 +121,9 @@ class MyPartners extends StatelessWidget {
               isRequestsOnly: false,
             );
         }
-        return Container();
+        return Container(
+          child: Waiting(),
+        );
       },
     );
   }

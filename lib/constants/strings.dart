@@ -90,7 +90,8 @@ class Strings {
   static final String panelDoctorAdvicePicLabel = 'توصیه‌ها';
   static final String panelDoctorAdvicePicListLabel = 'توصیه های پیشین';
   static final String panelDoctorAdvicePicUploadLabel = 'ارسال توصیه';
-  static final String emptyPanelDoctorAdviceFiles = 'فایل توصیه‌ای موجود نمی باشد.';
+  static final String emptyPanelDoctorAdviceFiles =
+      'فایل توصیه‌ای موجود نمی باشد.';
 
   static final String panelPrescriptionsPicLabel = 'نسخه‌ها';
   static final String panelPrescriptionsUploadLabel = 'ارسال نسخه';
@@ -101,8 +102,6 @@ class Strings {
   static final String panelTestResultsPicUploadLabel = 'ارسال آزمایش';
   static final String panelTestResultsPicListLabel = 'نتایج آزمایش‌های پیشین';
   static final String emptyTestFiles = 'فایل آزمایشی موجود نمی باشد.';
-
-
 
 //
   static final String panelEventPageLabel = 'رویدادها';
@@ -126,7 +125,6 @@ class Strings {
 //
   static final String uploadPicTextFieldTitleHint = 'عنوان';
   static final String uploadPicTextFieldDescriptionHint = 'توضیحات';
-
 
 //
   static final String iDoctorLabel = 'پزشک من';
@@ -210,7 +208,8 @@ class Strings {
       "من همه قوانین و مقررات رزرو ویزیت حضوری را خوانده و موافقت میکنم";
   static final String emptyStartVisitTimeMessage =
       "لطفا زمان ویزیت مناسبی را وارد کنید";
-  static final String pastStartVisitTimeMessage = "شما نمی توانید ساعتی که گذشته است را به عنوان زمان شروع ویزیت انتخاب کنید.";
+  static final String pastStartVisitTimeMessage =
+      "شما نمی توانید ساعتی که گذشته است را به عنوان زمان شروع ویزیت انتخاب کنید.";
   static final String enterVisitDateMessage = "لطفا تاریخ ویزیت را وارد کنید";
   static final String offlineDoctorMessage =
       " پزشک آنلاین نیست لطفا زمانی را برای ویزیت مشخص کنید";
@@ -257,7 +256,27 @@ class Strings {
       ".پس از افزایش اعتبار، پس از هر ویزیت با دکتر هزینه ویزیت از اعتبار شما کسر می شود" +
           "\n" +
           "هزینه ویزیت توسط خود دکتر و با توجه به نوع ویزیت (مجازی، حضوری) تعیین می شود.";
-  static final String minimumRequestedCredit = "مبلغ درخواست شده کمتر از حد مجاز دو هزار تومان است.";
+  static final String minimumRequestedCredit =
+      "مبلغ درخواست شده کمتر از حد مجاز دو هزار تومان است.";
+  static final String videoCallPatientPanelDescription =
+      "در صورت تایید پزشک، امکان برقراری ارتباط از طریق تماس تصویری امکان پذیر است";
+  static final String videoCallDoctorPanelDescription =
+      "با شروع تماس تصویری از سمت بیمار نوتیفیکیشی جهت ملحق شدن برای شما ارسال خواهد شد";
+  static final String voiceCallPatientPanelDescription =
+      "در صورت تایید پزشک، امکان برقراری ارتباط از طریق تماس صوتی امکان پذیر است";
+  static final String voiceCallDoctorPanelDescription =
+      "با شروع تماس صوتی از سمت بیمار نوتیفیکیش‌ی جهت ملحق شدن برای شما ارسال خواهد شد";
+
+  static final String noReservedVideoCall =
+      "ویزیت تصویری برای اکنون رزرو نشده است.";
+  static final String noReservedVoiceCall =
+      "ویزیت صوتی برای هم اکنون رزرو نشده است.";
+
+  static final String doctorPlanVisitTimeHelp =
+      "جدول زمانی ویزیت ها حدولی است که شما می توانید زمان‌های کاری خود در طول هفته را مشخص کنید تا بیماران بازه‌ای از این زمان را برای ویزیت خود انتخاب کنند." +
+          "\n" +
+          "در این جدول هر ساعت از شبانه روز به چهار بلاک یا خانه ۱۵ دقیقه ای تقسیم شده است.";
+
   static final bankCodes = {
     '207177': 'بانک توسعه صادرات ایران',
     '502229': 'بانک پاسارگاد',
@@ -299,5 +318,13 @@ class Strings {
     '639607': 'بانک سرمایه',
     '991975': 'بانک ملت'
   };
-  static final persianDaysSigns = ["شنبه","یکشنبه","دوشنبه","سه‌شنبه","‌چهارشنبه","‌پنج‌شنبه","جمعه"];
+  static final persianDaysSigns = [
+    "شنبه",
+    "یکشنبه",
+    "دوشنبه",
+    "سه‌شنبه",
+    "‌چهارشنبه",
+    "‌پنج‌شنبه",
+    "جمعه"
+  ];
 }

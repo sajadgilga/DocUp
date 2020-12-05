@@ -1,4 +1,5 @@
 import 'package:docup/utils/Utils.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 class DoctorPlan {
   static final daysCount = 7;
@@ -16,6 +17,7 @@ class DoctorPlan {
 
   // List<int> availableDays;
   List<DailyWorkTimes> weeklyWorkTimes;
+  Map<String, List<ReservedVisit>> recentVisits;
   String createdDate;
   String modifiedDate;
   bool enabled;
@@ -79,9 +81,6 @@ class DoctorPlan {
           startPart = part;
           endPart = part;
         } else if (startPart != null && endPart != null) {
-          if (hourIndex == dayHourParts.length - 1) {
-            endPart++;
-          }
           if (endPart == part - 1) {
             endPart++;
           } else {
@@ -89,8 +88,9 @@ class DoctorPlan {
             String startTime = convertMinuteToTimeString(
                 startPart * DoctorPlan.hourMinutePart);
             String endTime = convertMinuteToTimeString(
-                endPart * DoctorPlan.hourMinutePart +
-                    DoctorPlan.hourMinutePart);
+                (endPart * DoctorPlan.hourMinutePart +
+                        DoctorPlan.hourMinutePart) %
+                    (24 * 60));
 
             /// adding workTime to weeklyWorkTimes
             weeklyWorkTimes[dayIndex]
@@ -101,6 +101,19 @@ class DoctorPlan {
             startPart = part;
             endPart = part;
           }
+        }
+        if (hourIndex == dayHourParts.length-1) {
+          String startTime = convertMinuteToTimeString(
+              startPart * DoctorPlan.hourMinutePart);
+          String endTime = convertMinuteToTimeString(
+              (endPart * DoctorPlan.hourMinutePart +
+                  DoctorPlan.hourMinutePart) %
+                  (24 * 60));
+
+          /// adding workTime to weeklyWorkTimes
+          weeklyWorkTimes[dayIndex]
+              .workTimes
+              .add(WorkTimes(startTime: startTime, endTime: endTime));
         }
       }
     }
@@ -144,6 +157,7 @@ class DoctorPlan {
       int start = getTimeMinute(workTime.startTime);
       int startPart = start ~/ DoctorPlan.hourMinutePart;
       int end = getTimeMinute(workTime.endTime);
+      end = start > 0 && end == 0 ? 24 * 60 : end;
       int endPart = end ~/ DoctorPlan.hourMinutePart;
       for (int index = startPart; index <= endPart - 1; index++) {
         int i = index ~/ DoctorPlan.hourParts;
@@ -152,6 +166,36 @@ class DoctorPlan {
       }
     });
     return workTimeTable;
+  }
+
+  List<List<int>> getTakenVisitDailyTimeTable(String dateString) {
+    /// TODO amir: heavy process
+    /// initial empty table
+    List<List<int>> takenTimes = [];
+    for (int i = 0; i < DoctorPlan.dayHours; i++) {
+      List<int> dayRow = [];
+      for (int j = 0; j < DoctorPlan.hourParts; j++) {
+        dayRow.add(0);
+      }
+      takenTimes.add(dayRow);
+    }
+
+    /// fill table
+    if (this.recentVisits != null) {
+      this.recentVisits[dateString]?.forEach((ReservedVisit reservedVisit) {
+        int start = getTimeMinute(reservedVisit.startTime);
+        int startPart = start ~/ DoctorPlan.hourMinutePart;
+        for (int index = startPart;
+            index <= startPart + reservedVisit.durationPlan;
+            index++) {
+          int i = index ~/ DoctorPlan.hourParts;
+          int j = index % DoctorPlan.hourParts;
+          takenTimes[i][j] = 1;
+        }
+      });
+    }
+
+    return takenTimes;
   }
 
   DoctorPlan(
@@ -172,22 +216,23 @@ class DoctorPlan {
     initializeWeeklyWorkTimesIfNecessary();
   }
 
-  DoctorPlan copy() {
-    this.id = id;
-    this.visitType = visitType;
-    this.visitMethod = visitMethod;
-    this.visitDurationPlan = visitDurationPlan;
-
-    // List<int> availableDays;
-    this.weeklyWorkTimes = weeklyWorkTimes;
-    this.createdDate = createdDate;
-    this.modifiedDate = modifiedDate;
-    this.enabled = enabled;
-    this.baseVideoPrice = baseVideoPrice;
-    this.baseVoicePrice = baseVoicePrice;
-    this.baseTextPrice = baseTextPrice;
-    this.basePhysicalVisitPrice = basePhysicalVisitPrice;
-  }
+  //
+  // DoctorPlan copy() {
+  //   this.id = id;
+  //   this.visitType = visitType;
+  //   this.visitMethod = visitMethod;
+  //   this.visitDurationPlan = visitDurationPlan;
+  //
+  //   // List<int> availableDays;
+  //   this.weeklyWorkTimes = weeklyWorkTimes;
+  //   this.createdDate = createdDate;
+  //   this.modifiedDate = modifiedDate;
+  //   this.enabled = enabled;
+  //   this.baseVideoPrice = baseVideoPrice;
+  //   this.baseVoicePrice = baseVoicePrice;
+  //   this.baseTextPrice = baseTextPrice;
+  //   this.basePhysicalVisitPrice = basePhysicalVisitPrice;
+  // }
 
   void initializeWeeklyWorkTimesIfNecessary() {
     if (this.weeklyWorkTimes == null) this.weeklyWorkTimes = [];
@@ -233,6 +278,14 @@ class DoctorPlan {
       }
     } else {
       initializeWeeklyWorkTimesIfNecessary();
+    }
+    recentVisits = {};
+    if (json.containsKey("recent_visits")) {
+      (json['recent_visits'] as List).forEach((element) {
+        ReservedVisit takenVisitTime = ReservedVisit.fromJson(element);
+        recentVisits[takenVisitTime.jalaliDate] =
+            (recentVisits[takenVisitTime.jalaliDate] ?? []) + [takenVisitTime];
+      });
     }
     createdDate = json['created_date'];
     modifiedDate = json['modified_date'];
@@ -286,6 +339,25 @@ class DailyWorkTimes {
       data['work_times'].add(element.toJson());
     });
     return data;
+  }
+}
+
+class ReservedVisit {
+  String startTime;
+  int durationPlan;
+
+  // int status;
+  String jalaliDate;
+
+  ReservedVisit.fromJson(Map<String, dynamic> json) {
+    String visitDateTime = json['request_visit_time'];
+    DateTime dateTime = DateTime.parse(visitDateTime.split("+")[0]);
+    Jalali jalali = Jalali.fromDateTime(dateTime);
+
+    jalaliDate = getJalaliDateStringFromJalali(jalali);
+    startTime = getTimeStringFromDateTime(dateTime, withSeconds: false);
+    durationPlan = json['visit_duration_plan'];
+    // status
   }
 }
 
