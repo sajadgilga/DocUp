@@ -1,22 +1,20 @@
+import 'dart:async';
+
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/NotificationBloc.dart';
-import 'package:docup/blocs/NotificationBlocV2.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/NewestNotificationResponse.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/networking/Response.dart';
 import 'package:docup/repository/DoctorRepository.dart';
 import 'package:docup/repository/PatientRepository.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/mainPage/NotifNavigationRepo.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/Waiting.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/customPainter/DrawerPainter.dart';
-
-//import 'package:docup/ui/home/notification/DrawerPainter.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icon_shadow/icon_shadow.dart';
@@ -31,12 +29,9 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  NotificationBlocV2 _notificationBloc = NotificationBlocV2();
-
   @override
   initState() {
     BlocProvider.of<NotificationBloc>(context).add(GetNewestNotifications());
-    _notificationBloc.get();
     super.initState();
   }
 
@@ -66,30 +61,22 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: IColors.background,
-      body: StreamBuilder<Response<NewestNotificationResponse>>(
-        stream: _notificationBloc.stream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            switch (snapshot.data.status) {
-              case Status.LOADING:
-                return DocUpAPICallLoading2();
-                break;
-              case Status.COMPLETED:
-                return _widget(context, snapshot.data.data);
-                break;
-              case Status.ERROR:
-                return APICallError(
-                  () => _notificationBloc.get(),
-                  errorMessage: snapshot.data.error.toString(),
-                );
-                break;
+        backgroundColor: IColors.background,
+        body: BlocBuilder<NotificationBloc, NotificationState>(
+          builder: (context, state) {
+            if (state is NotificationLoading) {
+              return DocUpAPICallLoading2();
+            } else if (state is NotificationsLoaded) {
+              return _widget(context, state.notifications);
+            } else {
+              return APICallError(
+                  () => BlocProvider.of<NotificationBloc>(context)
+                      .add(GetNewestNotifications()),
+                  errorMessage:
+                      ((state is NotificationError) ? state.error : "") ?? "");
             }
-          }
-          return Waiting();
-        },
-      ),
-    );
+          },
+        ));
   }
 
   _widget(context, NewestNotificationResponse data) => Stack(
@@ -124,8 +111,7 @@ class _NotificationPageState extends State<NotificationPage> {
                       style: TextStyle(fontSize: 24),
                     ),
                   ),
-                  _notificationCountCircle(
-                      data.newestEventsCounts + data.newestVisitsCounts),
+                  _notificationCountCircle(data.newestNotifsCounts),
                   _notificationsWidget(context, data),
                 ],
               )),
@@ -142,176 +128,186 @@ class _NotificationPageState extends State<NotificationPage> {
       );
 
   _notificationsWidget(buildContext, NewestNotificationResponse notifications) {
-    return (notifications.newestEventsCounts +
-                notifications.newestVisitsCounts) ==
-            0
+    print(notifications.newestNotifsCounts);
+    return (notifications.newestNotifsCounts) == 0
         ? Expanded(
             child: Positioned(
                 right: MediaQuery.of(buildContext).size.width * 0.4,
                 top: 180,
                 child: AutoText("اعلانی موجود نیست")),
           )
-        : Expanded(
-            child: Positioned(
-              right: MediaQuery.of(buildContext).size.width * 0.15,
-              top: 180,
-              child: Container(
-                width: MediaQuery.of(buildContext).size.width * 0.85,
-                height: MediaQuery.of(buildContext).size.height * 0.7 - 80,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: notifications.newestVisitsCounts,
-                    itemBuilder: (BuildContext context, int index) =>
-                        NotificationItem(
-                          title: notifications.newestVisits[index]
-                              .getNotificationTitle(),
-                          description: notifications.newestVisits[index]
-                              .getNotificationDescription(),
-                          time: notifications.newestVisits[index]
-                              .getNotificationTime(),
-                          color: notifications.newestVisits[index]
-                              .getNotificationColor(),
-                          onTap: () {
-                            onItemTap(notifications.newestVisits[index]);
-                          },
-                        )),
-              ),
+        : Positioned(
+            right: MediaQuery.of(buildContext).size.width * 0.15,
+            top: 180,
+            child: Container(
+              width: MediaQuery.of(buildContext).size.width * 0.85,
+              height: MediaQuery.of(buildContext).size.height * 0.7,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: notifications.newestNotifsCounts,
+                  itemBuilder: (BuildContext context, int index) {
+                    NewestNotif newestNotif = notifications.newestNotifs.reversed.toList()[index];
+                    return Dismissible(
+                      key: Key(newestNotif.hashCode.toString()),
+                      onDismissed: (item) {
+                        BlocProvider.of<NotificationBloc>(context)
+                            .add(AddNotifToSeen(newestNotif.notifId));
+                      },
+                      child: NotificationItem(
+                        newestNotifs: newestNotif,
+                        color: IColors.themeColor,
+                        onPush: widget.onPush,
+                      ),
+                    );
+                  }),
             ),
           );
-  }
-
-  void onItemTap(NewestVisit notification) {
-    /// Set message to seen
-    NewestNotificationResponse.addNotifToSeen(notification);
-
-    /// update notif counts in home page
-    BlocProvider.of<NotificationBloc>(context).add(GetNewestNotifications());
-
-    /// change page
-    LoadingAlertDialog loadingAlertDialog = LoadingAlertDialog(context);
-    loadingAlertDialog.showLoading();
-    getPartnerEntity(notification).then((partner) {
-      loadingAlertDialog.disposeDialog();
-      partner.vid = notification.id;
-      widget.onPush(NavigatorRoutes.panel, partner);
-    });
-  }
-
-  Future<UserEntity> getPartnerEntity(NewestVisit visit) async {
-    var state = BlocProvider.of<EntityBloc>(context).state;
-    UserEntity uEntity;
-    if (state.entity.type == RoleType.PATIENT) {
-      uEntity = await DoctorRepository().getDoctor(visit.doctor);
-    } else if (state.entity.type == RoleType.DOCTOR) {
-      uEntity = await PatientRepository().getPatient(visit.patient);
-    }
-    return uEntity;
   }
 }
 
 class NotificationItem extends StatelessWidget {
-  final String time;
-  final String title;
-  final String description;
+  final NewestNotif newestNotifs;
   final String location;
   final Color color;
-  final Function() onTap;
+  final Function onPush;
 
   const NotificationItem(
-      {Key key,
-      this.time,
-      this.title,
-      this.description,
-      this.location,
-      this.color,
-      this.onTap})
+      {Key key, this.newestNotifs, this.location, this.color, this.onPush})
       : super(key: key);
+
+  Future<UserEntity> getPartnerEntity(BuildContext context,
+      {int doctorId, int patientId}) async {
+    var state = BlocProvider.of<EntityBloc>(context).state;
+    UserEntity uEntity;
+    if (state.entity.type == RoleType.PATIENT) {
+      uEntity = await DoctorRepository().getDoctor(doctorId);
+    } else if (state.entity.type == RoleType.DOCTOR) {
+      uEntity = await PatientRepository().getPatient(patientId);
+    }
+    return uEntity;
+  }
+
+  void onItemTap(NewestNotif notif, BuildContext context) {
+    /// Set message to seen
+
+    /// update notif counts in home page
+    /// TODO
+    BlocProvider.of<NotificationBloc>(context)
+        .add(AddNotifToSeen(notif.notifId));
+
+    NotificationNavigationRepo notifNavRepo =
+        NotificationNavigationRepo(onPush);
+    // void navigate(Entity entity) {
+    //   /// change page
+    //   NotificationNavigationRepo notifNavRepo =
+    //       NotificationNavigationRepo(onPush);
+    //   if (notif is NewestVideoVoiceCallNotif) {
+    //     /// voice or video call
+    //     notifNavRepo.joinVideoOrVoiceCall(context, notif);
+    //   } else if (notif is NewestMedicalTestNotif) {
+    //     /// test send and response
+    //     notifNavRepo.navigateToTestPage(notif, context);
+    //   } else if (notif is NewestVisitNotif) {
+    //     /// visit
+    //     /// TODO for visit request reminder and visit reminder all have to navigate to panel page
+    //     if (entity.isDoctor) {
+    //       notifNavRepo.navigateToPatientRequestPage(notif, context);
+    //     } else if (entity.isPatient) {
+    //       notifNavRepo.navigateToPanel(notif, context);
+    //     }
+    //   }
+    // }
+    notifNavRepo.navigate(context, notif);
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: Stack(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Material(
-              color: IColors.grey,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(16))),
-              child: Padding(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+      onTap: () {
+        onItemTap(newestNotifs, context);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Material(
+          color: IColors.grey,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16))),
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: AutoText(
+                    newestNotifs.notifTime == null
+                        ? "هم اکنون"
+                        : replaceFarsiNumber(newestNotifs.notifTime) +
+                            " - " +
+                            replaceFarsiNumber(DateTimeService.normalizeDate(
+                                newestNotifs.notifDate)),
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  textDirection: TextDirection.rtl,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: AutoText(
-                        time == null
-                            ? "هم اکنون"
-                            : replaceFarsiNumber(
-                                normalizeDateAndTime(time, cutSeconds: true)),
-                        textDirection: TextDirection.rtl,
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      textDirection: TextDirection.rtl,
-                      children: <Widget>[
-                        IconShadowWidget(
-                            Icon(
-                              Icons.brightness_1,
-                              size: 16,
-                              color: color ?? IColors.black,
-                            ),
-                            showShadow: true,
-                            shadowColor: color ?? IColors.black),
-                        SizedBox(width: 5),
-                        AutoText(
-                          title == null ? "اعلان جدید" : title,
-                          textDirection: TextDirection.rtl,
-                          style: TextStyle(
-                              color: color ?? IColors.black, fontSize: 16),
+                    IconShadowWidget(
+                        Icon(
+                          Icons.brightness_1,
+                          size: 16,
+                          color: color ?? IColors.black,
                         ),
-                        SizedBox(width: 10),
-                      ],
-                    ),
+                        showShadow: true,
+                        shadowColor: color ?? IColors.black),
+                    SizedBox(width: 5),
                     AutoText(
-                      description == null ? "" : description,
+                      newestNotifs.title == null
+                          ? "اعلان جدید"
+                          : newestNotifs.title,
                       textDirection: TextDirection.rtl,
-                      style: TextStyle(color: IColors.darkGrey, fontSize: 14),
+                      style: TextStyle(
+                          color: color ?? IColors.black, fontSize: 14),
                     ),
-                    SizedBox(height: 5),
-                    Visibility(
-                      visible: location != null,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 20.0),
-                        child: Row(
-                          children: <Widget>[
-                            AutoText(
-                              location != null ? location : "",
-                              style: TextStyle(color: IColors.darkGrey),
-                            ),
-                            Icon(
-                              Icons.location_on,
-                              size: 16,
-                              color: IColors.darkGrey,
-                            )
-                          ],
-                        ),
-                      ),
-                    )
+                    SizedBox(width: 10),
                   ],
                 ),
-              ),
+                AutoText(
+                  newestNotifs.description == null
+                      ? ""
+                      : newestNotifs.description,
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(color: IColors.darkGrey, fontSize: 12),
+                ),
+                SizedBox(height: 5),
+                Visibility(
+                  visible: location != null,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: Row(
+                      children: <Widget>[
+                        AutoText(
+                          location != null ? location : "",
+                          style: TextStyle(color: IColors.darkGrey),
+                        ),
+                        Icon(
+                          Icons.location_on,
+                          size: 16,
+                          color: IColors.darkGrey,
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
-          )
-        ],
+          ),
+        ),
       ),
     );
   }

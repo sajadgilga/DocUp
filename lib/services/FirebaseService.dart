@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/models/NewestNotificationResponse.dart';
-import 'package:docup/models/UserEntity.dart';
 import 'package:docup/networking/CustomException.dart';
 import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/ui/mainPage/NotifNavigationRepo.dart';
@@ -83,21 +81,24 @@ class NotificationAndFirebaseService {
     print("onResume: $message");
 
     Map<String, dynamic> data = new Map<String, dynamic>.from(message['data']);
-    handleNotifNavigation(data['payload'], intPossible(data['type']));
+    handleNotifNavigation(intPossible(data['notif_id']), data['payload'],
+        intPossible(data['type']));
   }
 
   static Future<dynamic> onLaunch(Map<String, dynamic> message) async {
     print("onLaunch: $message");
 
     Map<String, dynamic> data = new Map<String, dynamic>.from(message['data']);
-    handleNotifNavigation(data['payload'], intPossible(data['type']));
+    handleNotifNavigation(intPossible(data['notif_id']), data['payload'],
+        intPossible(data['type']));
   }
 
   static Future<dynamic> myBackgroundMessageHandler(
       Map<String, dynamic> message) {
     print("onBackgroundMessageHandler: $message");
     Map<String, dynamic> data = new Map<String, dynamic>.from(message['data']);
-    handleNotifNavigation(data['payload'], intPossible(data['type']));
+    handleNotifNavigation(intPossible(data['notif_id']), data['payload'],
+        intPossible(data['type']));
 
     // Or do other work.
   }
@@ -108,25 +109,26 @@ class NotificationAndFirebaseService {
       String title = message['notification']['title'];
       String body = message['notification']['body'];
       String dataJson = json.encode(message['data']);
-      await _showNotificationWithDefaultSound(title, body, dataJson);
+      int notifId = intPossible(message['data']['notif_id']);
+      await _showNotificationWithDefaultSound(notifId, title, body, dataJson);
+      BlocProvider.of<NotificationBloc>(context).add(GetNewestNotifications());
 
-      Map<String, dynamic> data =
-          new Map<String, dynamic>.from(message['data']);
-      if (data.containsKey('payload')) {
-        if ([5, 6].contains(data['type'])) {
-          NewestVisit visit = NewestVisit.fromJson(data['payload']);
-
-          /// notification bloc events
-          // ignore: close_sinks
-          NotificationBloc notificationBloc =
-              BlocProvider.of<NotificationBloc>(context);
-
-          /// TODO amir: this condition should check type of notification later
-          notificationBloc.add(AddNewestVisitNotification(newVisit: visit));
-        } else if (true) {
-          /// TODO amir: handling event type of notification
-        }
-      }
+      // Map<String, dynamic> data =
+      //     new Map<String, dynamic>.from(message['data']);
+      // if (data.containsKey('payload')) {
+      //   if ([5, 6].contains(data['type'])) {
+      //     NewestVisit visit = NewestVisit.fromJson(data['payload']);
+      //
+      //     /// notification bloc events
+      //     // ignore: close_sinks
+      //     NotificationBloc notificationBloc =
+      //         BlocProvider.of<NotificationBloc>(context);
+      //
+      //     /// TODO amir: this condition should check type of notification later
+      //   } else if (true) {
+      //     /// TODO amir: handling event type of notification
+      //   }
+      // }
     } catch (e) {
       print(e.toString());
     } finally {
@@ -139,58 +141,27 @@ class NotificationAndFirebaseService {
       print("OnSelection: $payload");
       var jsonBody = json.decode(payload);
 
-      int type = jsonBody['type'] is int
-          ? jsonBody['type']
-          : int.parse(jsonBody['type']);
+      int type = intPossible(jsonBody['type']);
+      int notifId = intPossible(jsonBody['notif_id']);
       String pPayload = jsonBody['payload'];
-      handleNotifNavigation(pPayload, type);
+      handleNotifNavigation(notifId, pPayload, type);
     } catch (e) {
       print("OnNotification Tap Error:" + e.toString());
     }
   }
 
-  static void handleNotifNavigation(String payload, int type) {
-    void navigate() {
-      if (type == 1) {
-        /// voice or video call
-        var data = json.decode(payload);
-        User user = User.fromJson(data['partner_info']);
-        int visitType = intPossible(data['visit_type']);
-        String channelName = data['channel_name'];
-        NotificationAndFirebaseService.notifNavRepo
-            .joinVideoOrVoiceCall(context, channelName, visitType, user);
-      } else if (type == 2) {
-        /// test send and response
-        NewestMedicalTest medicalTest =
-            NewestMedicalTest.fromJson(json.decode(payload));
-        NotificationAndFirebaseService.notifNavRepo
-            .navigateToTestPage(medicalTest, context);
-      } else if ([5, 6].contains(type)) {
-        /// visit
-        NewestVisit visit = NewestVisit.fromJson(json.decode(payload));
-        NotificationAndFirebaseService.notifNavRepo
-            .navigateToPanel(visit, context);
-      }
-    }
+  static void handleNotifNavigation(int notifId, String payload, int type,
+      {String title, String description, String time, String date}) {
+    NewestNotif notif = NewestNotif.getChildFromJsonAndData(
+        notifId, "", "", "00:00:00", "2020/01/01", json.decode(payload), type);
 
-    EntityBloc _bloc = BlocProvider.of<EntityBloc>(context);
-    print(_bloc.state);
-    if (_bloc.state is EntityLoaded || _bloc.state.entity != null) {
-      navigate();
-    } else {
-      StreamSubscription streamSubscription;
-      streamSubscription = _bloc.listen((data) {
-        print(data);
-        if (data is EntityLoaded) {
-          navigate();
-          streamSubscription.cancel();
-        }
-      });
-    }
+    NotificationAndFirebaseService.notifNavRepo.navigate(context, notif);
+
+    BlocProvider.of<NotificationBloc>(context).add(AddNotifToSeen(notifId));
   }
 
   static Future _showNotificationWithDefaultSound(
-      String title, String body, String payload) async {
+      int notifId, String title, String body, String payload) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'channel_id', 'channel_name', 'channel_description',
         importance: Importance.Max, priority: Priority.High);
@@ -198,7 +169,7 @@ class NotificationAndFirebaseService {
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-      payload.hashCode,
+      notifId,
       title,
       body,
       platformChannelSpecifics,

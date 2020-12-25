@@ -18,10 +18,3 @@ samples, guidance on mobile development, and a full API reference.
 
 key.properties sign file changed
 pubspec.yaml changed flutter_svg
-
-// TODO
-don't forget to remove port from test backend url
-/// TODO
-after disposing page searchBloc.add(SearchLoading(null)) maybe preventing page from a bug
-to clean search result for other pages
-

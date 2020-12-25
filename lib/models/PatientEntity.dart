@@ -1,3 +1,5 @@
+import 'package:docup/utils/dateTimeService.dart';
+
 import 'DoctorPlan.dart';
 import 'Panel.dart';
 import 'UserEntity.dart';
@@ -79,11 +81,11 @@ class PatientEntity extends UserEntity {
 
   VisitItem get nearestPendingPatientVisit {
     try {
-      DateTime now = DateTime.now();
+      DateTime now = DateTimeService.getCurrentDateTime();
       for (int i = 0; i < visits?.length; i++) {
         VisitItem visitItem = visits[i];
         DateTime date =
-            DateTime.parse(visitItem.requestVisitTime.split("+")[0]);
+            DateTimeService.getDateTimeFromStandardString(visitItem.requestVisitTime.split("+")[0]);
         if (date.compareTo(now) > 0 && visitItem.status == 0) {
           return visitItem;
         }
@@ -95,11 +97,11 @@ class PatientEntity extends UserEntity {
 
   VisitItem get currentAcceptedVisit {
     try {
-      DateTime now = DateTime.now();
+      DateTime now = DateTimeService.getCurrentDateTime();
       for (int i = 0; i < visits?.length; i++) {
         VisitItem visitItem = visits[i];
         DateTime date =
-            DateTime.parse(visitItem.requestVisitTime.split("+")[0]);
+        DateTimeService.getDateTimeFromStandardString(visitItem.requestVisitTime.split("+")[0]);
         /// TODO amir: add duration plan in visits for better accuracy
         date = date.add(Duration(minutes: DoctorPlan.hourMinutePart * 3));
         if (date.compareTo(now) > 0 && visitItem.status == 1) {

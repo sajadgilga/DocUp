@@ -61,6 +61,9 @@ class Assets {
   static final String visitListDoctorIcon1 = "assets/visitLists/doctor_4@3x.png";
   static final String patientDetailFilesIcon = "assets/visitLists/file@2x.png";
 
+  static final String fileEntityPatientIcon = "assets/panel/patient.png";
+  static final String fileEntityDoctorIcon = "assets/panel/doctor.png";
+
   static String docupIcon = docupPatientIcon;
 
   static void changeIcons(RoleType roleType) {

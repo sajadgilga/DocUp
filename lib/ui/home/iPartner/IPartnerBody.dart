@@ -1,14 +1,10 @@
 import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/main.dart';
 import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/start/RoleType.dart';
-import 'package:flutter/material.dart';
-
 import 'package:docup/ui/home/iPartner/ChatBox.dart';
+import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/DoctorSummary.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IPartnerBody extends StatelessWidget {
@@ -52,7 +48,10 @@ class IPartnerBody extends StatelessWidget {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isPatient) {
       final clinic = (entity.partnerEntity as DoctorEntity).clinic;
-      if (clinic != null) return clinic.clinicName; else return '';
+      if (clinic != null)
+        return clinic.clinicName;
+      else
+        return '';
     } else {
       return ""; //TODO
     }
@@ -63,7 +62,19 @@ class IPartnerBody extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        ChatBox(selectPage: selectPage, color: color,onPush: this.onPush,),
+        GestureDetector(
+            onTap: () {
+              var _state = BlocProvider.of<EntityBloc>(context).state;
+              this.onPush(NavigatorRoutes.panel, _state.entity.partnerEntity);
+            },
+            child: Container(
+              color: Color.fromARGB(0, 0, 0, 0),
+              child: ChatBox(
+                selectPage: selectPage,
+                color: color,
+                onPush: this.onPush,
+              ),
+            )),
         SizedBox(
           height: 60,
           child: VerticalDivider(
@@ -81,11 +92,20 @@ class IPartnerBody extends StatelessWidget {
 //            _showDoctorDialogue(context);
 //            selectPage(0);
 //          },
-          child: PartnerSummary(
-              name: (partner != null ? partner.user.name : ''),
-              speciality: _getSubHeader(context),
-              location: _getLocation(context),
-              url: (partner != null ? partner.user.avatar : null)),
+          child: GestureDetector(
+            onTap: () {
+              var _state = BlocProvider.of<EntityBloc>(context).state;
+              onPush(NavigatorRoutes.myPartnerDialog, _state.entity.partnerEntity);
+            },
+            child: Container(
+              color: Color.fromARGB(0, 0, 0, 0),
+              child: PartnerSummary(
+                  name: (partner != null ? partner.user.name : ''),
+                  speciality: _getSubHeader(context),
+                  location: _getLocation(context),
+                  url: (partner != null ? partner.user.avatar : null)),
+            ),
+          ),
         )
       ],
     );

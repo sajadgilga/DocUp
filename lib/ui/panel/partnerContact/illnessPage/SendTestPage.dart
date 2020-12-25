@@ -180,7 +180,7 @@ class SendNoronioTestDialog {
             if (selectedTest == null) {
               showError("یکی از تست ها را انتخاب کنید.");
             } else
-              medicalTestBloc.addTestToPatient(selectedTest.id, patient.id);
+              medicalTestBloc.addTestToPartner(selectedTest.id, patient.id);
           },
           color: IColors.themeColor,
         )

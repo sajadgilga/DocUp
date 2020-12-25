@@ -9,11 +9,12 @@ import 'package:docup/networking/Response.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/DescriptionAlertDialog.dart';
+import 'package:docup/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:docup/ui/widgets/DoctorSummaryWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/VisitDateTimePicker.dart';
 import 'package:docup/utils/Utils.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -39,7 +40,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
   bool submitLoadingToggle = false;
 
   Map<String, int> typeSelected = {
-    VISIT_METHOD: VisitMethod.TEXT.index,
+    VISIT_METHOD: VirtualVisitMethod.TEXT.index,
     // VISIT_DURATION_PLAN: VisitDurationPlan.BASE.index
   };
 
@@ -71,8 +72,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
 
         /// pop to prev page
         showOneButtonDialog(context, Strings.physicalVisitRequestedMessage,
-            "در انتظار تایید پزشک", () => Navigator.pop(context),
-            color: Colors.black54);
+            Strings.waitingForApproval, () => Navigator.pop(context));
       } else if (data.status == Status.ERROR) {
         if (data.error is ApiException) {
           ApiException apiException = data.error;
@@ -101,20 +101,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
         child: Column(children: <Widget>[
           DoctorSummaryWidget(doctorEntity: widget.doctorEntity),
-          // ALittleVerticalSpace(),
-          // _visitTypeWidget(
-          //     VISIT_DURATION_PLAN,
-          //     {0: "پایه ۱۵ دقیقه", 1: "تکمیلی ۳۰ دقیقه", 2: "طولانی ۴۵ دقیقه"}
-          //       ..removeWhere((key, value) {
-          //         if (widget.doctorEntity.plan.visitDurationPlan
-          //             .contains(key)) {
-          //           return false;
-          //         }
-          //         return true;
-          //       }),
-          //     width: 160,
-          //     height: 50,
-          //     fontSize: 14),
           ALittleVerticalSpace(),
           _labelWidget("نوع مشاوره:"),
           ALittleVerticalSpace(),
@@ -129,13 +115,29 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
             ],
           ),
           ALittleVerticalSpace(),
+          // ALittleVerticalSpace(),
+          // _visitTypeWidget(
+          //     VISIT_DURATION_PLAN,
+          //     {0: "پایه ۱۵ دقیقه", 1: "تکمیلی ۳۰ دقیقه", 2: "طولانی ۴۵ دقیقه"}
+          //       ..removeWhere((key, value) {
+          //         if (widget.doctorEntity.plan.visitDurationPlan
+          //             .contains(key)) {
+          //           return false;
+          //         }
+          //         return true;
+          //       }),
+          //     width: 160,
+          //     height: 50,
+          //     fontSize: 14),
+          _doctorDurationPlanInfo(),
           AnimatedSize(
             duration: Duration(milliseconds: 400),
             vsync: this,
             child: VisitDateTimePicker(
               dateTextController,
               timeTextController,
-              widget.doctorEntity,
+              widget.doctorEntity?.plan,
+              widget.doctorEntity?.plan?.physicalVisitType,
               timeSelectorType: TimeSelectorType.Table,
               planDurationInMinute: _planMinuteDurationController,
               onBlocTap: () {
@@ -157,6 +159,65 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
           _submitWidget(),
           ALittleVerticalSpace(),
         ]),
+      ),
+    );
+  }
+
+  Widget _doctorDurationPlanInfo() {
+    List<Widget> res = [];
+    widget.doctorEntity.plan.physicalVisitDurationPlan?.forEach((values) {
+      res.add(Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            AutoText(
+              ((values + 1) * DoctorPlan.hourMinutePart).toString() +
+                  " " +
+                  "دقیقه ای",
+              style: TextStyle(fontSize: 13),
+              textAlign: TextAlign.right,
+            ),
+          ],
+        ),
+      ));
+    });
+    if ((widget.doctorEntity?.plan?.physicalVisitDurationPlan ?? []).length ==
+        0) {
+      res.add(Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            AutoText(
+              "زمانی مورد تایید پزشک وجود ندارد!",
+              style: TextStyle(fontSize: 13),
+              textAlign: TextAlign.right,
+            ),
+          ],
+        ),
+      ));
+    }
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    AutoText(
+                      "نوع زمان مورد تایید پزشک",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      textAlign: TextAlign.right,
+                    ),
+                  ],
+                ),
+              ),
+            ] +
+            res,
       ),
     );
   }
@@ -265,7 +326,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
   //   if (widget.doctorEntity.plan.weeklyWorkTimes == null) return [];
   //   List<String> visitTimes = [];
   //
-  //   /// TODO DoctorPlan Incomplete
   //
   //   // for (WorkTimes workTime in widget.doctorEntity.plan.weeklyWorkTimes) {
   //   //   final startHour = workTime.startTime.split(":")[0];
@@ -372,8 +432,8 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
     /// TODO amir: clean this part. It is so messy;
     if (this.submitLoadingToggle) return;
     if (!policyChecked) return;
-    String currentTime =
-        DateTime.now().hour.toString() + ":" + DateTime.now().minute.toString();
+    DateTime now = DateTimeService.getCurrentDateTime();
+    String currentTime = now.hour.toString() + ":" + now.minute.toString();
     if (dateTextController.text.isEmpty) {
       /// empty date
       showOneButtonDialog(
@@ -383,26 +443,48 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
       /// empty time
       showOneButtonDialog(
           context, Strings.emptyStartVisitTimeMessage, Strings.okAction, () {});
-    } else if (getTimeMinute(timeTextController.text) <
-            getTimeMinute(currentTime) &&
-        getTodayInJalaliString() == dateTextController.text) {
+    } else if (DateTimeService.getTimeMinute(timeTextController.text) <
+            DateTimeService.getTimeMinute(currentTime) &&
+        DateTimeService.getTodayInJalaliString() == dateTextController.text) {
       /// invalid time
       showOneButtonDialog(
           context, Strings.pastStartVisitTimeMessage, Strings.okAction, () {});
+    } else if (!widget.doctorEntity.plan.physicalVisitDurationPlan
+        .contains(getVisitDurationPlanFromVisitSelectedMinutes())) {
+      /// invalid duration plan
+      if (widget.doctorEntity.plan.physicalVisitDurationPlan.length == 0) {
+        showOneButtonDialog(
+            context,
+            Strings.invalidDurationPlan_EmptyDurationPlan,
+            Strings.okAction,
+            () {});
+      } else {
+        showOneButtonDialog(
+            context,
+            Strings.invalidDurationPlan_Plans[0] +
+                " " +
+                widget.doctorEntity.plan.physicalVisitDurationPlan
+                    .map(
+                        (e) => ((e + 1) * DoctorPlan.hourMinutePart).toString())
+                    .join("و ") +
+                " " +
+                Strings.invalidDurationPlan_Plans[2],
+            Strings.okAction,
+            () {});
+      }
     } else {
       sendVisitRequest();
     }
   }
 
-  _getStartTime(int timeIndexSelected) {
-    /// TODO DoctorPlan Incomplete
-    // return widget.doctorEntity.plan.weeklyWorkTimes[timeIndexSelected].startTime;
-  }
+  // _getStartTime(int timeIndexSelected) {
+  //   // return widget.doctorEntity.plan.weeklyWorkTimes[timeIndexSelected].startTime;
+  // }
 
   void sendVisitRequest() {
     /// TODO amir: timeTextController.text should be used here later
     String startTime = timeTextController.text.split("-")[0];
-    int startMinute = getTimeMinute(startTime);
+    int startMinute = DateTimeService.getTimeMinute(startTime);
     // String endTime = timeTextController.text.split("-")[1];
     // int endMinute = getTimeMinute(endTime);
     // if (endMinute < startMinute) {

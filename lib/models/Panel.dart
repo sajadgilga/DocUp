@@ -56,9 +56,10 @@ class Panel {
         List<FileEntity> pictures;
         sets.forEach((String key, value) {
           pictures = [];
-          if (value.length != 0)
+          if (value.length != 0) {
             value.forEach(
                 (image) => pictures.add(FileEntity.fromJson(image)));
+          }
           section.add(PanelSection(
               id: json['panel_image_list_name_id'][key],
               title: key,
@@ -85,6 +86,7 @@ class Panel {
       if (json.containsKey('doctor_info'))
         doctor = DoctorEntity.fromJson(json['doctor_info']);
     } catch (e) {
+      print("panel");
       print(e);
       // TODO
     }

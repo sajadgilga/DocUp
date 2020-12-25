@@ -3,6 +3,7 @@ import 'package:docup/models/ChatMessage.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -55,7 +56,7 @@ class _ChatBoxState extends State<ChatBox> {
     var message = ChatMessage(
       message: 'سلام دکتر',
       fromMe: false,
-      createdDate: DateTime.now(),
+      createdDate: DateTimeService.getCurrentDateTime(),
     );
     return Container(
       child: ListView(
@@ -78,27 +79,21 @@ class _ChatBoxState extends State<ChatBox> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        var _state = BlocProvider.of<EntityBloc>(context).state;
-        widget.onPush(NavigatorRoutes.panel, _state.entity.partnerEntity);
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              // Expanded(
-              //   child: _chatList(),
-              //   flex: 2,
-              // ),
-              _myMessages(),
-            ],
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            // Expanded(
+            //   child: _chatList(),
+            //   flex: 2,
+            // ),
+            _myMessages(),
+          ],
+        ),
+      ],
     );
   }
 }

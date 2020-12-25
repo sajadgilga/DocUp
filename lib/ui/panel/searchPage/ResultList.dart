@@ -167,10 +167,10 @@ class _SearchResultDoctorItem extends StatelessWidget {
 
   Widget _tags(context) {
     List<Widget> res = [];
-    if(entity.plan== null || entity.plan.visitMethod==null || entity.plan.visitMethod.length==0){
+    if(entity.plan== null || entity.plan.visitTypes==null || entity.plan.visitTypes.length==0){
       res.add(_tag("ویزیتی ثبت نشده", context));
     }
-    entity.plan?.visitMethod?.forEach((element) {
+    entity.plan?.virtualVisitMethod?.forEach((element) {
       if (element == 0) {
         res.add(_tag('متنی', context));
       } else if (element == 1) {
@@ -178,8 +178,8 @@ class _SearchResultDoctorItem extends StatelessWidget {
       } else if (element == 2) {
         res.add(_tag('تصویری', context));
       }
-      if (entity.plan.visitMethod.indexOf(element) !=
-          entity.plan.visitMethod.length - 1) {
+      if (entity.plan.virtualVisitMethod.indexOf(element) !=
+          entity.plan.virtualVisitMethod.length - 1) {
         res.add(_tag("/", context));
       }
     });

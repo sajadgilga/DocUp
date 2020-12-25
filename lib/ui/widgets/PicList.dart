@@ -1,15 +1,20 @@
 import 'dart:ui';
 
 import 'package:dashed_container/dashed_container.dart';
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/FileBloc.dart';
+import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/Picture.dart';
+import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
+import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'APICallError.dart';
 import 'AutoText.dart';
 import 'Waiting.dart';
 
@@ -70,7 +75,7 @@ class _PicListState extends State<PicList> {
       ));
 
   Widget _uploadBox() {
-    if (widget.uploadAvailable)
+    if (widget.uploadAvailable && widget.listId != -1)
       return GestureDetector(
         child: DashedContainer(
           child: Container(
@@ -96,6 +101,7 @@ class _PicListState extends State<PicList> {
 
   Widget _pictureItem(FileEntity fileEntity) {
     double width = MediaQuery.of(context).size.width * (40 / 100);
+    Entity entity = BlocProvider.of<EntityBloc>(context).state.entity;
     return GestureDetector(
       onTap: () {
         if (fileEntity != null) {
@@ -119,37 +125,91 @@ class _PicListState extends State<PicList> {
         height: 140.0,
         child: Column(
           children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width * (40 / 100),
-              height: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                child: FittedBox(
-                  child: fileEntity != null
-                      ? fileEntity.defaultFileWidget
-                      : Container(
-                          height: 140,
-                          width: width,
-                          child: Container(
-                            color: Color.fromARGB(0, 0, 0, 0),
-                          )),
-                  fit: BoxFit.cover,
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
+            Stack(alignment: Alignment.topLeft, children: [
+              Container(
+                width: width,
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  child: FittedBox(
+                    child: fileEntity != null
+                        ? fileEntity.defaultFileWidget
+                        : Container(
+                            height: 140,
+                            width: width,
+                            child: Container(
+                              color: Color.fromARGB(0, 0, 0, 0),
+                            )),
+                    fit: BoxFit.cover,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                  ),
                 ),
               ),
-            ),
-            AutoText(
-              fileEntity != null ? fileEntity.title : "",
-              maxLines: 2,
-              style: TextStyle(
-                fontSize: 8,
-                fontWeight: FontWeight.bold,
-                color: IColors.darkGrey,
-              ),
-            )
+              fileEntity != null &&
+                      (fileEntity.user != null &&
+                              entity.isPatient ==
+                                  fileEntity?.user?.isPatientOwner ||
+                          entity.isDoctor == fileEntity?.user?.isDoctorOwner)
+                  ? GestureDetector(
+                      onTap: () {
+                        showOneButtonDialog(
+                            context, "ایا از حذف مطمین هستید؟", "تایید", () {
+                          BlocProvider.of<FileBloc>(context).add(FileDelete(
+                              fileId: fileEntity.id, listId: widget.listId));
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color.fromARGB(200, 200, 200, 200)),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    )
+                  : SizedBox()
+            ]),
+            fileEntity != null
+                ? Container(
+                    width: width,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: width - 27 - 5,
+                          child: AutoText(
+                            fileEntity.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                              color: IColors.darkGrey,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Image.asset(
+                            fileEntity.user?.isDoctorOwner == true
+                                ? Assets.fileEntityDoctorIcon
+                                : Assets.fileEntityPatientIcon,
+                            width: 27,
+                            color: fileEntity?.user?.isDoctorOwner == true
+                                ? IColors.green
+                                : IColors.blue,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : SizedBox()
           ],
         ),
       ),
@@ -249,7 +309,10 @@ class _PicListState extends State<PicList> {
     );
   }
 
-  Widget _recentPics() => BlocBuilder<FileBloc, FileState>(
+  Widget _recentPics() {
+    return Container(
+      alignment: Alignment.center,
+      child: BlocBuilder<FileBloc, FileState>(
         builder: (context, state) {
           if (widget.listId == null || widget.listId < 0) return Container();
           if (state is FilesLoaded) {
@@ -259,22 +322,27 @@ class _PicListState extends State<PicList> {
             }
           }
           if (state is FileLoading) {
-            if (state.section == null)
-              return Container(
-                  margin: EdgeInsets.only(top: 40), child: Waiting());
-
-            if (state.section.id == widget.listId)
+            if (state.section != null && state.section.id == widget.listId) {
               return _picList(
                   MediaQuery.of(context).size.width, state.section.pictures);
-            else
-              return Container(
-                  margin: EdgeInsets.only(top: 40), child: Waiting());
+            }
           }
-          return Container(
-            child: AutoText(''),
-          );
+          if (state is FileError) {
+            return Container(
+              child: APICallError(
+                () {
+                  _initialApiCall(retry: true);
+                },
+                tightenPage: true,
+                withImage: false,
+              ),
+            );
+          }
+          return Container(margin: EdgeInsets.only(top: 40), child: Waiting());
         },
-      );
+      ),
+    );
+  }
 
   Widget _uploadPic() {
     return Container(
@@ -296,14 +364,37 @@ class _PicListState extends State<PicList> {
             )));
   }
 
+  void _initialApiCall({bool retry = false}) {
+    if (widget.listId == -1) return;
+    FileBloc bloc = BlocProvider.of<FileBloc>(context);
+    var state = bloc.state;
+    if (state != null && !retry) {
+      if (((state is FileLoading &&
+              state.section != null &&
+              state.section.id == widget.listId) ||
+          (state is FilesLoaded &&
+              state.section != null &&
+              state.section.id == widget.listId))) {
+        /// do nothing
+      } else {
+        bloc.add(FileListGet(listId: widget.listId));
+      }
+    } else {
+      bloc.add(FileListGet(listId: widget.listId));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _initialApiCall();
     return Container(
       margin: EdgeInsets.only(top: 20, bottom: 20),
       constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width - 50,
           maxWidth: MediaQuery.of(context).size.width - 50),
+      alignment: Alignment.center,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _uploadPic(),
           _recentPics(),

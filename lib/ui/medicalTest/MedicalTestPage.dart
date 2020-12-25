@@ -7,7 +7,6 @@ import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/SingleMedicalTestBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
-import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/MedicalTest.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/UserEntity.dart';
@@ -161,7 +160,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
               ),
               ALittleVerticalSpace(),
               state.entity.isDoctor
-                  ? _sendToPatientSection(state.entity.mEntity, test)
+                  ? _sendToPartnerSection(state.entity, test)
                   : SizedBox(),
               ALittleVerticalSpace(),
               QuestionList(test.questions, answeringController, context),
@@ -181,18 +180,18 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
     });
   }
 
-  Widget _sendToPatientSection(DoctorEntity doctorEntity, MedicalTest test) {
+  Widget _sendToPartnerSection(Entity entity, MedicalTest test) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       GestureDetector(
         onTap: () {
-          SendToPatientDialog dialog =
-              SendToPatientDialog(context, doctorEntity, test, _scaffoldKey);
+          SendToPartnerDialog dialog =
+              SendToPartnerDialog(context, entity, test, _scaffoldKey);
           dialog.showTestSendDialog();
         },
         child: Padding(
           padding: const EdgeInsets.only(left: 20),
           child: ActionButton(
-            title: "ارسال برای" + "\n" + "بیمار",
+            title: "ارسال برای" + "\n" + (entity.isDoctor ? "بیمار" : "پزشک"),
             width: 110,
             height: 80,
             textColor: Colors.white,
@@ -414,12 +413,12 @@ class _QuestionAnswersWidgetState extends State<QuestionAnswersWidget> {
       currentAnswer == id ? IColors.themeColor : Colors.white;
 }
 
-class SendToPatientDialog {
-  DoctorEntity doctorEntity;
+class SendToPartnerDialog {
+  Entity entity;
   BuildContext dialogContext;
   BuildContext context;
   StateSetter alertStateSetter;
-  UserEntity selectedPatient;
+  UserEntity selectedPartner;
   MedicalTest medicalTest;
   GlobalKey<ScaffoldState> _scaffoldKey;
 
@@ -427,8 +426,8 @@ class SendToPatientDialog {
 
   ///0 for done,1 for loading, 2 for error
 
-  SendToPatientDialog(
-      this.context, this.doctorEntity, this.medicalTest, this._scaffoldKey) {}
+  SendToPartnerDialog(
+      this.context, this.entity, this.medicalTest, this._scaffoldKey);
 
   void showTestSendDialog() {
     StreamSubscription streamSubscription;
@@ -494,7 +493,9 @@ class SendToPatientDialog {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 AutoText(
-                                  "بیماران در حال درمان",
+                                  entity.isDoctor
+                                      ? "بیماران در حال درمان"
+                                      : "پزشکان من",
                                   color: IColors.themeColor,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -520,10 +521,15 @@ class SendToPatientDialog {
                                   {
                                     if (state is SearchLoaded) {
                                       List<Widget> list = [];
-                                      state.result.patient_results
-                                          .forEach((element) {
-                                        list.add(getPatientItem(element));
-                                      });
+                                      entity.isDoctor
+                                          ? state.result.patient_results
+                                              .forEach((element) {
+                                              list.add(getPatientItem(element));
+                                            })
+                                          : state.result.doctor_results
+                                              .forEach((element) {
+                                              list.add(getPatientItem(element));
+                                            });
                                       return Container(
                                         height: list.length * 45.0,
                                         child: ListView(
@@ -568,15 +574,22 @@ class SendToPatientDialog {
                               children: [
                                 ActionButton(
                                   title: "ارسال",
-                                  color: IColors.themeColor,
+                                  color: actionButtonStatus == 2
+                                      ? IColors.red
+                                      : IColors.themeColor,
                                   loading: actionButtonStatus == 1,
                                   callBack: () {
-                                    if (selectedPatient == null) {
-                                      showSnackBar(_scaffoldKey,
-                                          "یکی از بیماران را انتخاب کنید.");
+                                    if (selectedPartner == null) {
+                                      if (entity.isDoctor) {
+                                        showSnackBar(_scaffoldKey,
+                                            "یکی از بیماران را انتخاب کنید.");
+                                      } else {
+                                        showSnackBar(_scaffoldKey,
+                                            "یکی از پزشکان را انتخاب کنید.");
+                                      }
                                     } else
-                                      medicalTestBloc.addTestToPatient(
-                                          medicalTest.id, selectedPatient.id);
+                                      medicalTestBloc.addTestToPartner(
+                                          medicalTest.id, selectedPartner.id);
                                   },
                                   borderRadius: 10,
                                 ),
@@ -597,21 +610,23 @@ class SendToPatientDialog {
   }
 
   void _initialSearch(SearchBloc searchBloc, context) {
-    searchBloc.add(SearchPatient(
-      text: "",
-    ));
+    if (this.entity.isDoctor) {
+      searchBloc.add(SearchPatient());
+    } else {
+      searchBloc.add(SearchDoctor(isMyDoctors: true));
+    }
   }
 
   Widget getPatientItem(UserEntity userEntity) {
     bool selected = false;
-    if (this.selectedPatient != null &&
-        this.selectedPatient.id == userEntity.id) {
+    if (this.selectedPartner != null &&
+        this.selectedPartner.id == userEntity.id) {
       selected = true;
     }
     return GestureDetector(
       onTap: () {
         alertStateSetter(() {
-          selectedPatient = userEntity;
+          selectedPartner = userEntity;
         });
       },
       child: Container(
@@ -668,6 +683,7 @@ class SendToPatientDialog {
               actionButtonStatus = 0;
             });
           });
+          showSnackBar(_scaffoldKey, response.error.message, context: context);
           break;
         case Status.COMPLETED:
           alertStateSetter(() {

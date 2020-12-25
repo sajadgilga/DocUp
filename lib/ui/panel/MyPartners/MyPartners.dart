@@ -30,7 +30,6 @@ class MyPartners extends StatelessWidget {
       ));
     else if (_state.entity.isPatient) if (_state.entity.mEntity != null) {
       searchBloc.add(SearchDoctor(
-          patientUsername: _state.entity.mEntity.user.username,
           isMyDoctors: true));
     } else {
       BlocProvider.of<EntityBloc>(context).add(EntityGet());

@@ -1,4 +1,5 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +21,7 @@ class TimeSelectionWidget extends StatelessWidget {
         final time = await showTimePicker(
           context: context,
           initialTime: TimeOfDay.fromDateTime(
-              currentValue ?? DateTime.now()),
+              currentValue ?? DateTimeService.getCurrentDateTime()),
         );
         return DateTimeField.convert(time);
       },

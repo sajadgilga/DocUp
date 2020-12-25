@@ -1,4 +1,5 @@
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/utils/dateTimeService.dart';
 
 import 'PatientEntity.dart';
 
@@ -40,7 +41,7 @@ class ChatMessage {
 
   ChatMessage.fromJson(Map<String, dynamic> json, bool isPatient) {
     id = json['id'];
-    createdDate = DateTime.parse(json['created_date']);
+    createdDate = DateTimeService.getDateTimeFromStandardString(json['created_date']);
     createdDate = createdDate.add(Duration(hours: 4, minutes: 30));
     if (json.containsKey('modified_date')) modifiedDate = json['modified_date'];
     if (json.containsKey('enabled')) enabled = json['enabled'];
@@ -57,9 +58,9 @@ class ChatMessage {
   ChatMessage.fromSocket(Map<String, dynamic> json, bool isPatient) {
     id = json['id'];
     if (json.containsKey('created_date'))
-      createdDate = DateTime.parse(json['created_date']);
+      createdDate = DateTimeService.getDateTimeFromStandardString(json['created_date']);
     else
-      createdDate = DateTime.now();
+      createdDate = DateTimeService.getCurrentDateTime();
     createdDate = createdDate.add(Duration(hours: 4, minutes: 30));
     if (json.containsKey('modified_date')) modifiedDate = json['modified_date'];
     if (json.containsKey('enabled')) enabled = json['enabled'];

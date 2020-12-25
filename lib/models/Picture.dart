@@ -4,7 +4,39 @@ import 'package:dio/dio.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/UploadSlider.dart';
 import 'package:docup/utils/Utils.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
+
+class FileEntityUser {
+  String firstName;
+  String lastName;
+  int _type;
+
+  /// possible null value from dirty data
+  FileEntityUser.fromJson(Map<String, dynamic> json) {
+    _type = intPossible(json['type']);
+    firstName = json['first_name'];
+    lastName = json['last_name'];
+  }
+
+  String get fullName {
+    return (firstName ?? "") + " " + (lastName ?? "");
+  }
+
+  bool get isDoctorOwner {
+    if (_type == 1) {
+      return true;
+    }
+    return false;
+  }
+
+  bool get isPatientOwner {
+    if (_type == 0) {
+      return true;
+    }
+    return false;
+  }
+}
 
 class FileEntity {
   int id;
@@ -17,6 +49,7 @@ class FileEntity {
   String filePath;
   String base64;
   String extension;
+  FileEntityUser user;
 
   FileEntity(
       {this.file,
@@ -57,11 +90,14 @@ class FileEntity {
     if (json.containsKey('file')) fileURL = json['file'];
     if (json.containsKey('created_at'))
       created_date = (json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTimeService.getDateTimeFromStandardString(json['created_at'])
           : null);
     if (json.containsKey('parent')) parent = json['parent'];
     if (json.containsKey('extension'))
       extension = json['extension'].toString().replaceAll(".", "");
+    if (json.containsKey("user") && json['user'] != null) {
+      user = FileEntityUser.fromJson(json['user']);
+    }
   }
 
   Image get image {

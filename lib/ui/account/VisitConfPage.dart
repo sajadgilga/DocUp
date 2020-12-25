@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
@@ -23,8 +21,58 @@ import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
+
+enum TypeSelect {
+  visitType,
+  virtualDurationPlan,
+  virtualVisitMethod,
+  physicalDurationPlan
+}
+
+extension CatExtension on TypeSelect {
+  String get title {
+    switch (this) {
+      case TypeSelect.visitType:
+        return 'انواع مشاوره';
+      case TypeSelect.virtualDurationPlan:
+        return 'زمان های مشاوره مجازی';
+      case TypeSelect.virtualVisitMethod:
+        return "انواع مشاوره مجازی";
+      case TypeSelect.physicalDurationPlan:
+        return "زمان های مشاوره حضوری";
+      default:
+        return "";
+    }
+  }
+
+  List<String> get items {
+    switch (this) {
+      case TypeSelect.visitType:
+        return [VisitTypes.PHYSICAL.title, VisitTypes.VIRTUAL.title];
+      case TypeSelect.virtualDurationPlan:
+        return [
+          VisitDurationPlan.BASE.title,
+          VisitDurationPlan.SUPPLEMENTARY.title,
+          VisitDurationPlan.LONG.title
+        ];
+      case TypeSelect.virtualVisitMethod:
+        return [
+          VirtualVisitMethod.TEXT.title,
+          VirtualVisitMethod.VOICE.title,
+          VirtualVisitMethod.VIDEO.title
+        ];
+      case TypeSelect.physicalDurationPlan:
+        return [
+          VisitDurationPlan.BASE.title,
+          VisitDurationPlan.SUPPLEMENTARY.title,
+          VisitDurationPlan.LONG.title
+        ];
+      default:
+        return [];
+    }
+  }
+}
 
 class VisitConfPage extends StatefulWidget {
   final Function(String, dynamic) onPush;
@@ -48,12 +96,10 @@ class _VisitConfPageState extends State<VisitConfPage>
       TextEditingController();
 
   Map<String, Set<int>> typeSelected = {
-    "انواع مشاوره ها": Set.identity(),
-    "انواع زمان مشاوره": Set.identity(),
-    "وقت ویزیت": Set.identity(),
-    "روزهای برگزاری": Set.identity(),
-    "ساعت‌های برگزاری": Set.identity(),
-    'نوع ویزیت': Set.identity()
+    TypeSelect.visitType.title: Set.identity(),
+    TypeSelect.virtualDurationPlan.title: Set.identity(),
+    TypeSelect.virtualVisitMethod.title: Set.identity(),
+    TypeSelect.physicalDurationPlan.title: Set.identity(),
   };
 
   Offset tappedOffset;
@@ -64,10 +110,12 @@ class _VisitConfPageState extends State<VisitConfPage>
 
   bool _toolTipVisitTime = false;
 
-  List<List<List<int>>> daysPlanTable = [];
+  List<List<List<int>>> virtualDaysPlanTable = [];
+  List<List<List<int>>> physicalDaysPlanTable = [];
 
   bool timeIsSelected = true;
-  StreamController<Set<int>> controller = BehaviorSubject();
+
+  // StreamController<Set<int>> controller = BehaviorSubject();
 
   @override
   void initState() {
@@ -85,26 +133,26 @@ class _VisitConfPageState extends State<VisitConfPage>
         toast(context, data.error.toString());
       }
     });
-    controller.stream.listen((event) {
-      print("set times from listener $event");
-      typeSelected["ساعت‌های برگزاری"] = event;
-    });
+    // controller.stream.listen((event) {
+    //   print("set times from listener $event");
+    //   typeSelected["ساعت‌های برگزاری"] = event;
+    // });
     super.initState();
   }
 
-  _getVisitTimes(DoctorPlan plan) {
-    List<int> visitTimes = [];
-
-    /// TODO amir
-    // for (WorkTimes workTime in plan.weeklyWorkTimes) {
-    //   final startHour = int.parse(workTime.startTime.split(":")[0]);
-    //   final endHour = int.parse(workTime.endTime.split(":")[0]);
-    //   for (int i = startHour; i <= endHour; i++) {
-    //     visitTimes.add(i);
-    //   }
-    // }
-    return visitTimes.toList();
-  }
+  // _getVisitTimes(DoctorPlan plan) {
+  //   List<int> visitTimes = [];
+  //
+  //   /// TODO amir
+  //   // for (WorkTimes workTime in plan.weeklyWorkTimes) {
+  //   //   final startHour = int.parse(workTime.startTime.split(":")[0]);
+  //   //   final endHour = int.parse(workTime.endTime.split(":")[0]);
+  //   //   for (int i = startHour; i <= endHour; i++) {
+  //   //     visitTimes.add(i);
+  //   //   }
+  //   // }
+  //   return visitTimes.toList();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +168,7 @@ class _VisitConfPageState extends State<VisitConfPage>
                   return DocUpAPICallLoading2();
                   break;
                 case Status.COMPLETED:
-                  return Center(child: _rootWidget(snapshot.data.data));
+                  return _rootWidget(snapshot.data.data);
                   break;
                 case Status.ERROR:
                   return APICallError(
@@ -139,19 +187,22 @@ class _VisitConfPageState extends State<VisitConfPage>
 
   Widget _rootWidget(DoctorEntity doctorEntity) {
     if (!isLoaded) {
-      typeSelected["انواع مشاوره ها"].addAll(doctorEntity.plan.visitMethod);
-      typeSelected["انواع زمان مشاوره"]
-          .addAll(doctorEntity.plan.visitDurationPlan);
-      if (doctorEntity.plan.weeklyWorkTimes != null &&
-          doctorEntity.plan.weeklyWorkTimes.isNotEmpty) {
-        print("set times from root ${_getVisitTimes(doctorEntity.plan)}");
-        typeSelected["ساعت‌های برگزاری"]
-            .addAll(_getVisitTimes(doctorEntity.plan));
-      }
+      typeSelected[TypeSelect.virtualVisitMethod.title]
+          .addAll(doctorEntity.plan.virtualVisitMethod);
+      typeSelected[TypeSelect.virtualDurationPlan.title]
+          .addAll(doctorEntity.plan.virtualVisitDurationPlan);
+      typeSelected[TypeSelect.physicalDurationPlan.title]
+          .addAll(doctorEntity.plan.physicalVisitDurationPlan);
+      // if (doctorEntity.plan.weeklyWorkTimes != null &&
+      //     doctorEntity.plan.weeklyWorkTimes.isNotEmpty) {
+      //   print("set times from root ${_getVisitTimes(doctorEntity.plan)}");
+      //   typeSelected["ساعت‌های برگزاری"]
+      //       .addAll(_getVisitTimes(doctorEntity.plan));
+      // }
 
-      /// TODO Incomplete DoctorPlan
       // typeSelected["روزهای برگزاری"].addAll(doctorEntity.plan.availableDays);
-      typeSelected["نوع ویزیت"].addAll(doctorEntity.plan.visitType);
+      typeSelected[TypeSelect.visitType.title]
+          .addAll(doctorEntity.plan.visitTypesNumber);
 
       /// setting initial base price
       textBasePriceController.text =
@@ -165,132 +216,157 @@ class _VisitConfPageState extends State<VisitConfPage>
 
       /// initial table data
       for (int i = 0; i < DoctorPlan.daysCount; i++) {
-        var a = doctorEntity.plan?.getDailyWorkTimeTable(i);
-        if (a != null) this.daysPlanTable.add(a);
+        var a = doctorEntity.plan.virtualVisitType?.getDailyWorkTimeTable(i);
+        if (a != null) {
+          this.virtualDaysPlanTable.add(a);
+        } else {
+          List<List<int>> workTimeTable = VisitType.getEmptyTablePlan();
+          this.virtualDaysPlanTable.add(workTimeTable);
+        }
+      }
+      for (int i = 0; i < DoctorPlan.daysCount; i++) {
+        var a = doctorEntity.plan.physicalVisitType?.getDailyWorkTimeTable(i);
+        if (a != null) {
+          this.physicalDaysPlanTable.add(a);
+        } else {
+          List<List<int>> workTimeTable = VisitType.getEmptyTablePlan();
+          this.physicalDaysPlanTable.add(workTimeTable);
+        }
       }
     }
     isLoaded = true;
     return SingleChildScrollView(
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-          DocUpHeader(),
+          DocUpHeader(
+            docUpLogo: false,
+          ),
           ALittleVerticalSpace(),
           LabelAndListWidget(
             smallSize: true,
-            title: "نوع ویزیت",
-            items: ["حضوری", "مجازی"],
-            selectedIndex: typeSelected["نوع ویزیت"],
+            title: TypeSelect.visitType.title,
+            items: TypeSelect.visitType.items,
+            selectedIndex: typeSelected[TypeSelect.visitType.title],
             callback: labelAndListCallback,
           ),
           ALittleVerticalSpace(),
-          typeSelected["نوع ویزیت"].contains(1)
-              ? LabelAndListWidget(
-                  smallSize: true,
-                  title: "انواع مشاوره ها",
-                  items: [
-                    VisitMethod.TEXT.title,
-                    VisitMethod.VOICE.title,
-                    VisitMethod.VIDEO.title
-                  ],
-                  selectedIndex: typeSelected["انواع مشاوره ها"],
-                  callback: labelAndListCallback,
-                )
-              : SizedBox(),
-          ALittleVerticalSpace(),
-          LabelAndListWidget(
-            smallSize: false,
-            title: "انواع زمان مشاوره",
-            items: [
-              VisitDurationPlan.BASE.title,
-              VisitDurationPlan.SUPPLEMENTARY.title,
-              VisitDurationPlan.LONG.title
-            ],
-            selectedIndex: typeSelected["انواع زمان مشاوره"],
-            callback: labelAndListCallback,
+          AnimatedSize(
+            duration: Duration(milliseconds: 400),
+            vsync: this,
+            child: typeSelected[TypeSelect.visitType.title].contains(1)
+                ? LabelAndListWidget(
+                    smallSize: true,
+                    title: TypeSelect.virtualVisitMethod.title,
+                    items: TypeSelect.virtualVisitMethod.items,
+                    selectedIndex:
+                        typeSelected[TypeSelect.virtualVisitMethod.title],
+                    callback: labelAndListCallback,
+                  )
+                : SizedBox(),
           ),
           ALittleVerticalSpace(),
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                AutoText(
-                  "قیمت پایه",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
+          AnimatedSize(
+            duration: Duration(milliseconds: 400),
+            vsync: this,
+            child: typeSelected[TypeSelect.visitType.title].contains(1)
+                ? LabelAndListWidget(
+                    smallSize: false,
+                    title: TypeSelect.virtualDurationPlan.title,
+                    items: TypeSelect.virtualDurationPlan.items,
+                    selectedIndex:
+                        typeSelected[TypeSelect.virtualDurationPlan.title],
+                    callback: labelAndListCallback,
+                  )
+                : SizedBox(),
           ),
-          typeSelected["انواع مشاوره ها"].contains(0) &&
-                  typeSelected["نوع ویزیت"].contains(1)
-              ? PriceWidget(
-                  title: "مشاوره متنی",
-                  priceController: textBasePriceController,
-                )
-              : SizedBox(),
-          typeSelected["انواع مشاوره ها"].contains(1) &&
-                  typeSelected["نوع ویزیت"].contains(1)
-              ? PriceWidget(
-                  title: "مشاوره صوتی",
-                  priceController: voiceBasePriceController,
-                )
-              : SizedBox(),
-          typeSelected["انواع مشاوره ها"].contains(2) &&
-                  typeSelected["نوع ویزیت"].contains(1)
-              ? PriceWidget(
-                  title: "مشاوره تصویری",
-                  priceController: videoBasePriceController,
-                )
-              : SizedBox(),
-          typeSelected["نوع ویزیت"].contains(0)
-              ? PriceWidget(
-                  title: "مشاوره حضوری",
-                  priceController: physicalBasePriceController,
-                )
-              : SizedBox(),
+          AnimatedSize(
+            duration: Duration(milliseconds: 400),
+            vsync: this,
+            child: typeSelected[TypeSelect.visitType.title].contains(0)
+                ? LabelAndListWidget(
+                    smallSize: false,
+                    title: TypeSelect.physicalDurationPlan.title,
+                    items: TypeSelect.physicalDurationPlan.items,
+                    selectedIndex:
+                        typeSelected[TypeSelect.physicalDurationPlan.title],
+                    callback: labelAndListCallback,
+                  )
+                : SizedBox(),
+          ),
           ALittleVerticalSpace(),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _toolTipVisitTime = !_toolTipVisitTime;
-              });
-            },
-            child: SimpleTooltip(
-              show: _toolTipVisitTime,
-              hideOnTooltipTap: true,
-              borderColor: IColors.themeColor,
-              tooltipDirection: TooltipDirection.down,
-              content: AutoText(Strings.doctorPlanVisitTimeHelp),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.0, left: 10, bottom: 10),
-                    child: Icon(
-                      Icons.help_outline_sharp,
-                      color: IColors.darkGrey,
-                      size: 22,
+          AnimatedSize(
+            duration: Duration(milliseconds: 400),
+            vsync: this,
+            child: (typeSelected[TypeSelect.virtualVisitMethod.title].length !=
+                            0 &&
+                        typeSelected[TypeSelect.visitType.title].contains(1)) ||
+                    (typeSelected[TypeSelect.visitType.title].contains(0))
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        AutoText(
+                          "قیمت پایه",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                          textAlign: TextAlign.right,
+                        ),
+                      ],
                     ),
-                  ),
-                  TimeSelectorHeaderWidget(
-                    callback: (timeIsSelected) {
-                      setState(() {
-                        this.timeIsSelected = timeIsSelected;
-                      });
-                    },
-                    timeDateWidgetsFlag: false,
-                  ),
-                ],
-              ),
-            ),
+                  )
+                : SizedBox(),
           ),
-          WeeklyTimeTable(
-            this.daysPlanTable,
-            startTableHour: 6,
-            endTableHour: 24,
+          AnimatedSize(
+            duration: Duration(milliseconds: 400),
+            vsync: this,
+            child:
+                typeSelected[TypeSelect.virtualVisitMethod.title].contains(0) &&
+                        typeSelected[TypeSelect.visitType.title].contains(1)
+                    ? PriceWidget(
+                        title: "مشاوره " + VirtualVisitMethod.TEXT.title,
+                        priceController: textBasePriceController,
+                      )
+                    : SizedBox(),
           ),
+          AnimatedSize(
+            duration: Duration(milliseconds: 400),
+            vsync: this,
+            child:
+                typeSelected[TypeSelect.virtualVisitMethod.title].contains(1) &&
+                        typeSelected[TypeSelect.visitType.title].contains(1)
+                    ? PriceWidget(
+                        title: "مشاوره " + VirtualVisitMethod.VOICE.title,
+                        priceController: voiceBasePriceController,
+                      )
+                    : SizedBox(),
+          ),
+          AnimatedSize(
+            duration: Duration(milliseconds: 400),
+            vsync: this,
+            child:
+                typeSelected[TypeSelect.virtualVisitMethod.title].contains(2) &&
+                        typeSelected[TypeSelect.visitType.title].contains(1)
+                    ? PriceWidget(
+                        title: "مشاوره " + VirtualVisitMethod.VIDEO.title,
+                        priceController: videoBasePriceController,
+                      )
+                    : SizedBox(),
+          ),
+          AnimatedSize(
+            duration: Duration(milliseconds: 400),
+            vsync: this,
+            child: typeSelected[TypeSelect.visitType.title].contains(0)
+                ? PriceWidget(
+                    title: "مشاوره " + VisitTypes.PHYSICAL.title,
+                    priceController: physicalBasePriceController,
+                  )
+                : SizedBox(),
+          ),
+          ALittleVerticalSpace(),
+          getWeeklyVirtualAndPhysicalTimeTable(),
           ALittleVerticalSpace(),
           ActionButton(
             title: "ثبت اطلاعات برای بررسی",
@@ -299,6 +375,123 @@ class _VisitConfPageState extends State<VisitConfPage>
           ),
           ALittleVerticalSpace(),
         ]));
+  }
+
+  Widget getWeeklyVirtualAndPhysicalTimeTable() {
+    TabController tabController = TabController(
+        length: typeSelected[TypeSelect.visitType.title].length,
+        vsync: this,
+        initialIndex: 1);
+
+    List<WeeklyTimeTable> tabsView =
+        (typeSelected[TypeSelect.visitType.title].contains(0)
+                ? <WeeklyTimeTable>[
+                    WeeklyTimeTable(
+                      context,
+                      this.physicalDaysPlanTable,
+                      startTableHour: 6,
+                      endTableHour: 24,
+                    )
+                  ]
+                : <WeeklyTimeTable>[]) +
+            (typeSelected[TypeSelect.visitType.title].contains(1)
+                ? <WeeklyTimeTable>[
+                    WeeklyTimeTable(
+                      context,
+                      this.virtualDaysPlanTable,
+                      startTableHour: 6,
+                      endTableHour: 24,
+                    )
+                  ]
+                : <WeeklyTimeTable>[]);
+    double tabViewHeight = tabsView.length == 0 ? 0 : tabsView[0].tableHeight;
+    List<int> visitTypes = typeSelected[TypeSelect.visitType.title].toList();
+    visitTypes.sort();
+    List<Widget> tabsTable = [
+      for (var visitTypeNumber in visitTypes)
+        Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: AutoText(
+            "ویزیت" + " " + VisitType.getVisitTypeName(visitTypeNumber),
+            style: TextStyle(fontSize: 18, color: IColors.themeColor),
+            maxLines: 1,
+          ),
+        ),
+    ];
+    return AnimatedSize(
+      duration: Duration(milliseconds: 400),
+      vsync: this,
+      child: Column(
+        children: [
+          (typeSelected[TypeSelect.virtualVisitMethod.title].length != 0 &&
+                      typeSelected[TypeSelect.visitType.title].contains(1)) ||
+                  (typeSelected[TypeSelect.visitType.title].contains(0))
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _toolTipVisitTime = !_toolTipVisitTime;
+                    });
+                  },
+                  child: SimpleTooltip(
+                    show: _toolTipVisitTime,
+                    hideOnTooltipTap: true,
+                    borderColor: IColors.themeColor,
+                    tooltipDirection: TooltipDirection.down,
+                    content: AutoText(Strings.doctorPlanVisitTimeHelp),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 10.0, left: 10, bottom: 10),
+                          child: Icon(
+                            Icons.help_outline_sharp,
+                            color: IColors.darkGrey,
+                            size: 22,
+                          ),
+                        ),
+                        TimeSelectorHeaderWidget(
+                          callback: (timeIsSelected) {
+                            setState(() {
+                              this.timeIsSelected = timeIsSelected;
+                            });
+                          },
+                          timeDateWidgetsFlag: false,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : SizedBox(),
+          DefaultTabController(
+            length: 2,
+            child: Column(
+              children: [
+                Container(
+                  height: 50,
+                  child: TabBar(
+                    controller: tabController,
+                    tabs: tabsTable,
+                    isScrollable: true,
+                  ),
+                ),
+                ALittleVerticalSpace(),
+                Container(
+                  height: tabViewHeight,
+                  alignment: Alignment.center,
+                  child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: tabController,
+                    children: tabsView,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   String correctTimeFormat(String text) {
@@ -343,83 +536,80 @@ class _VisitConfPageState extends State<VisitConfPage>
     });
   }
 
-  // Widget _timeAndDateSelectorWidget() {
-  //   if (timeIsSelected) {
-  //     return Column(
-  //       children: <Widget>[
-  //         CircularTimeSelector(
-  //             tappedOffset: tappedOffset,
-  //             controller: controller,
-  //             initTimes: Set.from(typeSelected["ساعت‌های برگزاری"])),
-  //         MediumVerticalSpace(),
-  //         _helpWidget(context),
-  //       ],
-  //     );
-  //   } else {
-  //     return LabelAndListWidget(
-  //       smallSize: true,
-  //       title: "روزهای برگزاری",
-  //       showTitle: false,
-  //       items: [
-  //         WeekDay.SATURDAY.name,
-  //         WeekDay.SUNDAY.name,
-  //         WeekDay.MONDAY.name,
-  //         WeekDay.TUESDAY.name,
-  //         WeekDay.WEDNESDAY.name,
-  //         WeekDay.THURSDAY.name,
-  //         WeekDay.FRIDAY.name,
-  //       ],
-  //       selectedIndex: typeSelected["روزهای برگزاری"],
-  //       callback: labelAndListCallback,
-  //     );
-  //   }
-  // }
-
   void submit(DoctorPlan plan) async {
     /// updating plan by table data
-    List<DailyWorkTimes> planDaysWorkTimes =
-        DoctorPlan.getWeeklyWorkTimesWithTableData(this.daysPlanTable);
+    List<int> visitTypesListNumber =
+        typeSelected[TypeSelect.visitType.title].toList();
     _bloc.updateDoctor(
         widget.doctorId,
         DoctorPlan(
-            visitMethod: typeSelected["انواع مشاوره ها"].toList(),
-            visitType: typeSelected["نوع ویزیت"].toList(),
-            visitDurationPlan: typeSelected["انواع زمان مشاوره"].toList(),
-            // availableDays: typeSelected["روزهای برگزاری"].toList(), /// this field has been removed
-            weeklyWorkTimes: planDaysWorkTimes,
-            enabled: true,
-            baseTextPrice: int.parse(textBasePriceController.text),
-            baseVideoPrice: int.parse(videoBasePriceController.text),
-            basePhysicalVisitPrice: int.parse(physicalBasePriceController.text),
-            baseVoicePrice: int.parse(voiceBasePriceController.text)));
+          visitTypes: (visitTypesListNumber.contains(0)
+                  ? <VisitType>[getPhysicalVisitTypeDetail()]
+                  : <VisitType>[]) +
+              (visitTypesListNumber.contains(1)
+                  ? <VisitType>[getVirtualVisitTypeDetail()]
+                  : <VisitType>[]),
+          enabled: true,
+        ));
   }
 
-  bool repeatableForSelectedDays = false;
-
-  Row _helpWidget(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: ActionButton(
-            color: IColors.themeColor,
-            title: "راهنما",
-            callBack: () => showOneButtonDialog(
-                context,
-                "زمان هایی که با زدن آنها انتخاب می‌شوند به معنای ساعات امکان پذیر برای ارایه خدمت توسط شما، می باشند. اگر زمان های صبح را هم به بازه می خواهید اضافه کنید به پشتیبانی اطلاع دهید",
-                "باشه",
-                () {}),
-          ),
-        ),
-      ],
-    );
+  VisitType getVirtualVisitTypeDetail() {
+    List<DailyWorkTimes> virtualPlanDaysWorkTimes =
+        DoctorPlan.getWeeklyWorkTimesWithTableData(this.virtualDaysPlanTable);
+    return VisitType(
+        visitType: 1,
+        visitMethod: typeSelected[TypeSelect.virtualVisitMethod.title].toList(),
+        visitDurationPlan:
+            typeSelected[TypeSelect.virtualDurationPlan.title].toList(),
+        baseTextPrice:
+            intPossible(textBasePriceController.text, defaultValues: 0),
+        baseVideoPrice:
+            intPossible(videoBasePriceController.text, defaultValues: 0),
+        baseVoicePrice:
+            intPossible(voiceBasePriceController.text, defaultValues: 0),
+        basePhysicalVisitPrice: 0,
+        weeklyWorkTimes: virtualPlanDaysWorkTimes);
   }
+
+  VisitType getPhysicalVisitTypeDetail() {
+    List<DailyWorkTimes> physicalPlanDaysWorkTimes =
+        DoctorPlan.getWeeklyWorkTimesWithTableData(this.physicalDaysPlanTable);
+    return VisitType(
+        visitType: 0,
+        visitMethod: [],
+        visitDurationPlan:
+            typeSelected[TypeSelect.physicalDurationPlan.title].toList(),
+        basePhysicalVisitPrice:
+            intPossible(physicalBasePriceController.text, defaultValues: 0),
+        baseTextPrice: 0,
+        baseVideoPrice: 0,
+        baseVoicePrice: 0,
+        weeklyWorkTimes: physicalPlanDaysWorkTimes);
+  }
+
+  // bool repeatableForSelectedDays = false;
+  //
+  // Row _helpWidget(BuildContext context) {
+  //   return Row(
+  //     children: <Widget>[
+  //       Padding(
+  //         padding: const EdgeInsets.only(left: 16.0),
+  //         child: ActionButton(
+  //           color: IColors.themeColor,
+  //           title: "راهنما",
+  //           callBack: () => showOneButtonDialog(
+  //               context,
+  //               "زمان هایی که با زدن آنها انتخاب می‌شوند به معنای ساعات امکان پذیر برای ارایه خدمت توسط شما، می باشند. اگر زمان های صبح را هم به بازه می خواهید اضافه کنید به پشتیبانی اطلاع دهید",
+  //               "باشه",
+  //               () {}),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   @override
   void dispose() {
-    try {
-      controller.close();
-    } catch (e) {}
     super.dispose();
   }
 }

@@ -8,6 +8,7 @@ import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,8 +77,8 @@ class VirtualVisitList extends StatelessWidget {
   Widget _todayItems(List<VisitEntity> results) {
     List<VisitEntity> todayVisits = [];
     results.forEach((element) {
-      DateTime visitTime = DateTime.parse(element.visitTime);
-      var now = DateTime.now();
+      DateTime visitTime = DateTimeService.getDateTimeFromStandardString(element.visitTime);
+      var now = DateTimeService.getCurrentDateTime();
       DateTime _today = DateTime(now.year, now.month, now.day, 23, 59, 59);
       if (visitTime.isBefore(_today)) todayVisits.add(element);
     });
@@ -94,8 +95,8 @@ class VirtualVisitList extends StatelessWidget {
   Widget _nextDayItems(List<VisitEntity> results) {
     List<VisitEntity> nextDayVisits = [];
     results.forEach((element) {
-      DateTime visitTime = DateTime.parse(element.visitTime);
-      var now = DateTime.now();
+      DateTime visitTime = DateTimeService.getDateTimeFromStandardString(element.visitTime);
+      var now = DateTimeService.getCurrentDateTime();
       DateTime _today = DateTime(now.year, now.month, now.day, 23, 59, 59);
       if (visitTime.isAfter(_today)) nextDayVisits.add(element);
     });

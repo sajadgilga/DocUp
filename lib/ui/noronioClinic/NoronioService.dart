@@ -106,7 +106,10 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        DocUpHeader(title: "نورونیو"),
+        DocUpHeader(
+          title: "نورونیو",
+          docUpLogo: false,
+        ),
         ALittleVerticalSpace(),
         DocUpSubHeader(
           title: "اولین کلینیک مجازی در حوزه شناختی",

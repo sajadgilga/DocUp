@@ -1,29 +1,17 @@
-import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/constants/colors.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/DoctorCreditWidget.dart';
-import 'package:docup/ui/widgets/DoctorData.dart';
-import 'package:docup/ui/widgets/DocupHeader.dart';
-import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/Avatar.dart';
-import 'package:docup/ui/widgets/MapWidget.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/ui/widgets/ContactUsAndPolicy.dart';
+import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
-import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uni_links/uni_links.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/services.dart' show PlatformException;
 
 class PatientProfileMenuPage extends StatefulWidget {
   final Function(String, dynamic) onPush;
@@ -77,38 +65,13 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
         MediumVerticalSpace(),
         _accountSetting(),
         ALittleVerticalSpace(),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              AutoText("درباره ما",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ],
-          ),
-        ),
+        aboutUsButton(context),
         ALittleVerticalSpace(),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              AutoText("قوانین و شرایط",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ],
-          ),
-        ),
+        policyAndConditions(context),
         ALittleVerticalSpace(),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              AutoText("ارتباط با ما",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ],
-          ),
-        ),
+        paymentDescription(context),
+        ALittleVerticalSpace(),
+        contactUsButton(),
         ActionButton(
           color: IColors.red,
           title: "خروج از حساب کاربری",

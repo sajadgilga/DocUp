@@ -15,7 +15,7 @@ import 'package:docup/ui/BasePage.dart';
 import 'package:docup/ui/start/RoleType.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/DescriptionAlertDialog.dart';
+import 'package:docup/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:docup/ui/widgets/InputField.dart';
 import 'package:docup/ui/widgets/OptionButton.dart';
 import 'package:docup/ui/widgets/SnackBar.dart';

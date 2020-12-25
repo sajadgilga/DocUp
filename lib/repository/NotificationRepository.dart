@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:docup/blocs/NotificationBloc.dart';
 import 'package:docup/models/FCMEntity.dart';
 import 'package:docup/models/NewestNotificationResponse.dart';
 import 'package:docup/networking/ApiProvider.dart';
@@ -29,5 +30,8 @@ class NotificationRepository {
     return NewestNotificationResponse.fromJson(response);
   }
 
-
+  Future<AddToSeenResponse> addNotifToSeen(int notifId) async{
+    final response = await _provider.patch('api/newest-notifications/?notif_id=$notifId');
+    return AddToSeenResponse.fromJson(response);
+  }
 }

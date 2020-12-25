@@ -6,6 +6,7 @@ import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/medicines/ReminderList.dart';
 import 'package:docup/utils/Utils.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -120,8 +121,8 @@ class _DateCalenderState extends State<DateCalender> {
                   child: PersianDateTimePicker2(
                     color: IColors.themeColor,
                     type: "date",
-                    initial: getTomorrowInJalali(),
-                    min: getTodayInJalaliString(),
+                    initial: DateTimeService.getTomorrowInJalali(),
+                    min: DateTimeService.getTodayInJalaliString(),
                     disable: <int, String>{},
                     onSelect: (date) {},
                   ),

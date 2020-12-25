@@ -7,6 +7,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
@@ -37,6 +38,7 @@ extension WeekDaysExtension on WeekDay {
 }
 
 String replaceFarsiNumber(String input) {
+  if (input == null) return "";
   const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   const farsi = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 
@@ -45,51 +47,6 @@ String replaceFarsiNumber(String input) {
   }
 
   return input;
-}
-
-String normalizeDateAndTime(String str, {bool cutSeconds = false}) {
-  String date = str.split("T")[0];
-  String time = str.split("T")[1].split("+")[0];
-  if (cutSeconds && time.split(":").length == 3) {
-    time = time.split(":")[0] + ":" + time.split(":")[1];
-  }
-  final jalaliDate = Jalali.fromDateTime(DateTime(int.parse(date.split("-")[0]),
-      int.parse(date.split("-")[1]), int.parse(date.split("-")[2])));
-  String finalDate = "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
-  return "تاریخ: $finalDate زمان : $time ";
-}
-
-DateTime getDateAndTimeFromWS(String str) {
-  String date = str.split("T")[0];
-  String time = str.split("T")[1];
-  final timeArray = time.split(":");
-  return DateTime(
-      int.parse(date.split("-")[0]),
-      int.parse(date.split("-")[1]),
-      int.parse(date.split("-")[2]),
-      int.parse(timeArray[0]),
-      int.parse(timeArray[1]),
-      int.parse(timeArray[2]));
-}
-
-DateTime getDateAndTimeFromJalali(String jalaiDateStr,
-    {String timeStr = "00:00"}) {
-  var array = jalaiDateStr.split("/");
-  var georgianDate =
-      Jalali(int.parse(array[0]), int.parse(array[1]), int.parse(array[2]))
-          .toGregorian();
-  var timeArray = timeStr.split(":");
-  return DateTime(georgianDate.year, georgianDate.month, georgianDate.day,
-      int.parse(timeArray[0]), int.parse(timeArray[1]));
-}
-
-Jalali getJalalyDateFromJalilyString(String jalalyDate) {
-  try {
-    var array = jalalyDate.split("/");
-    return Jalali(
-        int.parse(array[0]), int.parse(array[1]), int.parse(array[2]));
-  } catch (e) {}
-  return null;
 }
 
 bool validatePhoneNumber(String value) {
@@ -157,8 +114,8 @@ void showDatePickerDialog(
       return PersianDateTimePicker(
         color: IColors.themeColor,
         type: "date",
-        initial: getTodayInJalaliString(),
-        min: getTodayInJalaliString(),
+        initial: DateTimeService.getTodayInJalaliString(),
+        min: DateTimeService.getTodayInJalaliString(),
         disable: getDisableDays(availableDays),
         onSelect: (date) {
           controller.text = date;
@@ -176,18 +133,8 @@ Map<int, String> getDisableDays(List<int> availableDays) {
   return disableDays;
 }
 
-String getTodayInJalaliString() {
-  final jalali = Jalali.fromDateTime(DateTime.now());
-  final now = "${jalali.year}/${jalali.month}/${jalali.day}";
-  return now;
-}
-
-Jalali getTodayInJalali() {
-  return Jalali.fromDateTime(DateTime.now());
-}
-
 String getInitialDate(Map<int, String> disableDays) {
-  DateTime now = DateTime.now();
+  DateTime now = DateTimeService.getCurrentDateTime();
   for (int i = 0; i < 7; i++) {
     DateTime date = now.add(Duration(days: i));
     Jalali dateJ = Jalali.fromDateTime(date);
@@ -199,25 +146,12 @@ String getInitialDate(Map<int, String> disableDays) {
   return "${dateJ.year}/${dateJ.month}/${dateJ.day}";
 }
 
-String getYesterdayInJalilyString() {
-  DateTime dt = DateTime.now();
-  dt = dt.subtract(Duration(days: 1));
-  Jalali jalali = Jalali.fromDateTime(dt);
-  final date = "${jalali.year}/${jalali.month}/${jalali.day}";
-  return date;
-}
-
-String getTomorrowInJalali() {
-  DateTime dt = DateTime.now();
-  dt = dt.add(Duration(days: 1));
-  final jalali = Jalali.fromDateTime(dt);
-  final tomorrow = "${jalali.year}/${jalali.month}/${jalali.day}";
-  return tomorrow;
-}
-
 void showOneButtonDialog(
     context, String message, String action, Function callback,
-    {Color color}) {
+    {Color color,
+    bool barrierDismissible = true,
+    bool callCallBackAfterDialogDispose = false}) {
+  bool callBackHadCalled = false;
   BuildContext dialogContext;
   AlertDialog dialog = AlertDialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -234,6 +168,7 @@ void showOneButtonDialog(
         title: action,
         height: 45,
         callBack: () {
+          callBackHadCalled = true;
           Navigator.pop(dialogContext);
           callback();
         },
@@ -242,6 +177,63 @@ void showOneButtonDialog(
   );
   showDialog(
       context: context,
+      barrierDismissible: barrierDismissible,
+      builder: (BuildContext context) {
+        dialogContext = context;
+        return dialog;
+      }).then((value) {
+    if (callCallBackAfterDialogDispose && !callBackHadCalled) {
+      callback();
+    }
+  });
+}
+
+void showTwoButtonDialog(context, String message, String applyTitle,
+    String rejectTitle, Function applyCallBack, Function rejectCallBack,
+    {Color color, bool barrierDismissible = true}) {
+  BuildContext dialogContext;
+  AlertDialog dialog = AlertDialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+    title: Text(
+      message,
+      style: TextStyle(fontSize: 14),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.rtl,
+    ),
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Container(
+          width: 80,
+          child: ActionButton(
+            color: color == null ? IColors.red : color,
+            title: rejectTitle,
+            height: 45,
+            callBack: () {
+              Navigator.pop(dialogContext);
+              rejectCallBack();
+            },
+          ),
+        ),
+        Container(
+          width: 80,
+          child: ActionButton(
+            color: color == null ? IColors.themeColor : color,
+            title: applyTitle,
+            height: 45,
+            callBack: () {
+              Navigator.pop(dialogContext);
+              applyCallBack();
+            },
+          ),
+        ),
+      ],
+    ),
+  );
+  showDialog(
+      context: context,
+      barrierDismissible: barrierDismissible,
       builder: (BuildContext context) {
         dialogContext = context;
         return dialog;
@@ -388,36 +380,6 @@ String replacePersianWithEnglishNumber(String text) {
   return text;
 }
 
-int getTimeMinute(String time) {
-  String removeAllSpace(String text) {
-    return text.replaceAll(" ", "");
-  }
-
-  time = removeAllSpace(time);
-  time = replacePersianWithEnglishNumber(time);
-  try {
-    if (time.contains(":")) {
-      int hour = int.parse(time.split(":")[0]);
-      int minute = int.parse(time.split(":")[1]);
-      return (60 * hour) + minute;
-    } else {
-      int minute = int.parse(time);
-      return minute;
-    }
-  } catch (Exception) {
-    return 0;
-  }
-}
-
-String convertMinuteToTimeString(int lessonsMinute) {
-  int hour = ((lessonsMinute / 60).floor());
-  int minute = lessonsMinute % 60;
-  String hourString = hour < 10 ? "0" + hour.toString() : hour.toString();
-  String minuteString =
-      minute < 10 ? "0" + minute.toString() : minute.toString();
-  return hourString + ":" + minuteString;
-}
-
 String utf8IfPossible(String text) {
   try {
     text = utf8.decode(text.codeUnits);
@@ -425,7 +387,7 @@ String utf8IfPossible(String text) {
   return text;
 }
 
-int intPossible(var text) {
+int intPossible(var text,{int defaultValues}) {
   try {
     if (text is int) {
       return text;
@@ -433,7 +395,7 @@ int intPossible(var text) {
       return int.parse(text);
     }
   } catch (e) {}
-  return null;
+  return defaultValues;
 }
 
 bool isNumeric(String s) {

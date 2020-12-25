@@ -125,7 +125,7 @@ class NavigatorViewState extends State<NavigatorView> {
   }
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context,
-      {detail, widgetArg}) {
+      {detail, extraDetail, widgetArg}) {
     switch (widget.index) {
       case -1:
         return {
@@ -146,7 +146,8 @@ class NavigatorViewState extends State<NavigatorView> {
               _cognitiveTest(context, detail),
           NavigatorRoutes.uploadFileDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
-              child: UploadFileSlider(listId: detail, body: widgetArg)),
+              child: UploadFileSlider(
+                  listId: detail, partnerId: extraDetail, body: widgetArg)),
           NavigatorRoutes.visitRequestList: (context) =>
               _visitRequestPage(context),
           NavigatorRoutes.account: (context) =>
@@ -171,10 +172,19 @@ class NavigatorViewState extends State<NavigatorView> {
               _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
+          NavigatorRoutes.cognitiveTest: (context) =>
+              _cognitiveTest(context, detail),
           NavigatorRoutes.partnerSearchView: (context) =>
               _partnerSearchPage(context, detail: detail),
           NavigatorRoutes.visitRequestList: (context) =>
               _visitRequestPage(context),
+          NavigatorRoutes.uploadFileDialogue: (context) => BlocProvider.value(
+              value: _pictureBloc,
+              child: UploadFileSlider(
+                listId: detail,
+                partnerId: extraDetail,
+                body: widgetArg,
+              )),
           NavigatorRoutes.physicalVisitList: (context) =>
               _physicalVisitListPage(context),
           NavigatorRoutes.virtualVisitList: (context) =>
@@ -218,6 +228,7 @@ class NavigatorViewState extends State<NavigatorView> {
               value: _pictureBloc,
               child: UploadFileSlider(
                 listId: detail,
+                partnerId: extraDetail,
                 body: widgetArg,
               )),
           NavigatorRoutes.partnerSearchView: (context) =>
@@ -255,6 +266,7 @@ class NavigatorViewState extends State<NavigatorView> {
               value: _pictureBloc,
               child: UploadFileSlider(
                 listId: detail,
+                partnerId: extraDetail,
                 body: widgetArg,
               )),
           NavigatorRoutes.doctorProfileMenuPage: (context) =>
@@ -288,14 +300,20 @@ class NavigatorViewState extends State<NavigatorView> {
 //    }
 //  }
 
-  void push(contet, String direction, {detail, widgetArg}) {
+  void push(contet, String direction,
+      {detail, extraDetail, widgetArg, returnCallBack}) {
     if (detail == 'chat')
       widget.navigatorKey.currentState.popUntil((route) => route.isFirst);
     _route(RouteSettings(name: direction), context,
-        detail: detail, widgetArg: widgetArg);
-    widget.navigatorKey.currentState.push(_route(
-        RouteSettings(name: direction), context,
-        detail: detail, widgetArg: widgetArg));
+        detail: detail, extraDetail: extraDetail, widgetArg: widgetArg);
+    widget.navigatorKey.currentState
+        .push(_route(RouteSettings(name: direction), context,
+            detail: detail, extraDetail: extraDetail, widgetArg: widgetArg))
+        .then((value) {
+      if (returnCallBack != null) {
+        returnCallBack();
+      }
+    });
   }
 
   void _pop(BuildContext context) {
@@ -303,9 +321,9 @@ class NavigatorViewState extends State<NavigatorView> {
   }
 
   Route<dynamic> _route(RouteSettings settings, BuildContext context,
-      {detail, widgetArg}) {
-    var routeBuilders =
-        _routeBuilders(context, detail: detail, widgetArg: widgetArg);
+      {detail, extraDetail, widgetArg}) {
+    var routeBuilders = _routeBuilders(context,
+        detail: detail, extraDetail: extraDetail, widgetArg: widgetArg);
     return MaterialPageRoute(
         settings: settings,
         builder: (BuildContext context) {
@@ -414,9 +432,9 @@ class NavigatorViewState extends State<NavigatorView> {
           var entity = entityState.entity;
           entity.partnerEntity = partner;
           entity.iPanelId = entity.panelByPartnerId.id;
-          _visitTimeBloc.add(VisitTimeGet(partnerId: entity.pId));
           Entity copyEntity = entity.copy();
           if (state.patientSection == PatientPanelSection.DOCTOR_INTERFACE) {
+            _visitTimeBloc.add(VisitTimeGet(partnerId: entity.pId));
             return Panel(
               onPush: (direction, entity) {
                 push(context, direction, detail: entity);
@@ -472,9 +490,11 @@ class NavigatorViewState extends State<NavigatorView> {
                       InfoPage(
                         uploadAvailable: entity.isDoctor,
                         entity: copyEntity,
-                        onPush: (direction, entity, widgetArg) {
+                        onPush: (direction, listId, partnerId, widgetArg) {
                           push(context, direction,
-                              detail: entity, widgetArg: widgetArg);
+                              detail: listId,
+                              extraDetail: partnerId,
+                              widgetArg: widgetArg);
                         },
                         pageName: Strings.doctorAdvice,
                         picListLabel: Strings.panelDoctorAdvicePicLabel,
@@ -487,9 +507,11 @@ class NavigatorViewState extends State<NavigatorView> {
                       InfoPage(
                         uploadAvailable: entity.isDoctor,
                         entity: copyEntity,
-                        onPush: (direction, entity, widgetArg) {
+                        onPush: (direction, listId, partnerId, widgetArg) {
                           push(context, direction,
-                              detail: entity, widgetArg: widgetArg);
+                              detail: listId,
+                              extraDetail: partnerId,
+                              widgetArg: widgetArg);
                         },
                         pageName: Strings.prescriptions,
                         picListLabel: Strings.panelPrescriptionsPicLabel,
@@ -502,9 +524,11 @@ class NavigatorViewState extends State<NavigatorView> {
                       InfoPage(
                         uploadAvailable: entity.isDoctor || entity.isPatient,
                         entity: copyEntity,
-                        onPush: (direction, entity, widgetArg) {
+                        onPush: (direction, listId, partnerId, widgetArg) {
                           push(context, direction,
-                              detail: entity, widgetArg: widgetArg);
+                              detail: listId,
+                              extraDetail: partnerId,
+                              widgetArg: widgetArg);
                         },
                         pageName: Strings.testResults,
                         picListLabel: Strings.panelTestResultsPicLabel,
@@ -616,8 +640,8 @@ class NavigatorViewState extends State<NavigatorView> {
 
   Widget _doctorDetailPage(context, doctor) {
     return DoctorDetailPage(
-      onPush: (direction, entity) {
-        push(context, direction, detail: entity);
+      onPush: (direction, entity,Function() returnCallBack) {
+        push(context, direction, detail: entity,returnCallBack: returnCallBack);
       },
       doctorEntity: doctor,
     );

@@ -14,30 +14,51 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     try {
       NewestNotificationResponse notifications =
           await _repository.getNewestNotifications();
-      notifications = await NewestNotificationResponse.removeSeenNotifications(
-          notifications);
+      // notifications = await NewestNotificationResponse.removeSeenNotifications(
+      //     notifications);
 
       yield NotificationsLoaded(notifications: notifications);
     } catch (e) {
-      yield NotificationError(notifications: state.notifications);
+      yield NotificationError(
+          error: e.toString(), notifications: state.notifications);
     }
   }
 
-  Stream<NotificationState> _addVisitNotification(NewestVisit visit) async* {
-    NewestNotificationResponse notifications =
-        state.notifications ?? NewestNotificationResponse();
-    yield NotificationLoading(notifications: notifications);
-
+  Stream<NotificationState> _addNotifToSeen(AddNotifToSeen event) async* {
     try {
-      notifications.addOrUpdateNewVisitPushNotification(visit);
-      notifications = await NewestNotificationResponse.removeSeenNotifications(
-          notifications);
 
-      yield NotificationsLoaded(notifications: notifications);
+
+      AddToSeenResponse addToSeenResponse = await _repository.addNotifToSeen(event.newestNotifId);
+      if(addToSeenResponse.success){
+        state.notifications.deleteNotificationWithId(event.newestNotifId);
+        NewestNotificationResponse newestNotificationResponse =
+        state.notifications.getCopy();
+        yield NotificationsLoaded(notifications: newestNotificationResponse);
+      }else{
+        throw Exception("Add_To_Seen method were not successful");
+      }
     } catch (e) {
-      yield NotificationError(notifications: state.notifications);
+      print(e.toString());
+      yield NotificationError(
+          error: e.toString(), notifications: state.notifications);
     }
   }
+
+  // Stream<NotificationState> _addVisitNotification(NewestVisit visit) async* {
+  //   NewestNotificationResponse notifications =
+  //       state.notifications ?? NewestNotificationResponse();
+  //   yield NotificationLoading(notifications: notifications);
+  //
+  //   try {
+  //     notifications.addOrUpdateNewVisitPushNotification(visit);
+  //     notifications = await NewestNotificationResponse.removeSeenNotifications(
+  //         notifications);
+  //
+  //     yield NotificationsLoaded(notifications: notifications);
+  //   } catch (e) {
+  //     yield NotificationError(notifications: state.notifications);
+  //   }
+  // }
 
   @override
   Stream<NotificationState> mapEventToState(event) async* {
@@ -49,15 +70,18 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       }
     } else if (event is GetNewestNotifications) {
       yield* _get();
-    } else if (event is AddNewestVisitNotification) {
-      yield* _addVisitNotification(event.newVisit);
+    } else if (event is AddNotifToSeen) {
+      yield* _addNotifToSeen(event);
     }
+    // else if (event is AddNewestVisitNotification) {
+    //   yield* _addVisitNotification(event.newVisit);
+    // }
   }
 }
 
 // events
 abstract class NotificationEvent {
-  final NewestVisit newVisit;
+  final NewestVisitNotif newVisit;
 
   NotificationEvent({this.newVisit});
 }
@@ -66,9 +90,14 @@ class GetInitialNewestNotifications extends NotificationEvent {}
 
 class GetNewestNotifications extends NotificationEvent {}
 
-class AddNewestVisitNotification extends NotificationEvent {
-  AddNewestVisitNotification({newVisit}) : super(newVisit: newVisit);
+class AddNotifToSeen extends NotificationEvent {
+  int newestNotifId;
+
+  AddNotifToSeen(this.newestNotifId);
 }
+// class AddNewestVisitNotification extends NotificationEvent {
+//   AddNewestVisitNotification({newVisit}) : super(newVisit: newVisit);
+// }
 
 // states
 abstract class NotificationState extends Equatable {
@@ -93,5 +122,16 @@ class NotificationsLoaded extends NotificationState {
 }
 
 class NotificationError extends NotificationState {
-  NotificationError({notifications}) : super(notifications: notifications);
+  String error;
+
+  NotificationError({this.error, notifications})
+      : super(notifications: notifications);
+}
+
+class AddToSeenResponse {
+  bool success;
+
+  AddToSeenResponse.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+  }
 }

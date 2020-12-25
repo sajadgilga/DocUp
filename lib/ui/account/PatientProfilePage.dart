@@ -14,6 +14,7 @@ import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
+import 'package:docup/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/InputDoneView.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
@@ -228,47 +229,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
           SizedBox(height: 30),
           _addCreditWidget(),
           SizedBox(height: 10),
-          _supportWidget()
-        ],
-      ),
-    );
-  }
-
-  _supportWidget() {
-    double iconsSize = 60;
-    double telegramIconScale = (210 / 156);
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-            onTap: () =>
-                launch("http://telegram.me/" + Strings.supportTelegramId),
-            child: Container(
-                padding: EdgeInsets.all(5),
-                width: iconsSize * telegramIconScale,
-                child: Image.asset(
-                  Assets.accountTelegramIcon,
-                  width: iconsSize * telegramIconScale,
-                )),
-          ),
-          GestureDetector(
-            onTap: () => launch(
-                "whatsapp://send?phone=" + Strings.supportWhatsAppPhoneNumber),
-            child: Container(
-                padding: EdgeInsets.all(5),
-                width: iconsSize,
-                child: Image.asset(
-                  Assets.accountWhatsAppIcon,
-                  width: iconsSize,
-                )),
-          ),
-          AutoText(
-            "انتقادات و پیشنهادات",
-            style: TextStyle(fontSize: 17),
-          ),
+          // suggestionsAndCriticism()
         ],
       ),
     );

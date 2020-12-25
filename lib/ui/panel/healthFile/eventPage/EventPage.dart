@@ -58,15 +58,16 @@ class _EventPageState extends State<EventPage> {
 
   Widget _eventList() {
     return Container(
-      child: ListView.builder(
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemCount: _events.length,
-          itemBuilder: (BuildContext context, int index) => NotificationItem(
-                title: _events[index].title,
-                description: _events[index].description,
-                time: _events[index].time,
-              )),
+      /// TODO
+      // child: ListView.builder(
+      //     shrinkWrap: true,
+      //     scrollDirection: Axis.vertical,
+      //     itemCount: _events.length,
+      //     itemBuilder: (BuildContext context, int index) => NotificationItem(
+      //           title: _events[index].title,
+      //           description: _events[index].description,
+      //           time: _events[index].time,
+      //         )),
     );
   }
 

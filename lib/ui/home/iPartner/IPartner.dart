@@ -75,17 +75,12 @@ class IPartner extends StatelessWidget {
         ),
       );
     return Expanded(
-        child: GestureDetector(
-      onTap: () {
-        _chatPage();
-      },
-      child: IPartnerBody(
-          selectPage: selectPage,
-          partner: partner,
-          onPush: onPush,
-          globalOnPush: globalOnPush,
-          color: color),
-    ));
+        child: IPartnerBody(
+            selectPage: selectPage,
+            partner: partner,
+            onPush: onPush,
+            globalOnPush: globalOnPush,
+            color: color));
   }
 
   @override

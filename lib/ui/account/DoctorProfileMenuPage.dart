@@ -13,6 +13,7 @@ import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
@@ -67,38 +68,13 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
         ),
         _userCreditCards(),
         ALittleVerticalSpace(),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              AutoText("درباره ما",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ],
-          ),
-        ),
+        aboutUsButton(context),
         ALittleVerticalSpace(),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              AutoText("قوانین و شرایط",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ],
-          ),
-        ),
+        policyAndConditions(context),
         ALittleVerticalSpace(),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              AutoText("ارتباط با ما",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ],
-          ),
-        ),
+        paymentDescription(context),
+        ALittleVerticalSpace(),
+        contactUsButton(),
         ActionButton(
           color: IColors.red,
           title: "خروج از حساب کاربری",
@@ -341,7 +317,10 @@ class _CreditCardState extends State<CreditCard> {
                       ? SizedBox(
                           width: imageSize,
                           height: imageSize,
-                          child: DocUpAPICallLoading2(textFlag: false,width: 60,),
+                          child: DocUpAPICallLoading2(
+                            textFlag: false,
+                            width: 60,
+                          ),
                         )
                       : SizedBox(
                           child: Image.network(
@@ -558,9 +537,9 @@ class _CreditCardState extends State<CreditCard> {
 
   @override
   void dispose() {
-    try{
+    try {
       _doctorBloc.dispose();
-    }catch(e){}
+    } catch (e) {}
     super.dispose();
   }
 }

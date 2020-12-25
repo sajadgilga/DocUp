@@ -12,13 +12,12 @@ import 'package:docup/ui/widgets/MapWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../constants/colors.dart';
 
 class DoctorDetailPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
-  final Function(String, dynamic) onPush;
+  final Function(String, dynamic, Function()) onPush;
 
   DoctorDetailPage({Key key, this.doctorEntity, this.onPush}) : super(key: key);
 
@@ -32,7 +31,6 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
   @override
   void initState() {
     _bloc.getDoctor(widget.doctorEntity.id, false);
-
     super.initState();
   }
 
@@ -93,7 +91,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
           ALittleVerticalSpace(
             height: 20,
           ),
-          doctorEntity.plan.visitType.contains(0)
+          doctorEntity.plan.visitTypesNumber.contains(0)
               ? ActionButton(
                   width: 250,
                   height: 60,
@@ -101,11 +99,13 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   color: IColors.themeColor,
                   title: Strings.physicalReservationLabel,
                   callBack: () => widget.onPush(
-                      NavigatorRoutes.physicalVisitPage, doctorEntity),
+                      NavigatorRoutes.physicalVisitPage, doctorEntity, () {
+                    _bloc.getDoctor(widget.doctorEntity.id, false);
+                  }),
                 )
               : SizedBox(),
           SizedBox(height: 10),
-          doctorEntity.plan.visitType.contains(1)
+          doctorEntity.plan.visitTypesNumber.contains(1)
               ? ActionButton(
                   width: 250,
                   height: 60,
@@ -113,7 +113,9 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   color: IColors.darkBlue,
                   title: Strings.virtualReservationLabel,
                   callBack: () => widget.onPush(
-                      NavigatorRoutes.virtualVisitPage, doctorEntity),
+                      NavigatorRoutes.virtualVisitPage, doctorEntity, () {
+                    _bloc.getDoctor(widget.doctorEntity.id, false);
+                  }),
                 )
               : SizedBox(),
         ],

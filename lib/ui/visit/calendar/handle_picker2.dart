@@ -1,6 +1,7 @@
 
 import 'package:docup/ui/visit/calendar/date_picker2.dart';
 import 'package:docup/ui/visit/calendar/utils/date.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
@@ -43,27 +44,28 @@ class _HandlePicker2State extends State<HandlePicker2>
   void initState() {
     super.initState();
     initDateTime = widget.initDateTime;
+    Jalali jalaliNow = DateTimeService.getCurrentJalali();
+    DateTime nowGeorgian = DateTimeService.getCurrentDateTime();
     if (initDateTime == null) {
-      Jalali now = Jalali.now();
       switch (widget.type) {
         case 'rangedate':
-          initDateTime = '${DateUtils.jalaliToString(now)} # ${DateUtils.jalaliToString(now)}';
+          initDateTime = '${DateUtils.jalaliToString(jalaliNow)} # ${DateUtils.jalaliToString(jalaliNow)}';
           break;
         case 'datetime':
-          initDateTime = '${DateUtils.jalaliToString(now)} 00:00';
+          initDateTime = '${DateUtils.jalaliToString(jalaliNow)} 00:00';
           break;
         case 'date':
-          initDateTime = '${DateUtils.jalaliToString(now)}';
+          initDateTime = '${DateUtils.jalaliToString(jalaliNow)}';
           break;
         case 'time':
           initDateTime = '00:00';
           break;
         case 'year':
-          initDateTime = '${now.formatter.yyyy}';
+          initDateTime = '${jalaliNow.formatter.yyyy}';
 
           break;
         case 'month':
-          initDateTime = '${now.formatter.mm}';
+          initDateTime = '${jalaliNow.formatter.mm}';
           break;
         default:
       }
@@ -84,11 +86,11 @@ class _HandlePicker2State extends State<HandlePicker2>
         endSelectedInitTime =
             splitEndDateTime.length > 1 ? splitEndDateTime[1] : null;
       } else {
-        startSelectedInitDate = '${Jalali.now()}';
-        endSelectedInitDate = '${Jalali.now()}';
+        startSelectedInitDate = '${jalaliNow}';
+        endSelectedInitDate = '${jalaliNow}';
         startSelectedInitTime =
-            "${DateTime.now().hour}:${DateTime.now().minute}";
-        endSelectedInitTime = "${DateTime.now().hour}:${DateTime.now().minute}";
+            "${nowGeorgian.hour}:${nowGeorgian.minute}";
+        endSelectedInitTime = "${nowGeorgian.hour}:${nowGeorgian.minute}";
       }
     } else {
       if (initDateTime != null) {
@@ -100,11 +102,11 @@ class _HandlePicker2State extends State<HandlePicker2>
         endSelectedInitTime =
             splitDateTime.length > 1 ? splitDateTime[1] : null;
       } else {
-        startSelectedInitDate = '${Jalali.now()}';
-        endSelectedInitDate = '${Jalali.now()}';
+        startSelectedInitDate = '${jalaliNow}';
+        endSelectedInitDate = '${jalaliNow}';
         startSelectedInitTime =
-            "${DateTime.now().hour}:${DateTime.now().minute}";
-        endSelectedInitTime = "${DateTime.now().hour}:${DateTime.now().minute}";
+            "${nowGeorgian.hour}:${nowGeorgian.minute}";
+        endSelectedInitTime = "${nowGeorgian.hour}:${nowGeorgian.minute}";
       }
     }
   }

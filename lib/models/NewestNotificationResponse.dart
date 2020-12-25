@@ -1,163 +1,8 @@
-import 'dart:ui';
-
-import 'package:docup/constants/colors.dart';
+import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NewestNotificationResponse {
-  int newestEventsCounts;
-  List<NewestEvents> newestEvents;
-  int newestVisitsCounts;
-  List<NewestVisit> newestVisits;
-
-  void addOrUpdateNewVisitPushNotification(NewestVisit visit) {
-    int prevVisitNotificationIndex = -1;
-    for (int i = 0; i < newestVisits.length; i++) {
-      if (newestVisits[i].id == visit.id) {
-        prevVisitNotificationIndex = i;
-        break;
-      }
-    }
-    if (prevVisitNotificationIndex == -1) {
-      newestVisits.insert(0, visit);
-      newestVisitsCounts += 1;
-    } else {
-      newestVisits.removeAt(prevVisitNotificationIndex);
-      newestVisits.insert(0, visit);
-    }
-  }
-
-  NewestNotificationResponse(
-      {this.newestEventsCounts = 0,
-      this.newestEvents,
-      this.newestVisitsCounts = 0,
-      this.newestVisits}) {
-    if (this.newestEvents == null) {
-      this.newestEvents = [];
-    }
-    if (this.newestVisits == null) {
-      this.newestVisits = [];
-    }
-  }
-
-  NewestNotificationResponse.fromJson(Map<String, dynamic> json) {
-    newestEventsCounts = json['newest_events_counts'] ?? 0;
-    if (json['newest_events'] != null) {
-      newestEvents = new List<NewestEvents>();
-      json['newest_events'].forEach((v) {
-        newestEvents.add(new NewestEvents.fromJson(v));
-      });
-    }
-    newestVisitsCounts = json['newest_visits_counts'] ?? 0;
-    if (json['newest_visits'] != null) {
-      newestVisits = new List<NewestVisit>();
-      json['newest_visits'].forEach((v) {
-        newestVisits.add(new NewestVisit.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['newest_events_counts'] = this.newestEventsCounts;
-    if (this.newestEvents != null) {
-      data['newest_events'] = this.newestEvents.map((v) => v.toJson()).toList();
-    }
-    data['newest_visits_counts'] = this.newestVisitsCounts;
-    if (this.newestVisits != null) {
-      data['newest_visits'] = this.newestVisits.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-
-  static Future<NewestNotificationResponse> removeSeenNotifications(
-      NewestNotificationResponse notifs) async {
-    /// TODO for other kind of notifications later
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> seenNotif =
-        prefs.getStringList("seenNotificationIds") ?? <String>[];
-    List<NewestVisit> filteredNotifs = [];
-    notifs.newestVisits.forEach((element) {
-      if (!seenNotif.contains(element.getNotificationKey())) {
-        filteredNotifs.add(element);
-      }
-    });
-    notifs.newestVisits = filteredNotifs;
-    notifs.newestVisitsCounts = filteredNotifs.length;
-    return notifs;
-  }
-
-  static void addNotifToSeen(NewestVisit visit) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> seenNotif =
-        prefs.getStringList("seenNotificationIds") ?? <String>[];
-    if (!seenNotif.contains(visit.getNotificationKey())) {
-      seenNotif.add(visit.getNotificationKey());
-    }
-    prefs.setStringList("seenNotificationIds", seenNotif);
-  }
-}
-
-class NewestEvents {
-  int id;
-  Owner owner;
-  List<InvitedDoctors> invitedDoctors;
-  String title;
-  String description;
-  String time;
-  String endTime;
-
-  NewestEvents(
-      {this.id,
-      this.owner,
-      this.invitedDoctors,
-      this.title,
-      this.description,
-      this.time,
-      this.endTime});
-
-  NewestEvents.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    owner = json['owner'] != null ? new Owner.fromJson(json['owner']) : null;
-//    if (json['invited_patients'] != null) {
-//      invitedPatients = new List<Null>();
-//      json['invited_patients'].forEach((v) {
-//        invitedPatients.add(new Null.fromJson(v));
-//      });
-//    }
-    if (json['invited_doctors'] != null) {
-      invitedDoctors = new List<InvitedDoctors>();
-      json['invited_doctors'].forEach((v) {
-        invitedDoctors.add(new InvitedDoctors.fromJson(v));
-      });
-    }
-    title = json['title'];
-    description = json['description'];
-    time = json['time'];
-    endTime = json['end_time'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.owner != null) {
-      data['owner'] = this.owner.toJson();
-    }
-//    if (this.invitedPatients != null) {
-//      data['invited_patients'] =
-//          this.invitedPatients.map((v) => v.toJson()).toList();
-//    }
-    if (this.invitedDoctors != null) {
-      data['invited_doctors'] =
-          this.invitedDoctors.map((v) => v.toJson()).toList();
-    }
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['time'] = this.time;
-    data['end_time'] = this.endTime;
-    return data;
-  }
-}
+import 'UserEntity.dart';
 
 class Owner {
   String firstName;
@@ -176,6 +21,134 @@ class Owner {
     data['last_name'] = this.lastName;
     return data;
   }
+}
+
+class NewestNotificationResponse {
+  List<NewestNotif> newestNotifs;
+
+  int get newestNotifsCounts {
+    return newestNotifs?.length ?? 0;
+  }
+
+  void deleteNotificationWithId(int notifId) {
+    int index = -1;
+    for (int i = 0; i < newestNotifs.length; i++) {
+      NewestNotif notif = newestNotifs[i];
+      if (notif.notifId == notifId) {
+        index = i;
+        break;
+      }
+    }
+    if (index != -1) {
+      newestNotifs.removeAt(index);
+    }
+  }
+
+  NewestNotificationResponse getCopy() {
+    return NewestNotificationResponse(newestNotifs: newestNotifs);
+  }
+
+  NewestNotificationResponse({this.newestNotifs}) {
+    if (this.newestNotifs == null) {
+      this.newestNotifs = [];
+    }
+  }
+
+  NewestNotificationResponse.fromJson(Map<String, dynamic> json) {
+    newestNotifs = [];
+    if (json['results'] != null) {
+      newestNotifs = new List<NewestNotif>();
+      json['results'].forEach((v) {
+        /// super
+        int type = intPossible(v['type']);
+        int notifId = v['id'];
+        String title = v['title'];
+        String description = v['body'];
+        String notifDate = v['time'].split("T")[0];
+        String notifTime = v['time'].split("T")[1].split("+")[0];
+        Map<String, dynamic> jsonData = v['data']['payload'];
+        newestNotifs.add(NewestNotif.getChildFromJsonAndData(
+            notifId, title, description, notifTime, notifDate, jsonData, type));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['newest_visits_counts'] = this.newestNotifsCounts;
+    if (this.newestNotifs != null) {
+      data['newest_visits'] = this.newestNotifs.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+
+  static Future<NewestNotificationResponse> removeSeenNotifications(
+      NewestNotificationResponse notifs) async {
+    /// TODO for other kind of notifications later
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> seenNotif =
+        prefs.getStringList("seenNotificationIds") ?? <String>[];
+    List<NewestVisitNotif> filteredNotifs = [];
+    notifs.newestNotifs.forEach((element) {
+      if (!seenNotif.contains(element.notifId)) {
+        filteredNotifs.add(element);
+      }
+    });
+    notifs.newestNotifs = filteredNotifs;
+    return notifs;
+  }
+
+  static void addNotifToSeen(NewestVisitNotif visit) async {}
+}
+
+abstract class NewestNotif {
+  int notifId;
+  String title;
+  String description;
+  String notifTime;
+  String notifDate;
+  int notifType;
+
+  NewestNotif(
+      {this.notifId,
+      this.title,
+      this.description,
+      this.notifTime,
+      this.notifDate,
+      this.notifType});
+
+  static NewestNotif getChildFromJsonAndData(
+      int notifId,
+      String title,
+      String description,
+      String time,
+      String date,
+      Map<String, dynamic> payload,
+      int type) {
+    if (type == 1) {
+      /// voice or video call
+      return NewestVideoVoiceCallNotif.fromJson(
+          notifId, title, description, time, date, type, payload);
+    } else if ([2, 3].contains(type)) {
+      /// test send and response
+      return NewestMedicalTestNotif.fromJson(
+          notifId, title, description, time, date, type, payload);
+    } else if ([5, 6].contains(type)) {
+      /// visit
+      return NewestVisitNotif.fromJson(
+          notifId, title, description, time, date, type, payload);
+    } else if (type == 7) {
+      /// visit request reminder
+      return NewestVisitNotif.fromJson(
+          notifId, title, description, time, date, type, payload);
+    } else if (type == 8) {
+      /// visit reminder
+      return NewestVisitNotif.fromJson(
+          notifId, title, description, time, date, type, payload);
+    }
+  }
+
+  toJson();
 }
 
 class InvitedDoctors {
@@ -202,13 +175,88 @@ class InvitedDoctors {
   }
 }
 
-class NewestVisit {
-  int id;
+class NewestEventsNotif extends NewestNotif {
+  int eventId;
+  Owner owner;
+  List<InvitedDoctors> invitedDoctors;
+  String time;
+  String endTime;
+
+  NewestEventsNotif(int notifId, String title, String description,
+      String notifTime, String notifDate, int notifType,
+      {this.eventId, this.owner, this.invitedDoctors, this.time, this.endTime})
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType);
+
+  NewestEventsNotif.fromJson(
+      int notifId,
+      String title,
+      String description,
+      String notifTime,
+      String notifDate,
+      int notifType,
+      Map<String, dynamic> json)
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType) {
+    eventId = json['id'];
+    owner = json['owner'] != null ? new Owner.fromJson(json['owner']) : null;
+//    if (json['invited_patients'] != null) {
+//      invitedPatients = new List<Null>();
+//      json['invited_patients'].forEach((v) {
+//        invitedPatients.add(new Null.fromJson(v));
+//      });
+//    }
+    if (json['invited_doctors'] != null) {
+      invitedDoctors = new List<InvitedDoctors>();
+      json['invited_doctors'].forEach((v) {
+        invitedDoctors.add(new InvitedDoctors.fromJson(v));
+      });
+    }
+    title = json['title'];
+    description = json['description'];
+    notifTime = json['time'];
+    endTime = json['end_time'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.eventId;
+    if (this.owner != null) {
+      data['owner'] = this.owner.toJson();
+    }
+//    if (this.invitedPatients != null) {
+//      data['invited_patients'] =
+//          this.invitedPatients.map((v) => v.toJson()).toList();
+//    }
+    if (this.invitedDoctors != null) {
+      data['invited_doctors'] =
+          this.invitedDoctors.map((v) => v.toJson()).toList();
+    }
+    data['title'] = this.title;
+    data['description'] = this.description;
+    data['time'] = this.notifTime;
+    data['end_time'] = this.endTime;
+    return data;
+  }
+}
+
+class NewestVisitNotif extends NewestNotif {
+  /// visit reminder/ visit accepted/ visit rejected/ visit pending
+  int visitId;
   String createdDate;
   String modifiedDate;
   bool enabled;
   String doctorMessage;
-  String title;
   int visitType;
   int visitMethod;
   int visitDurationPlan;
@@ -216,29 +264,63 @@ class NewestVisit {
   String requestVisitTime;
   int status;
 
-  int doctor;
-  int patient;
-  int panel;
+  int doctorId;
+  int patientId;
+  int panelId;
 
-  NewestVisit(
-      {this.id,
+  VisitEntity getVisitEntity() {
+    return VisitEntity(
+        id: visitId,
+        visitType: visitType,
+        visitMethod: visitMethod,
+        visitDurationPlan: visitDurationPlan,
+        doctor: doctorId,
+        patient: patientId,
+        panel: panelId,
+        status: status,
+        visitTime: requestVisitTime);
+  }
+
+  NewestVisitNotif(int notifId, String title, String description,
+      String notifTime, String notifDate, int notifType,
+      {this.visitId,
       this.createdDate,
       this.modifiedDate,
       this.enabled,
       this.doctorMessage,
-      this.title,
       this.visitType,
       this.visitMethod,
       this.visitDurationPlan,
       this.patientMessage,
       this.requestVisitTime,
       this.status,
-      this.doctor,
-      this.patient,
-      this.panel});
+      this.doctorId,
+      this.patientId,
+      this.panelId})
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType);
 
-  NewestVisit.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+  NewestVisitNotif.fromJson(
+      int notifId,
+      String title,
+      String description,
+      String notifTime,
+      String notifDate,
+      int notifType,
+      Map<String, dynamic> json)
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType) {
+    visitId = json['id'];
     createdDate = json['created_date'];
     modifiedDate = json['modified_date'];
     enabled = json['enabled'];
@@ -250,14 +332,14 @@ class NewestVisit {
     patientMessage = json['patient_message'] ?? "";
     requestVisitTime = json['request_visit_time'];
     status = json['status'];
-    doctor = json['doctor'];
-    patient = json['patient'];
-    panel = json['panel'];
+    doctorId = json['doctor'];
+    patientId = json['patient'];
+    panelId = json['panel'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    data['id'] = this.visitId;
     data['created_date'] = this.createdDate;
     data['modified_date'] = this.modifiedDate;
     data['enabled'] = this.enabled;
@@ -269,89 +351,113 @@ class NewestVisit {
     data['patient_message'] = this.patientMessage;
     data['request_visit_time'] = this.requestVisitTime;
     data['status'] = this.status;
-    data['doctor'] = this.doctor;
-    data['patient'] = this.patient;
-    data['panel'] = this.panel;
+    data['doctor'] = this.doctorId;
+    data['patient'] = this.patientId;
+    data['panel'] = this.panelId;
     return data;
-  }
-
-  String getNotificationTitle() {
-    String title = "عنوان";
-    if (status == 0) {
-      title = "در انتظار تایید ویزیت";
-    } else if (status == 1) {
-      title = "تایید درخواست ویزیت";
-    } else if (status == 2) {
-      title = "رد درخواست ویزیت";
-    }
-    // if (this.title != null && this.title!="") {
-    //   title = this.title +": " + title;
-    // }
-    return title;
-  }
-
-  String getNotificationDescription() {
-    return (visitType == 0 ? "ویزیت حضوری" : "ویزیت مجازی");
-  }
-
-  String getNotificationTime() {
-    return requestVisitTime;
-  }
-
-  Color getNotificationColor() {
-    return status == 0
-        ? IColors.darkGrey
-        : (status == 1 ? IColors.themeColor : IColors.red);
-  }
-
-  String getNotificationKey() {
-    return id.toString() +
-            "-" +
-            status.toString() +
-            "-" +
-            panel.toString() +
-            "-" +
-            requestVisitTime ??
-        "";
   }
 }
 
-class NewestMedicalTest {
+class NewestMedicalTestNotif extends NewestNotif {
   /// TODO amir: check data json of notification to build it's model
 
-  int doctor_id;
-  int patient_id;
-  int panelId;
   int testId;
+  String testTitle;
+  String testDescription;
+  int doctorId;
+  int patientId;
+  int panelId;
 
-  NewestMedicalTest(
-      {this.doctor_id, this.patient_id, this.panelId, this.testId});
+  NewestMedicalTestNotif(int notifId, String title, String description,
+      String notifTime, String notifDate, int notifType,
+      {this.testId,
+      this.testTitle,
+      this.testDescription,
+      this.doctorId,
+      this.patientId,
+      this.panelId})
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType);
 
-  NewestMedicalTest.fromJson(Map<String, dynamic> json) {
-    doctor_id = intPossible(json['doctor_id']);
-    patient_id = intPossible(json['patient_id']);
+  NewestMedicalTestNotif.fromJson(
+      int notifId,
+      String title,
+      String description,
+      String notifTime,
+      String notifDate,
+      int notifType,
+      Map<String, dynamic> json)
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType) {
+    doctorId = intPossible(json['doctor_id']);
+    patientId = intPossible(json['patient_id']);
     testId = intPossible(json['test_id']);
     panelId = intPossible(json['panel_id']);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['doctor_id'] = doctor_id;
-    data['patient_id'] = patient_id;
+    data['doctor_id'] = doctorId;
+    data['patient_id'] = patientId;
     data['test_id'] = testId;
     data['panel_id'] = panelId;
     return data;
   }
+}
 
-  String getNotificationTitle() {
-    String title = "عنوان";
+class NewestVideoVoiceCallNotif extends NewestNotif {
+  /// TODO amir: check data json of notification to build it's model
 
-    /// TODO
-    return title;
+  User user;
+  String channelName;
+  VisitEntity visit;
+
+  NewestVideoVoiceCallNotif(int notifId, String title, String description,
+      String notifTime, String notifDate, int notifType,
+      {this.user, this.channelName, this.visit})
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType);
+
+  NewestVideoVoiceCallNotif.fromJson(
+      int notifId,
+      String title,
+      String description,
+      String notifTime,
+      String notifDate,
+      int notifType,
+      Map<String, dynamic> json)
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType) {
+    user = User.fromJson(json['partner_info']);
+    channelName = json['channel_name'];
+    if (json.containsKey('visit')) visit = VisitEntity.fromJson(json['visit']);
   }
 
-  String getNotificationDescription() {
-    /// TODO
-    return "";
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['partner_info'] = user.toJson();
+    data['channel_name'] = channelName;
+    data['visit'] = visit.toJson();
+    return data;
   }
 }

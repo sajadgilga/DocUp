@@ -44,7 +44,6 @@ class _PanelState extends State<Panel> {
   @override
   initState() {
     BlocProvider.of<TabSwitchBloc>(context).listen((data) {
-      print("helloooooooooooooooooooooooooooooooooooooooo");
       setState(() {});
     });
     super.initState();

@@ -1,4 +1,6 @@
 import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorPlan.dart';
+import 'package:docup/utils/dateTimeService.dart';
 
 import 'PatientEntity.dart';
 
@@ -35,6 +37,34 @@ class VisitEntity {
   int visitDurationPlan;
   String visitTime;
 
+  String get visitTypeAndMethodDescription {
+    if (visitType == 0) {
+      return "ویزیت" + " " + visitTypeName;
+    } else if (visitType == 1) {
+      return "ویزیت" + " " + visitTypeName + " " + visitMethodName;
+    }
+  }
+
+  String get visitTypeName {
+    if (visitType == 0) {
+      return "حضوری";
+    } else if (visitType == 1) {
+      return "مجازی";
+    }
+  }
+
+  String get visitMethodName {
+    if (visitMethod == 0) {
+      return "متنی";
+    } else if (visitMethod == 1) {
+      return "صوتی";
+    } else if (visitMethod == 2) {
+      return "تصویری";
+    } else {
+      return "";
+    }
+  }
+
   VisitEntity(
       {this.id,
       this.createdDate,
@@ -51,6 +81,20 @@ class VisitEntity {
       this.visitMethod,
       this.visitDurationPlan,
       this.visitTime});
+
+  int get visitDurationMinutes {
+    return (visitDurationPlan + 1) * DoctorPlan.hourMinutePart;
+  }
+
+  int get visitEndTimeDiffFromNow {
+    DateTime now = DateTimeService.getCurrentDateTime();
+    DateTime visitStartTime =
+        DateTimeService.getDateTimeFromStandardString(visitTime);
+    DateTime visitEndTime =
+        visitStartTime.add(Duration(minutes: visitDurationMinutes));
+    Duration diff = visitEndTime.difference(now);
+    return diff.inSeconds;
+  }
 
   VisitEntity.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('id')) id = json['id'];

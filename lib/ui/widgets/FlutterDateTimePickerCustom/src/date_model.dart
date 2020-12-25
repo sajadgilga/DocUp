@@ -1,3 +1,5 @@
+import 'package:docup/utils/dateTimeService.dart';
+
 import 'date_format.dart';
 import 'datetime_util.dart';
 import 'dart:math';
@@ -124,7 +126,7 @@ class DatePickerModel extends CommonPickerModel {
     this.maxTime = maxTime ?? DateTime(2049, 12, 31);
     this.minTime = minTime ?? DateTime(1970, 1, 1);
 
-    currentTime = currentTime ?? DateTime.now();
+    currentTime = currentTime ?? DateTimeService.getCurrentDateTime();
     if (currentTime != null) {
       if (currentTime.compareTo(this.maxTime) > 0) {
         currentTime = this.maxTime;
@@ -358,7 +360,7 @@ class TimePickerModel extends CommonPickerModel {
 
   TimePickerModel({DateTime currentTime, LocaleType locale, this.showSecondsColumn: true})
       : super(locale: locale) {
-    this.currentTime = currentTime ?? DateTime.now();
+    this.currentTime = currentTime ?? DateTimeService.getCurrentDateTime();
 
     _currentLeftIndex = this.currentTime.hour;
     _currentMiddleIndex = this.currentTime.minute;
@@ -426,7 +428,7 @@ class TimePickerModel extends CommonPickerModel {
 //a time picker model
 class Time12hPickerModel extends CommonPickerModel {
   Time12hPickerModel({DateTime currentTime, LocaleType locale}) : super(locale: locale) {
-    this.currentTime = currentTime ?? DateTime.now();
+    this.currentTime = currentTime ?? DateTimeService.getCurrentDateTime();
 
     _currentLeftIndex = this.currentTime.hour % 12;
     _currentMiddleIndex = this.currentTime.minute;
@@ -511,7 +513,7 @@ class DateTimePickerModel extends CommonPickerModel {
     } else {
       this.maxTime = maxTime;
       this.minTime = minTime;
-      var now = DateTime.now();
+      var now = DateTimeService.getCurrentDateTime();
       if (this.minTime != null && this.minTime.isAfter(now)) {
         this.currentTime = this.minTime;
       } else if (this.maxTime != null && this.maxTime.isBefore(now)) {

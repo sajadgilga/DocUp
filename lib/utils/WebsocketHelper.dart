@@ -58,7 +58,7 @@ class SocketHelper {
                 _retryCount = 0;
                 onReceive(event);
               }, onDone: () {
-                print('websocket got done');
+                print('websocket got done ' + DateTime.now().toString());
                 webSocketStatusController.text = "0";
 
                 /// as disconnected status
@@ -70,7 +70,7 @@ class SocketHelper {
                 webSocketStatusController.text = "0";
 
                 /// as disconnected status
-                print('websocket error');
+                print('websocket error ' + DateTime.now().toString());
                 final _retryTimeout = min(_maxRetryTimeout, 2 ^ (_retryCount++));
                 Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
                   connect(url);

@@ -50,8 +50,8 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
     }
   }
 
-  void _raiseGetPartnerEntity(entity) {
-    if (entity.type == RoleType.PATIENT) {
+  void _raiseGetPartnerEntity(Entity entity) {
+    if (state.entity.type == RoleType.PATIENT) {
       var panels = (entity.mEntity as PatientEntity).panels;
       if (panels.length > 0) {
         for (var panel in panels) {

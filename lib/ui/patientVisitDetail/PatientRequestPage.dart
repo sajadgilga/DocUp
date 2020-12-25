@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/FileBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/constants/assets.dart';
@@ -23,6 +22,7 @@ import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/PicList.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -65,13 +65,14 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     this.sectionId = _state.entity.sectionIdByNameAndPatientEntityId(
         Strings.testResults, widget.patientEntity.id);
-    if (sectionId != null)
-      BlocProvider.of<FileBloc>(context)
-          .add(FileListGet(listId: this.sectionId));
+    // if (sectionId != null)
+    //   BlocProvider.of<FileBloc>(context)
+    //       .add(FileListGet(listId: this.sectionId));
 
     _bloc.responseVisitStream.listen((data) {
-      submitLoadingToggle = false;
       if (data.status == Status.COMPLETED) {
+        submitLoadingToggle = false;
+
         String span = data.data.status == 1 ? "تایید" : "رد";
         showOneButtonDialog(
             context, 'درخواست بیمار با موفقیت $span شد', "تایید", () {
@@ -314,7 +315,6 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   }
 
   _patientDataWidget(VisitEntity entity) {
-    String visitMethod = entity.visitMethod == 0 ? "متنی" : "تصویری";
     return Expanded(
       child: Container(
         child: Row(
@@ -332,7 +332,8 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                 Container(
                   width: 65,
                   child: AutoText(
-                    replaceFarsiNumber(normalizeDateAndTime(entity.visitTime,
+                    replaceFarsiNumber(DateTimeService.normalizeDateAndTime(
+                        entity.visitTime,
                         cutSeconds: true)),
                     style: TextStyle(fontSize: 12, color: IColors.green),
                     textAlign: TextAlign.end,
@@ -365,9 +366,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   Row(
                     children: [
                       AutoText(
-                        entity.visitType == 0
-                            ? "ویزیت حضوری"
-                            : "ویزیت مجازی، $visitMethod",
+                        entity.visitTypeAndMethodDescription,
                         textAlign: TextAlign.right,
                         softWrap: true,
                         overflow: TextOverflow.fade,

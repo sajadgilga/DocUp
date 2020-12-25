@@ -2,16 +2,32 @@ const VISIT_METHOD = "نوع مشاوره";
 const VISIT_DURATION_PLAN = "مدت زمان مشاوره";
 const String TIME_SELECTION = "انتخاب ساعت";
 
-enum VisitMethod { TEXT, VOICE,  VIDEO}
-
-extension VisitMethodExtension on VisitMethod {
+enum VisitTypes{
+  VIRTUAL,PHYSICAL
+}
+extension VisitTypeExtension on VisitTypes {
   String get title {
     switch (this) {
-      case VisitMethod.TEXT:
+      case VisitTypes.VIRTUAL:
+        return "مجازی";
+      case VisitTypes.PHYSICAL:
+        return "حضوری";
+      default:
+        return "";
+    }
+  }
+}
+
+enum VirtualVisitMethod { TEXT, VOICE,  VIDEO}
+
+extension VisitMethodExtension on VirtualVisitMethod {
+  String get title {
+    switch (this) {
+      case VirtualVisitMethod.TEXT:
         return "متنی";
-      case VisitMethod.VOICE:
+      case VirtualVisitMethod.VOICE:
         return "صوتی";
-      case VisitMethod.VIDEO:
+      case VirtualVisitMethod.VIDEO:
         return "تصویری";
       default:
         return "";
@@ -38,13 +54,13 @@ extension VisitDurationPlanExtension on VisitDurationPlan {
   int get duration {
     switch (this) {
       case VisitDurationPlan.BASE:
-        return 30;
+        return 15;
       case VisitDurationPlan.SUPPLEMENTARY:
-        return 60;
-      case VisitDurationPlan.LONG:
-        return 90;
-      default:
         return 30;
+      case VisitDurationPlan.LONG:
+        return 45;
+      default:
+        return 15;
     }
   }
 }

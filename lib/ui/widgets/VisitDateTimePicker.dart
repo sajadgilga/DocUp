@@ -1,11 +1,12 @@
 import 'dart:math';
 
 import 'package:docup/constants/colors.dart';
-import 'package:docup/models/DoctorEntity.dart';
+import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DailyTimeTable.dart';
 import 'package:docup/utils/Utils.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,8 @@ class VisitDateTimePicker extends StatefulWidget {
   final TextEditingController dateTextController;
   final TextEditingController timeTextController;
 
-  DoctorEntity doctorEntity;
+  DoctorPlan doctorPlan;
+  VisitType visitType;
   final TimeSelectorType timeSelectorType;
 
   /// scrollable widget
@@ -31,8 +33,8 @@ class VisitDateTimePicker extends StatefulWidget {
   final TextEditingController planDurationInMinute;
   final Function onBlocTap;
 
-  VisitDateTimePicker(
-      this.dateTextController, this.timeTextController, this.doctorEntity,
+  VisitDateTimePicker(this.dateTextController, this.timeTextController,
+      this.doctorPlan, this.visitType,
       {this.timeSelectorType = TimeSelectorType.Table,
       this.endTimeWidget = false,
       this.planDurationInMinute,
@@ -51,9 +53,7 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
   @override
   void initState() {
     disableDays = getDisableDays(
-        (widget.doctorEntity == null || widget.doctorEntity.plan == null)
-            ? {}
-            : widget.doctorEntity.plan.availableDays);
+        (widget.visitType == null) ? <int>[] : widget.visitType.availableDays);
     initialDate = ['', null].contains(widget.dateTextController.text)
         ? getInitialDate(disableDays)
         : widget.dateTextController.text;
@@ -63,7 +63,8 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
 
   @override
   Widget build(BuildContext context) {
-    var jalali = getJalalyDateFromJalilyString(widget.dateTextController.text);
+    var jalali = DateTimeService.getJalalyDateFromJalilyString(
+        widget.dateTextController.text);
     if (jalali != null) {
       selectedDay = jalali.weekDay - 1;
     }
@@ -81,7 +82,7 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                     color: IColors.themeColor,
                     type: "date",
                     initial: initialDate,
-                    min: getYesterdayInJalilyString(),
+                    min: DateTimeService.getYesterdayInJalilyString(),
                     disable: disableDays,
                     onSelect: (date) {
                       widget.dateTextController.text = date;
@@ -99,18 +100,21 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                           timeController: widget.timeTextController,
                         )
                       : DailyAvailableVisitTime(
-                          startTableHour: widget.doctorEntity.plan
-                              .getMinWorkTimeHour(selectedDay),
-                          endTableHour: widget.doctorEntity.plan
-                              .getMaxWorkTimeHour(selectedDay),
+                          startTableHour: widget.visitType
+                                  ?.getMinWorkTimeHour(selectedDay) ??
+                              0,
+                          endTableHour: widget.visitType
+                                  ?.getMaxWorkTimeHour(selectedDay) ??
+                              0,
 
                           /// TODO
                           planDurationInMinute: widget.planDurationInMinute,
                           selectedDateController: widget.dateTextController,
                           selectedTimeController: widget.timeTextController,
-                          dailyDoctorWorkTime: widget.doctorEntity.plan
-                              .getDailyWorkTimeTable(selectedDay),
-                          dayUnAvailableTimeTable: widget.doctorEntity.plan
+                          dailyDoctorWorkTime: widget.visitType
+                                  ?.getDailyWorkTimeTable(selectedDay) ??
+                              VisitType.getEmptyTablePlan(),
+                          dayReservedTimeTable: widget.doctorPlan
                               .getTakenVisitDailyTimeTable(
                                   widget.dateTextController.text),
                           onBlocTap: widget.onBlocTap,
@@ -167,7 +171,7 @@ class _ScrollableTimeSelectorState extends State<ScrollableTimeSelector> {
                     if (![null, ""].contains(startTimeController.text)) {
                       hour = int.parse(startTimeController.text.split(":")[0]);
                     } else {
-                      DateTime now = DateTime.now();
+                      DateTime now = DateTimeService.getCurrentDateTime();
                       hour = now.hour;
                     }
                     DateTime startDateTime = DateTime(2020, 1, 1, hour, 0, 0);
@@ -203,7 +207,7 @@ class _ScrollableTimeSelectorState extends State<ScrollableTimeSelector> {
               : SizedBox(),
           GestureDetector(
             onTap: () {
-              DateTime now = DateTime.now();
+              DateTime now = DateTimeService.getCurrentDateTime();
               DateTime startDateTime = DateTime(2020, 1, 1, now.hour, 0, 0);
               showTime(startTimeController, startDateTime);
             },

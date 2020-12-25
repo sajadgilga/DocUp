@@ -93,19 +93,19 @@ class ApiProvider {
     }
     return responseJson;
   }
+
   Future<dynamic> delete(String url) async {
     var responseJson;
     try {
       final headers = await getHeaders();
       print(_BASE_URL + url);
-      final response = await http.delete(_BASE_URL + url,headers: headers);
+      final response = await http.delete(_BASE_URL + url, headers: headers);
       responseJson = _response(httpResponse: response);
     } on SocketException {
       throw FetchDataException('اتصال به اینترنت را بررسی کنید');
     }
     return responseJson;
   }
-
 
   dynamic _response(
       {http.Response httpResponse,
@@ -131,6 +131,7 @@ class ApiProvider {
       case 400:
         var responseJson = decodeResponse(utf8Support, response);
         print("API RESPONSE -->>>> code:${response.statusCode} - ${body}");
+
         /// some changes happened in backend and error_code became code and detail became msg
         throw ApiException(
             responseJson['error_code'] ?? responseJson['code'],

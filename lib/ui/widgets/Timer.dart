@@ -8,6 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'AutoText.dart';
 
 class Timer extends StatelessWidget {
+  TextStyle style;
+
+  Timer({this.style});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class Timer extends StatelessWidget {
             (state.duration % 60).floor().toString().padLeft(2, '0');
         return AutoText(
           replaceFarsiNumber(' $minutesStr:$secondsStr '),
-          style: TextStyle(
+          style: style??TextStyle(
             fontSize: 14,
             color: IColors.themeColor,
             fontFamily: 'iransans',
@@ -30,5 +33,4 @@ class Timer extends StatelessWidget {
       },
     );
   }
-
 }

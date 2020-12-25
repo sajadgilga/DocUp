@@ -1,3 +1,5 @@
+import 'package:docup/constants/settings.dart';
+
 class Strings {
   static const String appTitle = 'Flutter Demo';
   static const String bottomNavigationHomeTitle = 'خانه';
@@ -115,7 +117,7 @@ class Strings {
 
 //
   static final String physicalReservationLabel = 'رزرو ویزیت حضوری';
-  static final String virtualReservationLabel = 'ویزیت مجازی';
+  static final String virtualReservationLabel = 'رزرو ویزیت مجازی';
 
 //
   static final String patientTrackingVisitFaceToFaceLabel = 'ویزیت حضوری';
@@ -210,6 +212,15 @@ class Strings {
       "لطفا زمان ویزیت مناسبی را وارد کنید";
   static final String pastStartVisitTimeMessage =
       "شما نمی توانید ساعتی که گذشته است را به عنوان زمان شروع ویزیت انتخاب کنید.";
+  static final String invalidDurationPlan_EmptyDurationPlan =
+      "پزشک زمانی را برای ویزیت تایید نمی کند.";
+  static final List<String> invalidDurationPlan_Plans = [
+    "مدت زمان ویزیت انتخاب شده مورد تایید پزشک نیست." +
+        "\n" +
+        " زمان های مورد تایید، ویزیت های",
+    "??",
+    "دقیقه ای هستند."
+  ];
   static final String enterVisitDateMessage = "لطفا تاریخ ویزیت را وارد کنید";
   static final String offlineDoctorMessage =
       " پزشک آنلاین نیست لطفا زمانی را برای ویزیت مشخص کنید";
@@ -220,7 +231,8 @@ class Strings {
   static final String periodTextFieldHint = 'هر چند ساعت';
   static final String submitDrugLabel = 'ارسال برای بیمار';
 
-  static final String supportWhatsAppPhoneNumber = "+989128123351";
+  static final String supportWhatsAppPhoneNumber =
+      Settings.bazaarBuild ? "+989335705997" : "+989128123351";
   static final String supportTelegramId = "amirmosio";
 
   static final String noVirtualAppointment =
@@ -236,14 +248,21 @@ class Strings {
   static final String policyDescription =
       "داکآپ به حریم خصوص کاربران خود احترام می گذارد و متعهد به حفظ اطلاعات شخصی است که شما در اختیار ان می گذارید." +
           "\n" +
-          "پس از افزایش اعتبار، پس از هر ویزیت با دکتر هزینه ویزیت از اعتبار شما کسر می شود." +
+          "پس از افزایش اعتبار و پس از هر ویزیت با دکتر هزینه ویزیت از اعتبار بیمار کسر می شود." +
           "\n" +
-          "هزینه ویزیت توسط خود دکتر و با توجه به نوع ویزیت (مجازی، حضوری) تعیین می شود."
+          "هزینه ویزیت توسط خود دکتر و با توجه به نوع ویزیت (حضوری، متنی، صوتی، تصویری) تعیین می شود."
               " اطلاعاتی مثل شماره تلفن قرار داده شده که صرفا برای امنیت هنگام ورود به اکانت اپلیکیشن گرفته می شود، در اختیار کاربران دیگر قرار نمی گیرد." +
           "\n" +
-          "اطلاعات دیگری که کاربر نیاز به استفاده از ان ها در برنامه دارد برای اطمینان از هویت اشخاص و مدارک دیگر صرفا استفاده پزشکی دارد."
-              "\n" +
-          "...";
+          "کد‌ملی برای پرونده سلامت کلینیک نورونیو استفاده می شود، و این کلینیک دیتا های مربوط به بیماران را برای خدمات خود استفاده می کند." +
+          "\n" +
+          "اطلاعات دیگری که کاربر نیاز به استفاده از ان ها در برنامه دارد برای اطمینان از هویت اشخاص و مدارک دیگر صرفا استفاده پزشکی دارد.";
+  static final String aboutUsTitle = "درباره ما";
+  static final String aboutUsDescription = "اپلیکیشن داک اپ";
+  static final String paymentDescriptionTitle = "روش های پرداخت";
+  static final String paymentDescriptionPatient =
+      "با انتخاب مبلغ مورد نظر برای افزایش اعتبار و زدن بر روی دکمه آن، به درگاه پرداخت منتقل می شوید، که با تمکیل فرایند، مبلغ مورد نظر، به اعتبار شما اضافه می شود. لازم به ذکر است بعد از افزایش حساب بعد از پذیرش هر ویزیت توسط دکتر، به اندازه هزینه ویزیت از اعتبار شما کاسته می شود و مبلغ برای پزشک ارسال می گردد.";
+  static final String paymentDescriptionDoctor =
+      "بعد از پذیرفتن هر ویزیت از طریق اپلیکیشن، هزینه ای که بیمار بابت، ویزیت پرداخته است به موجودی شما اضافه می گردد.";
 
   // static final String billingDescriptionTitle = "روش های پرداخت";
   static final String doctorBillingDescription =
@@ -261,11 +280,11 @@ class Strings {
   static final String videoCallPatientPanelDescription =
       "در صورت تایید پزشک، امکان برقراری ارتباط از طریق تماس تصویری امکان پذیر است";
   static final String videoCallDoctorPanelDescription =
-      "با شروع تماس تصویری از سمت بیمار نوتیفیکیشی جهت ملحق شدن برای شما ارسال خواهد شد";
+      "با شروع تماس تصویری از سمت بیمار نوتیفیکیشن جهت ملحق شدن برای شما ارسال خواهد شد";
   static final String voiceCallPatientPanelDescription =
       "در صورت تایید پزشک، امکان برقراری ارتباط از طریق تماس صوتی امکان پذیر است";
   static final String voiceCallDoctorPanelDescription =
-      "با شروع تماس صوتی از سمت بیمار نوتیفیکیش‌ی جهت ملحق شدن برای شما ارسال خواهد شد";
+      "با شروع تماس صوتی از سمت بیمار نوتیفیکیشن جهت ملحق شدن برای شما ارسال خواهد شد";
 
   static final String noReservedVideoCall =
       "ویزیت تصویری برای اکنون رزرو نشده است.";
@@ -276,6 +295,12 @@ class Strings {
       "جدول زمانی ویزیت ها حدولی است که شما می توانید زمان‌های کاری خود در طول هفته را مشخص کنید تا بیماران بازه‌ای از این زمان را برای ویزیت خود انتخاب کنند." +
           "\n" +
           "در این جدول هر ساعت از شبانه روز به چهار بلاک یا خانه ۱۵ دقیقه ای تقسیم شده است.";
+
+  static final String doctorWarningVisitEnding =
+      "پایان زمان ویزیت نزدیک است، ایا مایل به تمدید زمان ویزیت به اندازه دو دقیقه هستید؟\n" +
+          "در صورتی که ویزیت را تمدید نکنید تماس به صورت اتوماتیک در پایان زمان ویزین قطع می گردد.";
+  static final String endedVisitCallAlertToCloseCall =
+      "زمان ویزیت مجازی به پایان رسیده است و امکان برقراری تماس هم اکنون وجود ندارد.";
 
   static final bankCodes = {
     '207177': 'بانک توسعه صادرات ایران',

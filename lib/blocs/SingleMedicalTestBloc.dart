@@ -16,7 +16,7 @@ class SingleMedicalTestBloc extends Bloc<MedicalTestEvent, MedicalTestState> {
   Stream<Response<MedicalTestResponseEntity>> get apiStream =>
       _utilController.stream;
 
-  addTestToPatient(int testId, int patientId) async {
+  addTestToPartner(int testId, int patientId) async {
     apiSink.add(Response.loading());
     try {
       final MedicalTestResponseEntity result =
@@ -61,7 +61,7 @@ class SingleMedicalTestBloc extends Bloc<MedicalTestEvent, MedicalTestState> {
     } else if (event is GetPatientTestAndResponse) {
       yield* _getPatientTestAndResponse(event.testId, event.patientId);
     } else if (event is AddTestToPatient) {
-      yield* addTestToPatient(event.testId, event.patientId);
+      yield* addTestToPartner(event.testId, event.patientId);
     }
   }
 }

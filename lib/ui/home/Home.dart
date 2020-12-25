@@ -8,13 +8,13 @@ import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
+import 'package:docup/services/VibrateAndSoundService.dart';
 import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/home/iPartner/IPartner.dart';
 import 'package:docup/ui/home/notification/Notification.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
-import 'package:docup/ui/widgets/medicines/ReminderList.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -90,7 +90,7 @@ class _HomeState extends State<Home> {
   // }
 
   Widget _trackingList() {
-    return BlocBuilder <PatientTrackerBloc, TrackerState>(
+    return BlocBuilder<PatientTrackerBloc, TrackerState>(
         builder: (context, state) {
       return Column(
         children: [
@@ -211,7 +211,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _iPartner() {
-    return BlocBuilder <EntityBloc, EntityState>(
+    return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
         if (state is EntityLoaded) {
           if (state.entity.partnerEntity != null) {
@@ -264,20 +264,12 @@ class _HomeState extends State<Home> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
-            BlocBuilder <NotificationBloc, NotificationState>(
+            BlocBuilder<NotificationBloc, NotificationState>(
                 builder: (context, state) {
-              if (state.notifications != null &&
-                  state.notifications.newestEventsCounts != null)
-                return HomeNotification(
-                    onPush: widget.onPush,
-                    newNotificationCount:
-                        state.notifications.newestEventsCounts +
-                            state.notifications.newestVisitsCounts);
-              else
-                return HomeNotification(
+              return HomeNotification(
                   onPush: widget.onPush,
-                  newNotificationCount: 0,
-                );
+                  newNotificationCount:
+                      state.notifications?.newestNotifsCounts ?? 0);
             }),
             Expanded(
               child: Container(

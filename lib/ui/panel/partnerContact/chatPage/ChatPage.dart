@@ -15,6 +15,7 @@ import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -184,7 +185,7 @@ class _ChatPageState extends State<ChatPage> {
             String _visitTime;
             if (_visitTimeState is VisitTimeLoadedState) {
               _visitTime = replaceFarsiNumber(
-                  normalizeDateAndTime(_visitTimeState.visit.visitTime));
+                  DateTimeService.normalizeDateAndTime(_visitTimeState.visit.visitTime));
               return Stack(children: <Widget>[
                 _ChatPage(),
                 PanelAlert(

@@ -91,7 +91,7 @@ class SearchPatient extends SearchEvent {
   String text;
   String patientFilter;
 
-  SearchPatient({this.text, this.patientFilter});
+  SearchPatient({this.text="", this.patientFilter});
 }
 
 class SearchDoctor extends SearchEvent {
@@ -99,7 +99,6 @@ class SearchDoctor extends SearchEvent {
   String paramSearch;
   String expertise;
   int clinicId;
-  String patientUsername;
 
   /// TODO pagination should be completed after api document
 
@@ -107,7 +106,6 @@ class SearchDoctor extends SearchEvent {
       {this.paramSearch,
       this.clinicId,
       this.expertise,
-      this.patientUsername,
       this.isMyDoctors = false});
 }
 class ErrorEvent extends SearchEvent{

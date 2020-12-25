@@ -16,6 +16,7 @@ import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -98,7 +99,7 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
           String _visitTime;
           if (_visitTimeState is VisitTimeLoadedState) {
             _visitTime = replaceFarsiNumber(
-                normalizeDateAndTime(_visitTimeState.visit.visitTime));
+                DateTimeService.normalizeDateAndTime(_visitTimeState.visit.visitTime));
 
             return Stack(children: <Widget>[
               _VideoOrVoiceCallPage(),
@@ -232,6 +233,8 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
                         channelName: value,
                         videoCall: widget.videoCall,
                         user: widget.entity.partnerEntity.user,
+                        visit: visitEntity,
+                        entity: widget.entity,
                       ),
                     ),
                   );

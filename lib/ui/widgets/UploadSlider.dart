@@ -37,9 +37,10 @@ class AllowedFile {
 
 class UploadFileSlider extends StatefulWidget {
   int listId;
+  int partnerId;
   final Widget body;
 
-  UploadFileSlider({Key key, @required this.listId, this.body})
+  UploadFileSlider({Key key, @required this.listId, this.body, this.partnerId})
       : super(key: key);
 
   @override
@@ -64,10 +65,18 @@ class UploadFileSliderState extends State<UploadFileSlider> {
           Navigator.of(context).maybePop();
           Navigator.of(context, rootNavigator: true).maybePop();
         });
-      } else if (data is PictureError) {
-        showPicUploadedDialog(context, "مشکلی پیش آمد. دوباره تلاش کنید", () {
-          Navigator.of(context, rootNavigator: true).maybePop();
-        });
+      } else if (data is FileError) {
+        if (data.errorCode == 621) {
+          showPicUploadedDialog(context,
+              "برای اپلود فایل باید حداقل یک ویزیت تایید شده توسط پزشک برای اینده وجود داشته باشد.",
+              () {
+            Navigator.of(context, rootNavigator: true).maybePop();
+          });
+        } else {
+          showPicUploadedDialog(context, "مشکلی پیش آمد. دوباره تلاش کنید", () {
+            Navigator.of(context, rootNavigator: true).maybePop();
+          });
+        }
       }
     });
     super.initState();
@@ -189,8 +198,8 @@ class UploadFileSliderState extends State<UploadFileSlider> {
     if (_titleController.text != '') file.title = _titleController.text;
     if (_descriptionController.text != '')
       file.description = _descriptionController.text;
-    BlocProvider.of<FileBloc>(context)
-        .add(FileUpload(listId: widget.listId, file: file));
+    BlocProvider.of<FileBloc>(context).add(FileUpload(
+        listId: widget.listId, file: file, partnerId: widget.partnerId));
     showDialog(
         context: context,
         builder: (BuildContext context) {

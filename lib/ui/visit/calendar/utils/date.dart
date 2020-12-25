@@ -1,4 +1,5 @@
 import 'package:docup/ui/visit/calendar/utils/consts.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 class DateUtils {
@@ -94,7 +95,7 @@ class DateUtils {
     List split = date.split('/');
     return Jalali(
             int.parse(split[0]), int.parse(split[1]), int.parse(split[2])) ??
-        Jalali.now();
+        DateTimeService.getCurrentJalali();
   }
 
   static String jalaliToString(Date date) {

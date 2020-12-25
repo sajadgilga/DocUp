@@ -1,16 +1,14 @@
-import 'package:docup/blocs/FileBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/widgets/PicList.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class InfoPage extends StatefulWidget {
   final Entity entity;
-  final Function(String, dynamic, Widget) onPush;
+  final Function(String, dynamic, dynamic, Widget) onPush;
   final String picListLabel;
   final String lastPicsLabel;
   final String uploadLabel;
@@ -70,28 +68,15 @@ class _InfoPageState extends State<InfoPage> {
   }
 
   void _tapUpload() {
+    int partnerId = widget.entity.isDoctor
+        ? widget.entity.patient.id
+        : widget.entity.doctor.id;
     widget.onPush(NavigatorRoutes.uploadFileDialogue,
-        widget.entity.sectionId(widget.pageName), _fakeWidget());
+        widget.entity.sectionId(widget.pageName), partnerId, _fakeWidget());
   }
 
   @override
   Widget build(BuildContext context) {
-    /// if we put this line in init state it will get mixed up with prescription tests and advices
-    FileBloc bloc = BlocProvider.of<FileBloc>(context);
-    var state = bloc.state;
-    int panelSectionId = widget.entity.sectionId(widget.pageName);
-    if (state != null) {
-      if (((state is FileLoading && state.section!=null && state.section.id == panelSectionId) ||
-          (state is FilesLoaded && state.section!=null && state.section.id == panelSectionId))) {
-        /// do nothing
-      }else{
-        bloc.add(FileListGet(listId: panelSectionId));
-
-      }
-    } else {
-      bloc.add(FileListGet(listId: panelSectionId));
-    }
-
     return SingleChildScrollView(
         child: Container(
       child: Column(
@@ -99,7 +84,7 @@ class _InfoPageState extends State<InfoPage> {
           PartnerInfo(
             entity: widget.entity,
             onPush: (route, detail) {
-              widget.onPush(route, detail, null);
+              widget.onPush(route, detail, null, null);
             },
           ),
           PicList(

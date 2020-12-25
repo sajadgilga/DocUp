@@ -4,8 +4,15 @@ import 'package:docup/models/DoctorPlan.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/SnackBar.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
+
+class LegendItem {
+  final String name;
+  final Color color;
+
+  LegendItem(this.name, this.color);
+}
 
 class WeeklyTimeTable extends StatefulWidget {
   final List<List<List<int>>> daysPlanTable;
@@ -13,8 +20,21 @@ class WeeklyTimeTable extends StatefulWidget {
   final int endTableHour;
   final bool editable;
 
-  WeeklyTimeTable(this.daysPlanTable,
-      {this.startTableHour = 0, this.endTableHour = 24, this.editable = true});
+  /// for later info
+  double tableHeight;
+  double cellWidth;
+  double cellHeight;
+  double tabHeight = 50;
+  double gapHeight = 20;
+  int cellRows;
+
+  WeeklyTimeTable(BuildContext parentContext, this.daysPlanTable,
+      {this.startTableHour = 0, this.endTableHour = 24, this.editable = true}) {
+    cellRows = this.endTableHour - this.startTableHour;
+    cellWidth = MediaQuery.of(parentContext).size.width * (15 / 100);
+    cellHeight = MediaQuery.of(parentContext).size.width * (8 / 100);
+    this.tableHeight = cellRows * cellHeight + 55 + tabHeight + gapHeight;
+  }
 
   @override
   _WeeklyTimeTableState createState() => _WeeklyTimeTableState();
@@ -22,8 +42,6 @@ class WeeklyTimeTable extends StatefulWidget {
 
 class _WeeklyTimeTableState extends State<WeeklyTimeTable>
     with TickerProviderStateMixin {
-  double cellWidth;
-  double cellHeight;
   TabController tabController;
 
   @override
@@ -43,14 +61,11 @@ class _WeeklyTimeTableState extends State<WeeklyTimeTable>
 
   @override
   Widget build(BuildContext context) {
-    cellWidth = MediaQuery.of(context).size.width * (19 / 100);
-    cellHeight = MediaQuery.of(context).size.width * (8 / 100);
-    int cellRows = widget.endTableHour - widget.startTableHour;
     List<Widget> coloredTableList = [
       for (int i = DoctorPlan.daysCount - 1; i >= 0; i--)
         DailyWorkTimesTable(
-          cellHeight: cellHeight,
-          cellWidth: cellWidth,
+          cellHeight: widget.cellHeight,
+          cellWidth: widget.cellWidth,
           endTableHour: widget.endTableHour,
           startTableHour: widget.startTableHour,
           dayPlanTable: widget.daysPlanTable[i],
@@ -83,11 +98,14 @@ class _WeeklyTimeTableState extends State<WeeklyTimeTable>
               isScrollable: true,
             ),
           ),
-          ALittleVerticalSpace(),
+          ALittleVerticalSpace(
+            height: widget.gapHeight,
+          ),
           Container(
-            height: cellRows * cellHeight + 55,
+            height: widget.cellRows * widget.cellHeight + 55,
             alignment: Alignment.center,
             child: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
               controller: tabController,
               children: coloredTableList,
             ),
@@ -121,6 +139,11 @@ class DailyWorkTimesTable extends StatefulWidget {
 }
 
 class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
+  Tween<int> lastHoverCell = Tween(begin: -1, end: -1);
+  final LegendItem availableLegendItem = LegendItem("فعال", IColors.themeColor);
+  final LegendItem unavailableLegendItem =
+      LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
+
   @override
   Widget build(BuildContext context) {
     List<Widget> allRows = [];
@@ -162,13 +185,13 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           legendItem(
-            "غیرفعال",
+            unavailableLegendItem.name,
             Container(
               width: 20,
               height: 20,
               child: Icon(
                 Icons.circle,
-                color: IColors.darkGrey,
+                color: unavailableLegendItem.color,
               ),
               color: Color.fromARGB(0, 0, 0, 0),
             ),
@@ -177,13 +200,13 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
             width: 15,
           ),
           legendItem(
-            "فعال",
+            availableLegendItem.name,
             Container(
               width: 20,
               height: 20,
               child: Icon(
                 Icons.circle,
-                color: IColors.themeColor,
+                color: availableLegendItem.color,
               ),
               color: Color.fromARGB(0, 0, 0, 0),
             ),
@@ -203,13 +226,27 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
       Widget w = GestureDetector(
         key: ValueKey((rowNumber).toString() + i.toString()),
         child: getOneCell(rowNumber, i, hourPlanList[i]),
-        onHorizontalDragUpdate: (DragUpdateDetails dragUpdateDetails) {
-          print("fffffffff");
-          print(i);
-          print(dragUpdateDetails);
-        },
+        // onTap: () {
+        //   cellToggle(rowNumber, i);
+        // },
+        // onPointerMove: (m) {
+        //   onPointerMove(rowNumber, i, m.localPosition);
+        // },
+        // onPointerDown: (d) {
+        //   onPointerDown(rowNumber, i, d);
+        // },
+        // onPointerUp: (u) {
+        //   onPointerUp(rowNumber, i, u);
+        // },
         onTap: () {
           cellToggle(rowNumber, i);
+        },
+        onHorizontalDragUpdate: (DragUpdateDetails dragUpdateDetails) {
+          onPointerHorizontalMove(
+              rowNumber, i, dragUpdateDetails.localPosition);
+        },
+        onVerticalDragUpdate: (DragUpdateDetails dragUpdateDetails) {
+          onPointerVerticalMove(rowNumber, i, dragUpdateDetails.localPosition);
         },
       );
       res.add(w);
@@ -220,11 +257,74 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
     );
   }
 
-  void cellToggle(int rowNumber, int index) {
-    setState(() {
+  Tween<int> convertLocalPositionOffsetToLocalPositionShift(Offset offset) {
+    int xGap;
+    int yGap;
+    double x = offset.dx / widget.cellWidth;
+    double y = offset.dy / widget.cellHeight;
+    if (x > 0) {
+      xGap = x.floor();
+    } else {
+      xGap = x.ceil() - 1;
+    }
+
+    if (y > 0) {
+      yGap = y.floor();
+    } else {
+      yGap = y.ceil() - 1;
+    }
+    return Tween(begin: xGap, end: yGap);
+  }
+
+  void onPointerDown(int rowNumber, int index, Offset offset) {
+    lastHoverCell = null;
+  }
+
+  void onPointerUp(int rowNumber, int index, Offset offset) {
+    onPointerHorizontalMove(rowNumber, index, offset);
+    lastHoverCell = null;
+  }
+
+  void onPointerHorizontalMove(int rowNumber, int index, Offset offset) {
+    Tween<int> cellGap = convertLocalPositionOffsetToLocalPositionShift(offset);
+    int cellRowNumber = rowNumber + 0;
+    int cellIndex = index - cellGap.begin;
+    Tween<int> current = Tween(begin: cellIndex, end: cellRowNumber);
+    if (lastHoverCell == null ||
+        current.begin != lastHoverCell.begin ||
+        current.end != lastHoverCell.end) {
+      try {
+        cellToggle(current.end, current.begin);
+        lastHoverCell = current;
+      } catch (e) {}
+    }
+  }
+
+  void onPointerVerticalMove(int rowNumber, int index, Offset offset) {
+    Tween<int> cellGap = convertLocalPositionOffsetToLocalPositionShift(offset);
+    int cellRowNumber = rowNumber + cellGap.end;
+    Tween<int> current = Tween(begin: 0, end: cellRowNumber);
+    if (lastHoverCell == null || current.end != lastHoverCell.end) {
+      try {
+        for (int i = 0; i < DoctorPlan.hourParts; i++) {
+          cellToggle(current.end, i, withoutSetState: true);
+        }
+        lastHoverCell = current;
+        setState(() {});
+      } catch (e) {}
+    }
+  }
+
+  void cellToggle(int rowNumber, int index, {bool withoutSetState = false}) {
+    if (withoutSetState) {
       widget.dayPlanTable[rowNumber][index] =
           widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
-    });
+    } else {
+      setState(() {
+        widget.dayPlanTable[rowNumber][index] =
+            widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
+      });
+    }
   }
 
   Widget getOneCell(int rowNumber, int columnNumber, int key) {
@@ -251,9 +351,9 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
     ///  TODO amir: color
     Color lessonColor;
     if (key == 1) {
-      lessonColor = IColors.themeColor;
+      lessonColor = availableLegendItem.color;
     } else {
-      lessonColor = Color.fromARGB(255, 180, 180, 180);
+      lessonColor = unavailableLegendItem.color;
     }
     return Container(
       width: widget.cellWidth,
@@ -323,7 +423,7 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
 }
 
 class DailyAvailableVisitTime extends StatefulWidget {
-  final List<List<int>> dayUnAvailableTimeTable;
+  final List<List<int>> dayReservedTimeTable;
   final List<List<int>> dailyDoctorWorkTime;
   final int startTableHour;
   final int endTableHour;
@@ -338,7 +438,7 @@ class DailyAvailableVisitTime extends StatefulWidget {
 
   DailyAvailableVisitTime(
       {Key key,
-      this.dayUnAvailableTimeTable,
+      this.dayReservedTimeTable,
       this.dailyDoctorWorkTime,
       this.startTableHour,
       this.endTableHour,
@@ -357,6 +457,12 @@ class DailyAvailableVisitTime extends StatefulWidget {
 
 class _DailyAvailableVisitTimeTableState
     extends State<DailyAvailableVisitTime> {
+  final LegendItem availableLegendItem = LegendItem("فعال", IColors.themeColor);
+  final LegendItem unavailableLegendItem =
+      LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
+  final LegendItem reservedLegendItem = LegendItem("رزرو شده", Colors.black54);
+  final LegendItem selectedLegendItem =
+      LegendItem("انتخاب شده", Color.fromARGB(255, 44, 62, 80));
   List<int> selectedPartNumbers = [];
   List<int> errorSelectedPartNumber = [];
 
@@ -429,25 +535,25 @@ class _DailyAvailableVisitTimeTableState
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               legendItem(
-                "غیرفعال",
+                unavailableLegendItem.name,
                 Container(
                   width: 20,
                   height: 20,
                   child: Icon(
                     Icons.circle,
-                    color: IColors.darkGrey,
+                    color: unavailableLegendItem.color,
                   ),
                   color: Color.fromARGB(0, 0, 0, 0),
                 ),
               ),
               legendItem(
-                "فعال",
+                availableLegendItem.name,
                 Container(
                   width: 20,
                   height: 20,
                   child: Icon(
                     Icons.circle,
-                    color: IColors.themeColor,
+                    color: availableLegendItem.color,
                   ),
                   color: Color.fromARGB(0, 0, 0, 0),
                 ),
@@ -461,26 +567,26 @@ class _DailyAvailableVisitTimeTableState
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               legendItem(
-                "زمان های رزرو شده",
+                reservedLegendItem.name,
                 Container(
                   width: 20,
                   height: 20,
                   child: Icon(
                     Icons.circle,
-                    color: IColors.disabledButton,
+                    color: reservedLegendItem.color,
                   ),
                   color: Color.fromARGB(0, 0, 0, 0),
                 ),
               ),
               legendItem(
-                "انتخاب شده",
+                selectedLegendItem.name,
                 Container(
                   width: 20,
                   height: 20,
                   color: Color.fromARGB(0, 0, 0, 0),
                   child: Icon(
                     Icons.check_circle,
-                    color: IColors.darkBlue,
+                    color: selectedLegendItem.color,
                   ),
                 ),
               )
@@ -551,8 +657,8 @@ class _DailyAvailableVisitTimeTableState
         selectedPartNumbers.first - 1 == currentBloc) {
       /// checking next cell to be available
       bool checkDurationPlan = true;
-      if ((widget.dayUnAvailableTimeTable != null &&
-              widget.dayUnAvailableTimeTable[r][c] == 1) ||
+      if ((widget.dayReservedTimeTable != null &&
+              widget.dayReservedTimeTable[r][c] == 1) ||
           widget.dailyDoctorWorkTime[r][c] == 0) {
         checkDurationPlan = false;
       }
@@ -575,8 +681,9 @@ class _DailyAvailableVisitTimeTableState
     if (selectedPartNumbers.length == 0) {
       widget.selectedTimeController.text = "";
     } else {
-      widget.selectedTimeController.text = convertMinuteToTimeString(
-          selectedPartNumbers.first * DoctorPlan.hourMinutePart);
+      widget.selectedTimeController.text =
+          DateTimeService.convertMinuteToTimeString(
+              selectedPartNumbers.first * DoctorPlan.hourMinutePart);
     }
     widget.planDurationInMinute.text =
         (selectedPartNumbers.length * 15).toString();
@@ -635,14 +742,14 @@ class _DailyAvailableVisitTimeTableState
     if (errorSelectedPartNumber.contains(partNumber)) {
       lessonColor = IColors.red;
     } else if (key == 1) {
-      if (widget.dayUnAvailableTimeTable != null &&
-          widget.dayUnAvailableTimeTable[rowNumber][columnNumber] == 1) {
-        lessonColor = IColors.disabledButton;
+      if (widget.dayReservedTimeTable != null &&
+          widget.dayReservedTimeTable[rowNumber][columnNumber] == 1) {
+        lessonColor = reservedLegendItem.color;
       } else {
-        lessonColor = IColors.themeColor;
+        lessonColor = availableLegendItem.color;
       }
     } else {
-      lessonColor = Color.fromARGB(255, 180, 180, 180);
+      lessonColor = unavailableLegendItem.color;
     }
 
     return Container(

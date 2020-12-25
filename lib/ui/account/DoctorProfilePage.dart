@@ -9,6 +9,7 @@ import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
+import 'package:docup/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:docup/ui/widgets/DoctorCreditWidget.dart';
 import 'package:docup/ui/widgets/DoctorData.dart';
 import 'package:docup/ui/widgets/MapWidget.dart';
@@ -57,7 +58,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder <EntityBloc, EntityState>(
+    return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
         if ((state is EntityLoaded || state.entity.mEntity != null) &&
             !(state is EntityError)) {
@@ -169,7 +170,8 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
 //                    callBack: () => showNextVersionDialog(context),
           callBack: () =>
               widget.onPush(NavigatorRoutes.visitConfig, doctorEntity),
-        )
+        ),
+        // suggestionsAndCriticism()
       ],
     ));
   }

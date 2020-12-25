@@ -135,7 +135,7 @@ class Entity {
     try {
       return getPanelByPatientId(patientId).sections[name].id;
     } catch (e) {}
-    return null;
+    return -1;
   }
 
   bool isActivePanel(panelId) {

@@ -11,11 +11,14 @@ class APICallError extends StatelessWidget {
   final String errorMessage;
   final Function onRetryPressed;
   final bool tightenPage;
-  final String defaultMessage =
-      "بار دیگر تلاش کنید.";
+  final String defaultMessage = "بار دیگر تلاش کنید.";
+  final bool withImage;
 
   const APICallError(this.onRetryPressed,
-      {Key key, this.errorMessage, this.tightenPage = false})
+      {Key key,
+      this.errorMessage,
+      this.tightenPage = false,
+      this.withImage = true})
       : super(key: key);
 
   @override
@@ -31,61 +34,71 @@ class APICallError extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: withImage?MainAxisAlignment.spaceBetween:MainAxisAlignment.center,
           children: <Widget>[
+            withImage
+                ? Container(
+                    padding: EdgeInsets.only(left: x * (10 / 360)),
+                    width: imageWidth,
+                    child: SvgPicture.asset(
+                      Assets.apiCallError,
+                      width: imageWidth,
+                    ),
+                  )
+                : SizedBox(),
             Container(
-              padding: EdgeInsets.only(left: x * (10 / 360)),
-              width: imageWidth,
-              child: SvgPicture.asset(
-                Assets.apiCallError,
-                width: imageWidth,
+              width: x - imageWidth,
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: withImage
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.center,
+                children: [
+                  AutoText(
+                    "خطا در برقراری ارتباط",
+                    textAlign: withImage ? TextAlign.right : TextAlign.center,
+                    textDirection: TextDirection.rtl,
+                    maxLines: 2,
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  AutoText(
+                    "لطفا اتصال به اینترنت را بررسی" +
+                        "\n" +
+                        " کنید و مجددا تلاش نمایید.",
+                    textAlign: withImage ? TextAlign.right : TextAlign.center,
+                    textDirection: TextDirection.rtl,
+                    maxLines: 6,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                    ),
+                  ),
+                  AutoText(
+                    kReleaseMode
+                        ? defaultMessage
+                        : (errorMessage ?? defaultMessage),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
+                    maxLines: 20,
+                  ),
+                  SizedBox(height: 8),
+                  ActionButton(
+                    color: IColors.themeColor,
+                    textColor: IColors.whiteTransparent,
+                    title: 'Retry',
+                    borderRadius: 10,
+                    callBack: onRetryPressed,
+                  )
+                ],
               ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                AutoText(
-                  "خطا در برقراری ارتباط",
-                  textAlign: TextAlign.right,
-                  textDirection: TextDirection.rtl,
-                  maxLines: 2,
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                AutoText(
-                  "لطفا اتصال به اینترنت را بررسی" +
-                      "\n" +
-                      " کنید و مجددا تلاش نمایید.",
-                  textAlign: TextAlign.right,
-                  textDirection: TextDirection.rtl,
-                  maxLines: 6,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                  ),
-                ),
-                AutoText(
-                  kReleaseMode
-                      ? defaultMessage
-                      : (errorMessage ?? defaultMessage),
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                  ),
-                ),
-                SizedBox(height: 8),
-                ActionButton(
-                  color: IColors.themeColor,
-                  textColor: IColors.whiteTransparent,
-                  title: 'Retry',
-                  borderRadius: 10,
-                  callBack: onRetryPressed,
-                )
-              ],
             )
           ],
         ));

@@ -1,3 +1,5 @@
+import 'package:docup/utils/dateTimeService.dart';
+
 import 'i18n_model.dart';
 
 /// Outputs year as four digits
@@ -222,7 +224,7 @@ const String Z = 'Z';
 
 String formatDate(DateTime date, List<String> formats, LocaleType locale) {
   if (formats.first == ymdw) {
-    final now = DateTime.now();
+    final now = DateTimeService.getCurrentDateTime();
     if (date.year == now.year &&
         date.month == now.month &&
         date.day == now.day) {

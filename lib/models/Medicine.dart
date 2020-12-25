@@ -1,3 +1,5 @@
+import 'package:docup/utils/dateTimeService.dart';
+
 class Medicine {
   int id;
   String drugName;
@@ -36,7 +38,7 @@ class Medicine {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['drug_name'] = drugName;
-    var now = DateTime.now();
+    var now = DateTimeService.getCurrentDateTime();
     if (consumingDay.isEmpty)
       data['consuming_day'] = '${now.year}-${now.month}-${now.day}';
     else

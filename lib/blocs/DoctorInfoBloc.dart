@@ -74,7 +74,7 @@ class DoctorInfoBloc {
   updateDoctor(int doctorId, DoctorPlan plan) async {
     doctorPlanSink.add(Response.loading());
     try {
-      plan.id = doctorId;
+      // plan.id = doctorId;
       DoctorPlan doctorPlan = await _repository.updatePlan(plan);
       doctorPlanSink.add(Response.completed(doctorPlan));
     } catch (e) {

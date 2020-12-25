@@ -10,7 +10,7 @@ class DocUpHeader extends StatelessWidget {
   final bool docUpLogo;
   final Color color;
 
-  DocUpHeader({Key key, this.title, this.docUpLogo = true, this.color})
+  DocUpHeader({Key key, this.title, this.docUpLogo = false, this.color})
       : super(key: key);
 
   @override
