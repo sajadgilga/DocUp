@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/models/NoronioService.dart';
@@ -15,7 +17,11 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
   final Color defaultBgColor;
 
   SquareBoxNoronioClinicService(this.noronioService,
-      {Key key, this.boxSize, this.defaultBgColor, this.bFontSize,this.lFontSize})
+      {Key key,
+      this.boxSize,
+      this.defaultBgColor,
+      this.bFontSize,
+      this.lFontSize})
       : super(key: key);
 
   @override
@@ -33,50 +39,72 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
       opacity = 0.5;
     }
 
-    boxSize = boxSize ?? MediaQuery.of(context).size.width * (40 / 100);
+    boxSize = boxSize == null
+        ? MediaQuery.of(context).size.width * (40 / 100)
+        : min(MediaQuery.of(context).size.width * (40 / 100), boxSize);
     return GestureDetector(
       child: Opacity(
         opacity: opacity,
-        child: Container(
-          margin: EdgeInsets.only(bottom: 30, left: 10, right: 10),
-          padding: EdgeInsets.only(left: 5, right: 5, bottom: 10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: bgColor),
-          width: boxSize,
-          height: boxSize,
-          child: noronioService.iconAddress == null
-              ? SizedBox()
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Container(
-                      width: boxSize,
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          AutoText(
-                            'نورونیو',
-                            style: TextStyle(
-                                color: IColors.themeColor, fontSize: this.lFontSize??10),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 30, left: 10, right: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 5, right: 5, bottom: 10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: bgColor),
+                width: boxSize,
+                height: boxSize,
+                child: noronioService.iconAddress == null
+                    ? SizedBox()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Container(
+                            width: boxSize,
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                AutoText(
+                                  'نورونیو',
+                                  style: TextStyle(
+                                      color: IColors.themeColor,
+                                      fontSize: this.lFontSize ?? 10),
+                                ),
+                                Icon(
+                                  Icons.add_location,
+                                  color: IColors.themeColor,
+                                  size: 20,
+                                ),
+                              ],
+                            ),
                           ),
-                          Icon(
-                            Icons.add_location,
-                            color: IColors.themeColor,
-                            size: 20,
+                          Container(
+                              width: boxSize * (40 / 100),
+                              child: imageHandler()),
+                          DocUpSubHeader(
+                            title: noronioService.title,
+                            textAlign: TextAlign.center,
+                            fontSize: this.bFontSize,
                           ),
                         ],
                       ),
-                    ),
-                    Container(
-                        width: boxSize * (40 / 100), child: imageHandler()),
-                    DocUpSubHeader(
-                      title: noronioService.title,
-                      textAlign: TextAlign.center,
-                      fontSize: this.bFontSize,
+              ),
+              noronioService.responseNormalTime != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: DocUpSubHeader(
+                        title: noronioService.responseNormalTime,
+                        textAlign: TextAlign.center,
+                        fontSize: 12,
+                      ),
                     )
-                  ],
-                ),
+                  : SizedBox()
+            ],
+          ),
         ),
       ),
       onTap: noronioService.onTap != null ? noronioService.onTap : () {},

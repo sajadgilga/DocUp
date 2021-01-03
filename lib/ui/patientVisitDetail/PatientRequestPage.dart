@@ -12,6 +12,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/models/PatientEntity.dart';
 import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/networking/Response.dart';
+import 'package:docup/services/googleCalendarService.dart';
 import 'package:docup/ui/visitsList/visitSearchResult/VisitResult.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
@@ -20,6 +21,7 @@ import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/PicList.dart';
+import 'package:docup/ui/widgets/SnackBar.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/dateTimeService.dart';
@@ -45,6 +47,8 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   int patientVisitStatus = 0;
   int sectionId;
   bool submitLoadingToggle = false;
+
+  VisitEntity visitEntity;
 
   void _updateSearch() {
     var searchBloc = BlocProvider.of<SearchBloc>(context);
@@ -73,13 +77,44 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
       if (data.status == Status.COMPLETED) {
         submitLoadingToggle = false;
 
-        String span = data.data.status == 1 ? "تایید" : "رد";
-        showOneButtonDialog(
-            context, 'درخواست بیمار با موفقیت $span شد', "تایید", () {
+        void _doneAndClosePage() {
           _updateSearch();
           BlocProvider.of<EntityBloc>(context).add(EntityGet());
           Navigator.pop(context);
-        });
+        }
+
+        if (data.data.status == 1) {
+          if (Platform.isAndroid) {
+            showTwoButtonDialog(
+                context,
+                'درخواست بیمار تایید  شد.' +
+                    "\n" +
+                    "آیا مایلید این ویزیت را در گوگل کلندر خود اضافه کنید؟",
+                "بله",
+                "خیر", () {
+              GoogleCalenderService.addVisitEvent(
+                  visitEntity, widget.patientEntity).then((result){
+                    if(result){
+                      showSnackBar(null, Strings.errorCode_615, secs: 10,context: context);
+                    }else{
+                      showSnackBar(null, Strings.errorCode_615, secs: 10,context: context);
+                    }
+              });
+              _doneAndClosePage();
+            }, () {
+              _doneAndClosePage();
+            });
+          } else {
+            showOneButtonDialog(context, 'درخواست بیمار تایید  شد', "تایید",
+                () {
+              _doneAndClosePage();
+            });
+          }
+        } else {
+          showOneButtonDialog(context, 'درخواست بیمار رد شد.', "تایید", () {
+            _doneAndClosePage();
+          });
+        }
       } else if (data.status == Status.ERROR) {
         toast(context, data.error.toString());
       }
@@ -101,7 +136,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   return DocUpAPICallLoading2();
                   break;
                 case Status.COMPLETED:
-                  VisitEntity visitEntity = snapshot.data.data;
+                  visitEntity = snapshot.data.data;
                   if (visitEntity.status == 0) {
                     patientVisitStatus = null;
                   } else {

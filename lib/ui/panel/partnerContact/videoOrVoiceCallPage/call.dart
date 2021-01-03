@@ -202,7 +202,7 @@ class _CallPageState extends State<CallPage> {
           final info = 'userJoined: $uid';
           _infoStrings.add(info);
           _users.add(uid);
-          VibrateAndRingtoneService.vibrate(miliSecDuration: 200);
+          VibrateAndRingtoneService.playSoundAndVibrate(miliSecDuration: 200);
         });
       },
       userOffline: (int uid, UserOfflineReason reason) {
@@ -210,7 +210,7 @@ class _CallPageState extends State<CallPage> {
           final info = 'userOffline: $uid';
           _infoStrings.add(info);
           _users.remove(uid);
-          VibrateAndRingtoneService.vibrate(miliSecDuration: 200);
+          VibrateAndRingtoneService.playSoundAndVibrate(miliSecDuration: 200);
         });
       },
       firstRemoteVideoFrame: (

@@ -61,19 +61,21 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   void _initialApiCall() {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     try {
+      MedicalTestItem mdi = widget.medicalTestPageInitData.medicalTestItem;
       if (_state.entity.isDoctor) {
         if (widget.medicalTestPageInitData.patientEntity == null) {
-          _bloc.add(
-              GetTest(id: widget.medicalTestPageInitData.medicalTestItem.id));
+          _bloc.add(GetTest(id: mdi.testId));
         } else {
           _bloc.add(GetPatientTestAndResponse(
-              testId: widget.medicalTestPageInitData.medicalTestItem.id,
-              patientId: widget.medicalTestPageInitData.patientEntity.id));
+              testId: mdi.testId,
+              patientId: widget.medicalTestPageInitData.patientEntity.id,
+              panelTestId: mdi is PanelMedicalTestItem ? mdi.id : null));
         }
       } else {
         _bloc.add(GetPatientTestAndResponse(
-            testId: widget.medicalTestPageInitData.medicalTestItem.id,
-            patientId: _state.entity.mEntity.id));
+            testId: mdi.testId,
+            patientId: _state.entity.mEntity.id,
+            panelTestId: mdi is PanelMedicalTestItem ? mdi.id : null));
       }
       this.firstInitialized = true;
     } catch (e) {}
@@ -159,11 +161,17 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
                 ],
               ),
               ALittleVerticalSpace(),
-              state.entity.isDoctor
+              state.entity.isDoctor &&
+                      widget.medicalTestPageInitData.sendableFlag
                   ? _sendToPartnerSection(state.entity, test)
                   : SizedBox(),
               ALittleVerticalSpace(),
-              QuestionList(test.questions, answeringController, context),
+              QuestionList(
+                test.questions,
+                answeringController,
+                context,
+                editable: widget.medicalTestPageInitData.editableFlag ?? true,
+              ),
               ALittleVerticalSpace(
                 height: 30,
               ),
@@ -182,22 +190,20 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
 
   Widget _sendToPartnerSection(Entity entity, MedicalTest test) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      GestureDetector(
-        onTap: () {
-          SendToPartnerDialog dialog =
-              SendToPartnerDialog(context, entity, test, _scaffoldKey);
-          dialog.showTestSendDialog();
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20),
-          child: ActionButton(
-            title: "ارسال برای" + "\n" + (entity.isDoctor ? "بیمار" : "پزشک"),
-            width: 110,
-            height: 80,
-            textColor: Colors.white,
-            borderRadius: 10,
-            color: IColors.themeColor,
-          ),
+      Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: ActionButton(
+          title: "ارسال برای" + "\n" + (entity.isDoctor ? "بیمار" : "پزشک"),
+          width: 110,
+          height: 80,
+          textColor: Colors.white,
+          borderRadius: 10,
+          color: IColors.themeColor,
+          callBack: () {
+            SendToPartnerDialog dialog =
+                SendToPartnerDialog(context, entity, test, _scaffoldKey);
+            dialog.showTestSendDialog();
+          },
         ),
       ),
       Padding(
@@ -267,9 +273,11 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
       //       () => Navigator.pop(context));
       // }
       if (userEntity is PatientEntity) {
+        MedicalTestItem mdi = widget.medicalTestPageInitData.medicalTestItem;
         MedicalTestResponse response = MedicalTestResponse(
             userEntity.id, test.id, this.patientAnswers,
-            panelId: widget.medicalTestPageInitData.panelId);
+            panelId: widget.medicalTestPageInitData.panelId,
+            panelTestId: mdi is PanelMedicalTestItem ? mdi.id : null);
         MedicalTestRepository medicalTestRepository = MedicalTestRepository();
         medicalTestRepository
             .addPatientResponse(response)
@@ -312,9 +320,11 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
 class QuestionList extends StatelessWidget {
   final List<Question> questions;
   final BuildContext context;
+  final bool editable;
   StreamController<QuestionAnswerPair> answeringController = BehaviorSubject();
 
-  QuestionList(this.questions, this.answeringController, this.context);
+  QuestionList(this.questions, this.answeringController, this.context,
+      {this.editable = true});
 
   @override
   Widget build(BuildContext context) {
@@ -330,7 +340,11 @@ class QuestionList extends StatelessWidget {
         children: <Widget>[
           _questionLabelWidget(question.label),
           ALittleVerticalSpace(),
-          QuestionAnswersWidget(question, answeringController),
+          QuestionAnswersWidget(
+            question,
+            answeringController,
+            editable: editable,
+          ),
           MediumVerticalSpace(),
         ],
       );
@@ -352,8 +366,10 @@ class QuestionList extends StatelessWidget {
 class QuestionAnswersWidget extends StatefulWidget {
   final Question question;
   final StreamController<QuestionAnswerPair> answeringController;
+  final bool editable;
 
-  QuestionAnswersWidget(this.question, this.answeringController);
+  QuestionAnswersWidget(this.question, this.answeringController,
+      {this.editable = true});
 
   @override
   _QuestionAnswersWidgetState createState() => _QuestionAnswersWidgetState();
@@ -394,7 +410,7 @@ class _QuestionAnswersWidgetState extends State<QuestionAnswersWidget> {
                 boxShadowFlag: true,
                 callBack: () {
                   var state = BlocProvider.of<EntityBloc>(context).state;
-                  if (state.entity.isPatient) {
+                  if (state.entity.isPatient && widget.editable) {
                     answerClicked(widget.question.answers[index]);
                   }
                 })

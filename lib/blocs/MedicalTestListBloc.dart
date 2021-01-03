@@ -40,7 +40,7 @@ class MedicalTestListBloc
     /// TODO amir
     yield TestsListLoading(result: null);
     try {
-      final List<MedicalTestItem> result =
+      final List<PanelMedicalTestItem> result =
           await _repository.getPanelMedicalTests(getPanelMedicalTest.panelId);
       yield TestsListLoaded(result: result);
     } catch (e) {

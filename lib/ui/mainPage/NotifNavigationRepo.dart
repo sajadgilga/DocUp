@@ -166,8 +166,13 @@ class NotificationNavigationRepo {
       NewestMedicalTestNotif test, BuildContext context) async {
     /// TODO maybe it is better to delete true
     if (NotificationNavigationRepo.lastTestIdPage != test.testId || true) {
-      MedicalTestItem medicalTestItem =
-          MedicalTestItem(test.testId, "تست", description: "", done: false);
+      PanelMedicalTestItem medicalTestItem = PanelMedicalTestItem(
+          id: test.panelCognitiveTestId,
+          testId: test.testId,
+          name: test.testTitle,
+          description: "",
+          done: false,
+          panelId: test.panelId,);
       PatientEntity uEntity;
       bool isDoctor =
           BlocProvider.of<EntityBloc>(context).state?.entity?.isDoctor;
@@ -180,6 +185,7 @@ class NotificationNavigationRepo {
 
       MedicalTestPageData medicalTestPageData = MedicalTestPageData(
           editableFlag: true,
+          sendableFlag: false,
           medicalTestItem: medicalTestItem,
           patientEntity: uEntity,
           panelId: test.panelId,

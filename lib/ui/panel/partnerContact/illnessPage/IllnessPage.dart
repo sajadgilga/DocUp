@@ -42,7 +42,7 @@ class IllnessPage extends StatefulWidget {
 }
 
 class _IllnessPageState extends State<IllnessPage> {
-  List<VisitTime> times;
+  // List<VisitTime> times;
   SingleMedicalTestBloc _singleTestBloc = SingleMedicalTestBloc();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool noronioClinicTestsAvailable = true;
@@ -50,12 +50,12 @@ class _IllnessPageState extends State<IllnessPage> {
   @override
   void initState() {
     _initialApiCallBack();
-    times = [];
-    times.add(VisitTime(Month.ESF, '۷', '۱۳۹۸', true));
-    times.add(VisitTime(Month.DAY, '۱۶', '۱۳۹۸', false));
-    times.add(VisitTime(Month.ABN, '۷', '۱۳۹۸', false));
-    times.add(VisitTime(Month.TIR, '۱۲', '۱۳۹۸', false));
-    times.add(VisitTime(Month.FAR, '۲۱', '۱۳۹۸', false));
+    // times = [];
+    // times.add(VisitTime(Month.ESF, '۷', '۱۳۹۸', true));
+    // times.add(VisitTime(Month.DAY, '۱۶', '۱۳۹۸', false));
+    // times.add(VisitTime(Month.ABN, '۷', '۱۳۹۸', false));
+    // times.add(VisitTime(Month.TIR, '۱۲', '۱۳۹۸', false));
+    // times.add(VisitTime(Month.FAR, '۲۱', '۱۳۹۸', false));
 
     super.initState();
   }
@@ -84,7 +84,7 @@ class _IllnessPageState extends State<IllnessPage> {
     });
   }
 
-  Widget _IllnessPage(times) {
+  Widget _IllnessPage() {
     if (widget.entity.isDoctor &&
         (widget.entity.doctor.clinic == null ||
             widget.entity.doctor.clinic.id != NoronioClinic.ClinicId)) {
@@ -103,9 +103,9 @@ class _IllnessPageState extends State<IllnessPage> {
             onPush: widget.onPush,
             bgColor: IColors.background,
           ),
-          VisitBox(
-            visitTimes: times,
-          ),
+          // VisitBox(
+          //   visitTimes: times,
+          // ),
           BlocBuilder<MedicalTestListBloc, MedicalTestListState>(
               builder: (context, state) {
             if (state is TestsListLoaded ||
@@ -149,9 +149,9 @@ class _IllnessPageState extends State<IllnessPage> {
       ));
   }
 
-  List<MedicalTestItem> getTestsWithDone(
-      List<MedicalTestItem> tests, bool done) {
-    List<MedicalTestItem> res = [];
+  List<PanelMedicalTestItem> getTestsWithDone(
+      List<PanelMedicalTestItem> tests, bool done) {
+    List<PanelMedicalTestItem> res = [];
     tests.forEach((element) {
       if (element.done == done) {
         res.add(element);
@@ -160,7 +160,7 @@ class _IllnessPageState extends State<IllnessPage> {
     return res;
   }
 
-  _addTest(context) {
+  _addTestDialog(context) {
     SendNoronioTestDialog dialog =
         SendNoronioTestDialog(widget.entity.patient, context, _scaffoldKey);
     dialog.showSendTestDialog(() {
@@ -184,7 +184,7 @@ class _IllnessPageState extends State<IllnessPage> {
                 children: <Widget>[
                   FloatingActionButton(
                     mini: true,
-                    onPressed: () => _addTest(context),
+                    onPressed: () => _addTestDialog(context),
                     child: Icon(Icons.add),
                     backgroundColor: IColors.themeColor,
                   ),
@@ -195,16 +195,16 @@ class _IllnessPageState extends State<IllnessPage> {
           ],
         ),
       ),
-      body: body(times),
+      body: body(),
     );
   }
 
-  Widget body(times) {
+  Widget body() {
     if ((widget.entity.panel.status == 0 || widget.entity.panel.status == 1) &&
         false) {
       if (widget.entity.isPatient) {
         return Stack(children: <Widget>[
-          _IllnessPage(times),
+          _IllnessPage(),
           PanelAlert(
             label: Strings.requestSentLabel,
             buttonLabel: Strings.waitingForApproval,
@@ -213,7 +213,7 @@ class _IllnessPageState extends State<IllnessPage> {
         ]);
       } else {
         return Stack(children: <Widget>[
-          _IllnessPage(times),
+          _IllnessPage(),
           PanelAlert(
             label: Strings.requestSentLabelDoctorSide,
             buttonLabel: Strings.waitingForApprovalDoctorSide,
@@ -225,7 +225,7 @@ class _IllnessPageState extends State<IllnessPage> {
         ]);
       }
     } else {
-      return _IllnessPage(times);
+      return _IllnessPage();
     }
   }
 }

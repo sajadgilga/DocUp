@@ -147,7 +147,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   scrollDirection: Axis.vertical,
                   itemCount: notifications.newestNotifsCounts,
                   itemBuilder: (BuildContext context, int index) {
-                    NewestNotif newestNotif = notifications.newestNotifs.reversed.toList()[index];
+                    NewestNotif newestNotif = notifications.newestNotifs[index];
                     return Dismissible(
                       key: Key(newestNotif.hashCode.toString()),
                       onDismissed: (item) {

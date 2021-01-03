@@ -50,8 +50,8 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
         /// TODO
         MedicalTestPageData medicalTestPageData = MedicalTestPageData(
             patientEntity: null,
-            medicalTestItem: MedicalTestItem(element.id, element.name),
-            editableFlag: true);
+            medicalTestItem: MedicalTestItem(element.testId, element.name),
+            editableFlag: true,sendableFlag: true);
 
         widget.globalOnPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
       }, true);

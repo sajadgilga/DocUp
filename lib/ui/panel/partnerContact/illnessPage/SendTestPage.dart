@@ -180,7 +180,7 @@ class SendNoronioTestDialog {
             if (selectedTest == null) {
               showError("یکی از تست ها را انتخاب کنید.");
             } else
-              medicalTestBloc.addTestToPartner(selectedTest.id, patient.id);
+              medicalTestBloc.addTestToPartner(selectedTest.testId, patient.id);
           },
           color: IColors.themeColor,
         )
@@ -196,7 +196,7 @@ class SendNoronioTestDialog {
         serviceList[i],
         boxSize: 110,
         defaultBgColor:
-            selectedTest != null && selectedTest.id == testsList[i].id
+            selectedTest != null && selectedTest.testId == testsList[i].testId
                 ? IColors.darkGrey
                 : Colors.white,
         bFontSize: 9,
@@ -213,7 +213,7 @@ class SendNoronioTestDialog {
               serviceList[i + 1],
               boxSize: 110,
               defaultBgColor:
-                  selectedTest != null && selectedTest.id == testsList[i + 1].id
+                  selectedTest != null && selectedTest.testId == testsList[i + 1].testId
                       ? IColors.darkGrey
                       : Colors.white,
               bFontSize: 9,

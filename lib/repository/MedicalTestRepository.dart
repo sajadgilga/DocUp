@@ -10,9 +10,15 @@ class MedicalTestRepository {
     return MedicalTest.fromJson(response);
   }
 
-  Future<MedicalTest> getPatientTestAndResponse(int id, int patientId) async {
+  Future<MedicalTest> getPatientTestAndResponse(int id, int patientId,
+      {panelId, panelTestId}) async {
+    String extraArgs = "";
+    if (panelTestId != null) {
+      extraArgs += "&panel_cognitive_test_id=$panelTestId";
+    }
     final response = await _provider.get(
-        "medical-test/cognitive-tests-response?test_id=$id&patient_id=$patientId",
+        "medical-test/cognitive-tests-response?test_id=$id&patient_id=$patientId" +
+            extraArgs,
         utf8Support: true,
         body: {'test_id': id, "patient_id": patientId});
     return MedicalTest.fromJson(response);
@@ -29,14 +35,14 @@ class MedicalTestRepository {
     return res;
   }
 
-  Future<List<MedicalTestItem>> getPanelMedicalTests(int panelId) async {
+  Future<List<PanelMedicalTestItem>> getPanelMedicalTests(int panelId) async {
     /// TODO amir: need to test
     final response = await _provider.get(
         "medical-test/cognitive-tests-panel?panel_id=$panelId",
         utf8Support: true);
-    List<MedicalTestItem> res = [];
+    List<PanelMedicalTestItem> res = [];
     (response['results'] as List).forEach((element) {
-      res.add(MedicalTestItem.fromJson(element));
+      res.add(PanelMedicalTestItem.fromJson(element));
     });
     return res;
   }
@@ -48,15 +54,15 @@ class MedicalTestRepository {
     return MedicalTestResponseEntity.fromJson(response);
   }
 
-  Future<List<MedicalTest>> getPanelTests() async {
-    final response =
-        await _provider.get("medical-test/cognitive-tests/", utf8Support: true);
-    List<MedicalTest> res = [];
-    (response as List).forEach((element) {
-      res.add(MedicalTest.fromJson(element));
-    });
-    return res;
-  }
+  // Future<List<MedicalTest>> getPanelTests() async {
+  //   final response =
+  //       await _provider.get("medical-test/cognitive-tests/", utf8Support: true);
+  //   List<MedicalTest> res = [];
+  //   (response as List).forEach((element) {
+  //     res.add(MedicalTest.fromJson(element));
+  //   });
+  //   return res;
+  // }
 
   Future<MedicalTestResponseEntity> addPatientResponse(
       MedicalTestResponse testResponse) async {
@@ -64,6 +70,7 @@ class MedicalTestRepository {
     String params = "";
     if (testResponse.panelId != null) {
       params = "?panel_id=${testResponse.panelId}";
+      params += "&panel_cognitive_test_id=${testResponse.panelTestId}";
     }
     final response = await _provider.post(
         "medical-test/cognitive-tests-add-response/" + params,

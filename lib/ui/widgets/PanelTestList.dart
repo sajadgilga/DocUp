@@ -24,8 +24,8 @@ class PanelTestList extends StatefulWidget {
   final bool uploadAvailable;
   final int listId;
   final VoidCallback tapCallback;
-  final List<MedicalTestItem> previousTest;
-  final List<MedicalTestItem> waitingTest;
+  final List<PanelMedicalTestItem> previousTest;
+  final List<PanelMedicalTestItem> waitingTest;
   final Function(String, dynamic) globalOnPush;
 
   PanelTestList(
@@ -61,29 +61,42 @@ class _PanelTestListState extends State<PanelTestList> {
         ),
       );
 
-  List<Widget> getConvertTestIconToNoronioSquareBox(
-      List<MedicalTestItem> tests, bool editableFlag) {
-    List<Widget> res = [];
+  List<NoronioServiceItem> getConvertTestIconToNoronioSquareBox(
+      List<PanelMedicalTestItem> tests, bool editableFlag, bool sendableFlag) {
+    List<NoronioServiceItem> res = [];
     tests.forEach((element) {
-      res.add(SquareBoxNoronioClinicService(
-        NoronioServiceItem(element.name, Assets.noronioServiceBrainTest, null,
-            NoronioClinicServiceType.MultipleChoiceTest, () {
-          MedicalTestPageData medicalTestPageData = MedicalTestPageData(
-              editableFlag: editableFlag,
-              medicalTestItem: element,
-              patientEntity: widget.patient,
-              panelId: widget.panelId,
-              onDone: () {
-                BlocProvider.of<MedicalTestListBloc>(context)
-                    .add(GetPanelMedicalTest(panelId: widget.panelId));
-              });
-          widget.globalOnPush(
-              NavigatorRoutes.cognitiveTest, medicalTestPageData);
-        }, true),
-        boxSize: 130,
-      ));
+      res.add(NoronioServiceItem(element.name, Assets.noronioServiceBrainTest,
+          null, NoronioClinicServiceType.MultipleChoiceTest, () {
+        MedicalTestPageData medicalTestPageData = MedicalTestPageData(
+            editableFlag: editableFlag,
+            sendableFlag: sendableFlag,
+            medicalTestItem: element,
+            patientEntity: widget.patient,
+            panelId: widget.panelId,
+            onDone: () {
+              BlocProvider.of<MedicalTestListBloc>(context)
+                  .add(GetPanelMedicalTest(panelId: widget.panelId));
+            });
+        widget.globalOnPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
+      }, true, responseDateTime: element.timeAddTest));
     });
     return res;
+  }
+
+  List<Widget> _getTestRows(List<NoronioServiceItem> serviceItems) {
+    List<Widget> serviceRows = [];
+    for (int i = 0; i < serviceItems.length; i += 2) {
+      Widget ch1 = SquareBoxNoronioClinicService(serviceItems[i],boxSize: 130,);
+      Widget ch2 = (i == serviceItems.length - 1)
+          ? SquareBoxNoronioClinicService(NoronioServiceItem.empty(),boxSize: 130,)
+          : SquareBoxNoronioClinicService(serviceItems[i + 1],boxSize: 130,);
+
+      serviceRows.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [ch1, ch2],
+      ));
+    }
+    return serviceRows;
   }
 
   Widget _newTests() {
@@ -103,9 +116,10 @@ class _PanelTestListState extends State<PanelTestList> {
             ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Row(
-                  children: getConvertTestIconToNoronioSquareBox(
-                      widget.waitingTest, true)),
+              child: Column(
+                children: _getTestRows(getConvertTestIconToNoronioSquareBox(
+                    widget.waitingTest.reversed.toList(), true, false)),
+              ),
             )
           ],
         ),
@@ -129,11 +143,11 @@ class _PanelTestListState extends State<PanelTestList> {
               ],
             ),
             SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                  children: getConvertTestIconToNoronioSquareBox(
-                      widget.previousTest, false)),
-            )
+                scrollDirection: Axis.horizontal,
+                child: Column(
+                  children: _getTestRows(getConvertTestIconToNoronioSquareBox(
+                      widget.previousTest.reversed.toList(), false, false)),
+                ))
           ],
         ),
       ),

@@ -11,15 +11,19 @@ class QuestionAnswerPair {
 class MedicalTestResponse {
   final int patientId;
   final int cognitiveTestId;
+  final int panelTestId;
   final Map<int, Answer> answers;
   final int panelId;
 
-  MedicalTestResponse(this.patientId, this.cognitiveTestId, this.answers,{this.panelId});
+  MedicalTestResponse(this.patientId, this.cognitiveTestId, this.answers,
+      {this.panelId,this.panelTestId});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['patient_id'] = patientId;
     data['cognitive_test_id'] = cognitiveTestId;
+    data['panel_test_id'] = panelTestId;
+
     List<Map<String, dynamic>> res = [];
     List<int> questionIds = answers.keys.toList();
     questionIds.sort();
@@ -33,38 +37,79 @@ class MedicalTestResponse {
     return data;
   }
 }
-class MedicalTestPageData{
+
+class MedicalTestPageData {
   final MedicalTestItem medicalTestItem;
   final PatientEntity patientEntity;
   final bool editableFlag;
+  final bool sendableFlag;
   final int panelId;
   final Function onDone;
 
-  MedicalTestPageData({this.medicalTestItem, this.patientEntity, this.editableFlag,this.panelId,this.onDone});
-
-
+  MedicalTestPageData(
+      {this.medicalTestItem,
+      this.patientEntity,
+      this.editableFlag,
+      this.sendableFlag,
+      this.panelId,
+      this.onDone});
 }
+
+class MedicalTestItem2 {}
 
 class MedicalTestItem {
   /// this model is for loading test list from database and showing theme in
   /// noronioClinicService or panel after sending to a patient
-  int id;
+  int testId;
   String name;
   String description;
   String imageURL;
   bool done;
 
-  MedicalTestItem(this.id, this.name,
+  MedicalTestItem(this.testId, this.name,
       {this.description, this.imageURL, this.done});
 
   MedicalTestItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    testId = json['id'];
     name = json['name'];
     description = json['description'];
 
     /// TODO amir: incomplete api
     imageURL = json['logo'];
     done = json['done'] ?? false;
+  }
+}
+
+class PanelMedicalTestItem extends MedicalTestItem {
+  int id;
+  int panelId;
+  String timeAddTest;
+
+  PanelMedicalTestItem(
+      {this.id,
+      testId,
+      name,
+      description,
+      imageURL,
+      done,
+      this.panelId,
+      this.timeAddTest})
+      : super(testId, name,
+            description: description, done: done, imageURL: imageURL);
+
+  static PanelMedicalTestItem fromJson(Map<String, dynamic> json) {
+    PanelMedicalTestItem panelMedicalTestItem = PanelMedicalTestItem();
+    panelMedicalTestItem.id = intPossible(json['id']);
+    panelMedicalTestItem.testId = intPossible(json['test_id']);
+    panelMedicalTestItem.name = json['name'];
+    panelMedicalTestItem.description = json['description'];
+
+    /// TODO amir: incomplete api
+    panelMedicalTestItem.imageURL = json['logo'];
+    panelMedicalTestItem.done = json['done'] ?? false;
+    panelMedicalTestItem.panelId = intPossible(json['panel_id']);
+    panelMedicalTestItem.timeAddTest = json['time_add_test'];
+    return panelMedicalTestItem;
   }
 }
 

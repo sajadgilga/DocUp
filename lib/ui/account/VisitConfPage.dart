@@ -378,10 +378,14 @@ class _VisitConfPageState extends State<VisitConfPage>
   }
 
   Widget getWeeklyVirtualAndPhysicalTimeTable() {
+    int initialIndex = 1;
+    if(typeSelected[TypeSelect.visitType.title].length < 2){
+      initialIndex = 0;
+    }
     TabController tabController = TabController(
         length: typeSelected[TypeSelect.visitType.title].length,
         vsync: this,
-        initialIndex: 1);
+        initialIndex: 0);
 
     List<WeeklyTimeTable> tabsView =
         (typeSelected[TypeSelect.visitType.title].contains(0)

@@ -138,6 +138,30 @@ class UploadFileSliderState extends State<UploadFileSlider> {
     );
   }
 
+  Widget _pullUp() {
+    return Container(
+      height: 70,
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          AutoText(
+            "برای ارسال به بالا بکشید.",
+            style: TextStyle(
+                color: IColors.darkGrey,
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Icon(Icons.arrow_upward_rounded),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _descriptionTextField() => Directionality(
         textDirection: TextDirection.rtl,
         child: TextField(
@@ -256,17 +280,19 @@ class UploadFileSliderState extends State<UploadFileSlider> {
         },
       );
 
-  Widget _panel(width, height) => Container(
-          child: SingleChildScrollView(
-        child: Column(
+  Widget _panel(width, height) => SingleChildScrollView(
+        child: Container(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            _pullUp(),
             _close(),
             _pictureHolder(width, height),
             _listDescriptionSubmit(height)
           ],
-        ),
-      ));
+        )),
+      );
 
   Widget _body() {
     if (widget.body == null) return Container();
@@ -275,16 +301,26 @@ class UploadFileSliderState extends State<UploadFileSlider> {
 
   @override
   Widget build(BuildContext context) {
-    return SlidingUpPanel(
-      backdropEnabled: true,
-      backdropOpacity: .5,
-      body: _body(),
-      maxHeight: MediaQuery.of(context).size.height,
-      panel: _panel(MediaQuery.of(context).size.width,
-          MediaQuery.of(context).size.height),
-      defaultPanelState: PanelState.OPEN,
-      borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
+      body: SingleChildScrollView(
+        reverse: true,
+        child: SlidingUpPanel(
+          backdropEnabled: true,
+          padding: EdgeInsets.only(top: 0, bottom: bottom),
+          backdropOpacity: .5,
+          body: _body(),
+          minHeight: 70,
+          maxHeight: MediaQuery.of(context).size.height,
+          panel: _panel(MediaQuery.of(context).size.width,
+              MediaQuery.of(context).size.height),
+          defaultPanelState: PanelState.OPEN,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+      ),
     );
   }
 }

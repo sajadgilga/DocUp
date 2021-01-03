@@ -263,7 +263,7 @@ class MyPartnerDialog extends StatelessWidget {
 
           /// #
         }, Assets.panelDoctorDialogDoctorIcon, "ویزیت بیمار",
-            "ویزیت محازی و حضوری بیمار", IColors.themeColor),
+            "ویزیت مجازی و حضوری بیمار", IColors.themeColor),
         _myPartnerItem(() {
           /// navigation
 
@@ -274,7 +274,7 @@ class MyPartnerDialog extends StatelessWidget {
 
           /// #
         }, Assets.panelDoctorDialogPatientIcon, "پرونده سلامت",
-            "پرونده سلامت اتان را بررسی کنید", IColors.black),
+            "پرونده سلامتتان را بررسی کنید", IColors.black),
 
         /// TODO amir: incomplete widget tree for bazaar
 

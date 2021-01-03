@@ -360,7 +360,7 @@ class NewestVisitNotif extends NewestNotif {
 
 class NewestMedicalTestNotif extends NewestNotif {
   /// TODO amir: check data json of notification to build it's model
-
+  int panelCognitiveTestId;
   int testId;
   String testTitle;
   String testDescription;
@@ -399,6 +399,8 @@ class NewestMedicalTestNotif extends NewestNotif {
             notifTime: notifTime,
             notifDate: notifDate,
             notifType: notifType) {
+    panelCognitiveTestId = intPossible(json['panel_cognitive_test_id']);
+    testTitle = utf8IfPossible(json['title'])??"";
     doctorId = intPossible(json['doctor_id']);
     patientId = intPossible(json['patient_id']);
     testId = intPossible(json['test_id']);
@@ -407,9 +409,11 @@ class NewestMedicalTestNotif extends NewestNotif {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['title'] = testTitle;
+    data['panel_cognitive_test_id'] = panelCognitiveTestId;
+    data['test_id'] = testId;
     data['doctor_id'] = doctorId;
     data['patient_id'] = patientId;
-    data['test_id'] = testId;
     data['panel_id'] = panelId;
     return data;
   }

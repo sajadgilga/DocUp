@@ -1,8 +1,35 @@
+import 'package:ntp/ntp.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 import 'Utils.dart';
 
 class DateTimeService {
+  static DateTime currentNTPDateTime;
+  static DateTime currentMobileDateTime;
+
+  static loadCurrentDateTimes() async {
+    try{
+      currentNTPDateTime = await NTP.now();
+      currentMobileDateTime = DateTime.now();
+    }catch(e){
+
+    }
+  }
+
+  static DateTime getCurrentDateTime() {
+    DateTime now;
+    if (currentMobileDateTime == null || currentNTPDateTime == null) {
+      now = DateTime.now();
+      print("mobile now:" + now.toString());
+    } else {
+      Duration delta = DateTime.now().difference(currentMobileDateTime);
+      now = currentNTPDateTime.add(delta);
+      print("ntp now:" + now.toString());
+    }
+    loadCurrentDateTimes();
+    return now;
+  }
+
   static Jalali getCurrentJalali() {
     return Jalali.fromDateTime(getCurrentDateTime());
   }
@@ -32,32 +59,6 @@ class DateTimeService {
     final tomorrow = "${jalali.year}/${jalali.month}/${jalali.day}";
     return tomorrow;
   }
-
-  static DateTime getCurrentDateTime() {
-    /// TODO
-    return DateTime.now();
-  }
-
-  // static Future<Map<String, dynamic>> getDateTimeJson() async {
-  //   HashMap headerHashMap = HashMap();
-  //   headerHashMap.addAll({
-  //     'Content-Type': 'application/json; charset=UTF-8',
-  //   });
-  //   http.Response response;
-  //   try {
-  //     response = await http.get(
-  //       "http://api.codebazan.ir/time-date/?json=fa",
-  //     );
-  //   } catch (e) {
-  //     return null;
-  //   }
-  //   if (response.statusCode != 201) {
-  //     return json.decode(response.body);
-  //   } else {
-  //     throw Exception(
-  //         'Error in post with error code: ' + response.statusCode.toString());
-  //   }
-  // }
 
   static int getTimeMinute(String time) {
     String removeAllSpace(String text) {
@@ -104,10 +105,16 @@ class DateTimeService {
     return "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
   }
 
-  static String normalizeDateAndTime(String str, {bool cutSeconds = false}) {
-    String time = normalizeTime(str.split("T")[1].split("+")[0]);
+  static String normalizeDateAndTime(String str,
+      {bool cutSeconds = true, bool withLabel = true}) {
+    String time =
+        normalizeTime(str.split("T")[1].split("+")[0], cutSeconds: cutSeconds);
     String finalDate = normalizeDate(str.split("T")[0]);
-    return "تاریخ: $finalDate زمان : $time ";
+    if (withLabel) {
+      return "تاریخ: $finalDate زمان : $time ";
+    } else {
+      return "$finalDate $time";
+    }
   }
 
   static DateTime getDateTimeFromStandardString(String str) {
