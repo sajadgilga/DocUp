@@ -9,8 +9,11 @@ import 'package:docup/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:docup/utils/WebsocketHelper.dart';
+import 'package:docup/utils/entityUpdater.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PatientProfileMenuPage extends StatefulWidget {
@@ -139,6 +142,8 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove("token");
     prefs.remove("isPatient");
-    exit(0);
+    Phoenix.rebirth(context);
+    EntityAndPanelUpdater.end();
+    SocketHelper().dispose();
   }
 }

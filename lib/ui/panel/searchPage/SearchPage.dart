@@ -98,8 +98,8 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
     try {
       _controller?.dispose();
     } catch (e) {}
+    super.dispose();
   }
-
 //  Widget _docupIcon() => Container(
 //        padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
 //        child: Image.asset(Assets.docupIcon, width: 50),

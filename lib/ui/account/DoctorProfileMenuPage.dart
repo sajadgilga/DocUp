@@ -6,6 +6,7 @@ import 'package:docup/blocs/DoctorBloc.dart';
 import 'package:docup/blocs/UtilBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
+import 'package:docup/main.dart';
 import 'package:docup/models/BankData.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/networking/Response.dart';
@@ -18,9 +19,12 @@ import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
+import 'package:docup/utils/WebsocketHelper.dart';
+import 'package:docup/utils/entityUpdater.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DoctorProfileMenuPage extends StatefulWidget {
@@ -125,7 +129,9 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove("token");
     prefs.remove("isPatient");
-    exit(0);
+    Phoenix.rebirth(context);
+    EntityAndPanelUpdater.end();
+    SocketHelper().dispose();
   }
 }
 

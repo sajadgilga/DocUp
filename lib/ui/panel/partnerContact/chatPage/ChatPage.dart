@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:docup/blocs/visit_time/visit_time_bloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/ChatMessage.dart';
+import 'package:docup/models/TextPlan.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/repository/ChatMessageRepository.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
@@ -13,9 +15,7 @@ import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
-import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
-import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,8 +25,14 @@ import 'PartnerInfo.dart';
 class ChatPage extends StatefulWidget {
   final Entity entity;
   final Function(String, UserEntity) onPush;
+  final TextPlanRemainedTraffic textPlanRemainedTraffic;
 
-  ChatPage({Key key, this.entity, @required this.onPush}) : super(key: key);
+  ChatPage(
+      {Key key,
+      this.textPlanRemainedTraffic,
+      this.entity,
+      @required this.onPush})
+      : super(key: key);
 
   @override
   _ChatPageState createState() {
@@ -55,13 +61,16 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  void _submitMsg() {
-    if (_controller.text == '') {
+  void _submitMsg({bool nowIsVisitTime = false}) {
+    String text = _controller.text.trim();
+    if (text == '') {
       return;
     }
-    SocketHelper().sendMessage(
-        panelId: widget.entity.iPanelId, message: _controller.text);
-
+    SocketHelper().sendMessage(panelId: widget.entity.iPanelId, message: text);
+    if (!nowIsVisitTime) {
+      widget.textPlanRemainedTraffic.remainedWords -= min(
+          text.split(" ").length, widget.textPlanRemainedTraffic.remainedWords);
+    }
     _controller.text = '';
     setState(() {});
   }
@@ -103,31 +112,55 @@ class _ChatPageState extends State<ChatPage> {
               ),
       ));
 
-  Widget _sendBox() => Container(
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(color: Colors.grey, offset: Offset(0, 5), blurRadius: 10)
-      ]),
-      padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
-      child: Row(
-        children: <Widget>[
-          _submitButton(),
-          Expanded(
-            flex: 2,
-            child: TextField(
-              controller: _controller,
-              maxLines: 4,
-              minLines: 1,
-              onSubmitted: (text) {
-                _submitMsg();
-              },
-              textAlign: TextAlign.end,
-              decoration: InputDecoration(hintText: "...اینجا بنویسید"),
+  Widget _sendBox({bool nowIsVisitTime = false}) {
+    return Container(
+        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          BoxShadow(color: Colors.grey, offset: Offset(0, 5), blurRadius: 10)
+        ]),
+        padding: EdgeInsets.only(top: 5, bottom: 10, right: 20, left: 20),
+        child: Column(
+          children: [
+            widget.entity.isPatient
+                ? Container(
+                    height: 20,
+                    child: AutoText(nowIsVisitTime
+                        ? "پیام نا محدود هنگام ویزیت"
+                        : "کلمات باقی مانده" +
+                            " " +
+                            widget.textPlanRemainedTraffic.remainedWords
+                                .toString()),
+                  )
+                : SizedBox(),
+            widget.entity.isPatient
+                ? Container(
+                    height: 0.2,
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    color: IColors.themeColor,
+                  )
+                : SizedBox(),
+            Row(
+              children: <Widget>[
+                _submitButton(),
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: _controller,
+                    maxLines: 4,
+                    minLines: 1,
+                    onSubmitted: (text) {
+                      _submitMsg(nowIsVisitTime: nowIsVisitTime);
+                    },
+                    textAlign: TextAlign.end,
+                    decoration: InputDecoration(hintText: "...اینجا بنویسید"),
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ));
+          ],
+        ));
+  }
 
-  Widget _ChatPage() {
+  Widget _ChatPage({bool nowIsVisitTime = false}) {
 //    var _chatMessageBloc = BlocProvider.of<ChatMessageBloc>(context);
 //    _chatMessageBloc.add(ChatMessageGet(
 //        panelId: widget.entity.iPanelId,
@@ -147,7 +180,7 @@ class _ChatPageState extends State<ChatPage> {
             onPush: widget.onPush,
           ),
           _ChatBox(entity: widget.entity),
-          _sendBox(),
+          _sendBox(nowIsVisitTime: nowIsVisitTime),
         ],
       ),
     );
@@ -155,50 +188,24 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget build(BuildContext context) {
     try {
-      if (widget.entity.panel.status == 0 || widget.entity.panel.status == 1) {
-        if (widget.entity.isPatient)
-          return Stack(children: <Widget>[
-            _ChatPage(),
-            PanelAlert(
-              label: Strings.requestSentLabel,
-              buttonLabel: Strings.waitingForApproval,
-              btnColor: IColors.disabledButton,
-            )
-          ]);
-        else
-          return Stack(children: <Widget>[
-            _ChatPage(),
-            PanelAlert(
-              label: Strings.requestSentLabelDoctorSide,
-              buttonLabel: Strings.waitingForApprovalDoctorSide,
-              callback: () {
-                widget.onPush(NavigatorRoutes.patientDialogue,
-                    widget.entity.partnerEntity);
-              },
-            )
-          ]);
-      } else if (widget.entity.panel.status == 3 ||
-          widget.entity.panel.status == 2) {
-//            return _ChatPage();
+      if ([4, 5].contains(widget.entity.panel.status)) {
         return BlocBuilder<VisitTimeBloc, VisitTimeState>(
           builder: (context, _visitTimeState) {
-            String _visitTime;
             if (_visitTimeState is VisitTimeLoadedState) {
-              _visitTime = replaceFarsiNumber(
-                  DateTimeService.normalizeDateAndTime(_visitTimeState.visit.visitTime));
-              return Stack(children: <Widget>[
-                _ChatPage(),
-                PanelAlert(
-                  label: 'ویزیت شما '
-                      '\n'
-                      '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
-                      '\n'
-                      'است' /* Strings.notRequestTimeDoctorSide*/,
-                  buttonLabel: Strings.waitLabel,
-                  btnColor: IColors.disabledButton,
-                  size: AlertSize.LG,
-                ) //TODO: change to timer
-              ]);
+              return _ChatPage(nowIsVisitTime: true);
+              // if ([1,2].contains(_visitTimeState.visit.visitMethod)) {
+              //   return _ChatPage();
+              // } else {
+              //   return Stack(children: <Widget>[
+              //     _ChatPage(),
+              //     PanelAlert(
+              //       label: "ویزیت متنی در حال حاضر ندارید.",
+              //       buttonLabel: Strings.waitLabel,
+              //       btnColor: IColors.disabledButton,
+              //       size: AlertSize.LG,
+              //     ) //TODO: change to timer
+              //   ]);
+              // }
             } else if (_visitTimeState is VisitTimeErrorState) {
               return APICallError(() {
                 BlocProvider.of<VisitTimeBloc>(context)
@@ -209,56 +216,108 @@ class _ChatPageState extends State<ChatPage> {
             }
           },
         );
-      } else if (widget.entity.panel.status == 6 ||
-          widget.entity.panel.status == 7) {
-        if (widget.entity.isPatient)
+      } else if (widget.textPlanRemainedTraffic.remainedWords <= 0) {
+        if (widget.entity.isPatient) {
           return Stack(children: <Widget>[
             _ChatPage(),
             PanelAlert(
-              label: Strings.noAvailableVirtualVisit,
-              buttonLabel: Strings.reserveVirtualVisit,
+              label: Strings.noRemainedWordForYouPlanInChatRoom,
+              buttonLabel: Strings.goToTextPlanListPage,
+              btnColor: IColors.themeColor,
               callback: () {
-                widget.onPush(NavigatorRoutes.doctorDialogue,
-                    widget.entity.partnerEntity);
+                Navigator.pop(context);
+                widget.onPush(
+                    NavigatorRoutes.textPlanPage, widget.entity.doctor);
               },
             )
           ]);
-        else
-          return Stack(children: <Widget>[
-            _ChatPage(),
-            PanelAlert(
-              label: Strings.noAvailableVirtualVisit,
-              buttonLabel: Strings.reserveVirtualVisitDoctorSide,
-              btnColor: IColors.disabledButton,
-            )
-          ]);
-      } else
-        return BlocBuilder<VisitTimeBloc, VisitTimeState>(
-          builder: (context, _visitTimeState) {
-            if (_visitTimeState is VisitTimeLoadedState) {
-              if (_visitTimeState.visit.visitMethod == 0) {
-                return _ChatPage();
-              } else {
-                return Stack(children: <Widget>[
-                  _ChatPage(),
-                  PanelAlert(
-                    label: "ویزیت متنی در حال حاضر ندارید.",
-                    buttonLabel: Strings.waitLabel,
-                    btnColor: IColors.disabledButton,
-                    size: AlertSize.LG,
-                  ) //TODO: change to timer
-                ]);
-              }
-            } else if (_visitTimeState is VisitTimeErrorState) {
-              return APICallError(() {
-                BlocProvider.of<VisitTimeBloc>(context)
-                    .add(VisitTimeGet(partnerId: widget.entity.pId));
-              });
-            } else {
-              return DocUpAPICallLoading2();
-            }
-          },
-        );
+        } else {
+          return _ChatPage();
+        }
+      } else if ([0, 1, 2, 3, 6, 7].contains(widget.entity.panel.status)) {
+        /// no visit for now
+        return _ChatPage();
+      }
+//       if (widget.entity.panel.status == 0 || widget.entity.panel.status == 1) {
+//         if (widget.entity.isPatient)
+//           return Stack(children: <Widget>[
+//             _ChatPage(),
+//             PanelAlert(
+//               label: Strings.requestSentLabel,
+//               buttonLabel: Strings.waitingForApproval,
+//               btnColor: IColors.disabledButton,
+//             )
+//           ]);
+//         else
+//           return Stack(children: <Widget>[
+//             _ChatPage(),
+//             PanelAlert(
+//               label: Strings.requestSentLabelDoctorSide,
+//               buttonLabel: Strings.waitingForApprovalDoctorSide,
+//               callback: () {
+//                 widget.onPush(NavigatorRoutes.patientDialogue,
+//                     widget.entity.partnerEntity);
+//               },
+//             )
+//           ]);
+//       } else if (widget.entity.panel.status == 3 ||
+//           widget.entity.panel.status == 2) {
+// //            return _ChatPage();
+//         return BlocBuilder<VisitTimeBloc, VisitTimeState>(
+//           builder: (context, _visitTimeState) {
+//             String _visitTime;
+//             if (_visitTimeState is VisitTimeLoadedState) {
+//               _visitTime = replaceFarsiNumber(
+//                   DateTimeService.normalizeDateAndTime(
+//                       _visitTimeState.visit.visitTime));
+//               return Stack(children: <Widget>[
+//                 _ChatPage(),
+//                 PanelAlert(
+//                   label: 'ویزیت شما '
+//                       '\n'
+//                       '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
+//                       '\n'
+//                       'است' /* Strings.notRequestTimeDoctorSide*/,
+//                   buttonLabel: Strings.waitLabel,
+//                   btnColor: IColors.disabledButton,
+//                   size: AlertSize.LG,
+//                 ) //TODO: change to timer
+//               ]);
+//             } else if (_visitTimeState is VisitTimeErrorState) {
+//               return APICallError(() {
+//                 BlocProvider.of<VisitTimeBloc>(context)
+//                     .add(VisitTimeGet(partnerId: widget.entity.pId));
+//               });
+//             } else {
+//               return DocUpAPICallLoading2();
+//             }
+//           },
+//         );
+//       } else if (widget.entity.panel.status == 6 ||
+//           widget.entity.panel.status == 7) {
+//         if (widget.entity.isPatient) {
+//           return Stack(children: <Widget>[
+//             _ChatPage(),
+//             PanelAlert(
+//               label: Strings.noAvailableVirtualVisit,
+//               buttonLabel: Strings.reserveVirtualVisit,
+//               callback: () {
+//                 widget.onPush(NavigatorRoutes.doctorDialogue,
+//                     widget.entity.partnerEntity);
+//               },
+//             )
+//           ]);
+//         } else {
+//           return Stack(children: <Widget>[
+//             _ChatPage(),
+//             PanelAlert(
+//               label: Strings.noAvailableVirtualVisit,
+//               buttonLabel: Strings.reserveVirtualVisitDoctorSide,
+//               btnColor: IColors.disabledButton,
+//             )
+//           ]);
+//         }
+//       }
     } catch (_) {
       return Container();
     }

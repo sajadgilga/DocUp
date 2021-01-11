@@ -104,7 +104,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   }),
                 )
               : SizedBox(),
-          SizedBox(height: 10),
+          ALittleVerticalSpace(height: 10),
           doctorEntity.plan.visitTypesNumber.contains(1)
               ? ActionButton(
                   width: 250,
@@ -118,6 +118,18 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   }),
                 )
               : SizedBox(),
+          ALittleVerticalSpace(height: 10),
+          ActionButton(
+            width: 250,
+            height: 60,
+            borderRadius: 15,
+            color: IColors.themeColor,
+            title: Strings.trafficPlanReservationLabel,
+            callBack: () => widget.onPush(
+                NavigatorRoutes.textPlanPage, doctorEntity, () {
+              _bloc.getDoctor(widget.doctorEntity.id, false);
+            }),
+          )
         ],
       );
 

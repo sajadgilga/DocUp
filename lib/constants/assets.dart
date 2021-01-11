@@ -51,6 +51,8 @@ class Assets {
   static final String apiCallError =
       "assets/Group 2910.svg";
 
+  static final String doctorTextPlan = "assets/panel/doctor@3x.png";
+
   static final String introPage1 = "assets/img1.png";
   static final String introPage2 = "assets/img2.png";
   static final String introPage3 = "assets/img3.png";

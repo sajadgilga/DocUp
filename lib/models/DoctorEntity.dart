@@ -15,7 +15,6 @@ class DoctorEntity extends UserEntity {
 
   DoctorPlan plan;
 
-
   DoctorEntity(
       {this.councilCode,
       this.expert,
@@ -61,7 +60,7 @@ class DoctorEntity extends UserEntity {
 
       if (json['plan'] != null) {
         plan = DoctorPlan.fromJson(json['plan']);
-      }else{
+      } else {
         plan = DoctorPlan();
       }
     } catch (_) {
@@ -145,6 +144,38 @@ class DoctorEntity extends UserEntity {
 //  }
 //}
 
+class ClinicTrafficTextPlan {
+  int id;
+  String title;
+  int wordNumber;
+  int fileVolume;
+  int medicalTestCount;
+  int price;
+
+  ClinicTrafficTextPlan(
+      {this.id,
+      this.title,
+      this.wordNumber,
+      this.fileVolume,
+      this.medicalTestCount,
+      this.price});
+
+  ClinicTrafficTextPlan.fromJson(Map<String, dynamic> json) {
+    id = intPossible(json['id']) ?? -1;
+    title = utf8IfPossible(json['title']) ?? "";
+    wordNumber = intPossible(json['word_counts']);
+    fileVolume = intPossible(json['file_volume']);
+    medicalTestCount = intPossible(json['medical_test_count']);
+    price = intPossible(json['price']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    /// TODO
+    return data;
+  }
+}
+
 class Clinic {
   int id;
   User user;
@@ -154,6 +185,7 @@ class Clinic {
   String description;
   double longitude;
   double latitude;
+  List<ClinicTrafficTextPlan> pClinic;
 
   Clinic(
       {this.id,
@@ -174,6 +206,12 @@ class Clinic {
     description = utf8IfPossible(json['description']);
     longitude = json['longitude'];
     latitude = json['latitude'];
+    pClinic = [];
+    if (json.containsKey("pclinic")) {
+      (json['pclinic'] as List).forEach((element) {
+        pClinic.add(ClinicTrafficTextPlan.fromJson(element));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -194,6 +232,7 @@ class Clinic {
 
 class NoronioClinic extends Clinic {
   static const ClinicId = 4;
+
   NoronioClinic() {
     this.id = ClinicId;
   }

@@ -118,6 +118,7 @@ class Strings {
 //
   static final String physicalReservationLabel = 'رزرو ویزیت حضوری';
   static final String virtualReservationLabel = 'رزرو ویزیت مجازی';
+  static final String trafficPlanReservationLabel = "خرید پلن متنی";
 
 //
   static final String patientTrackingVisitFaceToFaceLabel = 'ویزیت حضوری';
@@ -238,11 +239,29 @@ class Strings {
   static final String noVirtualAppointment =
       "هیچ سابقه ای از مشاوره" + "\n" + "مجازی موجود نمی باشد.";
 
+  /// text plan
+  static final String buyPlanActionTitle = "خرید";
+  static final String noPlanDefinedForDoctorClinic = "پلن متنی در کلینیک دکتر مورد نظر تعیین نشده است.";
+  static final List<String> sureToBuyTextPlan = [
+    "ایا از خرید پلن متنی" + " ",
+    "",
+    " " + "مطمین هستید؟"
+  ];
+  static final String planSuccessfullyActivated = "پلن متنی با موفقیت خریداری شد.";
+  static final String noCreditErrorCode_602 = "اعتبار شما برای خرید پلن کافی نمی باشد.";
+  static final String oldPlanExistedErrorCode_603 = "پلن قبلی شما هنوز تمام نشده است.";
+  static final String noRemainedWordForYouPlanInChatRoom = "برای چت با پزشک در ساعت های غیر ویزیت، باید پلن متنی تهیه کنید.هنوز پلنی نخریده اید یا پلن قبلی شما تمام شده است.";
+  static final String goToTextPlanListPage = "خرید پلن متنی";
   /// Errors
   static final String errorCode_615 = "لطفا عنوان کاربر را درست انتخاب کنید،" +
       "\n" +
       "این کاربر قبلا با عنوان دیگری ثبت نام کرده است.";
   static final String errorCode_616 = "کد فعالسازی را اشتباه وارد کردید";
+
+  static final String visitEventAddedToGoogleCalendar =
+      "ویزیت با موفقیت به گوگل کلندر شما اضافه شد.";
+  static final String visitEventFailedForGoogleCalendar =
+      "اضافه شده ویزیت به گوگل کلندر ناموفق بود!";
 
   static final String privacyAndPolicy = "قوانین و سیاست ها";
   static final String policyDescription =

@@ -33,6 +33,12 @@ class SocketHelper {
     this.connect(url);
   }
 
+  void dispose(){
+    this.url = null;
+    token = null;
+    close();
+  }
+
   void connect(String url) {
     if (appIsPaused) {
       Future.delayed(Duration(milliseconds: 800), () {

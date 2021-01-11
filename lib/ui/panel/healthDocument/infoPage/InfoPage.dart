@@ -1,4 +1,5 @@
 import 'package:docup/constants/colors.dart';
+import 'package:docup/models/TextPlan.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
@@ -15,11 +16,13 @@ class InfoPage extends StatefulWidget {
   final String emptyFilesLabel;
   final String pageName;
   bool uploadAvailable;
+  final TextPlanRemainedTraffic textPlanRemainedTraffic;
 
   InfoPage(
       {Key key,
       this.entity,
       this.picListLabel,
+      this.textPlanRemainedTraffic,
       @required this.pageName,
       this.lastPicsLabel,
       this.uploadAvailable = true,

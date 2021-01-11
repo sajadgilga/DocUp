@@ -2,18 +2,19 @@ import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/ui/start/SplashPage.dart';
 import 'package:docup/utils/dateTimeService.dart';
+
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'constants/colors.dart';
 import 'constants/strings.dart';
 
-void main()async {
+void main() async {
   // /// to initialize shared preference after cleaning packages.
   // SharedPreferences.setMockInitialValues({});
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,7 @@ void main()async {
   /// initializing datetime and load datetime from ntp package
   DateTimeService.loadCurrentDateTimes();
 
-  runApp(MyApp());
+  runApp(Phoenix(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -21,7 +21,6 @@ import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/PicList.dart';
-import 'package:docup/ui/widgets/SnackBar.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/dateTimeService.dart';
@@ -93,14 +92,17 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                 "بله",
                 "خیر", () {
               GoogleCalenderService.addVisitEvent(
-                  visitEntity, widget.patientEntity).then((result){
-                    if(result){
-                      showSnackBar(null, Strings.errorCode_615, secs: 10,context: context);
-                    }else{
-                      showSnackBar(null, Strings.errorCode_615, secs: 10,context: context);
-                    }
+                      visitEntity, widget.patientEntity)
+                  .then((result) {
+                if (result) {
+                  toast(context, Strings.visitEventAddedToGoogleCalendar,
+                      secs: 13);
+                } else {
+                  toast(context, Strings.visitEventFailedForGoogleCalendar,
+                      secs: 13);
+                }
+                _doneAndClosePage();
               });
-              _doneAndClosePage();
             }, () {
               _doneAndClosePage();
             });

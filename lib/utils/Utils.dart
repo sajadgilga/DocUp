@@ -325,10 +325,10 @@ launchURL(String url) async {
   }
 }
 
-void toast(context, String message) {
+void toast(context, String message, {int secs = 4}) {
   Scaffold.of(context).showSnackBar(SnackBar(
     content: AutoText(message),
-    duration: Duration(seconds: 3),
+    duration: Duration(seconds: secs),
   ));
 }
 
@@ -387,7 +387,7 @@ String utf8IfPossible(String text) {
   return text;
 }
 
-int intPossible(var text,{int defaultValues}) {
+int intPossible(var text, {int defaultValues}) {
   try {
     if (text is int) {
       return text;

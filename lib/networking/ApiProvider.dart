@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
-  static const String URL_IP = "185.252.30.163:8001";
+  static const String URL_IP = "185.252.30.163";
   final String _BASE_URL = "http://$URL_IP/";
 
   Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {
@@ -129,6 +129,7 @@ class ApiProvider {
         return responseJson;
       case 403:
       case 400:
+      case 404:
         var responseJson = decodeResponse(utf8Support, response);
         print("API RESPONSE -->>>> code:${response.statusCode} - ${body}");
 

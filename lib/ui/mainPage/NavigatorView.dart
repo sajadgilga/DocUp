@@ -10,10 +10,12 @@ import 'package:docup/blocs/PatientTrackerBloc.dart';
 import 'package:docup/blocs/SearchBloc.dart';
 import 'package:docup/blocs/TabSwitchBloc.dart';
 import 'package:docup/blocs/VisitBloc.dart';
+import 'package:docup/blocs/visit_time/TextPlanBloc.dart';
 import 'package:docup/blocs/visit_time/visit_time_bloc.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/models/TextPlan.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/account/DoctorProfileMenuPage.dart';
 import 'package:docup/ui/account/DoctorProfilePage.dart';
@@ -38,6 +40,7 @@ import 'package:docup/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
 import 'package:docup/ui/panel/partnerContact/videoOrVoiceCallPage/VideoOrVoiceCallPage.dart';
 import 'package:docup/ui/panel/searchPage/SearchPage.dart';
 import 'package:docup/ui/patientVisitDetail/PatientRequestPage.dart';
+import 'package:docup/ui/plan/PlanPage.dart';
 import 'package:docup/ui/visit/PhysicalVisitPage.dart';
 import 'package:docup/ui/visit/VirtualVisitPage.dart';
 import 'package:docup/ui/visitsList/PhysicalVisitListPage.dart';
@@ -70,6 +73,10 @@ class NavigatorRoutes {
 
   static const String virtualVisitPage = '/virtualVisitPage';
   static const String physicalVisitPage = '/physicalVisitPage';
+
+  /// TODO may we have change in label later
+  static const String textPlanPage = "/textPlanPage";
+
   static const String uploadFileDialogue = '/uploadFileDialogue';
   static const String cognitiveTest = '/cognitiveTest';
 
@@ -107,7 +114,8 @@ class NavigatorViewState extends State<NavigatorView> {
   final FileBloc _pictureBloc = FileBloc();
   final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
   final VisitTimeBloc _visitTimeBloc = VisitTimeBloc();
-  MedicalTestListBloc _medicalTestListBloc = MedicalTestListBloc();
+  final MedicalTestListBloc _medicalTestListBloc = MedicalTestListBloc();
+  final TextPlanBloc _textPlanBloc = TextPlanBloc();
 
   @override
   dispose() {
@@ -134,8 +142,8 @@ class NavigatorViewState extends State<NavigatorView> {
                   push(context, direction, detail: entity);
                 },
               ),
-          NavigatorRoutes.panel: (context) =>
-              Scaffold(body: _panel(context, detail: detail)),
+          NavigatorRoutes.panel: (context) => Scaffold(
+              body: _panel(context, detail: detail, extraDetail: extraDetail)),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
@@ -198,9 +206,12 @@ class NavigatorViewState extends State<NavigatorView> {
               _doctorProfileMenuPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
               _physicalVisitPage(context, detail),
+          NavigatorRoutes.textPlanPage: (context) =>
+              _textPlanPage(context, detail),
           NavigatorRoutes.myPartnerDialog: (context) =>
               _myPartnerDialog(context, detail),
-          NavigatorRoutes.panel: (context) => _panel(context, detail: detail),
+          NavigatorRoutes.panel: (context) =>
+              _panel(context, detail: detail, extraDetail: extraDetail),
         };
 //      case 1:
 //        return {
@@ -217,7 +228,10 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.root: (context) => _myDoctorsList(context),
           NavigatorRoutes.myPartnerDialog: (context) =>
               _myPartnerDialog(context, detail),
-          NavigatorRoutes.panel: (context) => _panel(context, detail: detail),
+          NavigatorRoutes.panel: (context) =>
+              _panel(context, detail: detail, extraDetail: extraDetail),
+          NavigatorRoutes.textPlanPage: (context) =>
+              _textPlanPage(context, detail),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail),
           NavigatorRoutes.patientDialogue: (context) =>
@@ -424,7 +438,8 @@ class NavigatorViewState extends State<NavigatorView> {
         },
       );
 
-  Widget _panelPages(context, partner) {
+  Widget _panelPages(
+      context, partner, TextPlanRemainedTraffic textPlanRemainedTraffic) {
     return BlocBuilder<EntityBloc, EntityState>(
         builder: (context, entityState) {
       return BlocBuilder<PanelSectionBloc, PanelSectionSelected>(
@@ -443,6 +458,7 @@ class NavigatorViewState extends State<NavigatorView> {
                 [
                   IllnessPage(
                     entity: copyEntity,
+                    textPlanRemainedTraffic: textPlanRemainedTraffic,
                     globalOnPush: widget.pushOnBase,
                     selectPage: widget.selectPage,
                     onPush: (direction, entity) {
@@ -453,6 +469,7 @@ class NavigatorViewState extends State<NavigatorView> {
                 [
                   ChatPage(
                     entity: copyEntity,
+                    textPlanRemainedTraffic: textPlanRemainedTraffic,
                     onPush: (direction, entity) {
                       push(context, direction, detail: entity);
                     },
@@ -489,6 +506,7 @@ class NavigatorViewState extends State<NavigatorView> {
                     [
                       InfoPage(
                         uploadAvailable: entity.isDoctor,
+                        textPlanRemainedTraffic: textPlanRemainedTraffic,
                         entity: copyEntity,
                         onPush: (direction, listId, partnerId, widgetArg) {
                           push(context, direction,
@@ -506,6 +524,7 @@ class NavigatorViewState extends State<NavigatorView> {
                     [
                       InfoPage(
                         uploadAvailable: entity.isDoctor,
+                        textPlanRemainedTraffic: textPlanRemainedTraffic,
                         entity: copyEntity,
                         onPush: (direction, listId, partnerId, widgetArg) {
                           push(context, direction,
@@ -523,6 +542,7 @@ class NavigatorViewState extends State<NavigatorView> {
                     [
                       InfoPage(
                         uploadAvailable: entity.isDoctor || entity.isPatient,
+                        textPlanRemainedTraffic: textPlanRemainedTraffic,
                         entity: copyEntity,
                         onPush: (direction, listId, partnerId, widgetArg) {
                           push(context, direction,
@@ -591,7 +611,7 @@ class NavigatorViewState extends State<NavigatorView> {
     });
   }
 
-  Widget _panel(context, {incomplete, detail}) {
+  Widget _panel(context, {incomplete, detail, extraDetail}) {
     if (detail != null)
       switch (detail) {
         case "chat":
@@ -625,7 +645,7 @@ class NavigatorViewState extends State<NavigatorView> {
         child: BlocBuilder<PanelBloc, PanelState>(builder: (context, state) {
           // if (state is PanelsLoaded || state is PanelLoading || true) {
           // if (state.panels.length > 0)
-          return _panelPages(context, detail);
+          return _panelPages(context, detail, extraDetail);
           // }
           // return PanelMenu(
           //   () {
@@ -640,8 +660,9 @@ class NavigatorViewState extends State<NavigatorView> {
 
   Widget _doctorDetailPage(context, doctor) {
     return DoctorDetailPage(
-      onPush: (direction, entity,Function() returnCallBack) {
-        push(context, direction, detail: entity,returnCallBack: returnCallBack);
+      onPush: (direction, entity, Function() returnCallBack) {
+        push(context, direction,
+            detail: entity, returnCallBack: returnCallBack);
       },
       doctorEntity: doctor,
     );
@@ -771,12 +792,17 @@ class NavigatorViewState extends State<NavigatorView> {
         BlocProvider<VisitTimeBloc>.value(
           value: _visitTimeBloc,
         ),
+        BlocProvider<TextPlanBloc>.value(
+          value: _textPlanBloc,
+        ),
       ],
       child: MyPartnerDialog(
-        isRequestPage: false,
         partner: detail,
-        onPush: (direction, entity) {
-          push(context, direction, detail: entity);
+        onPush: (direction, entity, remainedTraffic, returnCallBack) {
+          push(context, direction,
+              detail: entity,
+              extraDetail: remainedTraffic,
+              returnCallBack: returnCallBack);
         },
       ),
     );
@@ -828,6 +854,22 @@ class NavigatorViewState extends State<NavigatorView> {
       onPush: (direction, entity) {
         push(context, direction);
       },
+    );
+  }
+
+  _textPlanPage(BuildContext context, entity) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TextPlanBloc>.value(
+          value: _textPlanBloc,
+        ),
+      ],
+      child: TextPlanPage(
+        doctorEntity: (entity as DoctorEntity),
+        onPush: (direction, entity) {
+          push(context, direction);
+        },
+      ),
     );
   }
 }

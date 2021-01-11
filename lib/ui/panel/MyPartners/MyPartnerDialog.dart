@@ -1,14 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelSectionBloc.dart';
+import 'package:docup/blocs/visit_time/TextPlanBloc.dart';
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/settings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/PatientEntity.dart';
+import 'package:docup/models/TextPlan.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
+import 'package:docup/ui/widgets/APICallError.dart';
+import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
@@ -17,23 +22,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MyPartnerDialog extends StatelessWidget {
-  final Function(String, UserEntity) onPush;
-  final isRequestPage;
+class MyPartnerDialog extends StatefulWidget {
+  final Function(String, UserEntity, TextPlanRemainedTraffic, Function())
+      onPush;
   final UserEntity partner;
+
+  MyPartnerDialog({@required this.onPush, @required this.partner});
+
+  @override
+  _MyPartnerDialogState createState() => _MyPartnerDialogState();
+}
+
+class _MyPartnerDialogState extends State<MyPartnerDialog> {
   TextEditingController _controller = TextEditingController();
 
-//  SearchBloc searchBloc = SearchBloc();
+  @override
+  void initState() {
+    initialApiCall();
+    super.initState();
+  }
 
-  MyPartnerDialog(
-      {@required this.onPush,
-      this.isRequestPage = false,
-      @required this.partner});
+  void initialApiCall() {
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+    TextPlanBloc _textPlanBloc = BlocProvider.of<TextPlanBloc>(context);
+
+    if (entity.isDoctor) {
+      var panel = entity.mEntity.getPanelByPatientId(widget.partner.id);
+      _textPlanBloc.add(GetDoctorTextPlanTrafficEvent(panelId: panel.id));
+    } else {
+      var panel = entity.mEntity.getPanelByDoctorId(widget.partner.id);
+      _textPlanBloc.add(GetPatientTextPlanTrafficEvent(panelId: panel.id));
+    }
+  }
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     _controller?.dispose();
+    super.dispose();
   }
 
   Widget _image(context) {
@@ -41,16 +67,16 @@ class MyPartnerDialog extends StatelessWidget {
         child: Container(
             width: 70,
             child: PolygonAvatar(
-              user: partner.user,
+              user: widget.partner.user,
             )));
   }
 
   Widget _nameAndExpertise(context) {
     String utfName;
     try {
-      utfName = utf8.decode(partner.user.name.toString().codeUnits);
+      utfName = utf8.decode(widget.partner.user.name.toString().codeUnits);
     } catch (_) {
-      utfName = partner.user.name;
+      utfName = widget.partner.user.name;
     }
     return Container(
       padding: EdgeInsets.only(right: 15),
@@ -156,6 +182,20 @@ class MyPartnerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    return BlocBuilder<TextPlanBloc, TextPlanState>(builder: (context, state) {
+      if (state is TextPlanLoaded) {
+        return _chatWidget(state.textPlan);
+      } else if (state is TextPlanError) {
+        return APICallError(
+          () => initialApiCall(),
+          errorMessage: state.error,
+        );
+      }
+      return DocUpAPICallLoading2();
+    });
+  }
+
+  Widget _chatWidget(TextPlanRemainedTraffic textPlanRemainedTraffic) {
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
@@ -173,7 +213,7 @@ class MyPartnerDialog extends StatelessWidget {
                   child: Image.asset(Assets.logoTransparent, width: 50)),
               topRightFlag: false,
               onTap: () {
-                onPush(NavigatorRoutes.root, null);
+                widget.onPush(NavigatorRoutes.root, null, null, null);
               },
             ),
             Padding(
@@ -198,15 +238,20 @@ class MyPartnerDialog extends StatelessWidget {
             SizedBox(
               height: 35,
             ),
-            (partner is DoctorEntity) ? _myDoctorItems(context) : SizedBox(),
-            (partner is PatientEntity) ? _myPatientItems(context) : SizedBox()
+            (widget.partner is DoctorEntity)
+                ? _myDoctorItems(context, textPlanRemainedTraffic)
+                : SizedBox(),
+            (widget.partner is PatientEntity)
+                ? _myPatientItems(context, textPlanRemainedTraffic)
+                : SizedBox()
           ],
         ),
       ),
     );
   }
 
-  Widget _myDoctorItems(context) {
+  Widget _myDoctorItems(
+      context, TextPlanRemainedTraffic textPlanRemainedTraffic) {
     return Column(
       children: [
         _myPartnerItem(() {
@@ -214,7 +259,8 @@ class MyPartnerDialog extends StatelessWidget {
           var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
           _panelSectionBloc.add(PanelSectionSelect(
               patientSection: PatientPanelSection.DOCTOR_INTERFACE));
-          onPush(NavigatorRoutes.panel, partner);
+          widget.onPush(NavigatorRoutes.panel, widget.partner,
+              textPlanRemainedTraffic, () => initialApiCall());
 
           /// #
         }, Assets.panelDoctorDialogDoctorIcon, "ویزیت پزشک",
@@ -224,7 +270,8 @@ class MyPartnerDialog extends StatelessWidget {
           var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
           _panelSectionBloc.add(PanelSectionSelect(
               patientSection: PatientPanelSection.HEALTH_FILE));
-          onPush(NavigatorRoutes.panel, partner);
+          widget.onPush(NavigatorRoutes.panel, widget.partner,
+              textPlanRemainedTraffic, () => initialApiCall());
 
           /// #
         }, Assets.panelDoctorDialogPatientIcon, "پرونده سلامت",
@@ -240,7 +287,8 @@ class MyPartnerDialog extends StatelessWidget {
                     BlocProvider.of<PanelSectionBloc>(context);
                 _panelSectionBloc.add(PanelSectionSelect(
                     patientSection: PatientPanelSection.HEALTH_CALENDAR));
-                onPush(NavigatorRoutes.panel, partner);
+                widget.onPush(NavigatorRoutes.panel, widget.partner,
+                    textPlanRemainedTraffic, () => initialApiCall());
 
                 /// #
               }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
@@ -250,7 +298,8 @@ class MyPartnerDialog extends StatelessWidget {
     ;
   }
 
-  Widget _myPatientItems(context) {
+  Widget _myPatientItems(
+      context, TextPlanRemainedTraffic textPlanRemainedTraffic) {
     return Column(
       children: [
         _myPartnerItem(() {
@@ -259,7 +308,8 @@ class MyPartnerDialog extends StatelessWidget {
           var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
           _panelSectionBloc.add(PanelSectionSelect(
               patientSection: PatientPanelSection.DOCTOR_INTERFACE));
-          onPush(NavigatorRoutes.panel, partner);
+          widget.onPush(NavigatorRoutes.panel, widget.partner,
+              textPlanRemainedTraffic, () => initialApiCall());
 
           /// #
         }, Assets.panelDoctorDialogDoctorIcon, "ویزیت بیمار",
@@ -270,7 +320,8 @@ class MyPartnerDialog extends StatelessWidget {
           var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
           _panelSectionBloc.add(PanelSectionSelect(
               patientSection: PatientPanelSection.HEALTH_FILE));
-          onPush(NavigatorRoutes.panel, partner);
+          widget.onPush(NavigatorRoutes.panel, widget.partner,
+              textPlanRemainedTraffic, () => initialApiCall());
 
           /// #
         }, Assets.panelDoctorDialogPatientIcon, "پرونده سلامت",
@@ -287,7 +338,8 @@ class MyPartnerDialog extends StatelessWidget {
                     BlocProvider.of<PanelSectionBloc>(context);
                 _panelSectionBloc.add(PanelSectionSelect(
                     patientSection: PatientPanelSection.HEALTH_CALENDAR));
-                onPush(NavigatorRoutes.panel, partner);
+                widget.onPush(NavigatorRoutes.panel, widget.partner,
+                    textPlanRemainedTraffic, () => initialApiCall());
 
                 /// #
               }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",

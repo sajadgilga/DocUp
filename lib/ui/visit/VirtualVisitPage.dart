@@ -39,10 +39,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   TextEditingController dateTextController = TextEditingController();
   bool submitLoadingToggle = false;
 
-  Map<String, int> typeSelected = {
-    VISIT_METHOD: VirtualVisitMethod.TEXT.index,
-    VISIT_DURATION_PLAN: VisitDurationPlan.BASE.index
-  };
+  Map<String, int> typeSelected = {};
 
   bool visitTimeChecked = true;
   bool policyChecked = false;
@@ -54,6 +51,9 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   @override
   void initState() {
     try {
+      if (widget.doctorEntity.plan.virtualVisitMethod.contains(0)) {
+        widget.doctorEntity.plan.virtualVisitMethod.remove(0);
+      }
       typeSelected[VISIT_METHOD] =
           widget.doctorEntity.plan.virtualVisitMethod.first;
       typeSelected[VISIT_DURATION_PLAN] =
@@ -111,7 +111,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
           ALittleVerticalSpace(),
           _visitTypeWidget(
               VISIT_METHOD,
-              {0: "متنی", 1: "صوتی", 2: "تصویری"}..removeWhere((key, value) {
+              {1: "صوتی", 2: "تصویری"}..removeWhere((key, value) {
                   if (widget.doctorEntity.plan.virtualVisitMethod
                       .contains(key)) {
                     return false;
@@ -338,9 +338,10 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
 
   String _calculateVisitCost() {
     int cost = 0;
-    if (typeSelected[VISIT_METHOD] == VirtualVisitMethod.TEXT.index) {
-      cost = widget.doctorEntity.plan.baseTextPrice;
-    } else if (typeSelected[VISIT_METHOD] == VirtualVisitMethod.VOICE.index) {
+    // if (typeSelected[VISIT_METHOD] == VirtualVisitMethod.TEXT.index) {
+    //   cost = widget.doctorEntity.plan.baseTextPrice;
+    // } else
+    if (typeSelected[VISIT_METHOD] == VirtualVisitMethod.VOICE.index) {
       cost = widget.doctorEntity.plan.baseVoicePrice;
     } else if (typeSelected[VISIT_METHOD] == VirtualVisitMethod.VIDEO.index) {
       cost = widget.doctorEntity.plan.baseVideoPrice;

@@ -40,7 +40,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
   bool submitLoadingToggle = false;
 
   Map<String, int> typeSelected = {
-    VISIT_METHOD: VirtualVisitMethod.TEXT.index,
+    // VISIT_METHOD: VirtualVisitMethod.TEXT.index,
     // VISIT_DURATION_PLAN: VisitDurationPlan.BASE.index
   };
 

@@ -58,7 +58,7 @@ extension CatExtension on TypeSelect {
         ];
       case TypeSelect.virtualVisitMethod:
         return [
-          VirtualVisitMethod.TEXT.title,
+          // VirtualVisitMethod.TEXT.title,
           VirtualVisitMethod.VOICE.title,
           VirtualVisitMethod.VIDEO.title
         ];
@@ -319,18 +319,18 @@ class _VisitConfPageState extends State<VisitConfPage>
                   )
                 : SizedBox(),
           ),
-          AnimatedSize(
-            duration: Duration(milliseconds: 400),
-            vsync: this,
-            child:
-                typeSelected[TypeSelect.virtualVisitMethod.title].contains(0) &&
-                        typeSelected[TypeSelect.visitType.title].contains(1)
-                    ? PriceWidget(
-                        title: "مشاوره " + VirtualVisitMethod.TEXT.title,
-                        priceController: textBasePriceController,
-                      )
-                    : SizedBox(),
-          ),
+          // AnimatedSize(
+          //   duration: Duration(milliseconds: 400),
+          //   vsync: this,
+          //   child:
+          //       typeSelected[TypeSelect.virtualVisitMethod.title].contains(0) &&
+          //               typeSelected[TypeSelect.visitType.title].contains(1)
+          //           ? PriceWidget(
+          //               title: "مشاوره " + VirtualVisitMethod.TEXT.title,
+          //               priceController: textBasePriceController,
+          //             )
+          //           : SizedBox(),
+          // ),
           AnimatedSize(
             duration: Duration(milliseconds: 400),
             vsync: this,

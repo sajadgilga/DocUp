@@ -135,7 +135,7 @@ class PhysicalVisitList extends StatelessWidget {
       onPush: onPush,
       isDoctor: false,
       text: 'امروز',
-      visitResults: todayVisits,
+      visitResults: todayVisits.reversed.toList(),
       emptyText: Strings.emptyVisitSearch,
       isRequestsOnly: true,
     );
@@ -153,7 +153,7 @@ class PhysicalVisitList extends StatelessWidget {
       onPush: onPush,
       isDoctor: false,
       text: 'روزهای بعد',
-      visitResults: nextDayVisits,
+      visitResults: nextDayVisits.reversed.toList(),
       emptyText: Strings.emptyVisitSearch,
       isRequestsOnly: true,
     );

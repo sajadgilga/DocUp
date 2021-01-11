@@ -5,6 +5,7 @@ import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/DoctorEntity.dart';
 import 'package:docup/models/MedicalTest.dart';
+import 'package:docup/models/TextPlan.dart';
 import 'package:docup/models/UserEntity.dart';
 import 'package:docup/models/VisitTime.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
@@ -28,10 +29,12 @@ class IllnessPage extends StatefulWidget {
   final Function(String, dynamic) onPush;
   final Function(int) selectPage;
   final Function(String, dynamic) globalOnPush;
+  final TextPlanRemainedTraffic textPlanRemainedTraffic;
 
   IllnessPage(
       {Key key,
       this.entity,
+        this.textPlanRemainedTraffic,
       @required this.onPush,
       @required this.selectPage,
       @required this.globalOnPush})

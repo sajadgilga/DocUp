@@ -23,4 +23,12 @@ class EntityAndPanelUpdater {
       _panelBloc.add(GetMyPanels());
     });
   }
+  static void end(){
+    if(_timer != null){
+      EntityAndPanelUpdater._entityBloc = null;
+      EntityAndPanelUpdater._panelBloc = null;
+      _timer.cancel();
+      _timer = null;
+    }
+  }
 }

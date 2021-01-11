@@ -11,6 +11,24 @@ abstract class UserEntity {
   int vid; //TODO: have to be removed later
   List<Panel> panels;
   Map<int, Panel> panelMap = {};
+  
+  Panel getPanelByPatientId(int patientId){
+    for(var panel in panels){
+      if(panel.patientId == patientId){
+        return panel;
+      }
+    }
+    return null;
+  }
+  Panel getPanelByDoctorId(int doctorId){
+    for(var panel in panels){
+      if(panel.doctorId == doctorId){
+        return panel;
+      }
+    }
+    return null;
+
+  }
 
   UserEntity({this.user, this.id, this.panels, this.vid});
 
