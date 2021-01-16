@@ -8,7 +8,6 @@ import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
 import 'package:docup/models/UserEntity.dart';
-import 'package:docup/services/VibrateAndSoundService.dart';
 import 'package:docup/ui/home/SearchBox.dart';
 import 'package:docup/ui/home/iPartner/IPartner.dart';
 import 'package:docup/ui/home/notification/Notification.dart';

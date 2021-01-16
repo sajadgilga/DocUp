@@ -1,6 +1,10 @@
+import 'dart:ui';
+
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/dateTimeService.dart';
+import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class DoctorPlan {
   static final daysCount = 7;
@@ -83,6 +87,24 @@ class DoctorPlan {
     return res;
   }
 
+  DoctorWorkDataSource get doctorWorkDateTimeDataSource {
+    List<DataSourceWorkTime> res = [];
+    res.add(DataSourceWorkTime(
+        eventName: "ویزیت حضوری",
+        background: Colors.blue,
+        dateString: "2021/01/15",
+        workTime: WorkTime(startTime: "14:30", endTime: "18:45")));
+    res.add(DataSourceWorkTime(
+        eventName: "ویزیت مجازی",
+        background: Colors.green,
+        dateString: "2021/01/15",
+        workTime: WorkTime(startTime: "15:30", endTime: "23:45")));
+    for (VisitType visitType in visitTypes) {
+      /// TODO
+    }
+    return DoctorWorkDataSource(res);
+  }
+
   static int getPartNumberWithIndex(int r, int c) {
     return r * DoctorPlan.hourParts + c;
   }
@@ -141,7 +163,7 @@ class DoctorPlan {
             /// adding workTime to weeklyWorkTimes
             weeklyWorkTimes[dayIndex]
                 .workTimes
-                .add(WorkTimes(startTime: startTime, endTime: endTime));
+                .add(WorkTime(startTime: startTime, endTime: endTime));
 
             /// starting a new workTime
             startPart = part;
@@ -159,7 +181,7 @@ class DoctorPlan {
           /// adding workTime to weeklyWorkTimes
           weeklyWorkTimes[dayIndex]
               .workTimes
-              .add(WorkTimes(startTime: startTime, endTime: endTime));
+              .add(WorkTime(startTime: startTime, endTime: endTime));
         }
       }
     }
@@ -313,7 +335,7 @@ class VisitType {
     List<List<int>> workTimeTable = VisitType.getEmptyTablePlan();
 
     /// fill table
-    this.weeklyWorkTimes[dayIndex].workTimes.forEach((WorkTimes workTime) {
+    this.weeklyWorkTimes[dayIndex].workTimes.forEach((WorkTime workTime) {
       int start = DateTimeService.getTimeMinute(workTime.startTime);
       int startPart = start ~/ DoctorPlan.hourMinutePart;
       int end = DateTimeService.getTimeMinute(workTime.endTime);
@@ -364,9 +386,9 @@ class VisitType {
       weeklyWorkTimes = [];
       Map<int, DailyWorkTimes> mapWeekWorkTimes = {};
       json['work_days'].forEach((workTimesList) {
-        List<WorkTimes> dayWorkTimes = [];
+        List<WorkTime> dayWorkTimes = [];
         workTimesList['work_times'].forEach((w) {
-          dayWorkTimes.add(new WorkTimes.fromJson(w));
+          dayWorkTimes.add(new WorkTime.fromJson(w));
         });
         DailyWorkTimes dailyWorkTimes =
             DailyWorkTimes(workTimesList['day'], dayWorkTimes);
@@ -408,13 +430,13 @@ class VisitType {
 
 class DailyWorkTimes {
   int day;
-  List<WorkTimes> workTimes;
+  List<WorkTime> workTimes;
 
   DailyWorkTimes(this.day, this.workTimes);
 
   DailyWorkTimes.fromJson(Map<String, dynamic> json) {
     day = json['day'];
-    workTimes = (json['work_times'] as List).map((e) => WorkTimes.fromJson(e));
+    workTimes = (json['work_times'] as List).map((e) => WorkTime.fromJson(e));
   }
 
   Map<String, dynamic> toJson() {
@@ -448,7 +470,7 @@ class ReservedVisit {
   }
 }
 
-class WorkTimes {
+class WorkTime {
   String startTime;
   String endTime;
 
@@ -464,9 +486,9 @@ class WorkTimes {
     return end;
   }
 
-  WorkTimes({this.startTime, this.endTime});
+  WorkTime({this.startTime, this.endTime});
 
-  WorkTimes.fromJson(Map<String, dynamic> json) {
+  WorkTime.fromJson(Map<String, dynamic> json) {
     startTime = json['start_time'];
     endTime = json['end_time'];
   }
@@ -476,5 +498,69 @@ class WorkTimes {
     data['start_time'] = this.startTime;
     data['end_time'] = this.endTime;
     return data;
+  }
+}
+
+class DoctorWorkDataSource extends CalendarDataSource {
+  DoctorWorkDataSource(List<DataSourceWorkTime> source) {
+    appointments = source;
+  }
+
+  /// calendar stuff
+  @override
+  DateTime getStartTime(int index) {
+    return (appointments[index] as DataSourceWorkTime).startDateTime;
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    return (appointments[index] as DataSourceWorkTime).endDateTime;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return false;
+  }
+
+  @override
+  String getSubject(int index) {
+    return appointments[index].eventName;
+  }
+
+  @override
+  String getStartTimeZone(int index) {
+    return '';
+  }
+
+  @override
+  String getEndTimeZone(int index) {
+    return '';
+  }
+
+  @override
+  Color getColor(int index) {
+    return appointments[index].background;
+  }
+
+  /// end calendar stuff
+}
+
+class DataSourceWorkTime {
+  DataSourceWorkTime(
+      {this.eventName, this.dateString, this.workTime, this.background});
+
+  String eventName;
+  String dateString;
+  WorkTime workTime;
+  Color background;
+
+  DateTime get startDateTime {
+    return DateTimeService.getDateTimeFromDateStringAndTimeStringSlash(
+        dateString, workTime.startTime);
+  }
+
+  DateTime get endDateTime {
+    return DateTimeService.getDateTimeFromDateStringAndTimeStringSlash(
+        dateString, workTime.endTime);
   }
 }

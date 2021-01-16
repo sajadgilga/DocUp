@@ -8,12 +8,10 @@ class DateTimeService {
   static DateTime currentMobileDateTime;
 
   static loadCurrentDateTimes() async {
-    try{
+    try {
       currentNTPDateTime = await NTP.now();
       currentMobileDateTime = DateTime.now();
-    }catch(e){
-
-    }
+    } catch (e) {}
   }
 
   static DateTime getCurrentDateTime() {
@@ -152,5 +150,17 @@ class DateTimeService {
           int.parse(array[0]), int.parse(array[1]), int.parse(array[2]));
     } catch (e) {}
     return null;
+  }
+
+  static DateTime getDateTimeFromDateStringAndTimeStringSlash(
+      String dateString, String timeString) {
+    List<String> dateDetail = dateString.split("/");
+    List<String> timeDetail = timeString.split(":");
+    int year = intPossible(dateDetail[0]);
+    int month = intPossible(dateDetail[1]);
+    int day = intPossible(dateDetail[2]);
+    int hour = intPossible(timeDetail[0]);
+    int minute = intPossible(timeDetail[1]);
+    return DateTime(year, month, day, hour, minute);
   }
 }
