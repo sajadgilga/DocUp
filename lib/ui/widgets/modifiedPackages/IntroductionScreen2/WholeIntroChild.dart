@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 
 class WholeIntoChild1 extends StatelessWidget {
-  final String header = "داکآپ، پل ارتباطی پزشک و بیمار";
+  final String header = "نورونیو، پل ارتباطی پزشک و بیمار";
   final String subHeader =
       "رزرو نوبت، گفتگو با پزشکان متخصص و پیگیر آنلاین روند درمان";
   final String imageAddress = Assets.introPage1;
