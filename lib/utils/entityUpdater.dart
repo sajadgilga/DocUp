@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:docup/blocs/EntityBloc.dart';
 import 'package:docup/blocs/PanelBloc.dart';
 
+import 'dateTimeService.dart';
+
 class EntityAndPanelUpdater {
   static EntityBloc _entityBloc;
   static PanelBloc _panelBloc;
@@ -18,7 +20,7 @@ class EntityAndPanelUpdater {
 
   static void createTimer() {
     _timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
-      print("Timer: ${DateTime.now()}");
+      print("Timer: ${DateTimeService.getCurrentDateTime()}");
       _entityBloc.add(EntityUpdate());
       _panelBloc.add(GetMyPanels());
     });

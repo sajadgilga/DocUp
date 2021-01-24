@@ -6,9 +6,11 @@ import 'package:docup/repository/UtilRepository.dart';
 import 'package:docup/services/FirebaseService.dart';
 import 'package:docup/ui/mainPage/navigator_destination.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:docup/utils/entityUpdater.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,19 +70,22 @@ class _MainPageState extends State<MainPage> {
   }
 
   checkAppVersion() {
-    UtilRepository utilRepository = UtilRepository();
-    utilRepository.getLatestAppBuildNumber().then((value) async {
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      int currentBuildNumber = intPossible(await packageInfo.buildNumber);
-      if (currentBuildNumber < value) {
-        showOneButtonDialog(
-            context,
-            "نسخه اپلیکیشن کنونی شما قدیمی است. با زدن بر روی دکمه زیر برای اپدیت اپ اقدام کنید.",
-            "دانلود", () {
-          launchURL("https://docup.ir");
-        }, barrierDismissible: false);
-      }
-    });
+    if(!kIsWeb){
+      UtilRepository utilRepository = UtilRepository();
+      utilRepository.getLatestAppBuildNumber().then((value) async {
+        PackageInfo packageInfo = await PackageInfo.fromPlatform();
+        int currentBuildNumber = intPossible(await packageInfo.buildNumber);
+        if (currentBuildNumber < value) {
+          showOneButtonDialog(
+              context,
+              "نسخه اپلیکیشن کنونی شما قدیمی است. با زدن بر روی دکمه زیر برای اپدیت اپ اقدام کنید.",
+              "دانلود", () {
+            launchURL("https://docup.ir");
+          }, barrierDismissible: false);
+        }
+      });
+    }
+
   }
 
   @override
@@ -136,7 +141,7 @@ class _MainPageState extends State<MainPage> {
                   Container(
                       alignment: Alignment.center,
                       child: (destination.hasImage
-                          ? SvgPicture.asset(
+                          ? CrossPlatformSvg.asset(
                               destination.image,
                               color: _getBottomNavigationColor(destination,
                                   secondary: Colors.grey),

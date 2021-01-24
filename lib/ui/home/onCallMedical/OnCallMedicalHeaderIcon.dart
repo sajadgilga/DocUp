@@ -1,5 +1,6 @@
 import 'package:docup/constants/assets.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
 
 import 'package:docup/constants/colors.dart';
@@ -22,7 +23,7 @@ class _OnCallMedicalHeaderIconState extends State<OnCallMedicalHeaderIcon> {
         alignment: Alignment.bottomCenter,
         child: Material(
           child: InkWell(
-            child: SvgPicture.asset(Assets.onCallMedicalIcon, width: 35,),
+            child: CrossPlatformSvg.asset(Assets.onCallMedicalIcon, width: 35,),
             hoverColor: Colors.white,
           ),
           color: Colors.transparent,

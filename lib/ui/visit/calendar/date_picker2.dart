@@ -1,6 +1,7 @@
 import 'package:docup/ui/visit/calendar/utils/consts.dart';
 import 'package:docup/ui/visit/calendar/widget/render_table2.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
@@ -61,14 +62,14 @@ class _DatePicker2State extends State<DatePicker2>
           var splitEndDate = widget.endSelectedDate.split('/');
           startSelectedDate = Jalali(int.parse(splitStartDate[0]),
                   int.parse(splitStartDate[1]), int.parse(splitStartDate[2])) ??
-              Jalali.now();
+              DateTimeService.getCurrentJalali();
           endSelectedDate = Jalali(int.parse(splitEndDate[0]),
                   int.parse(splitEndDate[1]), int.parse(splitEndDate[2])) ??
-              Jalali.now();
+              DateTimeService.getCurrentJalali();
 
           initDate = startSelectedDate = Jalali(int.parse(splitStartDate[0]),
                   int.parse(splitStartDate[1]), int.parse(splitStartDate[2])) ??
-              Jalali.now();
+              DateTimeService.getCurrentJalali();
         }
       });
     }
@@ -91,14 +92,14 @@ class _DatePicker2State extends State<DatePicker2>
       var splitEndDate = widget.endSelectedDate.split('/');
       startSelectedDate = Jalali(int.parse(splitStartDate[0]),
               int.parse(splitStartDate[1]), int.parse(splitStartDate[2])) ??
-          Jalali.now();
+          DateTimeService.getCurrentJalali();
       endSelectedDate = Jalali(int.parse(splitEndDate[0]),
               int.parse(splitEndDate[1]), int.parse(splitEndDate[2])) ??
-          Jalali.now();
+          DateTimeService.getCurrentJalali();
 
       initDate = startSelectedDate = Jalali(int.parse(splitStartDate[0]),
               int.parse(splitStartDate[1]), int.parse(splitStartDate[2])) ??
-          Jalali.now();
+          DateTimeService.getCurrentJalali();
     }
 
     controller =
@@ -133,7 +134,7 @@ class _DatePicker2State extends State<DatePicker2>
               year: month == 12 ? year + 1 : year);
           break;
         case 'now':
-          newDate = Jalali.now();
+          newDate = DateTimeService.getCurrentJalali();
           break;
         default:
       }
@@ -338,8 +339,8 @@ class _DatePicker2State extends State<DatePicker2>
                       style: TextStyle(fontSize: 16, color: Global.color),
                     ),
                     onPressed: () {
-                      startSelectedDate = Jalali.now();
-                      endSelectedDate = Jalali.now();
+                      startSelectedDate = DateTimeService.getCurrentJalali();
+                      endSelectedDate = DateTimeService.getCurrentJalali();
                       _changeMonth('now');
                     },
                   ),

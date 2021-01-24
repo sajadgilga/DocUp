@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/start/RoleType.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -100,7 +101,7 @@ class _OptionButtonState extends State<OptionButton> {
                         padding: EdgeInsets.all(5),
                         width: 60,
                         height: 60,
-                        child: SvgPicture.asset(
+                        child: CrossPlatformSvg.asset(
                           roleType.asset,
                           color: getCurrentColor(),
                         ),

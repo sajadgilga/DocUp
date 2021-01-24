@@ -23,6 +23,7 @@ import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/SnackBar.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
+import 'package:docup/utils/CrossPlatformDeviceDetection.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -151,7 +152,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
                       widget.onPush(NavigatorRoutes.root, null);
                     },
                     topRightFlag: false,
-                    topLeftFlag: Platform.isIOS,
+                    topLeftFlag: PlatformDetection.isIOS,
                   ),
                   DocUpHeader(
                     title: widget.medicalTestPageInitData.medicalTestItem.name,

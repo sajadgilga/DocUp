@@ -65,10 +65,10 @@
             </list>
           </value>
         </entry>
-        <entry key="calendar_views">
+        <entry key="carousel_slider">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/calendar_views-0.5.2/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/carousel_slider-2.3.1/lib" />
             </list>
           </value>
         </entry>
@@ -279,13 +279,6 @@
           <value>
             <list>
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications_platform_interface-1.0.1/lib" />
-            </list>
-          </value>
-        </entry>
-        <entry key="flutter_localizations">
-          <value>
-            <list>
-              <option value="$PROJECT_DIR$/../../../windowsubuntu/flutter/packages/flutter_localizations/lib" />
             </list>
           </value>
         </entry>
@@ -807,13 +800,6 @@
             </list>
           </value>
         </entry>
-        <entry key="syncfusion_localizations">
-          <value>
-            <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/syncfusion_localizations-18.4.34/lib" />
-            </list>
-          </value>
-        </entry>
         <entry key="term_glyph">
           <value>
             <list>
@@ -994,7 +980,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/auto_size_text-2.1.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/bloc-3.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0-nullsafety.3/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/calendar_views-0.5.2/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/carousel_slider-2.3.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/characters-1.1.0-nullsafety.5/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/charcode-1.2.0-nullsafety.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0-nullsafety.3/lib" />
@@ -1095,7 +1081,6 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/syncfusion_flutter_calendar-18.4.34/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/syncfusion_flutter_core-18.4.34/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/syncfusion_flutter_datepicker-18.4.34-beta/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/syncfusion_localizations-18.4.34/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0-nullsafety.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/test_api-0.2.19-nullsafety.6/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/timezone-0.5.9/lib" />
@@ -1122,7 +1107,6 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/zone_local-0.1.2/lib" />
       <root url="file://$PROJECT_DIR$/../../../windowsubuntu/flutter/bin/cache/pkg/sky_engine/lib" />
       <root url="file://$PROJECT_DIR$/../../../windowsubuntu/flutter/packages/flutter/lib" />
-      <root url="file://$PROJECT_DIR$/../../../windowsubuntu/flutter/packages/flutter_localizations/lib" />
       <root url="file://$PROJECT_DIR$/../../../windowsubuntu/flutter/packages/flutter_test/lib" />
       <root url="file://$PROJECT_DIR$/../../../windowsubuntu/flutter/packages/flutter_web_plugins/lib" />
     </CLASSES>

@@ -1,7 +1,8 @@
-import 'package:docup/ui/widgets/IntroductionScreen2/page_view_model.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 
-import '../AutoText.dart';
+import 'page_view_model.dart';
+
 
 class IntroContent2 extends StatelessWidget {
   final PageViewModel2 page;

@@ -22,9 +22,12 @@ import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/PicList.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:docup/utils/CrossPlatformDeviceDetection.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,7 +86,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
         }
 
         if (data.data.status == 1) {
-          if (Platform.isAndroid) {
+          if (PlatformDetection.isAndroid) {
             showTwoButtonDialog(
                 context,
                 'درخواست بیمار تایید  شد.' +
@@ -182,7 +185,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                       Navigator.pop(context, 'Nope.');
                     },
                     topRightFlag: false,
-                    topLeftFlag: Platform.isIOS,
+                    topLeftFlag: PlatformDetection.isIOS,
                   ),
                 ],
               ),
@@ -341,7 +344,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
       recentLabel: Strings.panelTestResultsPicListLabel,
       emptyListLabel: Strings.emptyTestFiles,
       uploadLabel: "",
-      asset: SvgPicture.asset(
+      asset: CrossPlatformSvg.asset(
         "assets/cloud.svg",
         height: 35,
         width: 35,

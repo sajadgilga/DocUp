@@ -1,7 +1,7 @@
 import 'package:docup/constants/settings.dart';
 
 class Strings {
-  static const String appTitle = 'Flutter Demo';
+  static const String appTitle = 'داک آپ';
   static const String bottomNavigationHomeTitle = 'خانه';
   static const String bottomNavigationPanelTitle = 'پنل کاربری';
   static const String bottomNavigationServicesTitle = 'خدمات';

@@ -19,8 +19,10 @@ import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/InputDoneView.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
+import 'package:docup/utils/CrossPlatformDeviceDetection.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,7 +80,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
       }
     });
     _amountTextController.text = widget.defaultCreditForCharge;
-    if (Platform.isIOS) {
+    if (PlatformDetection.isIOS) {
       KeyboardVisibilityNotification().addNewListener(onShow: () {
         showOverlay(context);
       }, onHide: () {

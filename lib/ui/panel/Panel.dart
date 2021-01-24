@@ -8,6 +8,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Header.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -79,7 +80,7 @@ class _PanelState extends State<Panel> {
               onTap: () {
                 _showSearchPage();
               },
-              child: SvgPicture.asset(
+              child: CrossPlatformSvg.asset(
                 Assets.searchIcon,
                 width: 30,
               ),

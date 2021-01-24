@@ -16,6 +16,7 @@ import 'package:docup/ui/widgets/APICallLoading.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/PanelTestList.dart';
 import 'package:docup/ui/widgets/VisitBox.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -126,7 +127,7 @@ class _IllnessPageState extends State<IllnessPage> {
                     : "تست های ارسالی",
                 recentLabel: Strings.illnessInfoLastPicsLabel,
                 uploadLabel: "شما ۱ تست از سوی پزشک دارید",
-                asset: SvgPicture.asset(
+                asset: CrossPlatformSvg.asset(
                   "assets/cloud.svg",
                   height: 35,
                   width: 35,

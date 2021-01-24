@@ -245,7 +245,7 @@ class NotificationItem extends StatelessWidget {
                         ? "هم اکنون"
                         : replaceFarsiNumber(newestNotifs.notifTime) +
                             " - " +
-                            replaceFarsiNumber(DateTimeService.normalizeDate(
+                            replaceFarsiNumber(DateTimeService.getJalaliStringFormGeorgianDateTimeString(
                                 newestNotifs.notifDate)),
                     textDirection: TextDirection.rtl,
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),

@@ -9,6 +9,7 @@ import 'package:docup/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:docup/utils/CrossPlatformDeviceDetection.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:docup/utils/entityUpdater.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,7 +57,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
                 widget.onPush(NavigatorRoutes.root, null);
               },
               topRightFlag: false,
-              topLeftFlag: Platform.isIOS,
+              topLeftFlag: PlatformDetection.isIOS,
             ),
             DocUpHeader(
               title: "پروفایل من",

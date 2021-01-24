@@ -9,6 +9,7 @@ import 'package:docup/models/VisitResponseEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
@@ -314,7 +315,7 @@ extension PatientStatusExtension on PatientStatus {
           height: 15,
         );
       case PatientStatus.VIRTUAL_VISIT_REQUEST:
-        return SvgPicture.asset(
+        return CrossPlatformSvg.asset(
           Assets.onCallMedicalIcon,
           width: 15,
         );

@@ -10,6 +10,7 @@ import 'package:docup/constants/strings.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/Panel.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
@@ -147,7 +148,7 @@ class PanelMenuMainItem extends StatelessWidget {
         color: color,
       );
     else if (asset != null)
-      return SvgPicture.asset(
+      return CrossPlatformSvg.asset(
         asset,
         color: color,
         width: 30,

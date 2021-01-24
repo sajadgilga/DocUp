@@ -4,30 +4,33 @@ import 'package:shamsi_date/shamsi_date.dart';
 import 'Utils.dart';
 
 class DateTimeService {
-  static DateTime currentNTPDateTime;
-  static DateTime currentMobileDateTime;
+  static DateTime _currentNTPDateTime;
+  static DateTime _currentMobileDateTime;
 
   static loadCurrentDateTimes() async {
     try {
-      currentNTPDateTime = await NTP.now();
-      currentMobileDateTime = DateTime.now();
+      _currentNTPDateTime = await NTP.now();
+      _currentMobileDateTime = DateTime.now();
     } catch (e) {}
   }
 
   static DateTime getCurrentDateTime() {
     DateTime now;
-    if (currentMobileDateTime == null || currentNTPDateTime == null) {
+    if (_currentMobileDateTime == null || _currentNTPDateTime == null) {
       now = DateTime.now();
       print("mobile now:" + now.toString());
     } else {
-      Duration delta = DateTime.now().difference(currentMobileDateTime);
-      now = currentNTPDateTime.add(delta);
+      Duration delta = DateTime.now().difference(_currentMobileDateTime);
+      now = _currentNTPDateTime.add(delta);
       print("ntp now:" + now.toString());
     }
     loadCurrentDateTimes();
     return now;
   }
 
+  static Jalali getJalaliformDateTime(DateTime date) {
+    return Jalali.fromDateTime(date);
+  }
   static Jalali getCurrentJalali() {
     return Jalali.fromDateTime(getCurrentDateTime());
   }
@@ -48,6 +51,10 @@ class DateTimeService {
 
   static Jalali getTodayInJalali() {
     return Jalali.fromDateTime(DateTimeService.getCurrentDateTime());
+  }
+
+  static String getDateStringFormDateTime(DateTime date) {
+    return "${date.year}/${date.month}/${date.day}";
   }
 
   static String getTomorrowInJalali() {
@@ -95,7 +102,10 @@ class DateTimeService {
     return timeString;
   }
 
-  static String normalizeDate(String date) {
+  static String getJalaliStringFormGeorgianDateTimeString(String date) {
+    if (date.split("T").length > 1) {
+      date = date.split("T")[0];
+    }
     final jalaliDate = Jalali.fromDateTime(DateTime(
         int.parse(date.split("-")[0]),
         int.parse(date.split("-")[1]),
@@ -107,7 +117,7 @@ class DateTimeService {
       {bool cutSeconds = true, bool withLabel = true}) {
     String time =
         normalizeTime(str.split("T")[1].split("+")[0], cutSeconds: cutSeconds);
-    String finalDate = normalizeDate(str.split("T")[0]);
+    String finalDate = getJalaliStringFormGeorgianDateTimeString(str);
     if (withLabel) {
       return "تاریخ: $finalDate زمان : $time ";
     } else {

@@ -111,8 +111,8 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                           planDurationInMinute: widget.planDurationInMinute,
                           selectedDateController: widget.dateTextController,
                           selectedTimeController: widget.timeTextController,
-                          dailyDoctorWorkTime: widget.visitType
-                                  ?.getDailyWorkTimeTable(selectedDay) ??
+                          /// TODO
+                          dailyDoctorWorkTime: null ??
                               VisitType.getEmptyTablePlan(),
                           dayReservedTimeTable: widget.doctorPlan
                               .getTakenVisitDailyTimeTable(

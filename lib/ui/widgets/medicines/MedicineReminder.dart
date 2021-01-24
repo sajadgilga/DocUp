@@ -1,3 +1,4 @@
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -184,7 +185,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
               SizedBox(
                 height: 10,
               ),
-              SvgPicture.asset(
+              CrossPlatformSvg.asset(
                 widget.type.asset,
                 alignment: Alignment.center,
                 color: _reminderState.color,

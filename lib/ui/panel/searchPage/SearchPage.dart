@@ -103,12 +103,12 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
 //  Widget _docupIcon() => Container(
 //        padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
 //        child: Image.asset(Assets.docupIcon, width: 50),
-////        child: SvgPicture.asset(Assets.docupIcon, width: 50),
+////        child: CrossPlatformSvg.asset(Assets.docupIcon, width: 50),
 //        alignment: Alignment.centerRight,
 //      );
 //
 //  Widget _backArrow(context) {
-//    return (Platform.isIOS
+//    return (PlatformDetection.isIOS
 //        ? GestureDetector(
 //            onTap: () {
 //              Navigator.pop(context);

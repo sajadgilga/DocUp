@@ -1,6 +1,7 @@
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -40,7 +41,7 @@ class APICallError extends StatelessWidget {
                 ? Container(
                     padding: EdgeInsets.only(left: x * (10 / 360)),
                     width: imageWidth,
-                    child: SvgPicture.asset(
+                    child: CrossPlatformSvg.asset(
                       Assets.apiCallError,
                       width: imageWidth,
                     ),

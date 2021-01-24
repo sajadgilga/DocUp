@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:calendar_views/calendar_views.dart';
 import 'package:docup/blocs/DoctorInfoBloc.dart';
 import 'package:docup/constants/colors.dart';
 import 'package:docup/constants/strings.dart';
@@ -21,6 +20,7 @@ import 'package:docup/ui/widgets/PriceWidget.dart';
 import 'package:docup/ui/widgets/TimeSelectionWidget.dart';
 import 'package:docup/ui/widgets/TimeSelectorHeaderWidget.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:docup/ui/widgets/modifiedPackages/calendar_views-0.5.2/widgets/DoctorWorkTImeCalendar/day_view_example.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +117,7 @@ class _VisitConfPageState extends State<VisitConfPage>
 
   // List<List<List<int>>> virtualDaysPlanTable = [];
   // List<List<List<int>>> physicalDaysPlanTable = [];
-  DoctorWorkDataSource doctorWorkDataSource;
+  DoctorPlan plan;
   CalendarController calendarController = CalendarController();
 
   bool timeIsSelected = true;
@@ -222,8 +222,7 @@ class _VisitConfPageState extends State<VisitConfPage>
           doctorEntity.plan?.basePhysicalVisitPrice.toString();
 
       /// initial table data
-      this.doctorWorkDataSource =
-          doctorEntity.plan.doctorWorkDateTimeDataSource;
+      this.plan = doctorEntity.plan;
       // for (int i = 0; i < DoctorPlan.daysCount; i++) {
       //   var a = doctorEntity.plan.virtualVisitType?.getDailyWorkTimeTable(i);
       //   if (a != null) {
@@ -495,26 +494,29 @@ class _VisitConfPageState extends State<VisitConfPage>
                   ),
                 ),
                 Container(
-                  height: 350,
-                  color: Color.fromARGB(0, 0, 0, 0),
-                  child:
-                  // DayView(controller: DaysPageController(firstDayOnInitialPage: DateTime.now(),daysPerPage: 7),)
-                  SfCalendar(
-                    // backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                    view: CalendarView.week,
-                    allowViewNavigation: false,
-                    dataSource: this.doctorWorkDataSource,
-                    showNavigationArrow: true,
-                    showDatePickerButton: true,
-                    cellEndPadding: 1,
-                    controller: this.calendarController,
-                    onTap: (calendarTapDetails) {
-                      log("");
-                    },
-                    appointmentTextStyle: TextStyle(fontWeight: FontWeight.bold),
-                    // appointmentBuilder: (context, calendarAppointmentDetails) {},
-                  ),
-                ),
+                    height: 350,
+                    color: Color.fromARGB(0, 0, 0, 0),
+                    child: DayViewExample(
+                      plan?.totalWorkTimes ??
+                          <DateTime, DataSourceDailyWorkTimes>{},
+                      showEventTitle: false,
+                    )
+                    // SfCalendar(
+                    //   // backgroundColor: Color.fromARGB(0, 0, 0, 0),
+                    //   view: CalendarView.week,
+                    //   allowViewNavigation: false,
+                    //   dataSource: this.doctorWorkDataSource,
+                    //   showNavigationArrow: true,
+                    //   showDatePickerButton: true,
+                    //   cellEndPadding: 1,
+                    //   controller: this.calendarController,
+                    //   onTap: (calendarTapDetails) {
+                    //     log("");
+                    //   },
+                    //   appointmentTextStyle: TextStyle(fontWeight: FontWeight.bold),
+                    //   // appointmentBuilder: (context, calendarAppointmentDetails) {},
+                    // ),
+                    ),
               ],
             )
           : SizedBox(),
@@ -704,8 +706,8 @@ class _VisitConfPageState extends State<VisitConfPage>
 
   VisitType getVirtualVisitTypeDetail() {
     /// TODO
-    List<DailyWorkTimes> virtualPlanDaysWorkTimes =
-        DoctorPlan.getWeeklyWorkTimesWithTableData([]);
+    List<DailyWorkTimes> virtualPlanDaysWorkTimes = [];
+    // DoctorPlan.getWeeklyWorkTimesWithTableData([]);
     return VisitType(
         visitType: 1,
         visitMethod: typeSelected[TypeSelect.virtualVisitMethod.title].toList(),
@@ -718,13 +720,13 @@ class _VisitConfPageState extends State<VisitConfPage>
         baseVoicePrice:
             intPossible(voiceBasePriceController.text, defaultValues: 0),
         basePhysicalVisitPrice: 0,
-        weeklyWorkTimes: virtualPlanDaysWorkTimes);
+        DaysWorkTimes: virtualPlanDaysWorkTimes);
   }
 
   VisitType getPhysicalVisitTypeDetail() {
     /// TODO
-    List<DailyWorkTimes> physicalPlanDaysWorkTimes =
-        DoctorPlan.getWeeklyWorkTimesWithTableData([]);
+    List<DailyWorkTimes> physicalPlanDaysWorkTimes = [];
+    // DoctorPlan.getWeeklyWorkTimesWithTableData([]);
     return VisitType(
         visitType: 0,
         visitMethod: [],
@@ -735,7 +737,7 @@ class _VisitConfPageState extends State<VisitConfPage>
         baseTextPrice: 0,
         baseVideoPrice: 0,
         baseVoicePrice: 0,
-        weeklyWorkTimes: physicalPlanDaysWorkTimes);
+        DaysWorkTimes: physicalPlanDaysWorkTimes);
   }
 
   // bool repeatableForSelectedDays = false;
@@ -835,7 +837,8 @@ class AddWorkTimeDataSourceDialog {
           );
         }).then((value) {});
   }
-  Widget currentSelectedDate(){
+
+  Widget currentSelectedDate() {
     /// TODO
     return null;
   }

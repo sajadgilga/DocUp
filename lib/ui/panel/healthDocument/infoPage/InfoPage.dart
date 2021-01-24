@@ -4,6 +4,7 @@ import 'package:docup/models/UserEntity.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:docup/ui/widgets/PicList.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -57,7 +58,7 @@ class _InfoPageState extends State<InfoPage> {
             recentLabel: widget.lastPicsLabel,
             emptyListLabel: widget.emptyFilesLabel,
             uploadLabel: widget.uploadLabel,
-            asset: SvgPicture.asset(
+            asset: CrossPlatformSvg.asset(
               "assets/cloud.svg",
               height: 35,
               width: 35,
@@ -97,7 +98,7 @@ class _InfoPageState extends State<InfoPage> {
             recentLabel: widget.lastPicsLabel,
             emptyListLabel: widget.emptyFilesLabel,
             uploadLabel: widget.uploadLabel,
-            asset: SvgPicture.asset(
+            asset: CrossPlatformSvg.asset(
               "assets/cloud.svg",
               height: 35,
               width: 35,

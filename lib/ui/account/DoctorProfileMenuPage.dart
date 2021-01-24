@@ -18,6 +18,7 @@ import 'package:docup/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
 import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:docup/utils/CrossPlatformDeviceDetection.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/WebsocketHelper.dart';
 import 'package:docup/utils/entityUpdater.dart';
@@ -59,7 +60,7 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
                 widget.onPush(NavigatorRoutes.root, null);
               },
               topRightFlag: false,
-              topLeftFlag: Platform.isIOS,
+              topLeftFlag: PlatformDetection.isIOS,
             ),
             DocUpHeader(
               title: "پروفایل من",

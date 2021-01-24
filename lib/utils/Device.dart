@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 
+import 'CrossPlatformDeviceDetection.dart';
+
 Future<String> getDeviceId() async {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  if (Platform.isIOS) {
+  if (PlatformDetection.isIOS) {
     IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
     return iosDeviceInfo.identifierForVendor; // unique ID on iOS
   } else {

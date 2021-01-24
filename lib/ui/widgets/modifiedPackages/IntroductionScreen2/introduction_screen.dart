@@ -3,13 +3,13 @@ library introduction_screen;
 import 'dart:async';
 import 'dart:math';
 
-import 'package:docup/ui/widgets/IntroductionScreen2/IntroBotton.dart';
-import 'package:docup/ui/widgets/IntroductionScreen2/dots_decorator.dart';
-import 'package:docup/ui/widgets/IntroductionScreen2/intro_page.dart';
-import 'package:docup/ui/widgets/IntroductionScreen2/page_view_model.dart';
 import 'package:flutter/material.dart';
 
+import 'IntroBotton.dart';
+import 'dots_decorator.dart';
 import 'dots_indicator.dart';
+import 'intro_page.dart';
+import 'page_view_model.dart';
 
 class IntroductionScreen2 extends StatefulWidget {
   /// All pages of the onboarding

@@ -18,6 +18,7 @@ import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Avatar.dart';
 import 'package:docup/ui/widgets/DocupHeader.dart';
 import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
+import 'package:docup/utils/CrossPlatformDeviceDetection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -208,7 +209,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
                 color: IColors.themeColor,
                 size: 20,
               ),
-              topLeftFlag: Platform.isIOS,
+              topLeftFlag: PlatformDetection.isIOS,
               topRight: Container(
                   child: Image.asset(Assets.logoTransparent, width: 50)),
               topRightFlag: false,

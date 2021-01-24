@@ -11,6 +11,7 @@ import 'package:docup/ui/visitsList/visitSearchResult/VisitResult.dart';
 import 'package:docup/ui/widgets/APICallError.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
+import 'package:docup/utils/CrossPlatformDeviceDetection.dart';
 import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,12 +48,12 @@ class VisitRequestsPage extends StatelessWidget {
   Widget _docupIcon() => Container(
         padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
         child: Image.asset(Assets.docupIcon, width: 50),
-//        child: SvgPicture.asset(Assets.docupIcon, width: 50),
+//        child: CrossPlatformSvg.asset(Assets.docupIcon, width: 50),
         alignment: Alignment.centerRight,
       );
 
   Widget _backArrow(context) {
-    return (Platform.isIOS
+    return (PlatformDetection.isIOS
         ? GestureDetector(
             onTap: () {
               Navigator.pop(context);

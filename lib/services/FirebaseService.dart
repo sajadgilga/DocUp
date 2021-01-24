@@ -7,8 +7,10 @@ import 'package:docup/models/NewestNotificationResponse.dart';
 import 'package:docup/networking/CustomException.dart';
 import 'package:docup/repository/NotificationRepository.dart';
 import 'package:docup/ui/mainPage/NotifNavigationRepo.dart';
+import 'package:docup/utils/CrossPlatformDeviceDetection.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -24,7 +26,8 @@ class NotificationAndFirebaseService {
     NotificationAndFirebaseService.context = context;
     NotificationAndFirebaseService.notifNavRepo =
         NotificationNavigationRepo(onPush);
-    if (!_isFCMConfigured) {
+    /// TODO web
+    if (!_isFCMConfigured && !kIsWeb) {
       try {
         _firebaseMessaging.configure(
           onMessage: onMessage,
@@ -33,7 +36,7 @@ class NotificationAndFirebaseService {
           onResume: onResume,
         );
 
-        if (Platform.isIOS) {
+        if (PlatformDetection.isIOS) {
           _firebaseMessaging.requestNotificationPermissions(
               const IosNotificationSettings(
                   sound: true, badge: true, alert: true, provisional: true));

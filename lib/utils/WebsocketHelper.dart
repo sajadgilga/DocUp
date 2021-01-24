@@ -4,21 +4,47 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// Web
 import 'package:web_socket_channel/io.dart';
+
+import 'dateTimeService.dart';
 
 class SocketHelper {
   static final SocketHelper _helper = SocketHelper._internal();
   String url;
   String token;
-  IOWebSocketChannel _channel;
-  StreamController _broadcastStreamer = StreamController.broadcast();
+  var _channel;
   final int _maxRetryTimeout = 32;
   int _retryCount = 0;
   final List<Map<String, dynamic>> messageQueue = [];
   final TextEditingController webSocketStatusController =
       TextEditingController();
   bool appIsPaused = false;
+
+  get channel {
+    return _channel;
+  }
+
+  Stream get stream {
+    return _channel.stream.asBroadcastStream();
+  }
+
+  Future<bool> checkInternetConnection() async {
+    if (kIsWeb) {
+      return true;
+    }
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
 
   factory SocketHelper() {
     return _helper;
@@ -33,15 +59,27 @@ class SocketHelper {
     this.connect(url);
   }
 
-  void dispose(){
+  void dispose() {
     this.url = null;
     token = null;
     close();
   }
 
   void connect(String url) {
+    getCrossPlatformWebSocket(url,
+        {Iterable<String> protocols,
+        Map<String, dynamic> headers,
+        Duration pingInterval}) {
+      if (kIsWeb) {
+        /// web
+        // return HtmlWebSocketChannel.connect(url);
+      } else {
+        return IOWebSocketChannel.connect(url, pingInterval: pingInterval);
+      }
+    }
+
     if (appIsPaused) {
-      Future.delayed(Duration(milliseconds: 800), () {
+      Future.delayed(Duration(milliseconds: 1000), () {
         print("App Is Waiting for UnPause");
         connect(url);
       });
@@ -50,25 +88,31 @@ class SocketHelper {
     checkInternetConnection().then((value) {
       if (value) {
         if (token != null && token.isNotEmpty) {
-          _channel = IOWebSocketChannel.connect(
+          _channel = getCrossPlatformWebSocket(
               "ws://$url/ws/chat/?Authorization=JWT $token",
               pingInterval: Duration(milliseconds: 2000));
 
-          Future.delayed(Duration(milliseconds: 0), () {
+          Future.delayed(Duration(milliseconds: 500), () {
             print('websocket connected');
             webSocketStatusController.text = "1";
           }).then((value) {
             print("websocket listening");
-            try{
+            try {
               channel.stream.asBroadcastStream().listen((event) {
-                _retryCount = 0;
+                Future.delayed(Duration(seconds: 5)).then((value) {
+                  if (webSocketStatusController.text == "1") {
+                    _retryCount = 0;
+                  }
+                });
                 onReceive(event);
               }, onDone: () {
-                print('websocket got done ' + DateTime.now().toString());
+                print('websocket got done ' +
+                    DateTimeService.getCurrentDateTime().toString());
                 webSocketStatusController.text = "0";
 
                 /// as disconnected status
-                final _retryTimeout = min(_maxRetryTimeout, 2 ^ (_retryCount++));
+                final _retryTimeout =
+                    min(_maxRetryTimeout, 2 ^ (_retryCount++) + 2);
                 Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
                   connect(url);
                 });
@@ -76,16 +120,15 @@ class SocketHelper {
                 webSocketStatusController.text = "0";
 
                 /// as disconnected status
-                print('websocket error ' + DateTime.now().toString());
-                final _retryTimeout = min(_maxRetryTimeout, 2 ^ (_retryCount++));
+                print('websocket error ' +
+                    DateTimeService.getCurrentDateTime().toString());
+                final _retryTimeout =
+                    min(_maxRetryTimeout, 2 ^ (_retryCount++) + 2);
                 Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
                   connect(url);
                 });
               });
-            }catch(e){
-
-            }
-
+            } catch (e) {}
 
             /// as connected status
             retryingMessageQueue();
@@ -158,26 +201,7 @@ class SocketHelper {
   }
 
   void onReceive(data) {
-    _broadcastStreamer.add(data);
+    // _broadcastStreamer.add(data);
     //TODO
-  }
-
-  IOWebSocketChannel get channel {
-    return _channel;
-  }
-
-  Stream get stream {
-    return _broadcastStreamer.stream;
-  }
-
-  Future<bool> checkInternetConnection() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
-      }
-    } on SocketException catch (_) {
-      return false;
-    }
   }
 }

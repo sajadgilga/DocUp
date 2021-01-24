@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:docup/constants/assets.dart';
 import 'package:docup/constants/colors.dart';
+import 'package:docup/ui/widgets/ActionButton.dart';
+import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../ActionButton.dart';
-import '../AutoText.dart';
 
 class WholeIntoChild1 extends StatelessWidget {
   final String header = "داکآپ، پل ارتباطی پزشک و بیمار";

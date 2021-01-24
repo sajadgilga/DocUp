@@ -1,5 +1,6 @@
-import 'package:docup/ui/widgets/IntroductionScreen2/page_decoration.dart';
 import 'package:flutter/material.dart';
+
+import 'page_decoration.dart';
 
 class PageViewModel2 {
   /// Title of page

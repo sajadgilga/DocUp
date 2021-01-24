@@ -1,4 +1,5 @@
 import 'package:docup/models/ChatMessage.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -110,7 +111,7 @@ class _ChatBubbleState extends State<ChatBubble> {
       if (widget.message.isRead)
         dateAndStatus.add(Container(
             padding: EdgeInsets.only(left: 5, top: 5),
-            child: SvgPicture.asset(
+            child: CrossPlatformSvg.asset(
               'assets/whatsapp.svg',
               color: Colors.green,
               width: 10,
@@ -119,7 +120,7 @@ class _ChatBubbleState extends State<ChatBubble> {
       else
         dateAndStatus.add(Container(
             padding: EdgeInsets.only(left: 5, top: 5),
-            child: SvgPicture.asset(
+            child: CrossPlatformSvg.asset(
               'assets/whatsapp.svg',
               color: Colors.green,
               width: 10,

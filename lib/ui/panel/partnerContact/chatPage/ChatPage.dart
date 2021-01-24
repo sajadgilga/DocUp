@@ -406,6 +406,7 @@ class _ChatBoxState extends State<_ChatBox> with WidgetsBindingObserver {
         stream: SocketHelper().stream,
         builder: (context, snapshot) {
           var data = json.decode(snapshot.data.toString());
+          print(data);
           if (data != null) {
             print(data);
             if (data['request_type'] == 'NEW_MESSAGE') {

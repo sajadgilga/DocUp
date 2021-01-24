@@ -1,10 +1,11 @@
 import 'dart:ui';
 
+import 'package:docup/constants/colors.dart';
+import 'package:docup/models/CalendarEvent.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class DoctorPlan {
   static final daysCount = 7;
@@ -87,106 +88,163 @@ class DoctorPlan {
     return res;
   }
 
-  DoctorWorkDataSource get doctorWorkDateTimeDataSource {
-    List<DataSourceWorkTime> res = [];
-    res.add(DataSourceWorkTime(
-        eventName: "ویزیت حضوری",
-        background: Colors.blue,
-        dateString: "2021/01/15",
-        workTime: WorkTime(startTime: "14:30", endTime: "18:45")));
-    res.add(DataSourceWorkTime(
-        eventName: "ویزیت مجازی",
-        background: Colors.green,
-        dateString: "2021/01/15",
-        workTime: WorkTime(startTime: "15:30", endTime: "23:45")));
-    for (VisitType visitType in visitTypes) {
-      /// TODO
-    }
-    return DoctorWorkDataSource(res);
+  Map<DateTime, DataSourceDailyWorkTimes> get totalWorkTimes {
+    Map<DateTime, DataSourceDailyWorkTimes> res = {};
+    DateTime date1 = DateTimeService.getCurrentDateTime();
+    res[date1] = (DataSourceDailyWorkTimes(date1, [
+      DataSourceWorkTime(
+          eventName: "ویزیت حضوری",
+          workTime: WorkTime(startTime: "10:30", endTime: "18:00"),
+          background: IColors.blue,
+          dateString: DateTimeService.getDateStringFormDateTime(date1)),
+      DataSourceWorkTime(
+          eventName: "ویزیت مجازی",
+          background: IColors.green,
+          workTime: WorkTime(startTime: "10:30", endTime: "12:00"),
+          dateString: DateTimeService.getDateStringFormDateTime(date1)),
+    ]));
+    DateTime date2 = date1.add(Duration(days: 2));
+
+    res[date2] = (DataSourceDailyWorkTimes(date2, [
+      DataSourceWorkTime(
+          eventName: "ویزیت حضوری",
+          background: IColors.blue,
+          workTime: WorkTime(startTime: "19:30", endTime: "22:00"),
+          dateString: DateTimeService.getDateStringFormDateTime(date2)),
+      DataSourceWorkTime(
+          eventName: "ویزیت مجازی",
+          workTime: WorkTime(startTime: "20:30", endTime: "23:00"),
+          dateString: DateTimeService.getDateStringFormDateTime(date2)),
+    ]));
+
+    DateTime date3 = date1.add(Duration(days: 3));
+
+    res[date3] = (DataSourceDailyWorkTimes(date3, [
+      DataSourceWorkTime(
+          eventName: "ویزیت حضوری",
+          background: IColors.blue,
+          workTime: WorkTime(startTime: "15:30", endTime: "22:00"),
+          dateString: DateTimeService.getDateStringFormDateTime(date3)),
+      DataSourceWorkTime(
+          eventName: "ویزیت مجازی",
+          workTime: WorkTime(startTime: "16:30", endTime: "19:00"),
+          dateString: DateTimeService.getDateStringFormDateTime(date3)),
+    ]));
+
+
+    DateTime date4 = date1.add(Duration(days: 4));
+
+    res[date4] = (DataSourceDailyWorkTimes(date4, [
+      DataSourceWorkTime(
+          eventName: "ویزیت حضوری",
+          background: IColors.blue,
+          workTime: WorkTime(startTime: "11:30", endTime: "12:00"),
+          dateString: DateTimeService.getDateStringFormDateTime(date4)),
+      DataSourceWorkTime(
+          eventName: "ویزیت مجازی",
+          workTime: WorkTime(startTime: "10:30", endTime: "12:00"),
+          dateString: DateTimeService.getDateStringFormDateTime(date4)),
+    ]));
+
+    DateTime date5 = date1.add(Duration(days: 5));
+
+    res[date5] = (DataSourceDailyWorkTimes(date5, [
+      DataSourceWorkTime(
+          eventName: "ویزیت حضوری",
+          background: IColors.blue,
+          workTime: WorkTime(startTime: "11:30", endTime: "12:00"),
+          dateString: DateTimeService.getDateStringFormDateTime(date5)),
+      DataSourceWorkTime(
+          eventName: "ویزیت مجازی",
+          workTime: WorkTime(startTime: "10:30", endTime: "12:00"),
+          dateString: DateTimeService.getDateStringFormDateTime(date5)),
+    ]));
+    return res;
   }
 
   static int getPartNumberWithIndex(int r, int c) {
     return r * DoctorPlan.hourParts + c;
   }
 
-  static List<DailyWorkTimes> getWeeklyWorkTimesWithTableData(
-      List<List<List<int>>> daysPlanTableData) {
-    /// TODO amir: heavy process
-    /// this static method gets 7 days 24*4 table data and as a result will update weeklyWorkTimes
-    ///  the start time and the end times spans as much as possible, remember to handle conflicts for work times
-    List<List<int>> daysAvailableParts = [];
-
-    /// updating daysAvailableParts
-    for (int dayIndex = 0; dayIndex < DoctorPlan.daysCount; dayIndex++) {
-      daysAvailableParts.add([]);
-
-      /// day table
-      List<List<int>> dayTableData = daysPlanTableData[dayIndex];
-      for (int hour = 0; hour < DoctorPlan.dayHours; hour++) {
-        for (int hPart = 0; hPart < DoctorPlan.hourParts; hPart++) {
-          int part = getPartNumberWithIndex(hour, hPart);
-          int value = dayTableData[hour][hPart];
-          if (value == 1) {
-            daysAvailableParts[dayIndex].add(part);
-          }
-        }
-      }
-    }
-
-    /// getting work time value start time and end time from daily part of daysAvailableParts
-    List<DailyWorkTimes> weeklyWorkTimes = [];
-    for (int dayIndex = 0; dayIndex < DoctorPlan.daysCount; dayIndex++) {
-      weeklyWorkTimes.add(DailyWorkTimes(dayIndex, []));
-
-      /// day table
-      List<int> dayHourParts = daysAvailableParts[dayIndex];
-      dayHourParts.sort();
-      int startPart;
-      int endPart;
-      for (int hourIndex = 0; hourIndex < dayHourParts.length; hourIndex++) {
-        int part = dayHourParts[hourIndex];
-        if (startPart == null && endPart == null) {
-          startPart = part;
-          endPart = part;
-        } else if (startPart != null && endPart != null) {
-          if (endPart == part - 1) {
-            endPart++;
-          } else {
-            /// end of a work time
-            String startTime = DateTimeService.convertMinuteToTimeString(
-                startPart * DoctorPlan.hourMinutePart);
-            String endTime = DateTimeService.convertMinuteToTimeString(
-                (endPart * DoctorPlan.hourMinutePart +
-                        DoctorPlan.hourMinutePart) %
-                    (24 * 60));
-
-            /// adding workTime to weeklyWorkTimes
-            weeklyWorkTimes[dayIndex]
-                .workTimes
-                .add(WorkTime(startTime: startTime, endTime: endTime));
-
-            /// starting a new workTime
-            startPart = part;
-            endPart = part;
-          }
-        }
-        if (hourIndex == dayHourParts.length - 1) {
-          String startTime = DateTimeService.convertMinuteToTimeString(
-              startPart * DoctorPlan.hourMinutePart);
-          String endTime = DateTimeService.convertMinuteToTimeString(
-              (endPart * DoctorPlan.hourMinutePart +
-                      DoctorPlan.hourMinutePart) %
-                  (24 * 60));
-
-          /// adding workTime to weeklyWorkTimes
-          weeklyWorkTimes[dayIndex]
-              .workTimes
-              .add(WorkTime(startTime: startTime, endTime: endTime));
-        }
-      }
-    }
-    return weeklyWorkTimes;
-  }
+  //
+  // static List<DailyWorkTimes> getWeeklyWorkTimesWithTableData(
+  //     List<List<List<int>>> daysPlanTableData) {
+  //   /// TODO amir: heavy process
+  //   /// this static method gets 7 days 24*4 table data and as a result will update weeklyWorkTimes
+  //   ///  the start time and the end times spans as much as possible, remember to handle conflicts for work times
+  //   List<List<int>> daysAvailableParts = [];
+  //
+  //   /// updating daysAvailableParts
+  //   for (int dayIndex = 0; dayIndex < DoctorPlan.daysCount; dayIndex++) {
+  //     daysAvailableParts.add([]);
+  //
+  //     /// day table
+  //     List<List<int>> dayTableData = daysPlanTableData[dayIndex];
+  //     for (int hour = 0; hour < DoctorPlan.dayHours; hour++) {
+  //       for (int hPart = 0; hPart < DoctorPlan.hourParts; hPart++) {
+  //         int part = getPartNumberWithIndex(hour, hPart);
+  //         int value = dayTableData[hour][hPart];
+  //         if (value == 1) {
+  //           daysAvailableParts[dayIndex].add(part);
+  //         }
+  //       }
+  //     }
+  //   }
+  //
+  //   /// getting work time value start time and end time from daily part of daysAvailableParts
+  //   List<DailyWorkTimes> weeklyWorkTimes = [];
+  //   for (int dayIndex = 0; dayIndex < DoctorPlan.daysCount; dayIndex++) {
+  //     weeklyWorkTimes.add(DailyWorkTimes(dayIndex, []));
+  //
+  //     /// day table
+  //     List<int> dayHourParts = daysAvailableParts[dayIndex];
+  //     dayHourParts.sort();
+  //     int startPart;
+  //     int endPart;
+  //     for (int hourIndex = 0; hourIndex < dayHourParts.length; hourIndex++) {
+  //       int part = dayHourParts[hourIndex];
+  //       if (startPart == null && endPart == null) {
+  //         startPart = part;
+  //         endPart = part;
+  //       } else if (startPart != null && endPart != null) {
+  //         if (endPart == part - 1) {
+  //           endPart++;
+  //         } else {
+  //           /// end of a work time
+  //           String startTime = DateTimeService.convertMinuteToTimeString(
+  //               startPart * DoctorPlan.hourMinutePart);
+  //           String endTime = DateTimeService.convertMinuteToTimeString(
+  //               (endPart * DoctorPlan.hourMinutePart +
+  //                       DoctorPlan.hourMinutePart) %
+  //                   (24 * 60));
+  //
+  //           /// adding workTime to weeklyWorkTimes
+  //           weeklyWorkTimes[dayIndex]
+  //               .workTimes
+  //               .add(WorkTime(startTime: startTime, endTime: endTime));
+  //
+  //           /// starting a new workTime
+  //           startPart = part;
+  //           endPart = part;
+  //         }
+  //       }
+  //       if (hourIndex == dayHourParts.length - 1) {
+  //         String startTime = DateTimeService.convertMinuteToTimeString(
+  //             startPart * DoctorPlan.hourMinutePart);
+  //         String endTime = DateTimeService.convertMinuteToTimeString(
+  //             (endPart * DoctorPlan.hourMinutePart +
+  //                     DoctorPlan.hourMinutePart) %
+  //                 (24 * 60));
+  //
+  //         /// adding workTime to weeklyWorkTimes
+  //         weeklyWorkTimes[dayIndex]
+  //             .workTimes
+  //             .add(WorkTime(startTime: startTime, endTime: endTime));
+  //       }
+  //     }
+  //   }
+  //   return weeklyWorkTimes;
+  // }
 
   List<List<int>> getTakenVisitDailyTimeTable(String dateString) {
     /// TODO amir: heavy process
@@ -260,7 +318,7 @@ class DoctorPlan {
 
 class VisitType {
   int visitType;
-  List<DailyWorkTimes> weeklyWorkTimes;
+  List<DailyWorkTimes> DaysWorkTimes;
   int baseVideoPrice;
   int baseVoicePrice;
   int baseTextPrice;
@@ -288,7 +346,7 @@ class VisitType {
       {this.visitType,
       this.visitMethod,
       this.visitDurationPlan,
-      this.weeklyWorkTimes,
+      this.DaysWorkTimes,
       this.baseVideoPrice,
       this.baseVoicePrice,
       this.baseTextPrice,
@@ -299,7 +357,7 @@ class VisitType {
 
   int getMinWorkTimeHour(int dayIndex) {
     int res = 24;
-    weeklyWorkTimes[dayIndex].workTimes.forEach((element) {
+    DaysWorkTimes[dayIndex].workTimes.forEach((element) {
       if (element.startTimeHour < res) {
         res = element.startTimeHour;
       }
@@ -309,7 +367,7 @@ class VisitType {
 
   int getMaxWorkTimeHour(int dayIndex) {
     int res = 0;
-    weeklyWorkTimes[dayIndex].workTimes.forEach((element) {
+    DaysWorkTimes[dayIndex].workTimes.forEach((element) {
       if (element.endTimeHour + 1 > res) {
         res = element.endTimeHour + 1;
       }
@@ -329,52 +387,55 @@ class VisitType {
     return workTimeTable;
   }
 
-  List<List<int>> getDailyWorkTimeTable(int dayIndex) {
-    /// TODO amir: heavy process
-    /// initial empty table
-    List<List<int>> workTimeTable = VisitType.getEmptyTablePlan();
-
-    /// fill table
-    this.weeklyWorkTimes[dayIndex].workTimes.forEach((WorkTime workTime) {
-      int start = DateTimeService.getTimeMinute(workTime.startTime);
-      int startPart = start ~/ DoctorPlan.hourMinutePart;
-      int end = DateTimeService.getTimeMinute(workTime.endTime);
-      end = start > 0 && end == 0 ? 24 * 60 : end;
-      int endPart = end ~/ DoctorPlan.hourMinutePart;
-      for (int index = startPart; index <= endPart - 1; index++) {
-        int i = index ~/ DoctorPlan.hourParts;
-        int j = index % DoctorPlan.hourParts;
-        workTimeTable[i][j] = 1;
-      }
-    });
-    return workTimeTable;
-  }
+  // List<List<int>> getDailyWorkTimeTable(int dayIndex) {
+  //   /// TODO amir: heavy process
+  //   /// initial empty table
+  //   List<List<int>> workTimeTable = VisitType.getEmptyTablePlan();
+  //
+  //   /// fill table
+  //   this.DaysWorkTimes[dayIndex].workTimes.forEach((WorkTime workTime) {
+  //     int start = DateTimeService.getTimeMinute(workTime.startTime);
+  //     int startPart = start ~/ DoctorPlan.hourMinutePart;
+  //     int end = DateTimeService.getTimeMinute(workTime.endTime);
+  //     end = start > 0 && end == 0 ? 24 * 60 : end;
+  //     int endPart = end ~/ DoctorPlan.hourMinutePart;
+  //     for (int index = startPart; index <= endPart - 1; index++) {
+  //       int i = index ~/ DoctorPlan.hourParts;
+  //       int j = index % DoctorPlan.hourParts;
+  //       workTimeTable[i][j] = 1;
+  //     }
+  //   });
+  //   return workTimeTable;
+  // }
 
   List<int> get availableDays {
     List<int> availableDays = [];
-    weeklyWorkTimes.forEach((element) {
-      if (element.workTimes != null && element.workTimes.length > 0) {
-        availableDays.add(element.day);
-      }
-    });
+
+    /// TODO
+    // DaysWorkTimes.forEach((element) {
+    //   if (element.workTimes != null && element.workTimes.length > 0) {
+    //     availableDays.add(element.date);
+    //   }
+    // });
     return availableDays;
   }
 
   void initializeWeeklyWorkTimesIfNecessary() {
-    if (this.weeklyWorkTimes == null) this.weeklyWorkTimes = [];
+    if (this.DaysWorkTimes == null) this.DaysWorkTimes = [];
 
-    Map<int, DailyWorkTimes> mapWeekWorkTimes = {};
-    weeklyWorkTimes.forEach((workTimesList) {
-      mapWeekWorkTimes[workTimesList.day] = workTimesList;
-    });
-    weeklyWorkTimes = [];
-    for (int i = 0; i < DoctorPlan.daysCount; i++) {
-      if (mapWeekWorkTimes.containsKey(i)) {
-        weeklyWorkTimes.add(mapWeekWorkTimes[i]);
-      } else {
-        weeklyWorkTimes.add(DailyWorkTimes(i, []));
-      }
-    }
+    /// TODO
+    // Map<int, DailyWorkTimes> mapWeekWorkTimes = {};
+    // DaysWorkTimes.forEach((workTimesList) {
+    //   mapWeekWorkTimes[workTimesList.date] = workTimesList;
+    // });
+    // DaysWorkTimes = [];
+    // for (int i = 0; i < DoctorPlan.daysCount; i++) {
+    //   if (mapWeekWorkTimes.containsKey(i)) {
+    //     DaysWorkTimes.add(mapWeekWorkTimes[i]);
+    //   } else {
+    //     DaysWorkTimes.add(DailyWorkTimes(i, []));
+    //   }
+    // }
   }
 
   VisitType.fromJson(Map<String, dynamic> json) {
@@ -383,24 +444,26 @@ class VisitType {
     visitDurationPlan = json['visit_duration_plan'].cast<int>();
     // availableDays = json['available_days'].cast<int>(); /// this field has been removed
     if (json['work_days'] != null) {
-      weeklyWorkTimes = [];
-      Map<int, DailyWorkTimes> mapWeekWorkTimes = {};
-      json['work_days'].forEach((workTimesList) {
-        List<WorkTime> dayWorkTimes = [];
-        workTimesList['work_times'].forEach((w) {
-          dayWorkTimes.add(new WorkTime.fromJson(w));
-        });
-        DailyWorkTimes dailyWorkTimes =
-            DailyWorkTimes(workTimesList['day'], dayWorkTimes);
-        mapWeekWorkTimes[workTimesList['day']] = dailyWorkTimes;
-      });
-      for (int i = 0; i < DoctorPlan.daysCount; i++) {
-        if (mapWeekWorkTimes.containsKey(i)) {
-          weeklyWorkTimes.add(mapWeekWorkTimes[i]);
-        } else {
-          weeklyWorkTimes.add(DailyWorkTimes(i, []));
-        }
-      }
+      DaysWorkTimes = [];
+
+      /// TODO
+      // Map<int, DailyWorkTimes> mapWeekWorkTimes = {};
+      // json['work_days'].forEach((workTimesList) {
+      //   List<WorkTime> dayWorkTimes = [];
+      //   workTimesList['work_times'].forEach((w) {
+      //     dayWorkTimes.add(new WorkTime.fromJson(w));
+      //   });
+      //   DailyWorkTimes dailyWorkTimes =
+      //       DailyWorkTimes(workTimesList['day'], dayWorkTimes);
+      //   mapWeekWorkTimes[workTimesList['day']] = dailyWorkTimes;
+      // });
+      // for (int i = 0; i < DoctorPlan.daysCount; i++) {
+      //   if (mapWeekWorkTimes.containsKey(i)) {
+      //     DaysWorkTimes.add(mapWeekWorkTimes[i]);
+      //   } else {
+      //     DaysWorkTimes.add(DailyWorkTimes(i, []));
+      //   }
+      // }
     } else {
       initializeWeeklyWorkTimesIfNecessary();
     }
@@ -417,7 +480,7 @@ class VisitType {
     data['visit_duration_plan'] = this.visitDurationPlan;
     data['work_days'] = [];
     for (int i = 0; i < DoctorPlan.daysCount; i++) {
-      data['work_days'].add(weeklyWorkTimes[i].toJson());
+      data['work_days'].add(DaysWorkTimes[i].toJson());
     }
     data['base_video_price'] = this.baseVideoPrice;
     data['base_voice_price'] = this.baseVoicePrice;
@@ -429,19 +492,19 @@ class VisitType {
 }
 
 class DailyWorkTimes {
-  int day;
+  DateTime date;
   List<WorkTime> workTimes;
 
-  DailyWorkTimes(this.day, this.workTimes);
+  DailyWorkTimes(this.date, this.workTimes);
 
   DailyWorkTimes.fromJson(Map<String, dynamic> json) {
-    day = json['day'];
+    date = json['date'];
     workTimes = (json['work_times'] as List).map((e) => WorkTime.fromJson(e));
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['day'] = this.day;
+    data['date'] = this.date;
     data['work_times'] = [];
     workTimes.forEach((element) {
       data['work_times'].add(element.toJson());
@@ -474,6 +537,11 @@ class WorkTime {
   String startTime;
   String endTime;
 
+  int get minuteDuration {
+    return DateTimeService.getTimeMinute(endTime) -
+        DateTimeService.getTimeMinute(startTime);
+  }
+
   int get startTimeHour {
     return int.parse(startTime.split(":")[0]);
   }
@@ -500,52 +568,53 @@ class WorkTime {
     return data;
   }
 }
+//
+// class DoctorWorkDataSource{
+//   List<DataSourceWorkTime> appointments;
+//   DoctorWorkDataSource(List<DataSourceWorkTime> source) {
+//     appointments = source;
+//   }
+//
+//   /// calendar stuff
+//   DateTime getStartTime(int index) {
+//     return (appointments[index] as DataSourceWorkTime).startDateTime;
+//   }
+//
+//   DateTime getEndTime(int index) {
+//     return (appointments[index] as DataSourceWorkTime).endDateTime;
+//   }
+//
+//   bool isAllDay(int index) {
+//     return false;
+//   }
+//
+//   String getSubject(int index) {
+//     return appointments[index].eventName;
+//   }
+//
+//   String getStartTimeZone(int index) {
+//     return '';
+//   }
+//
+//   String getEndTimeZone(int index) {
+//     return '';
+//   }
+//
+//   Color getColor(int index) {
+//     return appointments[index].background;
+//   }
+//
+//   /// end calendar stuff
+// }
 
-class DoctorWorkDataSource extends CalendarDataSource {
-  DoctorWorkDataSource(List<DataSourceWorkTime> source) {
-    appointments = source;
-  }
+class DataSourceDailyWorkTimes {
+  DateTime date;
+  List<DataSourceWorkTime> dataSourceWorkTimes;
 
-  /// calendar stuff
-  @override
-  DateTime getStartTime(int index) {
-    return (appointments[index] as DataSourceWorkTime).startDateTime;
-  }
-
-  @override
-  DateTime getEndTime(int index) {
-    return (appointments[index] as DataSourceWorkTime).endDateTime;
-  }
-
-  @override
-  bool isAllDay(int index) {
-    return false;
-  }
-
-  @override
-  String getSubject(int index) {
-    return appointments[index].eventName;
-  }
-
-  @override
-  String getStartTimeZone(int index) {
-    return '';
-  }
-
-  @override
-  String getEndTimeZone(int index) {
-    return '';
-  }
-
-  @override
-  Color getColor(int index) {
-    return appointments[index].background;
-  }
-
-  /// end calendar stuff
+  DataSourceDailyWorkTimes(this.date, this.dataSourceWorkTimes);
 }
 
-class DataSourceWorkTime {
+class DataSourceWorkTime implements Event {
   DataSourceWorkTime(
       {this.eventName, this.dateString, this.workTime, this.background});
 
@@ -563,4 +632,20 @@ class DataSourceWorkTime {
     return DateTimeService.getDateTimeFromDateStringAndTimeStringSlash(
         dateString, workTime.endTime);
   }
+
+  @override
+  int get duration {
+    return workTime.minuteDuration;
+  }
+
+  @override
+  int get startMinuteOfDay {
+    return DateTimeService.getTimeMinute(workTime.startTime);
+  }
+
+  @override
+  String get title => eventName;
+
+  @override
+  Color get color => background;
 }

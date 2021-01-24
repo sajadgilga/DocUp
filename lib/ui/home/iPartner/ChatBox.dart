@@ -3,6 +3,7 @@ import 'package:docup/models/ChatMessage.dart';
 import 'package:docup/ui/mainPage/NavigatorView.dart';
 import 'package:docup/ui/widgets/AutoText.dart';
 import 'package:docup/ui/widgets/ChatBubble.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:docup/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,7 +44,7 @@ class _ChatBoxState extends State<ChatBox> {
 
   Widget _myMessagesIcon() =>
       Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-        SvgPicture.asset(
+        CrossPlatformSvg.asset(
           'assets/chatBox.svg',
           color: widget.color,
           width: 17,

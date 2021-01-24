@@ -3,15 +3,12 @@ import 'package:docup/blocs/PanelBloc.dart';
 import 'package:docup/ui/start/SplashPage.dart';
 import 'package:docup/utils/dateTimeService.dart';
 
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:syncfusion_localizations/syncfusion_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'constants/colors.dart';
 import 'constants/strings.dart';
 
@@ -51,17 +48,6 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: Strings.appTitle,
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            // ... app-specific localization delegate[s] here
-            SfGlobalLocalizations.delegate
-          ],
-          supportedLocales: [
-            const Locale('en'),
-            const Locale('fa'),
-            // ... other locales the app supports
-          ],
-          locale: const Locale('fa'),
           theme: ThemeData(
             fontFamily: 'iransans',
             primarySwatch: MaterialColor(IColors.themeColor.value, swatch),

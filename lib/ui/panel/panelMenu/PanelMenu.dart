@@ -15,6 +15,7 @@ import 'package:docup/ui/panel/panelMenu/DoctorPanelMenu.dart';
 import 'package:docup/ui/panel/panelMenu/PatientPanelMenu.dart';
 import 'package:docup/ui/widgets/Header.dart';
 import 'package:docup/ui/widgets/Waiting.dart';
+import 'package:docup/utils/CrossPlatformSvg.dart';
 import 'package:docup/utils/Utils.dart';
 import 'package:docup/utils/customPainter/DrawerPainter.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class _PanelMenuState extends State<PanelMenu> {
               },
               child: Container(
                   padding: EdgeInsets.only(top: 15, left: 10, right: 10),
-                  child: SvgPicture.asset(
+                  child: CrossPlatformSvg.asset(
                     Assets.panelListIcon,
                     width: 35,
                     color: IColors.themeColor,
@@ -63,7 +64,7 @@ class _PanelMenuState extends State<PanelMenu> {
               onTap: () {
                 widget.onPush(NavigatorRoutes.partnerSearchView);
               },
-              child: SvgPicture.asset(
+              child: CrossPlatformSvg.asset(
                 Assets.searchIcon,
                 width: 30,
               ),
