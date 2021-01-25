@@ -15,9 +15,9 @@ class Assets {
   static final String calendarCheck = 'assets/calendarCheck.svg';
   static final String clinicPanel = 'assets/clinicPanel.svg';
   static final String emptyAvatar = 'assets/avatar.png';
-  static final String logoRectangle = 'assets/logoRec.png';
+  static final String logoRectangle = 'assets/logoTransparentNeuronio.png';
   static final String logoCircle = 'assets/logoCircle.png';
-  static final String logoTransparent = 'assets/logoTransparent.png';
+  static final String logoTransparent = 'assets/logoTransparentNeuronio.png';
   static final String profileIcon = 'assets/profileIcon.svg';
   static final String servicesIcon = 'assets/servicesIcon.svg';
   static final String panelIcon = 'assets/panelIcon.svg';

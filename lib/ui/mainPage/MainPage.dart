@@ -7,10 +7,13 @@ import 'package:Neuronio/ui/mainPage/navigator_destination.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/utils/WebsocketHelper.dart';
 import 'package:Neuronio/utils/entityUpdater.dart';
+import 'package:Neuronio/repository/UtilRepository.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:package_info/package_info.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 import '../../constants/colors.dart';
@@ -55,11 +58,29 @@ class _MainPageState extends State<MainPage> {
     _entityBloc.add(EntityGet());
     var _panelBloc = BlocProvider.of<PanelBloc>(context);
     _panelBloc.add(GetMyPanels());
+
     /// start updater if it is not started already
+    checkAppVersion();
     EntityAndPanelUpdater.start(_entityBloc, _panelBloc);
 
     NotificationAndFirebaseService.initFCM(context, widget.pushOnBase);
     super.initState();
+  }
+
+  checkAppVersion() {
+    UtilRepository utilRepository = UtilRepository();
+    utilRepository.getLatestAppBuildNumber().then((value) async {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      int currentBuildNumber = intPossible(await packageInfo.buildNumber);
+      if (currentBuildNumber < value) {
+        showOneButtonDialog(
+            context,
+            "نسخه اپلیکیشن کنونی شما قدیمی است. با زدن بر روی دکمه زیر برای اپدیت اپ اقدام کنید.",
+            "دانلود", () {
+          launchURL("https://docup.ir");
+        }, barrierDismissible: false);
+      }
+    });
   }
 
   @override
