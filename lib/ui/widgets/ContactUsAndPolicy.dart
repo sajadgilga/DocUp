@@ -1,8 +1,8 @@
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/constants/assets.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/constants/assets.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/constants/strings.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

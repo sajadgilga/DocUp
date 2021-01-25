@@ -1,12 +1,12 @@
 import 'dart:math';
 
-import 'package:docup/constants/colors.dart';
-import 'package:docup/models/DoctorPlan.dart';
-import 'package:docup/ui/visit/calendar/persian_datetime_picker2.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/DailyTimeTable.dart';
-import 'package:docup/utils/Utils.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/models/DoctorPlan.dart';
+import 'package:Neuronio/ui/visit/calendar/persian_datetime_picker2.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/DailyTimeTable.dart';
+import 'package:Neuronio/utils/Utils.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

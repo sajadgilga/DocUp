@@ -1,13 +1,13 @@
 import 'dart:ui';
 
-import 'package:docup/blocs/MedicalTestListBloc.dart';
-import 'package:docup/constants/assets.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/models/MedicalTest.dart';
-import 'package:docup/models/NoronioService.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/SquareBoxNoronioClinic.dart';
+import 'package:Neuronio/blocs/MedicalTestListBloc.dart';
+import 'package:Neuronio/constants/assets.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/models/MedicalTest.dart';
+import 'package:Neuronio/models/NoronioService.dart';
+import 'package:Neuronio/models/PatientEntity.dart';
+import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/widgets/SquareBoxNoronioClinic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

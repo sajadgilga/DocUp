@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:docup/blocs/DoctorBloc.dart';
-import 'package:docup/blocs/PatientBloc.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/networking/Response.dart';
-import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/VerticalSpace.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/blocs/DoctorBloc.dart';
+import 'package:Neuronio/blocs/PatientBloc.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/PatientEntity.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/networking/Response.dart';
+import 'package:Neuronio/ui/widgets/ActionButton.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

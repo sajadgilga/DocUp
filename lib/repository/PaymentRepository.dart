@@ -1,7 +1,7 @@
-import 'package:docup/models/AuthResponseEntity.dart';
-import 'package:docup/models/PayResponseEntity.dart';
-import 'package:docup/networking/ApiProvider.dart';
-import 'package:docup/networking/Constants.dart';
+import 'package:Neuronio/models/AuthResponseEntity.dart';
+import 'package:Neuronio/models/PayResponseEntity.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
+import 'package:Neuronio/networking/Constants.dart';
 
 class PaymentRepository {
   ApiProvider _provider = ApiProvider();

@@ -3,11 +3,11 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:docup/constants/colors.dart';
-import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/Waiting.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/ui/widgets/ActionButton.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/Waiting.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';

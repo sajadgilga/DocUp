@@ -1,4 +1,4 @@
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/utils/Utils.dart';
 
 import 'DoctorEntity.dart';
 import 'PatientEntity.dart';

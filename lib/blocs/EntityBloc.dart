@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/repository/DoctorRepository.dart';
-import 'package:docup/repository/PatientRepository.dart';
-import 'package:docup/ui/start/RoleType.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/PatientEntity.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/repository/DoctorRepository.dart';
+import 'package:Neuronio/repository/PatientRepository.dart';
+import 'package:Neuronio/ui/start/RoleType.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 

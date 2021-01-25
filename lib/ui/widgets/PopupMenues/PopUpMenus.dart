@@ -4,7 +4,7 @@ import 'dart:core';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:docup/constants/colors.dart';
+import 'package:Neuronio/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'triangle_painter.dart';
 

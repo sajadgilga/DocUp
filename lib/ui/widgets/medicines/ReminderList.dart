@@ -1,4 +1,4 @@
-import 'package:docup/models/Medicine.dart';
+import 'package:Neuronio/models/Medicine.dart';
 import 'package:flutter/material.dart';
 
 import 'MedicineReminder.dart';

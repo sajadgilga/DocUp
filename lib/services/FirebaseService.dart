@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:docup/blocs/NotificationBloc.dart';
-import 'package:docup/models/NewestNotificationResponse.dart';
-import 'package:docup/networking/CustomException.dart';
-import 'package:docup/repository/NotificationRepository.dart';
-import 'package:docup/ui/mainPage/NotifNavigationRepo.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/blocs/NotificationBloc.dart';
+import 'package:Neuronio/models/NewestNotificationResponse.dart';
+import 'package:Neuronio/networking/CustomException.dart';
+import 'package:Neuronio/repository/NotificationRepository.dart';
+import 'package:Neuronio/ui/mainPage/NotifNavigationRepo.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:docup/constants/assets.dart';
-import 'package:docup/constants/colors.dart';
+import 'package:Neuronio/constants/assets.dart';
+import 'package:Neuronio/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +9,7 @@ import '../ActionButton.dart';
 import '../AutoText.dart';
 
 class WholeIntoChild1 extends StatelessWidget {
-  final String header = "داکآپ، پل ارتباطی پزشک و بیمار";
+  final String header = "نورونیو، پل ارتباطی پزشک و بیمار";
   final String subHeader =
       "رزرو نوبت، گفتگو با پزشکان متخصص و پیگیر آنلاین روند درمان";
   final String imageAddress = Assets.introPage1;

@@ -1,12 +1,12 @@
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/constants/strings.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 
-import 'package:docup/ui/home/iPartner/IPartnerBody.dart';
-import 'package:docup/ui/widgets/DoctorSummary.dart';
+import 'package:Neuronio/ui/home/iPartner/IPartnerBody.dart';
+import 'package:Neuronio/ui/widgets/DoctorSummary.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IPartner extends StatelessWidget {

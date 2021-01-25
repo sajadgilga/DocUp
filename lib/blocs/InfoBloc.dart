@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/Panel.dart';
-import 'package:docup/repository/InfoRepository.dart';
+import 'package:Neuronio/models/Panel.dart';
+import 'package:Neuronio/repository/InfoRepository.dart';
 
 class InfoBloc extends Bloc<InfoEvent, InfoState> {
   InfoRepository _repository = InfoRepository();

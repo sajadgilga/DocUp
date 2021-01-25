@@ -1,5 +1,5 @@
-import 'package:docup/utils/Utils.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/Utils.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 class DoctorPlan {

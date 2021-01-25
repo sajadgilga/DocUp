@@ -1,8 +1,8 @@
-import 'package:docup/constants/assets.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:Neuronio/constants/assets.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 
-import 'package:docup/constants/colors.dart';
+import 'package:Neuronio/constants/colors.dart';
 import 'package:flutter_svg/svg.dart';
 
 class OnCallMedicalHeaderIcon extends StatefulWidget {

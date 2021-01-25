@@ -1,5 +1,5 @@
-import 'package:docup/models/ChatMessage.dart';
-import 'package:docup/networking/ApiProvider.dart';
+import 'package:Neuronio/models/ChatMessage.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
 
 class ChatMessageRepository {
   ApiProvider _provider = ApiProvider();

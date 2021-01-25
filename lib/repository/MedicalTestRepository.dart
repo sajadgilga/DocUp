@@ -1,5 +1,5 @@
-import 'package:docup/models/MedicalTest.dart';
-import 'package:docup/networking/ApiProvider.dart';
+import 'package:Neuronio/models/MedicalTest.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
 
 class MedicalTestRepository {
   ApiProvider _provider = ApiProvider();

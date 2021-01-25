@@ -1,16 +1,16 @@
 import 'dart:convert';
 
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/PanelBloc.dart';
-import 'package:docup/blocs/PanelSectionBloc.dart';
-import 'package:docup/blocs/SearchBloc.dart';
-import 'package:docup/blocs/TabSwitchBloc.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/panel/Panel.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/blocs/PanelBloc.dart';
+import 'package:Neuronio/blocs/PanelSectionBloc.dart';
+import 'package:Neuronio/blocs/SearchBloc.dart';
+import 'package:Neuronio/blocs/TabSwitchBloc.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/constants/strings.dart';
+import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/panel/Panel.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';

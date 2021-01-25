@@ -1,7 +1,7 @@
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/PanelBloc.dart';
-import 'package:docup/ui/start/SplashPage.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/blocs/PanelBloc.dart';
+import 'package:Neuronio/ui/start/SplashPage.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';

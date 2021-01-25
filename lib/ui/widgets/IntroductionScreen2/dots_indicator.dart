@@ -3,7 +3,7 @@ library dots_indicator;
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:docup/ui/widgets/IntroductionScreen2/dots_decorator.dart';
+import 'package:Neuronio/ui/widgets/IntroductionScreen2/dots_decorator.dart';
 import 'package:flutter/material.dart';
 
 typedef void OnTap(double position);

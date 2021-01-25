@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/VisitResponseEntity.dart';
+import 'package:Neuronio/models/VisitResponseEntity.dart';
 import 'package:meta/meta.dart';
-import 'package:docup/repository/VisitRepository.dart';
+import 'package:Neuronio/repository/VisitRepository.dart';
 
 part 'visit_time_event.dart';
 

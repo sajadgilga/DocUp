@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>docup</string>
+	<string>Neuronio</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -27,7 +27,7 @@
 			<string>com.nilva.docup</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>docup</string>
+				<string>Neuronio</string>
 			</array>
 		</dict>
 	</array>

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/MedicalTest.dart';
-import 'package:docup/repository/MedicalTestRepository.dart';
+import 'package:Neuronio/models/MedicalTest.dart';
+import 'package:Neuronio/repository/MedicalTestRepository.dart';
 import 'package:flutter/cupertino.dart';
 
 class MedicalTestListBloc

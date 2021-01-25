@@ -1,7 +1,7 @@
-import 'package:docup/constants/colors.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 
 class HomeNotification extends StatelessWidget {

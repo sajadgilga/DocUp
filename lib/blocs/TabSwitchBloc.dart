@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/constants/strings.dart';
+import 'package:Neuronio/constants/strings.dart';
 import 'package:flutter/material.dart';
 
 //

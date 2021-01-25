@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:docup/models/BankData.dart';
-import 'package:docup/networking/Response.dart';
-import 'package:docup/repository/UtilRepository.dart';
+import 'package:Neuronio/models/BankData.dart';
+import 'package:Neuronio/networking/Response.dart';
+import 'package:Neuronio/repository/UtilRepository.dart';
 
 class UtilBloc {
   UtilRepository _repository;

@@ -1,7 +1,7 @@
-import 'package:docup/constants/settings.dart';
+import 'package:Neuronio/constants/settings.dart';
 
 class Strings {
-  static const String appTitle = 'Flutter Demo';
+  static const String appTitle = 'Neuronio';
   static const String bottomNavigationHomeTitle = 'خانه';
   static const String bottomNavigationPanelTitle = 'پنل کاربری';
   static const String bottomNavigationServicesTitle = 'خدمات';
@@ -9,11 +9,11 @@ class Strings {
 
 //
   static const String registerHeaderMessage =
-      "ثبت نام / ورود در داک آپ به عنوان:";
+      "ثبت نام / ورود در نورونیو به عنوان:";
   static const String registerAsDoctorMessage = "ثبت نام / ورود پزشکان";
 
   static const String registerAsPatientMessage = "ثبت نام / ورود بیمار";
-  static const String signInHeaderMessage = ": ورود در داک آپ به عنوان";
+  static const String signInHeaderMessage = ": ورود در نورونیو به عنوان";
   static const String yourDoctorMessage = "پزشک همراه شما";
   static const String yourPatientMessage = "همگام با بیمار";
   static const String patientRegisterMessage =
@@ -46,7 +46,7 @@ class Strings {
   static final String PatientSearchBoxTooltip =
       'برای جست‌و‌جو و اتصال به پزشک، کلیک کنید';
   static final String DoctorSearchBoxHint = 'جست‌و‌جوی بیماران شما';
-  static final String docupIntroHomePart1 = 'داک‌ آپ،';
+  static final String docupIntroHomePart1 = 'نورونیو';
 
 //
   static final String docupIntroHomePart2 = 'پل ارتباطی بین پزشک و بیمار';
@@ -186,7 +186,7 @@ class Strings {
 
 //
   static final String emptyDoctorSearch =
-      'متاسفانه پزشکی با این نام در داکآپ موجود نمی‌باشد';
+      'متاسفانه پزشکی با این نام در نورونیو موجود نمی‌باشد';
   static final String emptyVisitSearch =
       'متاسفانه بیماری با این نام در این بخش موجود نمی‌باشد';
   static final String emptySearchDoctorSide =
@@ -246,7 +246,7 @@ class Strings {
 
   static final String privacyAndPolicy = "قوانین و سیاست ها";
   static final String policyDescription =
-      "داکآپ به حریم خصوص کاربران خود احترام می گذارد و متعهد به حفظ اطلاعات شخصی است که شما در اختیار ان می گذارید." +
+      "نورونیو به حریم خصوص کاربران خود احترام می گذارد و متعهد به حفظ اطلاعات شخصی است که شما در اختیار ان می گذارید." +
           "\n" +
           "پس از افزایش اعتبار و پس از هر ویزیت با دکتر هزینه ویزیت از اعتبار بیمار کسر می شود." +
           "\n" +
@@ -257,7 +257,7 @@ class Strings {
           "\n" +
           "اطلاعات دیگری که کاربر نیاز به استفاده از ان ها در برنامه دارد برای اطمینان از هویت اشخاص و مدارک دیگر صرفا استفاده پزشکی دارد.";
   static final String aboutUsTitle = "درباره ما";
-  static final String aboutUsDescription = "اپلیکیشن داک اپ";
+  static final String aboutUsDescription = "اپلیکیشن نورونیو";
   static final String paymentDescriptionTitle = "روش های پرداخت";
   static final String paymentDescriptionPatient =
       "با انتخاب مبلغ مورد نظر برای افزایش اعتبار و زدن بر روی دکمه آن، به درگاه پرداخت منتقل می شوید، که با تمکیل فرایند، مبلغ مورد نظر، به اعتبار شما اضافه می شود. لازم به ذکر است بعد از افزایش حساب بعد از پذیرش هر ویزیت توسط دکتر، به اندازه هزینه ویزیت از اعتبار شما کاسته می شود و مبلغ برای پزشک ارسال می گردد.";

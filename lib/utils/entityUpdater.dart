@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/PanelBloc.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/blocs/PanelBloc.dart';
 
 class EntityAndPanelUpdater {
   static EntityBloc _entityBloc;

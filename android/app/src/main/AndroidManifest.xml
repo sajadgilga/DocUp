@@ -23,7 +23,7 @@
     <application
         android:name=".Application"
         android:icon="@mipmap/ic_launcher"
-        android:label="docup"
+        android:label="Neuronio"
         android:screenOrientation="portrait"
         android:usesCleartextTraffic="true">
         <activity
@@ -45,7 +45,7 @@
 
                 <data
                     android:host="com.nilva.docup"
-                    android:scheme="docup" />
+                    android:scheme="Neuronio" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

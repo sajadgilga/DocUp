@@ -1,14 +1,14 @@
 import 'dart:io';
 
-import 'package:docup/constants/colors.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/ContactUsAndPolicy.dart';
-import 'package:docup/ui/widgets/DocupHeader.dart';
-import 'package:docup/ui/widgets/PageTopLeftIcon.dart';
-import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/models/PatientEntity.dart';
+import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/widgets/ActionButton.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/ContactUsAndPolicy.dart';
+import 'package:Neuronio/ui/widgets/DocupHeader.dart';
+import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
+import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

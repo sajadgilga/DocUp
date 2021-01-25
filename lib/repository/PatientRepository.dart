@@ -1,7 +1,7 @@
-//import 'package:docup/models/UpdatePatientResponseEntity.dart';
-import 'package:docup/models/Medicine.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/networking/ApiProvider.dart';
+//import 'package:Neuronio/models/UpdatePatientResponseEntity.dart';
+import 'package:Neuronio/models/Medicine.dart';
+import 'package:Neuronio/models/PatientEntity.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
 
 class PatientRepository {
   ApiProvider _provider = ApiProvider();

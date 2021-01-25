@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:docup/networking/CustomException.dart';
+import 'package:Neuronio/networking/CustomException.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
-  static const String URL_IP = "185.252.30.163:8001";
+  static const String URL_IP = "185.252.30.163";
   final String _BASE_URL = "http://$URL_IP/";
 
   Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {

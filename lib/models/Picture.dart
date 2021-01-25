@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/ui/widgets/UploadSlider.dart';
-import 'package:docup/utils/Utils.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/ui/widgets/UploadSlider.dart';
+import 'package:Neuronio/utils/Utils.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 
 class FileEntityUser {

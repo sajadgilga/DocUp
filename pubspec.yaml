@@ -1,5 +1,5 @@
-name: docup
-description: docup project
+name: Neuronio
+description: Neuronio project
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -78,7 +78,7 @@ dependencies:
 
 
 flutter_icons:
-  image_path: "assets/logoRec.png"
+  image_path: "assets/neuronio-512x512.png"
   android: true
   ios: true
 

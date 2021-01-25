@@ -1,9 +1,9 @@
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/models/ChatMessage.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/ChatBubble.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/models/ChatMessage.dart';
+import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/ChatBubble.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';

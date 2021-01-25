@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/constants/assets.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/Avatar.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/constants/assets.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/Avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';

@@ -1,5 +1,5 @@
 
-import 'package:docup/networking/ApiProvider.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
 
 class NotificationRepository {
   ApiProvider _provider = ApiProvider();

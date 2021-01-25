@@ -1,4 +1,4 @@
-import 'package:docup/ui/widgets/IntroductionScreen2/page_decoration.dart';
+import 'package:Neuronio/ui/widgets/IntroductionScreen2/page_decoration.dart';
 import 'package:flutter/material.dart';
 
 class PageViewModel2 {
