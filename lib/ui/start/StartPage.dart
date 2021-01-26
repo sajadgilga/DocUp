@@ -115,11 +115,6 @@ class _StartPageState extends State<StartPage> {
             String nationalCode =
                 (utf8IfPossible(response.data.nationalCode) ?? "").trim();
             _nationalCodeController.text = nationalCode;
-            if (firstName + lastName + nationalCode == "") {
-              showDescriptionAlertDialog(context,
-                  title: Strings.privacyAndPolicy,
-                  description: Strings.policyDescription);
-            }
           } catch (e) {}
         }
         return true;
@@ -148,7 +143,8 @@ class _StartPageState extends State<StartPage> {
     if (prefs.containsKey("privacyAndPolicy")) {
       hasShown = prefs.getBool("privacyAndPolicy");
     }
-    if (!hasShown) {
+    /// ignore prev shows
+    if (!hasShown || true) {
       showDescriptionAlertDialog(context,
           title: Strings.privacyAndPolicy,
           description: Strings.policyDescription);
@@ -310,14 +306,7 @@ class _StartPageState extends State<StartPage> {
                 SizedBox(height: 20),
                 _optionsWidget(),
                 SizedBox(height: 40),
-                GestureDetector(
-                  child: _titleWidget(),
-                  onTap: () {
-                    showDescriptionAlertDialog(context,
-                        title: Strings.privacyAndPolicy,
-                        description: Strings.policyDescription);
-                  },
-                ),
+                _titleWidget(),
                 SizedBox(height: 5),
                 _messageWidget(),
                 SizedBox(height: 50),
