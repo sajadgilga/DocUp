@@ -1,9 +1,9 @@
-import 'package:docup/blocs/MedicineBloc.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/FloatingButton.dart';
-import 'package:docup/ui/widgets/medicines/ReminderList.dart';
+import 'package:Neuronio/blocs/MedicineBloc.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/FloatingButton.dart';
+import 'package:Neuronio/ui/widgets/medicines/ReminderList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

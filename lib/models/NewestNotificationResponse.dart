@@ -1,5 +1,5 @@
-import 'package:docup/models/VisitResponseEntity.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/models/VisitResponseEntity.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'UserEntity.dart';

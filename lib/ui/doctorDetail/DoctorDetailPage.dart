@@ -1,15 +1,15 @@
-import 'package:docup/blocs/DoctorInfoBloc.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/networking/Response.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/widgets/APICallError.dart';
-import 'package:docup/ui/widgets/APICallLoading.dart';
-import 'package:docup/ui/widgets/ActionButton.dart';
-import 'package:docup/ui/widgets/Avatar.dart';
-import 'package:docup/ui/widgets/DoctorData.dart';
-import 'package:docup/ui/widgets/MapWidget.dart';
-import 'package:docup/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/blocs/DoctorInfoBloc.dart';
+import 'package:Neuronio/constants/strings.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/networking/Response.dart';
+import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/widgets/APICallError.dart';
+import 'package:Neuronio/ui/widgets/APICallLoading.dart';
+import 'package:Neuronio/ui/widgets/ActionButton.dart';
+import 'package:Neuronio/ui/widgets/Avatar.dart';
+import 'package:Neuronio/ui/widgets/DoctorData.dart';
+import 'package:Neuronio/ui/widgets/MapWidget.dart';
+import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

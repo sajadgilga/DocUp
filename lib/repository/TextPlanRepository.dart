@@ -1,7 +1,7 @@
-import 'package:docup/blocs/visit_time/TextPlanBloc.dart';
-import 'package:docup/models/AuthResponseEntity.dart';
-import 'package:docup/models/TextPlan.dart';
-import 'package:docup/networking/ApiProvider.dart';
+import 'package:Neuronio/blocs/visit_time/TextPlanBloc.dart';
+import 'package:Neuronio/models/AuthResponseEntity.dart';
+import 'package:Neuronio/models/TextPlan.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
 
 class TextPlanRepository {
   ApiProvider _provider = ApiProvider();

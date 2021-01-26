@@ -1,13 +1,13 @@
-import 'package:docup/blocs/MedicineBloc.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/Medicine.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/TimeSelectorWidget.dart';
-import 'package:docup/ui/widgets/VerticalSpace.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/blocs/MedicineBloc.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/constants/strings.dart';
+import 'package:Neuronio/models/Medicine.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/TimeSelectorWidget.dart';
+import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

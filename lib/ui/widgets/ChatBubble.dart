@@ -1,5 +1,5 @@
-import 'package:docup/models/ChatMessage.dart';
-import 'package:docup/utils/CrossPlatformSvg.dart';
+import 'package:Neuronio/models/ChatMessage.dart';
+import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

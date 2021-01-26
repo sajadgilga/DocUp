@@ -1,4 +1,4 @@
-import 'package:docup/constants/assets.dart';
+import 'package:Neuronio/constants/assets.dart';
 import 'package:flutter/cupertino.dart';
 
 class PageTopLeftIcon extends StatelessWidget {

@@ -1,10 +1,10 @@
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/DoctorPlan.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/SnackBar.dart';
-import 'package:docup/ui/widgets/VerticalSpace.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/constants/strings.dart';
+import 'package:Neuronio/models/DoctorPlan.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/SnackBar.dart';
+import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 
 class LegendItem {

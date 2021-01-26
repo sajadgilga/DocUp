@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import 'package:docup/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
 
 /// Recommendation for size of an item inside a [DayViewSchedule].
 @immutable

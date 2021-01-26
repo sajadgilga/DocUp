@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 

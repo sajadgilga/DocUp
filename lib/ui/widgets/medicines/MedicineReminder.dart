@@ -1,4 +1,4 @@
-import 'package:docup/utils/CrossPlatformSvg.dart';
+import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

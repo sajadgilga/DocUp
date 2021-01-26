@@ -1,5 +1,5 @@
-import 'package:docup/models/Panel.dart';
-import 'package:docup/networking/ApiProvider.dart';
+import 'package:Neuronio/models/Panel.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
 
 class InfoRepository {
   ApiProvider _Provider = ApiProvider();

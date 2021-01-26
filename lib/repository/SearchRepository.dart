@@ -1,5 +1,5 @@
-import 'package:docup/models/SearchResult.dart';
-import 'package:docup/networking/ApiProvider.dart';
+import 'package:Neuronio/models/SearchResult.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
 
 class SearchRepository {
   final ApiProvider _provider = ApiProvider();

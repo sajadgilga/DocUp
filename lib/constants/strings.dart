@@ -1,4 +1,4 @@
-import 'package:docup/constants/settings.dart';
+import 'package:Neuronio/constants/settings.dart';
 
 class Strings {
   static const String appTitle = 'نورونیو';

@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:docup/blocs/FileBloc.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/Picture.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/blocs/FileBloc.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/constants/strings.dart';
+import 'package:Neuronio/models/Picture.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

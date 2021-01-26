@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:docup/blocs/PatientBloc.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/networking/Response.dart';
+import 'package:Neuronio/blocs/PatientBloc.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/networking/Response.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

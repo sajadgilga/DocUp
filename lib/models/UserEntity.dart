@@ -1,6 +1,6 @@
-import 'package:docup/models/Panel.dart';
-import 'package:docup/ui/start/RoleType.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/models/Panel.dart';
+import 'package:Neuronio/ui/start/RoleType.dart';
+import 'package:Neuronio/utils/Utils.dart';
 
 import 'DoctorEntity.dart';
 import 'PatientEntity.dart';

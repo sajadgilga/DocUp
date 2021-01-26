@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/PopupMenues/PopUpMenus.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/PopupMenues/PopUpMenus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';

@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/networking/Response.dart';
-import 'package:docup/repository/DoctorRepository.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/networking/Response.dart';
+import 'package:Neuronio/repository/DoctorRepository.dart';
 
 class DoctorBloc {
   DoctorRepository _repository;

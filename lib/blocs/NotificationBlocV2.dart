@@ -1,8 +1,8 @@
 // import 'dart:async';
 //
-// import 'package:docup/models/NewestNotificationResponse.dart';
-// import 'package:docup/networking/Response.dart';
-// import 'package:docup/repository/NotificationRepository.dart';
+// import 'package:Neuronio/models/NewestNotificationResponse.dart';
+// import 'package:Neuronio/networking/Response.dart';
+// import 'package:Neuronio/repository/NotificationRepository.dart';
 //
 //
 // class NotificationBlocV2 {

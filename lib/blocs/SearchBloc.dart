@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/SearchResult.dart';
-import 'package:docup/repository/InfoRepository.dart';
-import 'package:docup/repository/SearchRepository.dart';
+import 'package:Neuronio/models/SearchResult.dart';
+import 'package:Neuronio/repository/InfoRepository.dart';
+import 'package:Neuronio/repository/SearchRepository.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchRepository _repository = SearchRepository();

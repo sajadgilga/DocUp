@@ -1,5 +1,5 @@
-import 'package:docup/ui/visit/calendar/utils/consts.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/ui/visit/calendar/utils/consts.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 class DateUtils {

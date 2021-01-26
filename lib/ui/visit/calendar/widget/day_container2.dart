@@ -1,6 +1,6 @@
-import 'package:docup/ui/visit/calendar/utils/consts.dart';
-import 'package:docup/ui/visit/calendar/utils/date.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/visit/calendar/utils/consts.dart';
+import 'package:Neuronio/ui/visit/calendar/utils/date.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 

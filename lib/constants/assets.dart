@@ -1,4 +1,4 @@
-import 'package:docup/ui/start/RoleType.dart';
+import 'package:Neuronio/ui/start/RoleType.dart';
 
 class Assets {
   static final String docupPatientIcon = 'assets/docupHomePatient.svg';

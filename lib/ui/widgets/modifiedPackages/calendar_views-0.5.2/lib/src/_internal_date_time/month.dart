@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 
 import 'date.dart';
 import 'validation.dart';

@@ -1,6 +1,6 @@
-import 'package:docup/blocs/NotificationBloc.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/utils/WebsocketHelper.dart';
+import 'package:Neuronio/blocs/NotificationBloc.dart';
+import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/utils/WebsocketHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

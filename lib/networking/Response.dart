@@ -1,4 +1,4 @@
-import 'package:docup/networking/CustomException.dart';
+import 'package:Neuronio/networking/CustomException.dart';
 
 class Response<T> {
   Status status;

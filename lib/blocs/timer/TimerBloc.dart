@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:docup/blocs/timer/TimerEvent.dart';
+import 'package:Neuronio/blocs/timer/TimerEvent.dart';
 import 'package:meta/meta.dart';
 
 import 'TimerState.dart';

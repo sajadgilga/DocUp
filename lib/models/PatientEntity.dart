@@ -1,4 +1,4 @@
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 
 import 'DoctorPlan.dart';
 import 'Panel.dart';

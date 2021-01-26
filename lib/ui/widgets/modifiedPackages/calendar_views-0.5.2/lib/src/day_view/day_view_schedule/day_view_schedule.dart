@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import 'package:docup/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
 
 /// Widget for display a day view schedule with the given [components].
 class DayViewSchedule extends StatefulWidget {

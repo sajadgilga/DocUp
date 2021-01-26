@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:docup/constants/colors.dart';
-import 'package:docup/ui/start/RoleType.dart';
-import 'package:docup/utils/CrossPlatformSvg.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/ui/start/RoleType.dart';
+import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

@@ -1,5 +1,5 @@
-import 'package:docup/models/VisitResponseEntity.dart';
-import 'package:docup/networking/ApiProvider.dart';
+import 'package:Neuronio/models/VisitResponseEntity.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
 
 class VisitRepository {
   ApiProvider _provider = ApiProvider();

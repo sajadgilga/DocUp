@@ -1,4 +1,4 @@
-import 'package:docup/models/UserEntity.dart';
+import 'package:Neuronio/models/UserEntity.dart';
 import 'package:flutter/material.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 

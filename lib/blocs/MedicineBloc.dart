@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/Medicine.dart';
-import 'package:docup/repository/PatientRepository.dart';
+import 'package:Neuronio/models/Medicine.dart';
+import 'package:Neuronio/repository/PatientRepository.dart';
 
 class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
   PatientRepository _repository = PatientRepository();

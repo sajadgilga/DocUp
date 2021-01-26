@@ -1,6 +1,6 @@
-import 'package:docup/constants/colors.dart';
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

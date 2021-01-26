@@ -1,6 +1,6 @@
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/models/VisitResponseEntity.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/PatientEntity.dart';
+import 'package:Neuronio/models/VisitResponseEntity.dart';
 
 class SearchResult {
   int count;

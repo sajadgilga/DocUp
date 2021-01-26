@@ -1,10 +1,10 @@
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/constants/assets.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/ui/BasePage.dart';
-import 'package:docup/ui/mainPage/MainPage.dart';
-import 'package:docup/ui/start/OnBoardingPage.dart';
-import 'package:docup/ui/start/StartPage.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/constants/assets.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/ui/BasePage.dart';
+import 'package:Neuronio/ui/mainPage/MainPage.dart';
+import 'package:Neuronio/ui/start/OnBoardingPage.dart';
+import 'package:Neuronio/ui/start/StartPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

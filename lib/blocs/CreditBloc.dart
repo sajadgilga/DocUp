@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/PayResponseEntity.dart';
-import 'package:docup/repository/PaymentRepository.dart';
+import 'package:Neuronio/models/PayResponseEntity.dart';
+import 'package:Neuronio/repository/PaymentRepository.dart';
 import 'package:flutter/cupertino.dart';
 
 class CreditBloc extends Bloc<CreditEvent, CreditState> {

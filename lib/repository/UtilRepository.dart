@@ -1,7 +1,7 @@
-import 'package:docup/models/BankData.dart';
-import 'package:docup/models/SearchResult.dart';
-import 'package:docup/networking/ApiProvider.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/models/BankData.dart';
+import 'package:Neuronio/models/SearchResult.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
+import 'package:Neuronio/utils/Utils.dart';
 
 class UtilRepository {
   final ApiProvider _provider = ApiProvider();

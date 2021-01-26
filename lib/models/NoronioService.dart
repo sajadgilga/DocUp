@@ -1,4 +1,4 @@
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 
 enum NoronioClinicServiceType { MultipleChoiceTest, DoctorsList, Game }
 

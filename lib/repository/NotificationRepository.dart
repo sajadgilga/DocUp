@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:docup/blocs/NotificationBloc.dart';
-import 'package:docup/models/FCMEntity.dart';
-import 'package:docup/models/NewestNotificationResponse.dart';
-import 'package:docup/networking/ApiProvider.dart';
-import 'package:docup/utils/CrossPlatformDeviceDetection.dart';
-import 'package:docup/utils/Device.dart';
+import 'package:Neuronio/blocs/NotificationBloc.dart';
+import 'package:Neuronio/models/FCMEntity.dart';
+import 'package:Neuronio/models/NewestNotificationResponse.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
+import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
+import 'package:Neuronio/utils/Device.dart';
 import 'package:flutter/foundation.dart';
 
 class NotificationRepository {

@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/TextPlan.dart';
-import 'package:docup/networking/CustomException.dart';
-import 'package:docup/networking/Response.dart';
-import 'package:docup/repository/TextPlanRepository.dart';
+import 'package:Neuronio/models/TextPlan.dart';
+import 'package:Neuronio/networking/CustomException.dart';
+import 'package:Neuronio/networking/Response.dart';
+import 'package:Neuronio/repository/TextPlanRepository.dart';
 
 class TextPlanBloc extends Bloc<TextPlanEvent, TextPlanState> {
   TextPlanRepository _repository;

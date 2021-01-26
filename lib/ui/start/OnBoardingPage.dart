@@ -1,9 +1,9 @@
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/modifiedPackages/IntroductionScreen2/WholeIntroChild.dart';
-import 'package:docup/ui/widgets/modifiedPackages/IntroductionScreen2/dots_decorator.dart';
-import 'package:docup/ui/widgets/modifiedPackages/IntroductionScreen2/introduction_screen.dart';
-import 'package:docup/ui/widgets/modifiedPackages/IntroductionScreen2/page_decoration.dart';
-import 'package:docup/ui/widgets/modifiedPackages/IntroductionScreen2/page_view_model.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/IntroductionScreen2/WholeIntroChild.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/IntroductionScreen2/dots_decorator.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/IntroductionScreen2/introduction_screen.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/IntroductionScreen2/page_decoration.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/IntroductionScreen2/page_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

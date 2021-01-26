@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:docup/models/AuthResponseEntity.dart';
-import 'package:docup/networking/Response.dart';
-import 'package:docup/repository/AuthRepository.dart';
-import 'package:docup/ui/start/RoleType.dart';
+import 'package:Neuronio/models/AuthResponseEntity.dart';
+import 'package:Neuronio/networking/Response.dart';
+import 'package:Neuronio/repository/AuthRepository.dart';
+import 'package:Neuronio/ui/start/RoleType.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthBloc {

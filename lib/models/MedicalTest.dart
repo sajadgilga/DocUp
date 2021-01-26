@@ -1,5 +1,5 @@
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/models/PatientEntity.dart';
+import 'package:Neuronio/utils/Utils.dart';
 
 class QuestionAnswerPair {
   final Question question;

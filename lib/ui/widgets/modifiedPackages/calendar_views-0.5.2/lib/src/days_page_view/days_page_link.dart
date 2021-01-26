@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:docup/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/src/calendar_page_view/all.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/src/calendar_page_view/all.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 

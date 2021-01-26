@@ -1,14 +1,14 @@
 import 'dart:ui';
 
 import 'package:dashed_container/dashed_container.dart';
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/FileBloc.dart';
-import 'package:docup/constants/assets.dart';
-import 'package:docup/constants/colors.dart';
-import 'package:docup/models/Picture.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/widgets/UploadSlider.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/blocs/FileBloc.dart';
+import 'package:Neuronio/constants/assets.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/models/Picture.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/ui/widgets/UploadSlider.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';

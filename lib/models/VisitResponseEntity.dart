@@ -1,6 +1,6 @@
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/DoctorPlan.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/DoctorPlan.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 
 import 'PatientEntity.dart';
 

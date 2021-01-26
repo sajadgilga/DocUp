@@ -1,4 +1,4 @@
-import 'package:docup/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
 import 'package:meta/meta.dart';
 
 

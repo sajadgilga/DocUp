@@ -1,5 +1,5 @@
-import 'package:docup/ui/widgets/DocupHeader.dart';
-import 'package:docup/constants/assets.dart';
+import 'package:Neuronio/ui/widgets/DocupHeader.dart';
+import 'package:Neuronio/constants/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

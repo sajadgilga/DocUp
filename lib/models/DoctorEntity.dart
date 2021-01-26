@@ -1,6 +1,6 @@
-import 'package:docup/models/DoctorPlan.dart';
-import 'package:docup/models/Panel.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/models/DoctorPlan.dart';
+import 'package:Neuronio/models/Panel.dart';
+import 'package:Neuronio/utils/Utils.dart';
 
 import 'UserEntity.dart';
 

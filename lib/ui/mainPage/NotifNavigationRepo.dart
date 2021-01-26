@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/MedicalTestListBloc.dart';
-import 'package:docup/models/MedicalTest.dart';
-import 'package:docup/models/NewestNotificationResponse.dart';
-import 'package:docup/models/PatientEntity.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/repository/DoctorRepository.dart';
-import 'package:docup/repository/PatientRepository.dart';
-import 'package:docup/ui/panel/partnerContact/videoOrVoiceCallPage/call.dart';
-import 'package:docup/utils/Utils.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/blocs/MedicalTestListBloc.dart';
+import 'package:Neuronio/models/MedicalTest.dart';
+import 'package:Neuronio/models/NewestNotificationResponse.dart';
+import 'package:Neuronio/models/PatientEntity.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/repository/DoctorRepository.dart';
+import 'package:Neuronio/repository/PatientRepository.dart';
+import 'package:Neuronio/ui/panel/partnerContact/videoOrVoiceCallPage/call.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

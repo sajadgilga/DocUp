@@ -1,5 +1,5 @@
-import 'package:docup/constants/colors.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 
 enum AlertSize { SM, MD, LG }

@@ -1,4 +1,4 @@
-import 'package:docup/models/VisitResponseEntity.dart';
+import 'package:Neuronio/models/VisitResponseEntity.dart';
 
 class ListResult {
   int count;

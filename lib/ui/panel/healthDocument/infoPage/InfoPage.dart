@@ -1,10 +1,10 @@
-import 'package:docup/constants/colors.dart';
-import 'package:docup/models/TextPlan.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/mainPage/NavigatorView.dart';
-import 'package:docup/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
-import 'package:docup/ui/widgets/PicList.dart';
-import 'package:docup/utils/CrossPlatformSvg.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/models/TextPlan.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
+import 'package:Neuronio/ui/widgets/PicList.dart';
+import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

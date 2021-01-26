@@ -1,11 +1,11 @@
-import 'package:docup/constants/colors.dart';
-import 'package:docup/constants/strings.dart';
-import 'package:docup/models/CalendarEvent.dart';
-import 'package:docup/models/DoctorPlan.dart';
-import 'package:docup/ui/widgets/AutoText.dart';
-import 'package:docup/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
-import 'package:docup/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/days_page_view.dart';
-import 'package:docup/utils/dateTimeService.dart';
+import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/constants/strings.dart';
+import 'package:Neuronio/models/CalendarEvent.dart';
+import 'package:Neuronio/models/DoctorPlan.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/days_page_view.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 

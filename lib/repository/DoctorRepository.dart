@@ -1,9 +1,9 @@
-import 'package:docup/models/DoctorEntity.dart';
-import 'package:docup/models/DoctorPlan.dart';
-import 'package:docup/models/ListResult.dart';
-import 'package:docup/models/PatientTracker.dart';
-import 'package:docup/models/VisitResponseEntity.dart';
-import 'package:docup/networking/ApiProvider.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/DoctorPlan.dart';
+import 'package:Neuronio/models/ListResult.dart';
+import 'package:Neuronio/models/PatientTracker.dart';
+import 'package:Neuronio/models/VisitResponseEntity.dart';
+import 'package:Neuronio/networking/ApiProvider.dart';
 
 class DoctorRepository {
   ApiProvider _provider = ApiProvider();

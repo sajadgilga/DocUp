@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:docup/models/ChatMessage.dart';
-import 'package:docup/repository/ChatMessageRepository.dart';
+import 'package:Neuronio/models/ChatMessage.dart';
+import 'package:Neuronio/repository/ChatMessageRepository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 

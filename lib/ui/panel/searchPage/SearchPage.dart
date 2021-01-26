@@ -1,13 +1,13 @@
 import 'dart:collection';
 
-import 'package:docup/blocs/EntityBloc.dart';
-import 'package:docup/blocs/SearchBloc.dart';
-import 'package:docup/models/SearchResult.dart';
-import 'package:docup/models/UserEntity.dart';
-import 'package:docup/ui/home/SearchBox.dart';
-import 'package:docup/ui/widgets/APICallError.dart';
-import 'package:docup/ui/widgets/PopupMenues/PopUpMenus.dart';
-import 'package:docup/ui/widgets/Waiting.dart';
+import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/blocs/SearchBloc.dart';
+import 'package:Neuronio/models/SearchResult.dart';
+import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/ui/home/SearchBox.dart';
+import 'package:Neuronio/ui/widgets/APICallError.dart';
+import 'package:Neuronio/ui/widgets/PopupMenues/PopUpMenus.dart';
+import 'package:Neuronio/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
