@@ -26,7 +26,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 enum TypeSelect {
   visitType,
@@ -118,7 +117,6 @@ class _VisitConfPageState extends State<VisitConfPage>
   // List<List<List<int>>> virtualDaysPlanTable = [];
   // List<List<List<int>>> physicalDaysPlanTable = [];
   DoctorPlan plan;
-  CalendarController calendarController = CalendarController();
 
   bool timeIsSelected = true;
 

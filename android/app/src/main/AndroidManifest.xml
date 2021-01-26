@@ -23,7 +23,7 @@
     <application
         android:name=".Application"
         android:icon="@mipmap/ic_launcher"
-        android:label="neuronio"
+        android:label="Neuronio"
         android:screenOrientation="portrait"
         android:usesCleartextTraffic="true">
         <activity
