@@ -63,6 +63,7 @@ class _StartPageState extends State<StartPage> {
   AlertDialog _loadingDialog = getLoadingDialog();
   bool _loadingEnable;
   bool validationFormError = false;
+  bool privacyAndPolicyDialog = false;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
@@ -144,7 +145,8 @@ class _StartPageState extends State<StartPage> {
       hasShown = prefs.getBool("privacyAndPolicy");
     }
     /// ignore prev shows
-    if (!hasShown || true) {
+    if (!hasShown || !privacyAndPolicyDialog) {
+      privacyAndPolicyDialog = true;
       showDescriptionAlertDialog(context,
           title: Strings.privacyAndPolicy,
           description: Strings.policyDescription);
