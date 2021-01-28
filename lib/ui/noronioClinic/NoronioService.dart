@@ -16,10 +16,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NoronioServicePage extends StatefulWidget {
   final Function(String, dynamic) onPush;
+  final Function(int) selectPage;
   final Function(String, dynamic) globalOnPush;
 
   NoronioServicePage(
-      {Key key, @required this.onPush, @required this.globalOnPush})
+      {Key key,
+      @required this.onPush,
+      @required this.selectPage,
+      @required this.globalOnPush})
       : super(key: key);
 
   @override
@@ -50,8 +54,12 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
         /// TODO
         MedicalTestPageData medicalTestPageData = MedicalTestPageData(
             patientEntity: null,
+            onDone: () {
+              widget.selectPage(1);
+            },
             medicalTestItem: MedicalTestItem(element.testId, element.name),
-            editableFlag: true,sendableFlag: true);
+            editableFlag: true,
+            sendableFlag: true);
 
         widget.globalOnPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
       }, true);

@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/repository/PatientRepository.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +26,9 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       String lastName,
       String nationalCode,
       double height,
-      double weight}) async {
+      double weight,
+      String birthCity,
+      String currentCity}) async {
     dataSink.add(Response.loading());
     try {
       PatientEntity patient = await _repository.update(PatientEntity(

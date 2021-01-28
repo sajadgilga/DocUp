@@ -75,17 +75,17 @@ class _MainPageState extends State<MainPage> {
       utilRepository.getLatestAppBuildNumber().then((value) async {
         PackageInfo packageInfo = await PackageInfo.fromPlatform();
         int currentBuildNumber = intPossible(await packageInfo.buildNumber);
+        print(value);
         if (currentBuildNumber < value) {
           showOneButtonDialog(
               context,
-              "نسخه اپلیکیشن کنونی شما قدیمی است. با زدن بر روی دکمه زیر برای اپدیت اپ اقدام کنید.",
-              "دانلود", () {
-            launchURL("https://docup.ir");
+              "نسخه اپلیکیشن کنونی شما قدیمی است. با زدن بر روی دکمه زیر برای اپدیت اپ اقدام کنید و اطلاعات بیشتری را از سایت نورونیو دریافت کنید.",
+              "تایید", () {
+            launchURL("https://neuronio.ir");
           }, barrierDismissible: false);
         }
       });
     }
-
   }
 
   @override

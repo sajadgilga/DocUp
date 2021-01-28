@@ -55,7 +55,6 @@ class MedicalTestPageData {
       this.onDone});
 }
 
-class MedicalTestItem2 {}
 
 class MedicalTestItem {
   /// this model is for loading test list from database and showing theme in
@@ -71,8 +70,8 @@ class MedicalTestItem {
 
   MedicalTestItem.fromJson(Map<String, dynamic> json) {
     testId = json['id'];
-    name = json['name'];
-    description = json['description'];
+    name = utf8IfPossible(json['name']);
+    description = utf8IfPossible(json['description']);
 
     /// TODO amir: incomplete api
     imageURL = json['logo'];

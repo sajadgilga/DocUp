@@ -10,6 +10,7 @@ import 'package:Neuronio/repository/DoctorRepository.dart';
 import 'package:Neuronio/repository/PatientRepository.dart';
 import 'package:Neuronio/ui/panel/partnerContact/videoOrVoiceCallPage/call.dart';
 import 'package:Neuronio/utils/Utils.dart';
+import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,20 +27,9 @@ class NotificationNavigationRepo {
   NotificationNavigationRepo(this.onPush);
 
   void navigate(BuildContext context, NewestNotif newestNotifs) {
-    EntityBloc _bloc = BlocProvider.of<EntityBloc>(context);
-    if (_bloc.state is EntityLoaded || _bloc.state.entity != null) {
-      navigation(_bloc.state.entity, newestNotifs, context);
-      // _bloc.add(EntityGet());
-    } else {
-      _bloc.add(EntityGet());
-      StreamSubscription streamSubscription;
-      streamSubscription = _bloc.listen((data) {
-        if (data is EntityLoaded) {
-          navigation(_bloc.state.entity, newestNotifs, context);
-          streamSubscription.cancel();
-        }
-      });
-    }
+    EntityAndPanelUpdater.processOnEntityLoad((entity) {
+      navigation(entity, newestNotifs, context);
+    });
   }
 
   void navigation(
@@ -167,12 +157,13 @@ class NotificationNavigationRepo {
     /// TODO maybe it is better to delete true
     if (NotificationNavigationRepo.lastTestIdPage != test.testId || true) {
       PanelMedicalTestItem medicalTestItem = PanelMedicalTestItem(
-          id: test.panelCognitiveTestId,
-          testId: test.testId,
-          name: test.testTitle,
-          description: "",
-          done: false,
-          panelId: test.panelId,);
+        id: test.panelCognitiveTestId,
+        testId: test.testId,
+        name: test.testTitle,
+        description: "",
+        done: false,
+        panelId: test.panelId,
+      );
       PatientEntity uEntity;
       bool isDoctor =
           BlocProvider.of<EntityBloc>(context).state?.entity?.isDoctor;

@@ -1,5 +1,6 @@
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:flutter/material.dart';
 
 enum AlertSize { SM, MD, LG }
@@ -36,12 +37,14 @@ class PanelAlert extends StatelessWidget {
   final Function callback;
   final Color btnColor;
   final AlertSize size;
+  final Widget extraChildWidget;
 
   PanelAlert(
       {this.label,
       this.buttonLabel,
       this.callback,
       this.btnColor,
+      this.extraChildWidget,
       this.size = AlertSize.MD});
 
   @override
@@ -62,7 +65,7 @@ class PanelAlert extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.white),
               constraints:
-                  BoxConstraints(maxHeight: size.height, maxWidth: size.width),
+                  BoxConstraints(maxWidth: size.width),
               padding:
                   EdgeInsets.only(top: 80, bottom: 40, right: 40, left: 40),
               child: Column(
@@ -73,9 +76,9 @@ class PanelAlert extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14),
                   ),
-                  SizedBox(
-                    height: 40,
-                  ),
+                  ALittleVerticalSpace(),
+                  extraChildWidget ?? SizedBox(),
+                  ALittleVerticalSpace(),
                   GestureDetector(
                       onTap: callback,
                       child: Container(

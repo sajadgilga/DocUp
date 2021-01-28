@@ -29,7 +29,7 @@ class SocketHelper {
   }
 
   Stream get stream {
-    return _channel.stream.asBroadcastStream();
+    return _channel._screeningStream.asBroadcastStream();
   }
 
   Future<bool> checkInternetConnection() async {
@@ -98,7 +98,7 @@ class SocketHelper {
           }).then((value) {
             print("websocket listening");
             try {
-              channel.stream.asBroadcastStream().listen((event) {
+              channel._screeningStream.asBroadcastStream().listen((event) {
                 Future.delayed(Duration(seconds: 5)).then((value) {
                   if (webSocketStatusController.text == "1") {
                     _retryCount = 0;
@@ -147,7 +147,7 @@ class SocketHelper {
   void reconnect() {
     _channel = IOWebSocketChannel.connect(
         "ws://$url/ws/chat/?Authorization=JWT $token");
-    _channel.stream.listen((event) {
+    _channel._screeningStream.listen((event) {
       onReceive(event);
     });
   }

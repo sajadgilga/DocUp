@@ -9,6 +9,7 @@ import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/CityAutoComplete.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,6 +27,10 @@ class EditProfileDataDialog {
       TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
+
+  /// city controller
+  final TextEditingController _birthCity = TextEditingController();
+  final TextEditingController _currentCity = TextEditingController();
 
   final Function() onDone;
 
@@ -178,7 +183,8 @@ class EditProfileDataDialog {
                                         child: Container(
                                           height: 70,
                                           child: TextField(
-                                            controller: _expertiseCodeController,
+                                            controller:
+                                                _expertiseCodeController,
                                             textDirection: TextDirection.ltr,
                                             textAlign: TextAlign.center,
                                             keyboardType: TextInputType.text,
@@ -208,7 +214,8 @@ class EditProfileDataDialog {
                                             textAlign: TextAlign.center,
                                             keyboardType:
                                                 TextInputType.numberWithOptions(
-                                                    signed: false, decimal: true),
+                                                    signed: false,
+                                                    decimal: true),
                                             maxLines: 1,
                                             style: TextStyle(fontSize: 16),
                                             decoration: InputDecoration(
@@ -234,7 +241,8 @@ class EditProfileDataDialog {
                                             textAlign: TextAlign.center,
                                             keyboardType:
                                                 TextInputType.numberWithOptions(
-                                                    signed: false, decimal: true),
+                                                    signed: false,
+                                                    decimal: true),
                                             maxLines: 1,
                                             style: TextStyle(fontSize: 16),
                                             decoration: InputDecoration(
@@ -246,6 +254,42 @@ class EditProfileDataDialog {
                                                       color: IColors.darkGrey,
                                                       width: 1)),
                                             ),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                entity.isPatient
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 50,
+                                          child: CityAutoComplete(
+                                            hintText: 'شهر تولد',
+                                            controller: _birthCity,
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                borderSide: new BorderSide(
+                                                    color: IColors.darkGrey,
+                                                    width: 1)),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                entity.isPatient
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 50,
+                                          child: CityAutoComplete(
+                                            hintText: 'شهر زندگی',
+                                            controller: _currentCity,
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                borderSide: new BorderSide(
+                                                    color: IColors.darkGrey,
+                                                    width: 1)),
                                           ),
                                         ),
                                       )
@@ -340,6 +384,8 @@ class EditProfileDataDialog {
           (dataBloc as PatientBloc).updateProfile(
               firstName: _firstNameController.text,
               lastName: _lastNameController.text,
+              birthCity: _birthCity.text,
+              currentCity: _currentCity.text,
               nationalCode: _nationalCodeController.text,
               weight: double.parse(_weightController.text),
               height: double.parse(_heightController.text));

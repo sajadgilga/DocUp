@@ -109,13 +109,23 @@ class _HomeState extends State<Home> {
   Widget _homeList() {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     if (entity.isPatient) {
-      return _learningVideos();
+      return Column(
+        children: [
+          _neuronioScreening(),
+          _learningVideos(),
+        ],
+      );
     } else if (entity.isDoctor) {
-      return _trackingList();
+      return Column(
+        children: [
+          _neuronioClinic(),
+          _trackingList(),
+        ],
+      );
     }
   }
 
-  Widget _noronioClinic() {
+  Widget _neuronioClinic() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       child: GestureDetector(
@@ -141,6 +151,42 @@ class _HomeState extends State<Home> {
                   padding: EdgeInsets.only(right: 40),
                   child: AutoText(
                     "پایش سلامت شناختی",
+                    style: TextStyle(fontSize: 10),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _neuronioScreening() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+      child: GestureDetector(
+        onTap: () {
+          /// TODO
+          widget.selectPage(1);
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(child: Image.asset(Assets.homeNoronioClinic)),
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(),
+                  child: AutoText("سنجش بیمار", style: TextStyle(fontSize: 17)),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 40),
+                  child: AutoText(
+                    "پایش سلامت شناختی" + "\n" + "غربالگری",
                     style: TextStyle(fontSize: 10),
                   ),
                 )
@@ -270,33 +316,36 @@ class _HomeState extends State<Home> {
                   newNotificationCount:
                       state.notifications?.newestNotifsCounts ?? 0);
             }),
-            Expanded(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
-                  child: SearchBox(
-                    onPush: widget.onPush,
-                    isPatient: BlocProvider.of<EntityBloc>(context)
-                        .state
-                        .entity
-                        .isPatient,
-                    enableFlag: false,
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                      SystemChrome.setEnabledSystemUIOverlays(
-                          [SystemUiOverlay.bottom]);
-                      widget.onPush(NavigatorRoutes.partnerSearchView, null);
-                    },
-                  ),
-                ),
-              ),
-            ),
+            BlocProvider.of<EntityBloc>(context).state.entity.isDoctor
+                ? Expanded(
+                    child: Container(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 10, right: 10, top: 15),
+                        child: SearchBox(
+                          onPush: widget.onPush,
+                          isPatient: BlocProvider.of<EntityBloc>(context)
+                              .state
+                              .entity
+                              .isPatient,
+                          enableFlag: false,
+                          onTap: () {
+                            FocusScope.of(context).unfocus();
+                            SystemChrome.setEnabledSystemUIOverlays(
+                                [SystemUiOverlay.bottom]);
+                            widget.onPush(
+                                NavigatorRoutes.partnerSearchView, null);
+                          },
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox(),
 //                        OnCallMedicalHeaderIcon()
           ]),
           SizedBox(
             height: 25,
           ),
-          _noronioClinic(),
           _homeList(),
           SizedBox(
             height: 15,

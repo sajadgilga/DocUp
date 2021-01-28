@@ -7,6 +7,7 @@ import 'package:Neuronio/blocs/MedicalTestListBloc.dart';
 import 'package:Neuronio/blocs/PanelBloc.dart';
 import 'package:Neuronio/blocs/PanelSectionBloc.dart';
 import 'package:Neuronio/blocs/PatientTrackerBloc.dart';
+import 'package:Neuronio/blocs/ScreenginBloc.dart';
 import 'package:Neuronio/blocs/SearchBloc.dart';
 import 'package:Neuronio/blocs/TabSwitchBloc.dart';
 import 'package:Neuronio/blocs/VisitBloc.dart';
@@ -38,6 +39,8 @@ import 'package:Neuronio/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:Neuronio/ui/panel/partnerContact/chatPage/ChatPage.dart';
 import 'package:Neuronio/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
 import 'package:Neuronio/ui/panel/partnerContact/videoOrVoiceCallPage/VideoOrVoiceCallPage.dart';
+import 'package:Neuronio/ui/panel/screening/BuyScreeningPlan.dart';
+import 'package:Neuronio/ui/panel/screening/ScreeningPage.dart';
 import 'package:Neuronio/ui/panel/searchPage/SearchPage.dart';
 import 'package:Neuronio/ui/patientVisitDetail/PatientRequestPage.dart';
 import 'package:Neuronio/ui/plan/PlanPage.dart';
@@ -64,6 +67,7 @@ class NavigatorRoutes {
   // static const String panelMenu = '/panelMenu';
   static const String panel = '/panel';
   static const String myPartnerDialog = '/myPartnerDialog';
+  static const String buyScreening = "/buyScreening";
 
   static const String account = '/account';
   static const String partnerSearchView = '/searchView';
@@ -110,6 +114,7 @@ class NavigatorViewState extends State<NavigatorView> {
   final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
   final ChatMessageBloc _chatMessageBloc = ChatMessageBloc();
   final SearchBloc _searchBloc = SearchBloc();
+  final ScreeningBloc _screeningBloc = ScreeningBloc();
   final VisitBloc _visitBloc = VisitBloc();
   final FileBloc _pictureBloc = FileBloc();
   final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
@@ -213,21 +218,12 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.panel: (context) =>
               _panel(context, detail: detail, extraDetail: extraDetail),
         };
-//      case 1:
-//        return {
-//          NavigatorRoutes.root: (context) => _empty(context),
-////          NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
-//          NavigatorRoutes.doctorDialogue: (context) =>
-//              _doctorDetailPage(context, detail),
-//          NavigatorRoutes.patientDialogue: (context) =>
-//              _patientDetailPage(context, detail),
-//          NavigatorRoutes.searchView: (context) => _searchPage(context),
-//        };
       case 1:
         return {
-          NavigatorRoutes.root: (context) => _myDoctorsList(context),
+          NavigatorRoutes.root: (context) => _myPanelsMenuList(context),
           NavigatorRoutes.myPartnerDialog: (context) =>
               _myPartnerDialog(context, detail),
+          NavigatorRoutes.buyScreening: (context) => _buyScreeningPage(context),
           NavigatorRoutes.panel: (context) =>
               _panel(context, detail: detail, extraDetail: extraDetail),
           NavigatorRoutes.textPlanPage: (context) =>
@@ -412,6 +408,7 @@ class NavigatorViewState extends State<NavigatorView> {
         onPush: (direction, entity) {
           push(context, direction, detail: entity);
         },
+        selectPage: widget.selectPage,
         globalOnPush: widget.pushOnBase,
       ),
     );
@@ -757,7 +754,17 @@ class NavigatorViewState extends State<NavigatorView> {
     );
   }
 
-  Widget _myDoctorsList(context) {
+  Widget _buyScreeningPage(context) {
+    return BlocProvider.value(
+      value: _screeningBloc,
+      child: BuyScreeningPage(onPush: (direction, entity) {
+        push(context, direction, detail: entity);
+      }),
+    );
+  }
+
+  Widget _myPanelsMenuList(context) {
+    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
     return MultiBlocProvider(
       providers: [
         BlocProvider<TabSwitchBloc>.value(
@@ -771,11 +778,18 @@ class NavigatorViewState extends State<NavigatorView> {
           value: _visitTimeBloc,
         ),
       ],
-      child: MyPartners(
-        onPush: (direction, entity) {
-          push(context, direction, detail: entity);
-        },
-      ),
+      child: entity.isDoctor
+          ? MyPartners(
+              onPush: (direction, entity) {
+                push(context, direction, detail: entity);
+              },
+            )
+          : BlocProvider.value(
+              value: _screeningBloc,
+              child: ScreeningPage(onPush: (direction, entity) {
+                push(context, direction, detail: entity);
+              }),
+            ),
     );
   }
 

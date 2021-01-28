@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:io';
 
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/SearchBloc.dart';
 import 'package:Neuronio/blocs/SingleMedicalTestBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/MedicalTest.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/models/UserEntity.dart';
@@ -257,22 +257,6 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
       showOneButtonDialog(
           context, "لطفا به همه سوالات پاسخ دهید", "باشه", () {});
     } else {
-      final score = calculateTestScore();
-      // if (score >= 0) {
-      //   showOneButtonDialog(
-      //       context,
-      //       "ریسک آلزایمر بالا است ",
-      //       "رزرو ویزیت",
-      //       () => widget.onPush(
-      //           NavigatorRoutes.doctorDialogue,
-      //           BlocProvider.of<EntityBloc>(context)
-      //               .state
-      //               .entity
-      //               .partnerEntity));
-      // } else {
-      //   showOneButtonDialog(context, "ریسک آلزایمر پایین است ", "متوجه شدم",
-      //       () => Navigator.pop(context));
-      // }
       if (userEntity is PatientEntity) {
         MedicalTestItem mdi = widget.medicalTestPageInitData.medicalTestItem;
         MedicalTestResponse response = MedicalTestResponse(
@@ -284,14 +268,17 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
             .addPatientResponse(response)
             .then((medicalTestResponseEntity) {
           if (medicalTestResponseEntity.success) {
-            showOneButtonDialog(context, medicalTestResponseEntity.msg, "باشه",
-                () {
+            showOneButtonDialog(
+                context,
+                widget.medicalTestPageInitData.panelId != null
+                    ? medicalTestResponseEntity.msg
+                    : Strings.seeTestResultsUseScreeningPlan,
+                "باشه", () {
               Navigator.pop(context);
-              if (widget.medicalTestPageInitData.panelId != null) {
-                try {
-                  widget.medicalTestPageInitData.onDone();
-                } catch (e) {}
-              }
+
+              try {
+                widget.medicalTestPageInitData.onDone();
+              } catch (e) {}
             });
           } else {
             showSnackBar(_scaffoldKey, medicalTestResponseEntity.msg);

@@ -15,6 +15,7 @@ import 'package:Neuronio/ui/BasePage.dart';
 import 'package:Neuronio/ui/start/RoleType.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/CityAutoComplete.dart';
 import 'package:Neuronio/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:Neuronio/ui/widgets/InputField.dart';
 import 'package:Neuronio/ui/widgets/OptionButton.dart';
@@ -57,6 +58,10 @@ class _StartPageState extends State<StartPage> {
   final _lastNameController = TextEditingController();
   final _nationalCodeController = TextEditingController();
   final _expertiseCodeController = TextEditingController();
+
+  /// city controller
+  final TextEditingController _birthCity = TextEditingController();
+  final TextEditingController _currentCity = TextEditingController();
 
   RoleType currentRoleType = RoleType.PATIENT;
   StartType startType = StartType.SIGN_UP;
@@ -250,7 +255,9 @@ class _StartPageState extends State<StartPage> {
               _patientBloc.updateProfile(
                   firstName: _firstNameController.text,
                   lastName: _lastNameController.text,
-                  nationalCode: _nationalCodeController.text);
+                  nationalCode: _nationalCodeController.text,
+                  birthCity: _birthCity.text,
+                  currentCity: _currentCity.text);
             } else if (currentRoleType == RoleType.DOCTOR) {
               _doctorBloc.updateProfile(
                   firstName: _firstNameController.text,
@@ -580,6 +587,16 @@ class _StartPageState extends State<StartPage> {
                     errorMessage: 'تخصص خود را وارد کنید',
                     needToHideKeyboard: false,
                     textInputType: TextInputType.text,
+                  )
+                : SizedBox(),
+            currentRoleType == RoleType.PATIENT
+                ? Column(
+                    children: [
+                      CityAutoComplete(
+                          hintText: 'شهر تولد', controller: _birthCity),
+                      CityAutoComplete(
+                          hintText: 'شهر زندگی', controller: _currentCity),
+                    ],
                   )
                 : SizedBox()
           ],
