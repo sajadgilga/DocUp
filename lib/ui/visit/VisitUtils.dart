@@ -18,14 +18,13 @@ extension VisitTypeExtension on VisitTypes {
   }
 }
 
-// enum VirtualVisitMethod { TEXT, VOICE,  VIDEO}
-enum VirtualVisitMethod { VOICE,  VIDEO}
+enum VirtualVisitMethod { TEXT, VOICE,  VIDEO}
 
 extension VisitMethodExtension on VirtualVisitMethod {
   String get title {
     switch (this) {
-      // case VirtualVisitMethod.TEXT:
-      //   return "متنی";
+      case VirtualVisitMethod.TEXT:
+        return "متنی";
       case VirtualVisitMethod.VOICE:
         return "صوتی";
       case VirtualVisitMethod.VIDEO:
