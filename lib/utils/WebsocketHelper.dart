@@ -17,7 +17,8 @@ class SocketHelper {
   String url;
   String token;
   var _channel;
-  var _stream;
+  // var _stream;
+  StreamController _broadcastStreamer = StreamController.broadcast();
   final int _maxRetryTimeout = 32;
   int _retryCount = 0;
   final List<Map<String, dynamic>> messageQueue = [];
@@ -30,7 +31,7 @@ class SocketHelper {
   }
 
   Stream get stream {
-    return _stream;
+    return _broadcastStreamer.stream;
   }
 
   Future<bool> checkInternetConnection() async {
@@ -92,7 +93,7 @@ class SocketHelper {
           _channel = getCrossPlatformWebSocket(
               "ws://$url/ws/chat/?Authorization=JWT $token",
               pingInterval: Duration(milliseconds: 2000));
-          _stream = _channel.stream.asBroadcastStream();
+          // _stream = _channel.stream.asBroadcastStream();
 
           Future.delayed(Duration(milliseconds: 500), () {
             print('websocket connected');
@@ -146,20 +147,6 @@ class SocketHelper {
     });
   }
 
-  // void reconnect() {
-  //   _channel = IOWebSocketChannel.connect(
-  //       "ws://$url/ws/chat/?Authorization=JWT $token");
-  //   _channel.stream.listen((event) {
-  //     onReceive(event);
-  //   });
-  // }
-
-  // void onError(err) {
-  //   print(err);
-  //   reconnect();
-  //   //TODO
-  // }
-
   void close({int code = 0, String reason = ''}) {
     _channel.sink.close(code, reason);
   }
@@ -203,7 +190,7 @@ class SocketHelper {
   }
 
   void onReceive(data) {
-    // _broadcastStreamer.add(data);
-    //TODO
+    _broadcastStreamer.add(data);
+    /// TODO
   }
 }
