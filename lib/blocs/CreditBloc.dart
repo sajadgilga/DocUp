@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/models/PayResponseEntity.dart';
 import 'package:Neuronio/repository/PaymentRepository.dart';
+import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 
 class CreditBloc extends Bloc<CreditEvent, CreditState> {
@@ -9,13 +9,20 @@ class CreditBloc extends Bloc<CreditEvent, CreditState> {
   @override
   get initialState => AddCreditLoading();
 
-  Stream<CreditState> _addCredit(String mobile, int amount) async* {
+  Stream<CreditState> _addCredit(int type, String mobile, int amount,
+      {Map<String, dynamic> extraCallBackParams}) async* {
     yield AddCreditLoading();
     try {
-      final PayResponseEntity result =
-          await _repository.sendDataToPay(mobile, amount);
+      /// changes to hamta payment
+      final HamtaResponseEntity result = await _repository.sendDataToHamta(
+          type, mobile, amount,
+          extraCallBackParams: extraCallBackParams);
+      if (!result.ok) {
+        throw Exception(result.error);
+      }
       yield AddCreditLoaded(result: result);
     } catch (e) {
+      print(e);
       yield AddCreditError();
     }
   }
@@ -23,7 +30,7 @@ class CreditBloc extends Bloc<CreditEvent, CreditState> {
   @override
   Stream<CreditState> mapEventToState(event) async* {
     if (event is AddCredit) {
-      yield* _addCredit(event.mobile, event.amount);
+      yield* _addCredit(event.type, event.mobile, event.amount);
     }
   }
 }
@@ -31,16 +38,21 @@ class CreditBloc extends Bloc<CreditEvent, CreditState> {
 // events
 abstract class CreditEvent {}
 
+class AddCreditType{
+  static int addCredit = 1;
+  static int buyScreeningPlan = 2;
+}
 class AddCredit extends CreditEvent {
+  final int type;
   final String mobile;
   final int amount;
 
-  AddCredit({@required this.mobile, this.amount});
+  AddCredit({@required this.type, @required this.mobile, this.amount});
 }
 
 // states
 class CreditState {
-  PayResponseEntity result;
+  HamtaResponseEntity result;
 
   CreditState({this.result});
 }

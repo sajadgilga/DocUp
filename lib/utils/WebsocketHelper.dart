@@ -17,6 +17,7 @@ class SocketHelper {
   String url;
   String token;
   var _channel;
+  var _stream;
   final int _maxRetryTimeout = 32;
   int _retryCount = 0;
   final List<Map<String, dynamic>> messageQueue = [];
@@ -29,7 +30,7 @@ class SocketHelper {
   }
 
   Stream get stream {
-    return _channel._screeningStream.asBroadcastStream();
+    return _stream;
   }
 
   Future<bool> checkInternetConnection() async {
@@ -91,6 +92,7 @@ class SocketHelper {
           _channel = getCrossPlatformWebSocket(
               "ws://$url/ws/chat/?Authorization=JWT $token",
               pingInterval: Duration(milliseconds: 2000));
+          _stream = _channel.stream.asBroadcastStream();
 
           Future.delayed(Duration(milliseconds: 500), () {
             print('websocket connected');
@@ -98,7 +100,7 @@ class SocketHelper {
           }).then((value) {
             print("websocket listening");
             try {
-              channel._screeningStream.asBroadcastStream().listen((event) {
+              channel.stream.asBroadcastStream().listen((event) {
                 Future.delayed(Duration(seconds: 5)).then((value) {
                   if (webSocketStatusController.text == "1") {
                     _retryCount = 0;
@@ -144,19 +146,19 @@ class SocketHelper {
     });
   }
 
-  void reconnect() {
-    _channel = IOWebSocketChannel.connect(
-        "ws://$url/ws/chat/?Authorization=JWT $token");
-    _channel._screeningStream.listen((event) {
-      onReceive(event);
-    });
-  }
+  // void reconnect() {
+  //   _channel = IOWebSocketChannel.connect(
+  //       "ws://$url/ws/chat/?Authorization=JWT $token");
+  //   _channel.stream.listen((event) {
+  //     onReceive(event);
+  //   });
+  // }
 
-  void onError(err) {
-    print(err);
-    reconnect();
-    //TODO
-  }
+  // void onError(err) {
+  //   print(err);
+  //   reconnect();
+  //   //TODO
+  // }
 
   void close({int code = 0, String reason = ''}) {
     _channel.sink.close(code, reason);

@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:Neuronio/blocs/CreditBloc.dart';
 import 'package:Neuronio/blocs/EntityBloc.dart';
-import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
@@ -14,7 +12,6 @@ import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Avatar.dart';
-import 'package:Neuronio/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/ui/widgets/InputDoneView.dart';
 import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
@@ -30,7 +27,6 @@ import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 import 'package:uni_links/uni_links.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'EditProfileAvatarDialog.dart';
 
@@ -63,7 +59,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
     initUniLinks();
     _loadingEnable = false;
     _creditBloc.listen((event) {
-      if (!(event is AddCreditLoaded) && _isRequestForPay) {
+      if ((event is AddCreditLoading) && _isRequestForPay) {
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -71,12 +67,19 @@ class _PatientProfilePageState extends State<PatientProfilePage>
               return _loadingDialog;
             });
         _loadingEnable = true;
-      } else {
+      } else if (event is AddCreditLoaded) {
         if (_loadingEnable) {
           Navigator.of(loadingContext).pop();
           _loadingEnable = false;
-          launchURL("https://pay.ir/pg/${event.result.token}");
+          launchURL(event.result.paymentUrl);
         }
+      } else {
+        Navigator.of(loadingContext).pop();
+        showOneButtonDialog(
+            context,
+            "پرداخت با خطا مواجه شد، لطفا از طریق راه های ارتباطی با ما تماس برقرار کنید.",
+            "تایید",
+            () {});
       }
     });
     _amountTextController.text = widget.defaultCreditForCharge;
@@ -303,6 +306,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                     } else {
                       _isRequestForPay = true;
                       _creditBloc.add(AddCredit(
+                          type: AddCreditType.addCredit,
                           mobile: entity.mEntity.user.phoneNumber,
                           amount: amountToman * 10));
                     }

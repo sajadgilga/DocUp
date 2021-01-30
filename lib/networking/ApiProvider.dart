@@ -24,6 +24,20 @@ class ApiProvider {
     return responseJson;
   }
 
+  Future<dynamic> getWithBaseUrl(String url, {Map body, bool utf8Support = false}) async {
+    var responseJson;
+    try {
+      final headers = await getHeaders();
+      print(url);
+      final response = await http.get(url, headers: headers);
+      responseJson =
+          _response(httpResponse: response, utf8Support: utf8Support);
+    } on SocketException {
+      throw FetchDataException('اتصال به اینترنت را بررسی کنید');
+    }
+    return responseJson;
+  }
+
   Future<dynamic> postDio(String url, {FormData data}) async {
     var responseJson;
     try {
