@@ -6,8 +6,6 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-/// Web
 import 'package:web_socket_channel/io.dart';
 
 import 'dateTimeService.dart';
@@ -73,7 +71,7 @@ class SocketHelper {
         Map<String, dynamic> headers,
         Duration pingInterval}) {
       if (kIsWeb) {
-        /// web
+        /// TODO web
         // return HtmlWebSocketChannel.connect(url);
       } else {
         return IOWebSocketChannel.connect(url, pingInterval: pingInterval);

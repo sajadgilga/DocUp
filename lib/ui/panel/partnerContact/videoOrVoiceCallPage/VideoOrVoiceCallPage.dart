@@ -15,6 +15,7 @@ import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
@@ -271,8 +272,12 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
   }
 
   Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
+    if(PlatformDetection.isWeb){
+      /// TODO web
+    }else{
+      await PermissionHandler().requestPermissions(
+        [PermissionGroup.camera, PermissionGroup.microphone],
+      );
+    }
   }
 }

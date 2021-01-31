@@ -104,7 +104,8 @@ class Strings {
   static final String panelTestResultsPicUploadLabel = 'ارسال آزمایش';
   static final String panelTestResultsPicListLabel = 'نتایج آزمایش‌های پیشین';
   static final String emptyTestFiles = 'فایل آزمایشی موجود نمی باشد.';
-  static final String seeTestResultsUseScreeningPlan = "نتیجه تست شما ثبت شد، برای اینکه بتوانید تحلیل تست های خود را مشاهده کنید، باید با پزشک خود ویزیتی داشته باشید. ";
+  static final String seeTestResultsUseScreeningPlan =
+      "نتیجه تست شما ثبت شد، برای اینکه بتوانید تحلیل تست های خود را مشاهده کنید، باید با پزشک خود ویزیتی داشته باشید. ";
 
 //
   static final String panelEventPageLabel = 'رویدادها';
@@ -384,7 +385,7 @@ class Strings {
     "‌پنج‌شنبه",
     "جمعه"
   ];
-
+  static final genders = ["مرد", "زن"];
   static final Map<String, int> cities = {
     "اوز": 166,
     "آب بر": 1,

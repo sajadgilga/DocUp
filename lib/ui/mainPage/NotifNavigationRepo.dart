@@ -9,6 +9,7 @@ import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/repository/DoctorRepository.dart';
 import 'package:Neuronio/repository/PatientRepository.dart';
 import 'package:Neuronio/ui/panel/partnerContact/videoOrVoiceCallPage/call.dart';
+import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
@@ -60,9 +61,13 @@ class NotificationNavigationRepo {
   }
 
   Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
+    if (PlatformDetection.isWeb) {
+      /// TODO web
+    } else {
+      await PermissionHandler().requestPermissions(
+        [PermissionGroup.camera, PermissionGroup.microphone],
+      );
+    }
   }
 
   Future<void> joinVideoOrVoiceCall(context,

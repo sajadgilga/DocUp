@@ -3,23 +3,28 @@ import 'dart:async';
 import 'package:Neuronio/blocs/DoctorBloc.dart';
 import 'package:Neuronio/blocs/PatientBloc.dart';
 import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
+import 'package:Neuronio/ui/widgets/AutoCompleteTextField.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:Neuronio/ui/widgets/CityAutoComplete.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class EditProfileDataDialog {
   Entity entity;
   BuildContext dialogContext;
   BuildContext context;
   StateSetter alertStateSetter;
+
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _nationalCodeController = TextEditingController();
@@ -27,6 +32,8 @@ class EditProfileDataDialog {
       TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
+
+  final TextEditingController _genderController = TextEditingController();
 
   /// city controller
   final TextEditingController _birthCity = TextEditingController();
@@ -50,6 +57,9 @@ class EditProfileDataDialog {
           ((entity.mEntity as PatientEntity).weight ?? 0).toString();
       _heightController.text =
           ((entity.mEntity as PatientEntity).height ?? 0).toString();
+      _genderController.text = (entity.patient.genderNumber ?? 0).toString();
+      _currentCity.text = entity.patient.city;
+      _birthCity.text = entity.patient.birthLocation;
     }
   }
 
@@ -97,215 +107,265 @@ class EditProfileDataDialog {
                                   BorderRadius.all(Radius.circular(15))),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                ALittleVerticalSpace(),
-                                AutoText(
-                                  "ویرایش اطلاعات",
-                                  color: IColors.black,
-                                  fontSize: 19,
-                                ),
-                                ALittleVerticalSpace(),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    height: 70,
-                                    child: TextField(
-                                      controller: _firstNameController,
-                                      textDirection: TextDirection.rtl,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 1,
-                                      style: TextStyle(fontSize: 16),
-                                      decoration: InputDecoration(
-                                        labelText: "نام",
-                                        isDense: true,
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            borderSide: new BorderSide(
-                                                color: IColors.darkGrey,
-                                                width: 1)),
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  ALittleVerticalSpace(),
+                                  AutoText(
+                                    "ویرایش اطلاعات",
+                                    color: IColors.black,
+                                    fontSize: 19,
+                                  ),
+                                  ALittleVerticalSpace(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      height: 70,
+                                      child: TextField(
+                                        controller: _firstNameController,
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 16),
+                                        decoration: InputDecoration(
+                                          labelText: "نام",
+                                          isDense: true,
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: new BorderSide(
+                                                  color: IColors.darkGrey,
+                                                  width: 1)),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    height: 70,
-                                    child: TextField(
-                                      controller: _lastNameController,
-                                      textDirection: TextDirection.rtl,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 1,
-                                      style: TextStyle(fontSize: 16),
-                                      decoration: InputDecoration(
-                                        labelText: "نام خانوادگی",
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            borderSide: new BorderSide(
-                                                color: IColors.darkGrey,
-                                                width: 1)),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      height: 70,
+                                      child: TextField(
+                                        controller: _lastNameController,
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 16),
+                                        decoration: InputDecoration(
+                                          labelText: "نام خانوادگی",
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: new BorderSide(
+                                                  color: IColors.darkGrey,
+                                                  width: 1)),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    height: 50,
-                                    child: TextField(
-                                      controller: _nationalCodeController,
-                                      textDirection: TextDirection.ltr,
-                                      textAlign: TextAlign.center,
-                                      keyboardType:
-                                          TextInputType.numberWithOptions(
-                                              signed: false, decimal: false),
-                                      maxLines: 1,
-                                      style: TextStyle(fontSize: 16),
-                                      decoration: InputDecoration(
-                                        labelText: "کد ملی",
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            borderSide: new BorderSide(
-                                                color: IColors.darkGrey,
-                                                width: 1)),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      height: 50,
+                                      child: TextField(
+                                        controller: _nationalCodeController,
+                                        textDirection: TextDirection.ltr,
+                                        textAlign: TextAlign.center,
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                signed: false, decimal: false),
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 16),
+                                        decoration: InputDecoration(
+                                          labelText: "کد ملی",
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: new BorderSide(
+                                                  color: IColors.darkGrey,
+                                                  width: 1)),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                entity.isDoctor
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          height: 70,
-                                          child: TextField(
-                                            controller:
-                                                _expertiseCodeController,
-                                            textDirection: TextDirection.ltr,
-                                            textAlign: TextAlign.center,
-                                            keyboardType: TextInputType.text,
-                                            maxLines: 2,
-                                            style: TextStyle(fontSize: 16),
-                                            decoration: InputDecoration(
-                                              labelText: "تخصص",
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  borderSide: new BorderSide(
-                                                      color: IColors.darkGrey,
-                                                      width: 1)),
+                                  entity.isDoctor
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            height: 70,
+                                            child: TextField(
+                                              controller:
+                                                  _expertiseCodeController,
+                                              textDirection: TextDirection.ltr,
+                                              textAlign: TextAlign.center,
+                                              keyboardType: TextInputType.text,
+                                              maxLines: 2,
+                                              style: TextStyle(fontSize: 16),
+                                              decoration: InputDecoration(
+                                                labelText: "تخصص",
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    borderSide: new BorderSide(
+                                                        color: IColors.darkGrey,
+                                                        width: 1)),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      )
-                                    : SizedBox(),
-                                entity.isPatient
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          height: 50,
-                                          child: TextField(
-                                            controller: _weightController,
-                                            textDirection: TextDirection.ltr,
-                                            textAlign: TextAlign.center,
-                                            keyboardType:
-                                                TextInputType.numberWithOptions(
-                                                    signed: false,
-                                                    decimal: true),
-                                            maxLines: 1,
-                                            style: TextStyle(fontSize: 16),
-                                            decoration: InputDecoration(
-                                              labelText: "وزن به کیلوگرم",
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  borderSide: new BorderSide(
-                                                      color: IColors.darkGrey,
-                                                      width: 1)),
+                                        )
+                                      : SizedBox(),
+                                  entity.isPatient
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            height: 50,
+                                            child: TextField(
+                                              controller: _weightController,
+                                              textDirection: TextDirection.ltr,
+                                              textAlign: TextAlign.center,
+                                              keyboardType: TextInputType
+                                                  .numberWithOptions(
+                                                      signed: false,
+                                                      decimal: true),
+                                              maxLines: 1,
+                                              style: TextStyle(fontSize: 16),
+                                              decoration: InputDecoration(
+                                                labelText: "وزن به کیلوگرم",
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    borderSide: new BorderSide(
+                                                        color: IColors.darkGrey,
+                                                        width: 1)),
+                                              ),
+                                            ),
+                                          ))
+                                      : SizedBox(),
+                                  entity.isPatient
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            height: 50,
+                                            child: TextField(
+                                              controller: _heightController,
+                                              textDirection: TextDirection.ltr,
+                                              textAlign: TextAlign.center,
+                                              keyboardType: TextInputType
+                                                  .numberWithOptions(
+                                                      signed: false,
+                                                      decimal: true),
+                                              maxLines: 1,
+                                              style: TextStyle(fontSize: 16),
+                                              decoration: InputDecoration(
+                                                labelText: "قد به متر",
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    borderSide: new BorderSide(
+                                                        color: IColors.darkGrey,
+                                                        width: 1)),
+                                              ),
                                             ),
                                           ),
-                                        ))
-                                    : SizedBox(),
-                                entity.isPatient
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          height: 50,
-                                          child: TextField(
-                                            controller: _heightController,
-                                            textDirection: TextDirection.ltr,
-                                            textAlign: TextAlign.center,
-                                            keyboardType:
-                                                TextInputType.numberWithOptions(
-                                                    signed: false,
-                                                    decimal: true),
-                                            maxLines: 1,
-                                            style: TextStyle(fontSize: 16),
-                                            decoration: InputDecoration(
-                                              labelText: "قد به متر",
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  borderSide: new BorderSide(
-                                                      color: IColors.darkGrey,
-                                                      width: 1)),
+                                        )
+                                      : SizedBox(),
+                                  entity.isPatient
+                                      ? Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                height: 50,
+                                                child: AutoCompleteTextField(
+                                                  hintText: 'شهر تولد',
+                                                  controller: _birthCity,
+                                                  emptyFieldError:
+                                                      'لظفا شهری را وارد کنید',
+                                                  notFoundError:
+                                                      "شهر موردنظر یافت نشد",
+                                                  items: Strings.cities.keys
+                                                      .toList(),
+                                                  forced: false,
+                                                  border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      borderSide:
+                                                          new BorderSide(
+                                                              color: IColors
+                                                                  .darkGrey,
+                                                              width: 1)),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      )
-                                    : SizedBox(),
-                                entity.isPatient
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          height: 50,
-                                          child: CityAutoComplete(
-                                            hintText: 'شهر تولد',
-                                            controller: _birthCity,
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                borderSide: new BorderSide(
-                                                    color: IColors.darkGrey,
-                                                    width: 1)),
-                                          ),
-                                        ),
-                                      )
-                                    : SizedBox(),
-                                entity.isPatient
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          height: 50,
-                                          child: CityAutoComplete(
-                                            hintText: 'شهر زندگی',
-                                            controller: _currentCity,
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                borderSide: new BorderSide(
-                                                    color: IColors.darkGrey,
-                                                    width: 1)),
-                                          ),
-                                        ),
-                                      )
-                                    : SizedBox(),
-                                ActionButton(
-                                  title: "ویرایش",
-                                  color: actionButtonStatus == 2
-                                      ? IColors.red
-                                      : IColors.themeColor,
-                                  loading: actionButtonStatus == 1,
-                                  height: 45,
-                                  callBack: () {
-                                    editData(dataBloc);
-                                  },
-                                )
-                              ],
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                height: 50,
+                                                child: AutoCompleteTextField(
+                                                  emptyFieldError:
+                                                      'لظفا شهری را وارد کنید',
+                                                  notFoundError:
+                                                      "شهر موردنظر یافت نشد",
+                                                  items: Strings.cities.keys
+                                                      .toList(),
+                                                  forced: false,
+                                                  hintText: 'شهر زندگی',
+                                                  controller: _currentCity,
+                                                  border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      borderSide:
+                                                          new BorderSide(
+                                                              color: IColors
+                                                                  .darkGrey,
+                                                              width: 1)),
+                                                ),
+                                              ),
+                                            ),
+                                            ToggleSwitch(
+                                              minWidth: 90.0,
+                                              initialLabelIndex: intPossible(
+                                                      _genderController.text) ??
+                                                  0,
+                                              cornerRadius: 20.0,
+                                              activeFgColor: Colors.white,
+                                              inactiveBgColor: Colors.grey,
+                                              inactiveFgColor: Colors.white,
+                                              labels: Strings.genders,
+                                              activeBgColors: [
+                                                for (var i in Strings.genders)
+                                                  IColors.themeColor
+                                              ],
+                                              onToggle: (index) {
+                                                _genderController.text =
+                                                    index.toString();
+                                              },
+                                            )
+                                          ],
+                                        )
+                                      : SizedBox(),
+                                  ALittleVerticalSpace(),
+                                  ActionButton(
+                                    title: "ویرایش",
+                                    color: actionButtonStatus == 2
+                                        ? IColors.red
+                                        : IColors.themeColor,
+                                    loading: actionButtonStatus == 1,
+                                    height: 45,
+                                    callBack: () {
+                                      editData(dataBloc);
+                                    },
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -359,6 +419,9 @@ class EditProfileDataDialog {
                 double.parse(_weightController.text);
             (entity.mEntity as PatientEntity).height =
                 double.parse(_heightController.text);
+            entity.patient.city = _currentCity.text;
+            entity.patient.birthLocation = _birthCity.text;
+            entity.patient.genderNumber = intPossible(_genderController.text);
           }
           try {
             onDone();
@@ -371,35 +434,38 @@ class EditProfileDataDialog {
   }
 
   void editData(dataBloc) {
-    if (_nationalCodeController.text == null ||
-        _nationalCodeController.text == "" ||
-        _nationalCodeController.text.length != 10) {
-      showError();
-    } else {
-      if (entity.isPatient) {
-        if (!isNumeric(_weightController.text) ||
-            !isNumeric(_heightController.text)) {
-          showError();
-        } else {
-          (dataBloc as PatientBloc).updateProfile(
-              firstName: _firstNameController.text,
-              lastName: _lastNameController.text,
-              birthCity: _birthCity.text,
-              currentCity: _currentCity.text,
-              nationalCode: _nationalCodeController.text,
-              weight: double.parse(_weightController.text),
-              height: double.parse(_heightController.text));
-        }
-      } else if (entity.isDoctor) {
-        if (_expertiseCodeController.text == null ||
-            _expertiseCodeController.text == "") {
-          showError();
-        } else {
-          (dataBloc as DoctorBloc).updateProfile(
-              firstName: _firstNameController.text,
-              lastName: _lastNameController.text,
-              nationalCode: _nationalCodeController.text,
-              expertise: _expertiseCodeController.text);
+    if (_formKey.currentState.validate()) {
+      if (_nationalCodeController.text == null ||
+          _nationalCodeController.text == "" ||
+          _nationalCodeController.text.length != 10) {
+        showError();
+      } else {
+        if (entity.isPatient) {
+          if (!isNumeric(_weightController.text) ||
+              !isNumeric(_heightController.text)) {
+            showError();
+          } else {
+            (dataBloc as PatientBloc).updateProfile(
+                firstName: _firstNameController.text,
+                lastName: _lastNameController.text,
+                birthCity: _birthCity.text,
+                currentCity: _currentCity.text,
+                nationalCode: _nationalCodeController.text,
+                genderNumber: intPossible(_genderController.text),
+                weight: double.parse(_weightController.text),
+                height: double.parse(_heightController.text));
+          }
+        } else if (entity.isDoctor) {
+          if (_expertiseCodeController.text == null ||
+              _expertiseCodeController.text == "") {
+            showError();
+          } else {
+            (dataBloc as DoctorBloc).updateProfile(
+                firstName: _firstNameController.text,
+                lastName: _lastNameController.text,
+                nationalCode: _nationalCodeController.text,
+                expertise: _expertiseCodeController.text);
+          }
         }
       }
     }

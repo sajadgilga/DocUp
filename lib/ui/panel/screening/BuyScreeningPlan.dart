@@ -162,7 +162,9 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
           ActionButton(
             title: "خرید پلن سنجش",
             color: IColors.themeColor,
-            callBack: () {},
+            callBack: () {
+              toast(context,"در آینده آماده می شود.");
+            },
           ),
         ],
       ),

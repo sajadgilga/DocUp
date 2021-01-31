@@ -9,13 +9,13 @@ import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Avatar.dart';
-import 'package:Neuronio/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:Neuronio/ui/widgets/DoctorCreditWidget.dart';
 import 'package:Neuronio/ui/widgets/DoctorData.dart';
 import 'package:Neuronio/ui/widgets/MapWidget.dart';
 import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
+import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -157,9 +157,13 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
           },
         ),
         MediumVerticalSpace(),
-        MapWidget(
-          clinic: doctorEntity.clinic,
-        ),
+
+        /// TODO
+        !PlatformDetection.isWeb
+            ? MapWidget(
+                clinic: doctorEntity.clinic,
+              )
+            : SizedBox(),
         ALittleVerticalSpace(),
         ALittleVerticalSpace(),
         ActionButton(

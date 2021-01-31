@@ -10,6 +10,7 @@ import 'package:Neuronio/ui/widgets/Avatar.dart';
 import 'package:Neuronio/ui/widgets/DoctorData.dart';
 import 'package:Neuronio/ui/widgets/MapWidget.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -77,9 +78,13 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
           clinicMarkLocation: 2,
         ),
         SizedBox(height: 30),
-        MapWidget(
-          clinic: doctorEntity.clinic,
-        ),
+
+        /// TODO
+        !PlatformDetection.isWeb
+            ? MapWidget(
+                clinic: doctorEntity.clinic,
+              )
+            : SizedBox(),
         SizedBox(height: 20),
         _doctorActionsWidget(doctorEntity)
       ],
@@ -125,8 +130,8 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
             borderRadius: 15,
             color: IColors.themeColor,
             title: Strings.trafficPlanReservationLabel,
-            callBack: () => widget.onPush(
-                NavigatorRoutes.textPlanPage, doctorEntity, () {
+            callBack: () =>
+                widget.onPush(NavigatorRoutes.textPlanPage, doctorEntity, () {
               _bloc.getDoctor(widget.doctorEntity.id, false);
             }),
           )

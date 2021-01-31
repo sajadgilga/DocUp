@@ -9,13 +9,15 @@ import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/AuthResponseEntity.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/networking/CustomException.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/ui/BasePage.dart';
 import 'package:Neuronio/ui/start/RoleType.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
+import 'package:Neuronio/ui/widgets/AutoCompleteTextField.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:Neuronio/ui/widgets/CityAutoComplete.dart';
 import 'package:Neuronio/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:Neuronio/ui/widgets/InputField.dart';
 import 'package:Neuronio/ui/widgets/OptionButton.dart';
@@ -29,6 +31,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../blocs/timer/TimerBloc.dart';
 import '../../blocs/timer/Tricker.dart';
@@ -58,6 +61,10 @@ class _StartPageState extends State<StartPage> {
   final _lastNameController = TextEditingController();
   final _nationalCodeController = TextEditingController();
   final _expertiseCodeController = TextEditingController();
+
+  /// initial gender with 1
+  final TextEditingController _genderController = TextEditingController()
+    ..text = "1";
 
   /// city controller
   final TextEditingController _birthCity = TextEditingController();
@@ -110,6 +117,7 @@ class _StartPageState extends State<StartPage> {
           _loadingEnable = false;
         }
         if (response.data.runtimeType == VerifyResponseEntity) {
+          /// loading data to field
           try {
             String firstName =
                 (utf8IfPossible(response.data.firstName) ?? "").trim();
@@ -124,6 +132,16 @@ class _StartPageState extends State<StartPage> {
               showDescriptionAlertDialog(context,
                   title: Strings.privacyAndPolicy,
                   description: Strings.policyDescription);
+            }
+            if (response.data is PatientEntity) {
+              _currentCity.text = (response.data as PatientEntity).city;
+              _birthCity.text = (response.data as PatientEntity).birthLocation;
+              _genderController.text =
+                  ((response.data as PatientEntity).genderNumber ?? 0)
+                      .toString();
+            } else if (response.data is DoctorEntity) {
+              _expertiseCodeController.text =
+                  (response.data as DoctorEntity).expert;
             }
           } catch (e) {}
         }
@@ -257,7 +275,8 @@ class _StartPageState extends State<StartPage> {
                   lastName: _lastNameController.text,
                   nationalCode: _nationalCodeController.text,
                   birthCity: _birthCity.text,
-                  currentCity: _currentCity.text);
+                  currentCity: _currentCity.text,
+                  genderNumber: intPossible(_genderController.text));
             } else if (currentRoleType == RoleType.DOCTOR) {
               _doctorBloc.updateProfile(
                   firstName: _firstNameController.text,
@@ -592,13 +611,42 @@ class _StartPageState extends State<StartPage> {
             currentRoleType == RoleType.PATIENT
                 ? Column(
                     children: [
-                      CityAutoComplete(
-                          hintText: 'شهر تولد', controller: _birthCity),
-                      CityAutoComplete(
-                          hintText: 'شهر زندگی', controller: _currentCity),
+                      AutoCompleteTextField(
+                        hintText: 'شهر تولد',
+                        controller: _birthCity,
+                        emptyFieldError: 'لظفا شهری را وارد کنید',
+                        notFoundError: "شهر موردنظر یافت نشد",
+                        items: Strings.cities.keys.toList(),
+                        forced: false,
+                      ),
+                      ALittleVerticalSpace(),
+                      AutoCompleteTextField(
+                          emptyFieldError: 'لظفا شهری را وارد کنید',
+                          notFoundError: "شهر موردنظر یافت نشد",
+                          items: Strings.cities.keys.toList(),
+                          forced: false,
+                          hintText: 'شهر زندگی',
+                          controller: _currentCity),
+                      ALittleVerticalSpace(),
+                      ToggleSwitch(
+                        minWidth: 90.0,
+                        initialLabelIndex:
+                            intPossible(_genderController.text) ?? 0,
+                        cornerRadius: 20.0,
+                        activeFgColor: Colors.white,
+                        inactiveBgColor: Colors.grey,
+                        inactiveFgColor: Colors.white,
+                        labels: Strings.genders,
+                        activeBgColors: [
+                          for (var i in Strings.genders) IColors.themeColor
+                        ],
+                        onToggle: (index) {
+                          _genderController.text = index.toString();
+                        },
+                      )
                     ],
                   )
-                : SizedBox()
+                : SizedBox(),
           ],
         );
     }
