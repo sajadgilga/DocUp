@@ -398,6 +398,19 @@ int intPossible(var text, {int defaultValues}) {
   return defaultValues;
 }
 
+double doublePossible(var text, {double defaultValues}) {
+  try {
+    if (text is double) {
+      return text;
+    } else if (text is String) {
+      return double.parse(text);
+    }else if(text is int){
+      return text.toDouble();
+    }
+  } catch (e) {}
+  return defaultValues;
+}
+
 bool isNumeric(String s) {
   if (s == null) {
     return false;

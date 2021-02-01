@@ -340,7 +340,17 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   )
-                : SizedBox(),
+                : Expanded(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        DocUpHeader(
+                          docUpLogo: true,
+                        ),
+                      ],
+                    ),
+                ),
 //                        OnCallMedicalHeaderIcon()
           ]),
           SizedBox(

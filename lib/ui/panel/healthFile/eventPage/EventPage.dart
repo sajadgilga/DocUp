@@ -92,7 +92,7 @@ class _EventPageState extends State<EventPage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     PartnerInfo(
-                      entity: widget.entity,
+                      entity: widget.entity.partnerEntity,
                       onPush: widget.onPush,
                     ),
                     Container(

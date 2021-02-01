@@ -60,7 +60,7 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
       child: Column(
         children: <Widget>[
           PartnerInfo(
-            entity: widget.entity,
+            entity: widget.entity.partnerEntity,
             onPush: widget.onPush,
           ),
           _videoCallPane(visitEntity: visitEntity)

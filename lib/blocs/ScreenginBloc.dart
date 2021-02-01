@@ -16,14 +16,6 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
 
   Stream<Response<Screening>> get apiStream => _screeningController.stream;
 
-  void reNewStreams() {
-    try {
-      _screeningController.close();
-    } finally {
-      _screeningController = StreamController<Response<Screening>>();
-    }
-  }
-
   getClinicScreeningPlan(int clinicId) async {
     apiSink.add(Response.loading());
     try {
@@ -35,13 +27,62 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
     }
   }
 
+  /// discount api
+  StreamController<Response<ScreeningDiscountDetailResponse>>
+      _discountController =
+      StreamController<Response<ScreeningDiscountDetailResponse>>();
+
+  StreamSink<Response<ScreeningDiscountDetailResponse>> get discountSink =>
+      _discountController.sink;
+
+  Stream<Response<ScreeningDiscountDetailResponse>> get discountStream =>
+      _discountController.stream;
+
+  validateScreeningDiscount(String discountString) async {
+    discountSink.add(Response.loading());
+    try {
+      ScreeningDiscountDetailResponse discount =
+          await _repository.validateDiscount(discountString);
+      if (!discount.success) {
+        throw Exception();
+      }
+      discountSink.add(Response.completed(discount));
+    } catch (e) {
+      discountSink.add(Response.error(e));
+      print(e);
+    }
+  }
+
+  /// renew
+  void reNewStreams() {
+    try {
+      _screeningController.close();
+    } finally {
+      _screeningController = StreamController<Response<Screening>>();
+    }
+
+    try {
+      _discountController.close();
+    } finally {
+      _discountController =
+          StreamController<Response<ScreeningDiscountDetailResponse>>();
+    }
+  }
+
   /// patient screening plan
   @override
   get initialState => ScreeningLoading();
 
   Stream<ScreeningState> _getPatientScreeningPlan(
       GetPatientScreening event) async* {
-    /// TODO
+    yield ScreeningLoading();
+    try {
+      final PatientScreeningResponse patientScreening =
+          await _repository.getPatientScreeningPlanIfExist();
+      yield ScreeningLoaded(result: patientScreening);
+    } catch (e) {
+      yield ScreeningError();
+    }
   }
 
   @override
@@ -59,7 +100,7 @@ class GetPatientScreening extends ScreeningEvent {}
 
 // states
 abstract class ScreeningState {
-  PatientScreening result;
+  PatientScreeningResponse result;
 
   ScreeningState({this.result});
 }

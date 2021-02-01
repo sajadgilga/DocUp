@@ -1,22 +1,21 @@
 import 'dart:convert';
 
-import 'package:Neuronio/blocs/EntityBloc.dart';
-import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/UserEntity.dart';
-import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Avatar.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:polygon_clipper/polygon_clipper.dart';
 
 class PartnerInfo extends StatelessWidget {
-  final Entity entity;
+  final UserEntity entity;
   final Function(String, UserEntity) onPush;
   final Color bgColor;
+  final EdgeInsets padding;
 
-  PartnerInfo({Key key, this.entity, @required this.onPush,this.bgColor}) : super(key: key);
+  PartnerInfo(
+      {Key key, this.entity, @required this.onPush, this.bgColor, this.padding})
+      : super(key: key);
 
   Widget _isOnline() => Container(
         width: 15,
@@ -46,11 +45,11 @@ class PartnerInfo extends StatelessWidget {
               Container(
                   width: 70,
                   child: PolygonAvatar(
-                    user: entity.partnerEntity.user,
+                    user: entity.user,
                   )),
               Align(
                   alignment: Alignment(-.75, 1),
-                  child: ((entity.partnerEntity.user.online??0) > 0
+                  child: ((entity.user.online ?? 0) > 0
                       ? _isOnline()
                       : Container()))
             ],
@@ -59,22 +58,18 @@ class PartnerInfo extends StatelessWidget {
   Widget _info() {
     String name = "";
     try {
-      name = utf8.decode(entity.partnerEntity.user.name.codeUnits);
+      name = utf8.decode(entity.user.name.codeUnits);
     } catch (e) {
       try {
-        name = entity.partnerEntity.user.name;
-      } catch (e) {
-      }
+        name = entity.user.name;
+      } catch (e) {}
     }
     String expertise = "";
     try {
-      expertise = utf8.decode(entity.pExpert.codeUnits);
-    } catch (e) {
-      try {
-        expertise = entity.pExpert;
-      } catch (e) {
+      if (this.entity is DoctorEntity) {
+        expertise = utf8IfPossible((entity as DoctorEntity).expert);
       }
-    }
+    } catch (e) {}
 
     return Column(
       children: <Widget>[
@@ -101,7 +96,7 @@ class PartnerInfo extends StatelessWidget {
   Widget _location() => Row(
         children: <Widget>[
           AutoText(
-            entity.pClinicName,
+            "",
             style: TextStyle(
                 color: Colors.grey,
                 fontSize: 12,
@@ -119,9 +114,10 @@ class PartnerInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 20, left: 30, right: 30, bottom: 10),
+      padding:
+          padding ?? EdgeInsets.only(top: 20, left: 30, right: 30, bottom: 10),
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-      color: bgColor??Colors.white70,
+      color: bgColor ?? Colors.white70,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[

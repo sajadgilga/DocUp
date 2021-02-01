@@ -103,7 +103,7 @@ class _IllnessPageState extends State<IllnessPage> {
           child: Container(
         child: Column(children: <Widget>[
           PartnerInfo(
-            entity: widget.entity,
+            entity: widget.entity.partnerEntity,
             onPush: widget.onPush,
             bgColor: IColors.background,
           ),

@@ -40,7 +40,7 @@ import 'package:Neuronio/ui/panel/partnerContact/chatPage/ChatPage.dart';
 import 'package:Neuronio/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
 import 'package:Neuronio/ui/panel/partnerContact/videoOrVoiceCallPage/VideoOrVoiceCallPage.dart';
 import 'package:Neuronio/ui/panel/screening/BuyScreeningPlan.dart';
-import 'package:Neuronio/ui/panel/screening/ScreeningPage.dart';
+import 'package:Neuronio/ui/panel/screening/PatientScreeningPage.dart';
 import 'package:Neuronio/ui/panel/searchPage/SearchPage.dart';
 import 'package:Neuronio/ui/patientVisitDetail/PatientRequestPage.dart';
 import 'package:Neuronio/ui/plan/PlanPage.dart';
@@ -786,7 +786,7 @@ class NavigatorViewState extends State<NavigatorView> {
             )
           : BlocProvider.value(
               value: _screeningBloc,
-              child: ScreeningPage(onPush: (direction, entity) {
+              child: PatientScreeningPage(onPush: (direction, entity) {
                 push(context, direction, detail: entity);
               }),
             ),

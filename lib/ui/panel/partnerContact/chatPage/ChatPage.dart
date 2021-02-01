@@ -176,7 +176,7 @@ class _ChatPageState extends State<ChatPage> {
       child: Column(
         children: <Widget>[
           PartnerInfo(
-            entity: widget.entity,
+            entity: widget.entity.partnerEntity,
             onPush: widget.onPush,
           ),
           _ChatBox(entity: widget.entity),

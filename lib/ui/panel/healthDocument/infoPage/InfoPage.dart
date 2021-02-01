@@ -48,7 +48,7 @@ class _InfoPageState extends State<InfoPage> {
       child: Column(
         children: <Widget>[
           PartnerInfo(
-            entity: widget.entity,
+            entity: widget.entity.partnerEntity,
             onPush: (route, detail) {},
           ),
           PicList(
@@ -86,7 +86,7 @@ class _InfoPageState extends State<InfoPage> {
       child: Column(
         children: <Widget>[
           PartnerInfo(
-            entity: widget.entity,
+            entity: widget.entity.partnerEntity,
             onPush: (route, detail) {
               widget.onPush(route, detail, null, null);
             },

@@ -72,6 +72,7 @@ class DocUpSubHeader extends StatelessWidget {
 }
 
 Widget menuLabel(title, {double fontSize = 14, bool divider = true}) => Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         AutoText(

@@ -153,7 +153,7 @@ class _TimeCalenderState extends State<TimeCalender> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 PartnerInfo(
-                  entity: widget.entity,
+                  entity: widget.entity.partnerEntity,
                   onPush: widget.onPush,
                 ),
                 ALittleVerticalSpace(

@@ -34,7 +34,6 @@ class PaymentRepository {
       "pay_mobile": mobile
     };
     String paramString = getParametersString(params);
-    print(paramString);
     final response = await _provider.getWithBaseUrl(
       "https://webpay.bahamta.com/api/create_request?" + paramString,
     );
