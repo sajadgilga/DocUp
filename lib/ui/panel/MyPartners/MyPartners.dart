@@ -71,13 +71,6 @@ class MyPartners extends StatelessWidget {
   }
 
   Widget _resultList() {
-//      BlocBuilder <VisitBloc, VisitState>(builder: (context, visitState) {
-//      var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
-//      if (_entity.isDoctor) {
-//        if (visitState is VisitLoaded) {
-//          return ResultList(onPush: onPush, isDoctor: _entity.isDoctor, results: visitState.result.results,)
-//        }
-//      }
     return BlocBuilder <SearchBloc, SearchState>(
       builder: (context, state) {
         if (state is SearchLoaded) {

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'AutoText.dart';
+import '../../../widgets/AutoText.dart';
 
 class PanelTestList extends StatefulWidget {
   final PatientEntity patient;
@@ -68,15 +68,15 @@ class _PanelTestListState extends State<PanelTestList> {
       res.add(NoronioServiceItem(element.name, Assets.noronioServiceBrainTest,
           null, NoronioClinicServiceType.MultipleChoiceTest, () {
         MedicalTestPageData medicalTestPageData = MedicalTestPageData(
+            MedicalPageDataType.Panel,
             editableFlag: editableFlag,
             sendableFlag: sendableFlag,
             medicalTestItem: element,
             patientEntity: widget.patient,
-            panelId: widget.panelId,
-            onDone: () {
-              BlocProvider.of<MedicalTestListBloc>(context)
-                  .add(GetPanelMedicalTest(panelId: widget.panelId));
-            });
+            panelId: widget.panelId, onDone: () {
+          BlocProvider.of<MedicalTestListBloc>(context)
+              .add(GetPanelMedicalTest(panelId: widget.panelId));
+        });
         widget.globalOnPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
       }, true, responseDateTime: element.timeAddTest));
     });
@@ -86,10 +86,19 @@ class _PanelTestListState extends State<PanelTestList> {
   List<Widget> _getTestRows(List<NoronioServiceItem> serviceItems) {
     List<Widget> serviceRows = [];
     for (int i = 0; i < serviceItems.length; i += 2) {
-      Widget ch1 = SquareBoxNoronioClinicService(serviceItems[i],boxSize: 130,);
+      Widget ch1 = SquareBoxNoronioClinicService(
+        serviceItems[i],
+        boxSize: 130,
+      );
       Widget ch2 = (i == serviceItems.length - 1)
-          ? SquareBoxNoronioClinicService(NoronioServiceItem.empty(),boxSize: 130,)
-          : SquareBoxNoronioClinicService(serviceItems[i + 1],boxSize: 130,);
+          ? SquareBoxNoronioClinicService(
+              NoronioServiceItem.empty(),
+              boxSize: 130,
+            )
+          : SquareBoxNoronioClinicService(
+              serviceItems[i + 1],
+              boxSize: 130,
+            );
 
       serviceRows.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

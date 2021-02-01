@@ -32,10 +32,10 @@ import 'package:rxdart/rxdart.dart';
 
 class MedicalTestPage extends StatefulWidget {
   final Function(String, dynamic) onPush;
-  final MedicalTestPageData medicalTestPageInitData;
+  final MedicalTestPageData testPageInitData;
 
   MedicalTestPage(
-      {Key key, @required this.onPush, @required this.medicalTestPageInitData})
+      {Key key, @required this.onPush, @required this.testPageInitData})
       : super(key: key);
 
   @override
@@ -45,7 +45,7 @@ class MedicalTestPage extends StatefulWidget {
 class _MedicalTestPageState extends State<MedicalTestPage> {
   SingleMedicalTestBloc _bloc = SingleMedicalTestBloc();
   StreamController<QuestionAnswerPair> answeringController = BehaviorSubject();
-  Map<int, Answer> patientAnswers = HashMap();
+  Map<int, QuestionAnswer> patientAnswers = HashMap();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool firstInitialized = false;
 
@@ -62,22 +62,44 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   void _initialApiCall() {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     try {
-      MedicalTestItem mdi = widget.medicalTestPageInitData.medicalTestItem;
-      if (_state.entity.isDoctor) {
-        if (widget.medicalTestPageInitData.patientEntity == null) {
+      MedicalTestItem mdi = widget.testPageInitData.medicalTestItem;
+      if (widget.testPageInitData.type == MedicalPageDataType.Usual) {
+        /// neuronio service
+        if (_state.entity.isDoctor) {
           _bloc.add(GetTest(id: mdi.testId));
         } else {
-          _bloc.add(GetPatientTestAndResponse(
+          _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
+              testId: mdi.testId, patientId: _state.entity.mEntity.id));
+        }
+      } else if (widget.testPageInitData.type == MedicalPageDataType.Panel) {
+        /// panel
+        if (_state.entity.isDoctor) {
+          _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
               testId: mdi.testId,
-              patientId: widget.medicalTestPageInitData.patientEntity.id,
+              patientId: widget.testPageInitData.patientEntity.id,
+              panelTestId: (mdi as PanelMedicalTestItem).id));
+        } else {
+          _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
+              testId: mdi.testId,
+              patientId: _state.entity.mEntity.id,
               panelTestId: mdi is PanelMedicalTestItem ? mdi.id : null));
         }
-      } else {
-        _bloc.add(GetPatientTestAndResponse(
-            testId: mdi.testId,
-            patientId: _state.entity.mEntity.id,
-            panelTestId: mdi is PanelMedicalTestItem ? mdi.id : null));
+      } else if (widget.testPageInitData.type ==
+          MedicalPageDataType.Screening) {
+        /// panel
+        if (_state.entity.isDoctor) {
+          _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
+              testId: mdi.testId,
+              patientId: widget.testPageInitData.patientEntity.id,
+              screeningId: widget.testPageInitData.screeningId));
+        } else {
+          _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
+              testId: mdi.testId,
+              patientId: _state.entity.mEntity.id,
+              screeningId: widget.testPageInitData.screeningId));
+        }
       }
+
       this.firstInitialized = true;
     } catch (e) {}
   }
@@ -155,15 +177,14 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
                     topLeftFlag: PlatformDetection.isIOS,
                   ),
                   DocUpHeader(
-                    title: widget.medicalTestPageInitData.medicalTestItem.name,
+                    title: widget.testPageInitData.medicalTestItem.name,
                     docUpLogo: false,
                     color: IColors.black,
                   ),
                 ],
               ),
               ALittleVerticalSpace(),
-              state.entity.isDoctor &&
-                      widget.medicalTestPageInitData.sendableFlag
+              state.entity.isDoctor && widget.testPageInitData.sendableFlag
                   ? _sendToPartnerSection(state.entity, test)
                   : SizedBox(),
               ALittleVerticalSpace(),
@@ -171,13 +192,12 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
                 test.questions,
                 answeringController,
                 context,
-                editable: widget.medicalTestPageInitData.editableFlag ?? true,
+                editable: widget.testPageInitData.editableFlag ?? true,
               ),
               ALittleVerticalSpace(
                 height: 30,
               ),
-              state.entity.isDoctor ||
-                      !widget.medicalTestPageInitData.editableFlag
+              state.entity.isDoctor || !widget.testPageInitData.editableFlag
                   ? SizedBox()
                   : _patientTestResultButton(test, state.entity.mEntity),
               MediumVerticalSpace()
@@ -209,9 +229,9 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
       ),
       Padding(
           padding: const EdgeInsets.only(right: 20),
-          child: widget.medicalTestPageInitData.patientEntity == null
+          child: widget.testPageInitData.patientEntity == null
               ? SizedBox()
-              : _userInfoWidget(widget.medicalTestPageInitData.patientEntity))
+              : _userInfoWidget(widget.testPageInitData.patientEntity))
     ]);
   }
 
@@ -258,11 +278,12 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
           context, "لطفا به همه سوالات پاسخ دهید", "باشه", () {});
     } else {
       if (userEntity is PatientEntity) {
-        MedicalTestItem mdi = widget.medicalTestPageInitData.medicalTestItem;
+        MedicalTestItem mdi = widget.testPageInitData.medicalTestItem;
         MedicalTestResponse response = MedicalTestResponse(
             userEntity.id, test.id, this.patientAnswers,
-            panelId: widget.medicalTestPageInitData.panelId,
-            panelTestId: mdi is PanelMedicalTestItem ? mdi.id : null);
+            panelId: widget.testPageInitData.panelId,
+            panelTestId: mdi is PanelMedicalTestItem ? mdi.id : null,
+            screeningId: widget.testPageInitData.screeningId);
         MedicalTestRepository medicalTestRepository = MedicalTestRepository();
         medicalTestRepository
             .addPatientResponse(response)
@@ -270,14 +291,14 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
           if (medicalTestResponseEntity.success) {
             showOneButtonDialog(
                 context,
-                widget.medicalTestPageInitData.panelId != null
+                widget.testPageInitData.panelId != null
                     ? medicalTestResponseEntity.msg
                     : Strings.seeTestResultsUseScreeningPlan,
                 "باشه", () {
               Navigator.pop(context);
 
               try {
-                widget.medicalTestPageInitData.onDone();
+                widget.testPageInitData.onDone();
               } catch (e) {}
             });
           } else {
@@ -288,14 +309,14 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
     }
   }
 
-  calculateTestScore() {
-    int res = 0;
-
-    patientAnswers.values.forEach((element) {
-      res += element.score;
-    });
-    return res;
-  }
+  // calculateTestScore() {
+  //   int res = 0;
+  //
+  //   patientAnswers.values.forEach((element) {
+  //     res += element.score;
+  //   });
+  //   return res;
+  // }
 
   void dispose() {
     try {
@@ -365,15 +386,21 @@ class QuestionAnswersWidget extends StatefulWidget {
 
 class _QuestionAnswersWidgetState extends State<QuestionAnswersWidget> {
   int currentAnswer;
+  TextEditingController _controller;
 
   @override
   void initState() {
-    for (int i = 0; i < widget.question.answers.length; i++) {
-      Answer element = widget.question.answers[i];
-      if (element.selected != null && element.selected) {
-        currentAnswer = element.id;
-        break;
+    if (widget.question.type == QuestionType.MultipleChoice) {
+      for (int i = 0; i < widget.question.answers.length; i++) {
+        Answer element = widget.question.answers[i];
+        if (element.selected != null && element.selected) {
+          currentAnswer = element.id;
+          break;
+        }
       }
+    } else if (widget.question.type == QuestionType.Descriptive) {
+      _controller = TextEditingController();
+      _controller.text = widget.question.description ?? "";
     }
 
     super.initState();
@@ -381,6 +408,17 @@ class _QuestionAnswersWidgetState extends State<QuestionAnswersWidget> {
 
   @override
   Widget build(BuildContext context) {
+    return widget.question.type == QuestionType.MultipleChoice
+        ? _multipleChoiceQuestion()
+        : _descriptiveQuestion();
+  }
+
+  bool get _editable {
+    var state = BlocProvider.of<EntityBloc>(context).state;
+    return state.entity.isPatient && widget.editable;
+  }
+
+  Widget _multipleChoiceQuestion() {
     return Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -397,20 +435,56 @@ class _QuestionAnswersWidgetState extends State<QuestionAnswersWidget> {
                 fontWeight: FontWeight.bold,
                 boxShadowFlag: true,
                 callBack: () {
-                  var state = BlocProvider.of<EntityBloc>(context).state;
-                  if (state.entity.isPatient && widget.editable) {
-                    answerClicked(widget.question.answers[index]);
+                  if (_editable) {
+                    QuestionAnswer questionAnswer = QuestionAnswer(
+                        QuestionType.MultipleChoice,
+                        widget.question.answers[index],
+                        null);
+                    answerChanged(questionAnswer);
                   }
                 })
         ]);
   }
 
-  answerClicked(Answer answer) {
-    setState(() {
-      currentAnswer = answer.id;
-      widget.answeringController
-          .add(QuestionAnswerPair(widget.question, answer));
-    });
+  Widget _descriptiveQuestion() {
+    return Container(
+      padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: TextField(
+          controller: _controller,
+          textAlign: TextAlign.right,
+          textDirection: TextDirection.rtl,
+          minLines: 1,
+          enabled: _editable,
+          maxLines: 15,
+          onChanged: (value) {
+            QuestionAnswer questionAnswer =
+                QuestionAnswer(QuestionType.Descriptive, null, value);
+            answerChanged(questionAnswer);
+          },
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: new BorderSide(color: IColors.darkGrey, width: 1)),
+            labelText: Strings.uploadPicTextFieldDescriptionHint,
+          ),
+        ),
+      ),
+    );
+  }
+
+  answerChanged(QuestionAnswer questionAnswer) {
+    if (questionAnswer.type == QuestionType.MultipleChoice) {
+      setState(() {
+        currentAnswer = questionAnswer.answer.id;
+      });
+    } else {
+      /// nothing
+    }
+
+    widget.answeringController
+        .add(QuestionAnswerPair(widget.question, questionAnswer));
   }
 
   getButtonColor(int id) =>

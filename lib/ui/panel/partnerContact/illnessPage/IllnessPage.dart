@@ -14,7 +14,7 @@ import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:Neuronio/ui/widgets/PanelTestList.dart';
+import 'package:Neuronio/ui/panel/partnerContact/illnessPage/PanelTestList.dart';
 import 'package:Neuronio/ui/widgets/VisitBox.dart';
 import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:Neuronio/utils/Utils.dart';

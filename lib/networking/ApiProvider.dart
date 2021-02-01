@@ -10,6 +10,14 @@ class ApiProvider {
   static const String URL_IP = "185.252.30.163:8001";
   final String _BASE_URL = "http://$URL_IP/";
 
+  static String getURLParametersString(Map<String, dynamic> params) {
+    List<String> paramList = [];
+    params.forEach((key, value) {
+      paramList.add(key + "=" + value.toString());
+    });
+    return paramList.join("&");
+  }
+
   Future<dynamic> get(String url, {Map body, bool utf8Support = false}) async {
     var responseJson;
     try {

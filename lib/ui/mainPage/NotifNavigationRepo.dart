@@ -180,15 +180,15 @@ class NotificationNavigationRepo {
       }
 
       MedicalTestPageData medicalTestPageData = MedicalTestPageData(
+          MedicalPageDataType.Panel,
           editableFlag: true,
           sendableFlag: false,
           medicalTestItem: medicalTestItem,
           patientEntity: uEntity,
-          panelId: test.panelId,
-          onDone: () {
-            BlocProvider.of<MedicalTestListBloc>(context)
-                .add(GetPanelMedicalTest(panelId: test.panelId));
-          });
+          panelId: test.panelId, onDone: () {
+        BlocProvider.of<MedicalTestListBloc>(context)
+            .add(GetPanelMedicalTest(panelId: test.panelId));
+      });
       onPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
       NotificationNavigationRepo.lastTestIdPage = test.testId;
     }

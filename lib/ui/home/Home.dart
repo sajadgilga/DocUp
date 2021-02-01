@@ -111,6 +111,7 @@ class _HomeState extends State<Home> {
     if (entity.isPatient) {
       return Column(
         children: [
+          _occasion(),
           _neuronioScreening(),
           _learningVideos(),
         ],
@@ -162,12 +163,25 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _neuronioScreening() {
+  Widget _occasion() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       child: GestureDetector(
         onTap: () {
           /// TODO
+        },
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Image.asset(Assets.mothersDayOccasion)),
+      ),
+    );
+  }
+
+  Widget _neuronioScreening() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+      child: GestureDetector(
+        onTap: () {
           widget.selectPage(1);
         },
         child: Stack(
@@ -341,7 +355,7 @@ class _HomeState extends State<Home> {
                     ),
                   )
                 : Expanded(
-                  child: Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -350,7 +364,7 @@ class _HomeState extends State<Home> {
                         ),
                       ],
                     ),
-                ),
+                  ),
 //                        OnCallMedicalHeaderIcon()
           ]),
           SizedBox(

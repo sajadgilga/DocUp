@@ -68,6 +68,10 @@ class Assets {
 
   static String docupIcon = docupPatientIcon;
 
+
+  /// occasions
+  static final String mothersDayOccasion = "assets/occasions/MothersDay.jpg";
+
   static void changeIcons(RoleType roleType) {
     switch (roleType) {
       case RoleType.PATIENT:

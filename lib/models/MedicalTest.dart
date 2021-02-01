@@ -3,7 +3,7 @@ import 'package:Neuronio/utils/Utils.dart';
 
 class QuestionAnswerPair {
   final Question question;
-  final Answer answer;
+  final QuestionAnswer answer;
 
   QuestionAnswerPair(this.question, this.answer);
 }
@@ -11,50 +11,72 @@ class QuestionAnswerPair {
 class MedicalTestResponse {
   final int patientId;
   final int cognitiveTestId;
+  final Map<int, QuestionAnswer> answers;
+
+  /// panel
   final int panelTestId;
-  final Map<int, Answer> answers;
   final int panelId;
 
+  /// screening
+  final int screeningId;
+
   MedicalTestResponse(this.patientId, this.cognitiveTestId, this.answers,
-      {this.panelId,this.panelTestId});
+      {this.panelId, this.panelTestId, this.screeningId});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['patient_id'] = patientId;
     data['cognitive_test_id'] = cognitiveTestId;
-    data['panel_test_id'] = panelTestId;
+    if (panelTestId != null) data['panel_test_id'] = panelTestId;
+    if (screeningId != null) data['screening_step_id'] = screeningId;
 
     List<Map<String, dynamic>> res = [];
     List<int> questionIds = answers.keys.toList();
     questionIds.sort();
     for (int i = 0; i < questionIds.length; i++) {
-      res.add({
-        'question_id': questionIds[i],
-        'answer_id': answers[questionIds[i]].id
-      });
+      QuestionAnswer ans = answers[questionIds[i]];
+      if (ans.type == QuestionType.MultipleChoice) {
+        res.add({
+          'question_id': questionIds[i],
+          'answer_id': ans.answer.id
+        });
+      } else if (ans.type == QuestionType.Descriptive) {
+        res.add({
+          'question_id': questionIds[i],
+          'desc': ans.text
+        });
+      }
     }
     data['questions'] = res;
     return data;
   }
 }
 
+enum MedicalPageDataType { Usual, Panel, Screening }
+
 class MedicalTestPageData {
+  final MedicalPageDataType type;
   final MedicalTestItem medicalTestItem;
   final PatientEntity patientEntity;
   final bool editableFlag;
   final bool sendableFlag;
-  final int panelId;
   final Function onDone;
 
-  MedicalTestPageData(
+  /// panel
+  final int panelId;
+
+  /// screening
+  final int screeningId;
+
+  MedicalTestPageData(this.type,
       {this.medicalTestItem,
       this.patientEntity,
       this.editableFlag,
       this.sendableFlag,
       this.panelId,
+      this.screeningId,
       this.onDone});
 }
-
 
 class MedicalTestItem {
   /// this model is for loading test list from database and showing theme in
@@ -132,14 +154,22 @@ class MedicalTest {
     }
   }
 
-  Map<int, Answer> get oldAnswers {
-    Map<int, Answer> res = {};
+  Map<int, QuestionAnswer> get oldAnswers {
+    Map<int, QuestionAnswer> res = {};
     questions.forEach((question) {
-      question.answers.forEach((answer) {
-        if (answer.selected) {
-          res[question.id] = answer;
-        }
-      });
+      if (question.type == QuestionType.MultipleChoice) {
+        question.answers.forEach((answer) {
+          if (answer.selected) {
+            QuestionAnswer questionAnswer =
+                QuestionAnswer(QuestionType.MultipleChoice, answer, null);
+            res[question.id] = questionAnswer;
+          }
+        });
+      } else {
+        QuestionAnswer questionAnswer = QuestionAnswer(
+            QuestionType.Descriptive, null, question.description);
+        res[question.id] = questionAnswer;
+      }
     });
     return res;
   }
@@ -156,21 +186,32 @@ class MedicalTest {
   }
 }
 
+enum QuestionType { Descriptive, MultipleChoice }
+
 class Question {
   int id;
   String label;
   List<Answer> answers;
+  String description;
+  QuestionType type;
 
-  Question({this.id, this.label, this.answers});
+  Question({this.id, this.label, this.answers, this.type, this.description});
 
   Question.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     label = json['label'];
-    if (json['answers'] != null) {
-      answers = new List<Answer>();
-      json['answers'].forEach((v) {
-        answers.add(new Answer.fromJson(v));
-      });
+    answers = new List<Answer>();
+    if (json['type'] == 0) {
+      type = QuestionType.Descriptive;
+      description = utf8IfPossible(json['description']);
+    } else if (json['type'] == 1) {
+      type = QuestionType.MultipleChoice;
+
+      if (json['answers'] != null) {
+        json['answers'].forEach((v) {
+          answers.add(new Answer.fromJson(v));
+        });
+      }
     }
   }
 
@@ -208,6 +249,14 @@ class Answer {
     data['selected'] = this.selected;
     return data;
   }
+}
+
+class QuestionAnswer {
+  final QuestionType type;
+  final Answer answer;
+  final String text;
+
+  QuestionAnswer(this.type, this.answer, this.text);
 }
 
 //// api models

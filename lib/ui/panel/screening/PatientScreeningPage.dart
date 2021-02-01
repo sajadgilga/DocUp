@@ -26,8 +26,9 @@ import 'package:timelines/timelines.dart';
 
 class PatientScreeningPage extends StatefulWidget {
   final Function(String, UserEntity) onPush;
+  final Function(String, MedicalTestPageData) globalOnPush;
 
-  PatientScreeningPage({@required this.onPush});
+  PatientScreeningPage({@required this.onPush, @required this.globalOnPush});
 
   @override
   _PatientScreeningPageState createState() => _PatientScreeningPageState();
@@ -225,6 +226,22 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
                       : SizedBox(),
                 ),
               );
+            } else if (index == 3) {
+              bool done = patientScreeningResponse.statusSteps.visitStatus;
+
+              return Indicator.outlined(
+                borderWidth: 2,
+                size: 25,
+                color: done ? IColors.themeColor : Colors.amberAccent,
+                child: Center(
+                  child: done
+                      ? Icon(
+                          Icons.check,
+                          color: IColors.themeColor,
+                        )
+                      : SizedBox(),
+                ),
+              );
             }
             return Container();
           },
@@ -235,6 +252,8 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               return icaTestTimeLineItem(patientScreeningResponse);
             } else if (index == 2) {
               return visitRequestTimeLineItem(patientScreeningResponse);
+            } else if (index == 3) {
+              return doctorPanelTimeLineItem(patientScreeningResponse);
             }
             return Container();
           },
@@ -242,7 +261,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             thickness: 2,
             color: IColors.themeColor,
           ),
-          itemCount: 3,
+          itemCount: 4,
         ),
       ),
     );
@@ -259,9 +278,21 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             element.name,
             Assets.noronioServiceBrainTest,
             element.imageURL,
-            NoronioClinicServiceType.MultipleChoiceTest,
-            () {},
-            !element.done);
+            NoronioClinicServiceType.MultipleChoiceTest, () {
+          /// TODO
+          MedicalTestPageData medicalTestPageData = MedicalTestPageData(
+              MedicalPageDataType.Screening,
+              patientEntity: null, onDone: () {
+            _initialApiCall();
+          },
+              medicalTestItem: MedicalTestItem(element.testId, element.name),
+              editableFlag: true,
+              sendableFlag: true,
+              screeningId: patientScreeningResponse.statusSteps.id);
+
+          widget.globalOnPush(
+              NavigatorRoutes.cognitiveTest, medicalTestPageData);
+        }, !element.done);
         services.add(cognitiveTest);
       });
 
@@ -412,7 +443,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             children: [
               Container(
                 child: menuLabel(
-                  "ویزیت با پزشک",
+                  "ثبت درخواست ویزیت",
                 ),
                 width: MediaQuery.of(context).size.width * 0.5,
                 height: 50,
@@ -423,11 +454,63 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             width: MediaQuery.of(context).size.width * 0.5,
             child: ActionButton(
               title: "صفحه درخواست ویزیت",
-              color: IColors.themeColor,
+              color: patientScreeningResponse.statusSteps.icaStatus
+                  ? IColors.themeColor
+                  : IColors.disabledButton,
               height: 50,
               callBack: () {
-                widget.onPush(NavigatorRoutes.doctorDialogue,
-                    patientScreeningResponse.statusSteps.doctor);
+                if (patientScreeningResponse.statusSteps.icaStatus) {
+                  widget.onPush(NavigatorRoutes.doctorDialogue,
+                      patientScreeningResponse.statusSteps.doctor);
+                } else {
+                  toast(context, "شما هنوز تست ICA را کامل نکردید.");
+                }
+              },
+            ),
+          )
+        ],
+      ),
+    ));
+  }
+
+  Widget doctorPanelTimeLineItem(
+      PatientScreeningResponse patientScreeningResponse) {
+    return Card(
+        child: Container(
+      padding: EdgeInsets.all(8.0),
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                child: menuLabel(
+                  "ارتباط با پزشک",
+                ),
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: 50,
+              ),
+            ],
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.5,
+            child: ActionButton(
+              title: "پنل ارتباطی",
+              color: patientScreeningResponse.statusSteps.visitStatus
+                  ? IColors.themeColor
+                  : IColors.disabledButton,
+              height: 50,
+              callBack: () {
+                if (patientScreeningResponse.statusSteps.visitStatus) {
+                  widget.onPush(NavigatorRoutes.myPartnerDialog,
+                      patientScreeningResponse.statusSteps.doctor);
+                } else {
+                  toast(context,
+                      "شما هنوز درخواست ویزیتی را برای پزشک ارسال نکردید");
+                }
               },
             ),
           )

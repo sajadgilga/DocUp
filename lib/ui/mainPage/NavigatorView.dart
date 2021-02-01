@@ -422,7 +422,7 @@ class NavigatorViewState extends State<NavigatorView> {
           BlocProvider<MedicalTestListBloc>.value(value: _medicalTestListBloc)
         ],
         child: MedicalTestPage(
-          medicalTestPageInitData: detail,
+          testPageInitData: detail,
           onPush: (direction, entity) {
             push(context, direction, detail: entity);
           },
@@ -786,9 +786,12 @@ class NavigatorViewState extends State<NavigatorView> {
             )
           : BlocProvider.value(
               value: _screeningBloc,
-              child: PatientScreeningPage(onPush: (direction, entity) {
-                push(context, direction, detail: entity);
-              }),
+              child: PatientScreeningPage(
+                onPush: (direction, entity) {
+                  push(context, direction, detail: entity);
+                },
+                globalOnPush: widget.pushOnBase,
+              ),
             ),
     );
   }

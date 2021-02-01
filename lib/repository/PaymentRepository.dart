@@ -33,18 +33,10 @@ class PaymentRepository {
           "https://service.docup.ir/payment/transaction-call-back/${CryptoService.codeWithSHA256(json.encode(callBackParameters))}/",
       "pay_mobile": mobile
     };
-    String paramString = getParametersString(params);
+    String paramString = ApiProvider.getURLParametersString(params);
     final response = await _provider.getWithBaseUrl(
       "https://webpay.bahamta.com/api/create_request?" + paramString,
     );
     return HamtaResponseEntity.fromJson(response);
-  }
-
-  static String getParametersString(Map<String, dynamic> params) {
-    List<String> paramList = [];
-    params.forEach((key, value) {
-      paramList.add(key + "=" + value.toString());
-    });
-    return paramList.join("&");
   }
 }

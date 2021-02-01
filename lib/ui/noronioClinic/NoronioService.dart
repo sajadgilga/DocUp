@@ -52,14 +52,14 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
           element.imageURL,
           NoronioClinicServiceType.MultipleChoiceTest, () {
         /// TODO
-        MedicalTestPageData medicalTestPageData = MedicalTestPageData(
-            patientEntity: null,
-            onDone: () {
-              widget.selectPage(1);
-            },
-            medicalTestItem: MedicalTestItem(element.testId, element.name),
-            editableFlag: true,
-            sendableFlag: true);
+        MedicalTestPageData medicalTestPageData =
+            MedicalTestPageData(MedicalPageDataType.Usual, patientEntity: null,
+                onDone: () {
+          widget.selectPage(1);
+        },
+                medicalTestItem: MedicalTestItem(element.testId, element.name),
+                editableFlag: true,
+                sendableFlag: true);
 
         widget.globalOnPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
       }, true);
