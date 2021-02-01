@@ -1,5 +1,6 @@
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/PanelBloc.dart';
+import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/ApiProvider.dart';
 import 'package:Neuronio/repository/UtilRepository.dart';
@@ -14,9 +15,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_tooltip/simple_tooltip.dart';
 
 import '../../constants/colors.dart';
 import 'NavigatorView.dart';
@@ -50,9 +52,12 @@ class _MainPageState extends State<MainPage> {
     3: GlobalKey<NavigatorState>(),
     4: GlobalKey<NavigatorState>(),
   };
+  bool _navigationBarDescriptionTooltipToggle = false;
 
   @override
   void initState() {
+    /// init in-app guid
+    checkNavigationBarDescription();
     // initialize socket helper for web socket messages
     SocketHelper().init(ApiProvider.URL_IP);
     // get user entity & panels, also periodically update entity's info
@@ -70,7 +75,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   checkAppVersion() {
-    if(!kIsWeb){
+    if (!kIsWeb) {
       UtilRepository utilRepository = UtilRepository();
       utilRepository.getLatestAppBuildNumber().then((value) async {
         PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -219,11 +224,44 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  Future<void> checkNavigationBarDescription(
+      {bool changeTooltip = true}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShown = false;
+    if (prefs.containsKey("navigationBarDescription")) {
+      hasShown = prefs.getBool("navigationBarDescription");
+    }
+    prefs.setBool("navigationBarDescription", true);
+    if (changeTooltip) {
+      _navigationBarDescriptionTooltipToggle = !hasShown;
+    }
+  }
+
   Widget _mainPage() {
     return Scaffold(
         backgroundColor: IColors.background,
-        bottomNavigationBar: SizedBox(
-          child: _bottomNavigationBar(),
+        bottomNavigationBar: SimpleTooltip(
+          hideOnTooltipTap: true,
+          show: _navigationBarDescriptionTooltipToggle,
+          animationDuration: Duration(milliseconds: 700),
+          tooltipDirection: TooltipDirection.up,
+          backgroundColor: IColors.whiteTransparent,
+          borderColor: IColors.themeColor,
+          tooltipTap: (){
+            _navigationBarDescriptionTooltipToggle = false;
+          },
+          content: AutoText(
+            Strings.navigationBarDescription,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black87,
+              fontSize: 12,
+              decoration: TextDecoration.none,
+            ),
+          ),
+          child: SizedBox(
+            child: _bottomNavigationBar(),
+          ),
         ),
         body: IndexedStack(
           index: _currentIndex,

@@ -128,8 +128,7 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
 
   void logout() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove("token");
-    prefs.remove("isPatient");
+    prefs.clear();
     Phoenix.rebirth(context);
     EntityAndPanelUpdater.end();
     SocketHelper().dispose();

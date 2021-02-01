@@ -7,6 +7,7 @@ import 'package:Neuronio/models/MedicalTest.dart';
 import 'package:Neuronio/models/NoronioService.dart';
 import 'package:Neuronio/models/Screening.dart';
 import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/repository/ScreeningRepository.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
 import 'package:Neuronio/ui/panel/PanelAlert.dart';
 import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
@@ -23,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timelines/timelines.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PatientScreeningPage extends StatefulWidget {
   final Function(String, UserEntity) onPush;
@@ -279,19 +281,30 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             Assets.noronioServiceBrainTest,
             element.imageURL,
             NoronioClinicServiceType.MultipleChoiceTest, () {
-          /// TODO
-          MedicalTestPageData medicalTestPageData = MedicalTestPageData(
-              MedicalPageDataType.Screening,
-              patientEntity: null, onDone: () {
-            _initialApiCall();
-          },
-              medicalTestItem: MedicalTestItem(element.testId, element.name),
-              editableFlag: true,
-              sendableFlag: true,
-              screeningId: patientScreeningResponse.statusSteps.id);
+          if (element.description == "#lifeQ") {
+            ScreeningRepository repo = ScreeningRepository();
+            repo
+                .doScreeningTestLifeQ(
+                    element.testId, patientScreeningResponse.statusSteps.id)
+                .then((value) {
+              _initialApiCall();
+            });
+            launch(
+                "https://docs.google.com/forms/d/e/1FAIpQLScCXP2RlG1TYTgeu8gCdOV1Adpaxh1Ae8-7YflIPyTpB6BjJg/viewform");
+          } else {
+            MedicalTestPageData medicalTestPageData = MedicalTestPageData(
+                MedicalPageDataType.Screening,
+                patientEntity: null, onDone: () {
+              _initialApiCall();
+            },
+                medicalTestItem: MedicalTestItem(element.testId, element.name),
+                editableFlag: true,
+                sendableFlag: true,
+                screeningId: patientScreeningResponse.statusSteps.id);
 
-          widget.globalOnPush(
-              NavigatorRoutes.cognitiveTest, medicalTestPageData);
+            widget.globalOnPush(
+                NavigatorRoutes.cognitiveTest, medicalTestPageData);
+          }
         }, !element.done);
         services.add(cognitiveTest);
       });

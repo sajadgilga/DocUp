@@ -107,7 +107,7 @@ AlertDialog getLoadingDialog() => AlertDialog(
     content: Waiting());
 
 void showDatePickerDialog(
-    context, List<int> availableDays, TextEditingController controller) {
+    context, List<int> availableDays, TextEditingController controller,{bool restrictMinDate=true,}) {
   showDialog(
     context: context,
     builder: (BuildContext _) {
@@ -115,7 +115,7 @@ void showDatePickerDialog(
         color: IColors.themeColor,
         type: "date",
         initial: DateTimeService.getTodayInJalaliString(),
-        min: DateTimeService.getTodayInJalaliString(),
+        min: restrictMinDate?DateTimeService.getTodayInJalaliString():'',
         disable: getDisableDays(availableDays),
         onSelect: (date) {
           controller.text = date;

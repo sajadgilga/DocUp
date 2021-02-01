@@ -14,9 +14,23 @@ class ScreeningRepository {
     return PatientScreeningResponse.fromJson(response);
   }
 
-  Future<ScreeningDiscountDetailResponse> validateDiscount(String discountString) async {
+  Future<BuyScreeningPlanResponse> buyScreeningPlan(
+      int screeningId, String discountString) async {
+    final response = await _provider.post('api/buy-screening-plan/',
+        body: {"screening_id": screeningId, "code": discountString});
+    return BuyScreeningPlanResponse.fromJson(response);
+  }
+
+  Future<ScreeningDiscountDetailResponse> validateDiscount(
+      String discountString) async {
     final response =
         await _provider.get('api/get-discount/?code=$discountString');
     return ScreeningDiscountDetailResponse.fromJson(response);
+  }
+
+  Future doScreeningTestLifeQ(int testId, int screeningId) async {
+    final response = await _provider.get(
+        'medical-test/update-status?test_id=$testId&screening_step_id=$screeningId');
+    return response;
   }
 }

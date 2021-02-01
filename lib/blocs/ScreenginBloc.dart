@@ -53,6 +53,31 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
     }
   }
 
+  /// discount buyapi
+  StreamController<Response<BuyScreeningPlanResponse>> _buyScreeningController =
+      StreamController<Response<BuyScreeningPlanResponse>>();
+
+  StreamSink<Response<BuyScreeningPlanResponse>> get buySink =>
+      _buyScreeningController.sink;
+
+  Stream<Response<BuyScreeningPlanResponse>> get buyStream =>
+      _buyScreeningController.stream;
+
+  requestToBuyScreening(int screeningId, String discountString) async {
+    buySink.add(Response.loading());
+    try {
+      BuyScreeningPlanResponse discount =
+          await _repository.buyScreeningPlan(screeningId, discountString);
+      if (!discount.success) {
+        throw Exception();
+      }
+      buySink.add(Response.completed(discount));
+    } catch (e) {
+      buySink.add(Response.error(e));
+      print(e);
+    }
+  }
+
   /// renew
   void reNewStreams() {
     try {
@@ -66,6 +91,13 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
     } finally {
       _discountController =
           StreamController<Response<ScreeningDiscountDetailResponse>>();
+    }
+
+    try {
+      _buyScreeningController.close();
+    } finally {
+      _buyScreeningController =
+          StreamController<Response<BuyScreeningPlanResponse>>();
     }
   }
 

@@ -14,6 +14,7 @@ class PatientEntity extends UserEntity {
   String birthLocation;
   String city;
   int genderNumber;
+  String birthDate;
   List<VisitItem> visits;
 
   PatientEntity(
@@ -23,6 +24,7 @@ class PatientEntity extends UserEntity {
       this.birthLocation,
       this.city,
       this.genderNumber,
+      this.birthDate,
       user,
       id,
       panels,
@@ -77,6 +79,7 @@ class PatientEntity extends UserEntity {
           visits.add(VisitItem.fromJson(element));
         });
       }
+      birthDate = json['date_of_birth'];
     } catch (e) {
       /// TODO
       print(e);
@@ -103,6 +106,9 @@ class PatientEntity extends UserEntity {
     }
     if (genderNumber != null) {
       data['gender'] = genderNumber;
+    }
+    if (birthDate != null) {
+      data['date_of_birth'] = birthDate;
     }
 
     return data;

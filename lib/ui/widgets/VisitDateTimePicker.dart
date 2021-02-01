@@ -5,14 +5,14 @@ import 'package:Neuronio/models/DoctorPlan.dart';
 import 'package:Neuronio/ui/visit/calendar/persian_datetime_picker2.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/DailyTimeTable.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/FlutterDateTimePickerCustom/flutter_datetime_picker.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/FlutterDateTimePickerCustom/src/datetime_picker_theme.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/FlutterDateTimePickerCustom/src/i18n_model.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'FlutterDateTimePickerCustom/flutter_datetime_picker.dart';
-import 'FlutterDateTimePickerCustom/src/datetime_picker_theme.dart';
-import 'FlutterDateTimePickerCustom/src/i18n_model.dart';
 import 'TimeSelectorHeaderWidget.dart';
 import 'TimeSelectorWidget.dart';
 

@@ -13,6 +13,7 @@ import 'package:Neuronio/ui/widgets/AutoCompleteTextField.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/utils/Utils.dart';
+import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -39,6 +40,8 @@ class EditProfileDataDialog {
   final TextEditingController _birthCity = TextEditingController();
   final TextEditingController _currentCity = TextEditingController();
 
+  final TextEditingController _jalaliBirthDate = TextEditingController();
+
   final Function() onDone;
 
   int actionButtonStatus = 0;
@@ -60,6 +63,9 @@ class EditProfileDataDialog {
       _genderController.text = (entity.patient.genderNumber ?? 0).toString();
       _currentCity.text = entity.patient.city;
       _birthCity.text = entity.patient.birthLocation;
+      _jalaliBirthDate.text =
+          DateTimeService.getJalaliStringFormGeorgianDateTimeString(
+              entity.patient.birthDate);
     }
   }
 
@@ -281,6 +287,55 @@ class EditProfileDataDialog {
                                                   const EdgeInsets.all(8.0),
                                               child: Container(
                                                 height: 50,
+                                                child: TextFormField(
+                                                  controller: _jalaliBirthDate,
+                                                  onTap: () {
+                                                    showDatePickerDialog(
+                                                        context,
+                                                        [],
+                                                        _jalaliBirthDate,
+                                                        restrictMinDate: false);
+                                                  },
+                                                  validator: (value) {
+                                                    if (value.isEmpty)
+                                                      return null;
+                                                    var jalali = DateTimeService
+                                                        .getJalalyDateFromJalilyString(
+                                                            value);
+                                                    if (jalali == null) {
+                                                      return "تاریخ نامعتبر";
+                                                    } else {
+                                                      return null;
+                                                    }
+                                                  },
+                                                  textDirection:
+                                                      TextDirection.ltr,
+                                                  textAlign: TextAlign.center,
+                                                  keyboardType:
+                                                      TextInputType.datetime,
+                                                  maxLines: 1,
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                  decoration: InputDecoration(
+                                                    labelText: "تاریخ تولد",
+                                                    border: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        borderSide:
+                                                            new BorderSide(
+                                                                color: IColors
+                                                                    .darkGrey,
+                                                                width: 1)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                height: 50,
                                                 child: AutoCompleteTextField(
                                                   hintText: 'شهر تولد',
                                                   controller: _birthCity,
@@ -422,6 +477,11 @@ class EditProfileDataDialog {
             entity.patient.city = _currentCity.text;
             entity.patient.birthLocation = _birthCity.text;
             entity.patient.genderNumber = intPossible(_genderController.text);
+            entity.patient.birthDate =
+                DateTimeService.getDateStringFormDateTime(
+                    DateTimeService.getJalalyDateFromJalilyString(
+                            _jalaliBirthDate.text)
+                        ?.toDateTime());
           }
           try {
             onDone();
@@ -445,6 +505,11 @@ class EditProfileDataDialog {
               !isNumeric(_heightController.text)) {
             showError();
           } else {
+            String birthDate = DateTimeService.getDateStringFormDateTime(
+                DateTimeService.getJalalyDateFromJalilyString(
+                        _jalaliBirthDate.text)
+                    ?.toDateTime(),
+                dateSeparator: "-");
             (dataBloc as PatientBloc).updateProfile(
                 firstName: _firstNameController.text,
                 lastName: _lastNameController.text,
@@ -453,7 +518,8 @@ class EditProfileDataDialog {
                 nationalCode: _nationalCodeController.text,
                 genderNumber: intPossible(_genderController.text),
                 weight: double.parse(_weightController.text),
-                height: double.parse(_heightController.text));
+                height: double.parse(_heightController.text),
+                birthDate: birthDate);
           }
         } else if (entity.isDoctor) {
           if (_expertiseCodeController.text == null ||
@@ -468,6 +534,8 @@ class EditProfileDataDialog {
           }
         }
       }
+    } else {
+      showError();
     }
   }
 }

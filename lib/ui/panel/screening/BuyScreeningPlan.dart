@@ -34,6 +34,9 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
   double discountPercent;
   ScreeningBloc _screeningBloc;
 
+  AlertDialog _loadingDialog = getLoadingDialog();
+  BuildContext _loadingContext;
+
   void _initialApiCall() {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     EntityAndPanelUpdater.processOnEntityLoad((entity) {
@@ -56,6 +59,31 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _initialApiCall();
     super.initState();
+
+    _screeningBloc.buyStream.listen((event) {
+      if (event.status == Status.LOADING) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              _loadingContext = context;
+              return _loadingDialog;
+            },
+            barrierDismissible: false);
+      } else if (event.status == Status.COMPLETED) {
+        if (_loadingContext != null) {
+          Navigator.of(_loadingContext).pop();
+        }
+        BlocProvider.of<ScreeningBloc>(context).add(GetPatientScreening());
+        Navigator.pop(context);
+      } else if (event.status == Status.ERROR) {
+        if (_loadingContext != null) {
+          Navigator.of(_loadingContext).pop();
+        }
+
+        /// TODO
+      }
+      setState(() {});
+    });
 
     _screeningBloc.discountStream.listen((event) {
       if (event.status == Status.LOADING) {
@@ -192,8 +220,9 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
                         : FontWeight.w600)),
             discountStatus == DiscountStats.Valid
                 ? AutoText(
-                    replaceFarsiNumber(
-                        (screening.price * discountPercent).toInt().toString()),
+                    replaceFarsiNumber((screening.price * (1 - discountPercent))
+                        .toInt()
+                        .toString()),
                     style: TextStyle(
                         color: IColors.themeColor,
                         fontSize: 18,
@@ -232,7 +261,11 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
               title: "خرید پلن سنجش",
               color: IColors.themeColor,
               callBack: () {
-                toast(context, "در آینده آماده می شود.");
+                _screeningBloc.requestToBuyScreening(
+                    screening.id,
+                    discountStatus == DiscountStats.Valid
+                        ? _discountController.text
+                        : null);
               },
             ),
             ALittleVerticalSpace()

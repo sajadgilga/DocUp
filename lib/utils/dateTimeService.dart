@@ -53,8 +53,12 @@ class DateTimeService {
     return Jalali.fromDateTime(DateTimeService.getCurrentDateTime());
   }
 
-  static String getDateStringFormDateTime(DateTime date) {
-    return "${date.year}/${date.month}/${date.day}";
+  static String getDateStringFormDateTime(DateTime date,{String dateSeparator = "/"}) {
+    try {
+      return "${date.year}${dateSeparator}${date.month}${dateSeparator}${date.day}";
+    }catch(e){
+      return null;
+    }
   }
 
   static String getTomorrowInJalali() {
@@ -103,14 +107,19 @@ class DateTimeService {
   }
 
   static String getJalaliStringFormGeorgianDateTimeString(String date) {
-    if (date.split("T").length > 1) {
-      date = date.split("T")[0];
+    try{
+      if (date.split("T").length > 1) {
+        date = date.split("T")[0];
+      }
+      final jalaliDate = Jalali.fromDateTime(DateTime(
+          int.parse(date.split(new RegExp(r"/|-|\\"))[0]),
+          int.parse(date.split(new RegExp(r"/|-|\\"))[1]),
+          int.parse(date.split(new RegExp(r"/|-|\\"))[2])));
+      return "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
+    }catch(e){
+      return null;
     }
-    final jalaliDate = Jalali.fromDateTime(DateTime(
-        int.parse(date.split("-")[0]),
-        int.parse(date.split("-")[1]),
-        int.parse(date.split("-")[2])));
-    return "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
+
   }
 
   static String normalizeDateAndTime(String str,

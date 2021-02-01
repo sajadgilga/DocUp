@@ -91,3 +91,13 @@ class ScreeningDiscountDetailResponse {
     percent = doublePossible(json['percent'] ?? 1);
   }
 }
+
+class BuyScreeningPlanResponse {
+  bool success;
+  double percent;
+
+  BuyScreeningPlanResponse.fromJson(Map<String, dynamic> json) {
+    success = json['success'] ?? false;
+    percent = doublePossible(json['percent'] ?? 1);
+  }
+}
