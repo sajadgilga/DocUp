@@ -18,6 +18,7 @@ import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
+import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,12 +46,13 @@ class PatientProfilePage extends StatefulWidget {
 class _PatientProfilePageState extends State<PatientProfilePage>
     with WidgetsBindingObserver {
   CreditBloc _creditBloc = CreditBloc();
+  bool _isRequestForPay = false;
+
   bool _creditDescriptionTooltipToggle = false;
   bool _creditErrorTooltipToggle = false;
 
   AlertDialog _loadingDialog = getLoadingDialog();
   bool _loadingEnable;
-  bool _isRequestForPay = false;
   BuildContext loadingContext;
 
   @override
@@ -154,6 +156,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
             !(state is EntityError)) {
           return _widget(state);
         } else if (state is EntityError) {
+          print(state);
           return APICallError(() {
             EntityBloc entityBloc = BlocProvider.of<EntityBloc>(context);
             entityBloc.add(EntityGet());
@@ -306,7 +309,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                     } else {
                       _isRequestForPay = true;
                       _creditBloc.add(AddCredit(
-                          type: AddCreditType.addCredit,
+                          type: AddCreditType.AddCredit.index,
                           mobile: entity.mEntity.user.phoneNumber,
                           amount: amountToman * 10));
                     }
@@ -454,12 +457,13 @@ class _PatientProfilePageState extends State<PatientProfilePage>
               context, "پرداخت با خطا مواجه شد", "متوجه شدم", () {});
         } else {
           var _state = BlocProvider.of<EntityBloc>(context).state.entity;
+          EntityAndPanelUpdater.updateEntity();
           setState(() {
             _state.mEntity.user.credit = query["credit"];
             _amountTextController.text = query["credit"];
           });
 
-          showOneButtonDialog(context, "شارژ حساب کاربری با موفقیت انجام شد",
+          showOneButtonDialog(context, "عملیات با موفقیت انجام شد.",
               "متوجه شدم", () {});
         }
       }, onError: (err) {

@@ -27,7 +27,7 @@ import 'package:timelines/timelines.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PatientScreeningPage extends StatefulWidget {
-  final Function(String, UserEntity) onPush;
+  final Function(String, UserEntity, int) onPush;
   final Function(String, MedicalTestPageData) globalOnPush;
 
   PatientScreeningPage({@required this.onPush, @required this.globalOnPush});
@@ -85,7 +85,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
       PatientScreeningResponse patientScreeningResponse) {
     return PanelAlert(
       callback: () {
-        widget.onPush(NavigatorRoutes.buyScreening, null);
+        widget.onPush(NavigatorRoutes.buyScreening, null, null);
       },
       label: Strings.noActiveScreeningPlan,
       buttonLabel: "توضیحات بیشتر درباره سنجش",
@@ -473,8 +473,10 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               height: 50,
               callBack: () {
                 if (patientScreeningResponse.statusSteps.icaStatus) {
-                  widget.onPush(NavigatorRoutes.doctorDialogue,
-                      patientScreeningResponse.statusSteps.doctor);
+                  widget.onPush(
+                      NavigatorRoutes.doctorDialogue,
+                      patientScreeningResponse.statusSteps.doctor,
+                      patientScreeningResponse.statusSteps.id);
                 } else {
                   toast(context, "شما هنوز تست ICA را کامل نکردید.");
                 }
@@ -519,7 +521,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               callBack: () {
                 if (patientScreeningResponse.statusSteps.visitStatus) {
                   widget.onPush(NavigatorRoutes.myPartnerDialog,
-                      patientScreeningResponse.statusSteps.doctor);
+                      patientScreeningResponse.statusSteps.doctor, null);
                 } else {
                   toast(context,
                       "شما هنوز درخواست ویزیتی را برای پزشک ارسال نکردید");

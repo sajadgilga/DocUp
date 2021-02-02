@@ -47,7 +47,10 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   StreamController<QuestionAnswerPair> answeringController = BehaviorSubject();
   Map<int, QuestionAnswer> patientAnswers = HashMap();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  /// TODO dirty code
   bool firstInitialized = false;
+  bool firstAnswersLoaded = false;
 
   @override
   void initState() {
@@ -138,9 +141,13 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
     return BlocBuilder<SingleMedicalTestBloc, MedicalTestState>(
         bloc: _bloc,
         builder: (context, state) {
-          if (state is GetTestLoaded)
+          if (state is GetTestLoaded) {
+            if (!firstAnswersLoaded) {
+              patientAnswers = state.result.oldAnswers;
+              firstAnswersLoaded = true;
+            }
             return _medicalTestWidget(state.result);
-          else if (state is GetTestLoading)
+          } else if (state is GetTestLoading)
             return DocUpAPICallLoading2();
           else
             return APICallError(
@@ -152,7 +159,6 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   }
 
   _medicalTestWidget(MedicalTest test) {
-    patientAnswers = test.oldAnswers;
     return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
       if (state is EntityLoaded) {
         if (state.entity.mEntity != null) {

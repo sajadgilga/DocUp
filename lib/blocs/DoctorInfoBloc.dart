@@ -59,7 +59,7 @@ class DoctorInfoBloc {
     doctorInfoSink.add(Response.loading());
     try {
       DoctorEntity doctorEntity = await _repository.getDoctor(doctorId);
-      if(isDoctor) {
+      if (isDoctor) {
         doctorEntity.plan = await _repository.getDoctorPlan();
       } else {
         doctorEntity.plan = await _repository.getDoctorPlanById(doctorId);
@@ -83,11 +83,11 @@ class DoctorInfoBloc {
     }
   }
 
-  visitRequest(int doctorId, int visitType, int visitMethod, int durationPlan,
-      String visitTime) async {
+  visitRequest(int screeningId, int doctorId, int visitType, int visitMethod,
+      int durationPlan, String visitTime) async {
     visitRequestSink.add(Response.loading());
     try {
-      VisitEntity response = await _repository.visitRequest(
+      VisitEntity response = await _repository.visitRequest(screeningId,
           doctorId, visitType, visitMethod, durationPlan, visitTime);
       visitRequestSink.add(Response.completed(response));
     } catch (e) {

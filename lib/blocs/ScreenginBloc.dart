@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:Neuronio/models/Screening.dart';
+import 'package:Neuronio/networking/CustomException.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/repository/ScreeningRepository.dart';
 import 'package:bloc/bloc.dart';
@@ -66,12 +67,12 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
   requestToBuyScreening(int screeningId, String discountString) async {
     buySink.add(Response.loading());
     try {
-      BuyScreeningPlanResponse discount =
+      BuyScreeningPlanResponse response =
           await _repository.buyScreeningPlan(screeningId, discountString);
-      if (!discount.success) {
-        throw Exception();
+      if (!response.success) {
+        throw ApiException(response.code, response.msg);
       }
-      buySink.add(Response.completed(discount));
+      buySink.add(Response.completed(response));
     } catch (e) {
       buySink.add(Response.error(e));
       print(e);

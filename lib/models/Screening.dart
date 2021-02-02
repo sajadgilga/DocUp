@@ -94,10 +94,12 @@ class ScreeningDiscountDetailResponse {
 
 class BuyScreeningPlanResponse {
   bool success;
-  double percent;
+  String msg;
+  int code;
 
   BuyScreeningPlanResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'] ?? false;
-    percent = doublePossible(json['percent'] ?? 1);
+    msg = utf8IfPossible(json['msg']??"");
+    code = intPossible(json['code']);
   }
 }

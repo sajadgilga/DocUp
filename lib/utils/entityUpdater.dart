@@ -22,9 +22,17 @@ class EntityAndPanelUpdater {
   static void createTimer() {
     _timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
       print("Timer: ${DateTimeService.getCurrentDateTime()}");
-      _entityBloc.add(EntityUpdate());
-      _panelBloc.add(GetMyPanels());
+      updateEntity();
+      updatePanel();
     });
+  }
+
+  static void updateEntity() {
+    _entityBloc.add(EntityUpdate());
+  }
+
+  static void updatePanel() {
+    _panelBloc.add(GetMyPanels());
   }
 
   static void end() {

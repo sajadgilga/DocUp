@@ -27,14 +27,14 @@ import 'package:Neuronio/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:Neuronio/ui/home/notification/NotificationPage.dart';
 import 'package:Neuronio/ui/medicalTest/MedicalTestPage.dart';
 import 'package:Neuronio/ui/noronioClinic/NoronioService.dart';
-import 'package:Neuronio/ui/panel/myPartners/MyPartnerDialog.dart';
-import 'package:Neuronio/ui/panel/myPartners/MyPartners.dart';
 import 'package:Neuronio/ui/panel/Panel.dart';
 import 'package:Neuronio/ui/panel/healthDocument/infoPage/InfoPage.dart';
 import 'package:Neuronio/ui/panel/healthFile/calander/DateCalander.dart';
 import 'package:Neuronio/ui/panel/healthFile/calander/TimeCalander.dart';
 import 'package:Neuronio/ui/panel/healthFile/eventPage/EventPage.dart';
 import 'package:Neuronio/ui/panel/healthFile/medicinePage/MedicinePage.dart';
+import 'package:Neuronio/ui/panel/myPartners/MyPartnerDialog.dart';
+import 'package:Neuronio/ui/panel/myPartners/MyPartners.dart';
 import 'package:Neuronio/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:Neuronio/ui/panel/partnerContact/chatPage/ChatPage.dart';
 import 'package:Neuronio/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
@@ -150,7 +150,7 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.panel: (context) => Scaffold(
               body: _panel(context, detail: detail, extraDetail: extraDetail)),
           NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, detail),
+              _doctorDetailPage(context, detail, extraDetail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
           NavigatorRoutes.partnerSearchView: (context) =>
@@ -166,14 +166,14 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
-              _virtualVisitPage(context, detail),
+              _virtualVisitPage(context, detail, extraDetail),
           NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
           NavigatorRoutes.doctorProfileMenuPage: (context) =>
               _doctorProfileMenuPage(context, detail),
           NavigatorRoutes.patientProfileMenuPage: (context) =>
               _patientProfileMenuPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
-              _physicalVisitPage(context, detail)
+              _physicalVisitPage(context, detail, extraDetail)
         };
       case 0:
         return {
@@ -182,7 +182,7 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, detail),
+              _doctorDetailPage(context, detail, extraDetail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
           NavigatorRoutes.cognitiveTest: (context) =>
@@ -205,12 +205,12 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
-              _virtualVisitPage(context, detail),
+              _virtualVisitPage(context, detail, extraDetail),
           NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
           NavigatorRoutes.doctorProfileMenuPage: (context) =>
               _doctorProfileMenuPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
-              _physicalVisitPage(context, detail),
+              _physicalVisitPage(context, detail, extraDetail),
           NavigatorRoutes.textPlanPage: (context) =>
               _textPlanPage(context, detail),
           NavigatorRoutes.myPartnerDialog: (context) =>
@@ -229,7 +229,7 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.textPlanPage: (context) =>
               _textPlanPage(context, detail),
           NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, detail),
+              _doctorDetailPage(context, detail, extraDetail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
           NavigatorRoutes.cognitiveTest: (context) =>
@@ -248,12 +248,12 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.account: (context) =>
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.virtualVisitPage: (context) =>
-              _virtualVisitPage(context, detail),
+              _virtualVisitPage(context, detail, extraDetail),
           NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
           NavigatorRoutes.doctorProfileMenuPage: (context) =>
               _doctorProfileMenuPage(context, detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
-              _physicalVisitPage(context, detail)
+              _physicalVisitPage(context, detail, extraDetail)
         };
       case 2:
         return {
@@ -261,11 +261,11 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.partnerSearchView: (context) =>
               _partnerSearchPage(context, detail: detail),
           NavigatorRoutes.physicalVisitPage: (context) =>
-              _physicalVisitPage(context, detail),
+              _physicalVisitPage(context, detail, extraDetail),
           NavigatorRoutes.virtualVisitPage: (context) =>
-              _virtualVisitPage(context, detail),
+              _virtualVisitPage(context, detail, extraDetail),
           NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, detail),
+              _doctorDetailPage(context, detail, extraDetail),
         };
       case 3:
         return {
@@ -289,7 +289,7 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.root: (context) => _home(context),
           NavigatorRoutes.notificationView: (context) => _notificationPage(),
           NavigatorRoutes.doctorDialogue: (context) =>
-              _doctorDetailPage(context, detail),
+              _doctorDetailPage(context, detail, extraDetail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
           NavigatorRoutes.partnerSearchView: (context) =>
@@ -655,13 +655,16 @@ class NavigatorViewState extends State<NavigatorView> {
         }));
   }
 
-  Widget _doctorDetailPage(context, doctor) {
+  Widget _doctorDetailPage(context, doctor, extraDetail) {
     return DoctorDetailPage(
-      onPush: (direction, entity, Function() returnCallBack) {
+      onPush: (direction, entity, Function() returnCallBack, screeningId) {
         push(context, direction,
-            detail: entity, returnCallBack: returnCallBack);
+            detail: entity,
+            extraDetail: screeningId,
+            returnCallBack: returnCallBack);
       },
       doctorEntity: doctor,
+      screeningId: extraDetail,
     );
   }
 
@@ -787,8 +790,9 @@ class NavigatorViewState extends State<NavigatorView> {
           : BlocProvider.value(
               value: _screeningBloc,
               child: PatientScreeningPage(
-                onPush: (direction, entity) {
-                  push(context, direction, detail: entity);
+                onPush: (direction, entity, screeningId) {
+                  push(context, direction,
+                      detail: entity, extraDetail: screeningId);
                 },
                 globalOnPush: widget.pushOnBase,
               ),
@@ -829,12 +833,13 @@ class NavigatorViewState extends State<NavigatorView> {
     return InStructure();
   }
 
-  _virtualVisitPage(BuildContext context, entity) {
+  _virtualVisitPage(BuildContext context, entity, extraDetail) {
     return VirtualVisitPage(
       doctorEntity: (entity as DoctorEntity),
       onPush: (direction, entity) {
         push(context, direction);
       },
+      screeningId: extraDetail,
     );
   }
 
@@ -865,12 +870,13 @@ class NavigatorViewState extends State<NavigatorView> {
     );
   }
 
-  _physicalVisitPage(BuildContext context, entity) {
+  _physicalVisitPage(BuildContext context, entity, extraDetail) {
     return PhysicalVisitPage(
       doctorEntity: (entity as DoctorEntity),
       onPush: (direction, entity) {
         push(context, direction);
       },
+      screeningId: extraDetail,
     );
   }
 

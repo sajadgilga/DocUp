@@ -24,9 +24,11 @@ import 'VisitUtils.dart';
 
 class VirtualVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
+  final int screeningId;
   final Function(String, dynamic) onPush;
 
-  VirtualVisitPage({Key key, this.doctorEntity, this.onPush}) : super(key: key);
+  VirtualVisitPage({Key key, this.doctorEntity, this.onPush, this.screeningId})
+      : super(key: key);
 
   @override
   _VirtualVisitPageState createState() => _VirtualVisitPageState();
@@ -310,20 +312,22 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
               AutoText("مدت زمان ویزیت", style: TextStyle(fontSize: 16))
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              AutoText("ریال", style: TextStyle(fontSize: 16)),
-              SizedBox(width: 5),
-              AutoText(replaceFarsiNumber(_calculateVisitCost()),
-                  style: TextStyle(
-                      color: IColors.themeColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600)),
-              SizedBox(width: 5),
-              AutoText("قیمت نهایی", style: TextStyle(fontSize: 16))
-            ],
-          ),
+
+          /// TODO
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: <Widget>[
+          //     AutoText("ریال", style: TextStyle(fontSize: 16)),
+          //     SizedBox(width: 5),
+          //     AutoText(replaceFarsiNumber(_calculateVisitCost()),
+          //         style: TextStyle(
+          //             color: IColors.themeColor,
+          //             fontSize: 18,
+          //             fontWeight: FontWeight.w600)),
+          //     SizedBox(width: 5),
+          //     AutoText("قیمت نهایی", style: TextStyle(fontSize: 16))
+          //   ],
+          // ),
         ],
       );
 
@@ -539,6 +543,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   void sendNowVisitRequest() {
     DateTime now = DateTimeService.getCurrentDateTime();
     _bloc.visitRequest(
+      widget.screeningId,
         widget.doctorEntity.id,
         1,
         typeSelected[VISIT_METHOD],
@@ -568,6 +573,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     // String visitDuration = "+" + convertMinuteToTimeString(duration);
     String timeZone = "+03:30";
     _bloc.visitRequest(
+        widget.screeningId,
         widget.doctorEntity.id,
         1,
         typeSelected[VISIT_METHOD],

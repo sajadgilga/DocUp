@@ -1,9 +1,13 @@
+import 'dart:async';
+
+import 'package:Neuronio/blocs/CreditBloc.dart';
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/ScreenginBloc.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/Screening.dart';
 import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/networking/CustomException.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
@@ -16,6 +20,7 @@ import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uni_links/uni_links.dart';
 
 class BuyScreeningPage extends StatefulWidget {
   final Function(String, UserEntity) onPush;
@@ -29,13 +34,18 @@ class BuyScreeningPage extends StatefulWidget {
 enum DiscountStats { Null, Loading, Valid, Invalid }
 
 class _BuyScreeningPageState extends State<BuyScreeningPage> {
+  CreditBloc _creditBloc = CreditBloc();
+  bool _isRequestForPay = false;
+
   TextEditingController _discountController = TextEditingController();
   DiscountStats discountStatus = DiscountStats.Null;
-  double discountPercent;
+  double discountPercent = 0;
   ScreeningBloc _screeningBloc;
 
   AlertDialog _loadingDialog = getLoadingDialog();
   BuildContext _loadingContext;
+  Screening screening;
+  StreamSubscription _sub;
 
   void _initialApiCall() {
     var _state = BlocProvider.of<EntityBloc>(context).state;
@@ -49,7 +59,12 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
 
   @override
   void dispose() {
-    _screeningBloc.reNewStreams();
+    try {
+      _screeningBloc.reNewStreams();
+    } catch (e) {}
+    try {
+      _sub.cancel();
+    } catch (e) {}
     super.dispose();
   }
 
@@ -58,7 +73,33 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
     _screeningBloc = BlocProvider.of<ScreeningBloc>(context);
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _initialApiCall();
+    initUniLinks();
     super.initState();
+
+    _creditBloc.listen((event) {
+      if ((event is AddCreditLoading) && _isRequestForPay) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              _loadingContext = context;
+              return _loadingDialog;
+            });
+      } else if (event is AddCreditLoaded) {
+        if (_loadingContext != null) {
+          Navigator.of(_loadingContext).pop();
+        }
+        launchURL(event.result.paymentUrl);
+      } else if (event is AddCreditError) {
+        if (_loadingContext != null) {
+          Navigator.of(_loadingContext).pop();
+        }
+        showOneButtonDialog(
+            context,
+            "پرداخت با خطا مواجه شد، لطفا از طریق راه های ارتباطی با ما تماس برقرار کنید.",
+            "تایید",
+            () {});
+      }
+    });
 
     _screeningBloc.buyStream.listen((event) {
       if (event.status == Status.LOADING) {
@@ -73,14 +114,34 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
         if (_loadingContext != null) {
           Navigator.of(_loadingContext).pop();
         }
+        EntityAndPanelUpdater.updateEntity();
         BlocProvider.of<ScreeningBloc>(context).add(GetPatientScreening());
         Navigator.pop(context);
       } else if (event.status == Status.ERROR) {
         if (_loadingContext != null) {
           Navigator.of(_loadingContext).pop();
         }
-
-        /// TODO
+        if ((event.error as ApiException).getCode() == 624) {
+          showOneButtonDialog(
+              context,
+              "اعتبار داخل آپ شما برای خرید کافی نیست.",
+              "هدایت به درگاه پرداخت", () {
+            var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
+            _isRequestForPay = true;
+            _creditBloc.add(AddCredit(
+                type: AddCreditType.BuyScreeningPlan.index,
+                mobile: _entity.mEntity.user.phoneNumber,
+                amount: discountStatus == DiscountStats.Valid
+                    ? (screening.price * (1 - discountPercent)).toInt() * 10
+                    : screening.price * 10,
+                extraCallBackParams: {
+                  "code": discountStatus == DiscountStats.Valid
+                      ? _discountController.text
+                      : null,
+                  "screening_id": screening.id
+                }));
+          });
+        }
       }
       setState(() {});
     });
@@ -110,6 +171,7 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
                 return DocUpAPICallLoading2();
                 break;
               case Status.COMPLETED:
+                screening = snapshot.data.data;
                 return _mainWidget(snapshot.data.data);
                 break;
               case Status.ERROR:
@@ -273,5 +335,23 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
         ),
       ),
     );
+  }
+
+  Future<Null> initUniLinks() async {
+    try {
+      /// profile page uni link will do the rest
+      _sub = getUriLinksStream().listen((Uri link) {
+        final query = link.queryParameters;
+        if (query["success"] == "false") {
+        } else {
+          BlocProvider.of<ScreeningBloc>(context).add(GetPatientScreening());
+          Navigator.pop(context);
+        }
+      }, onError: (err) {
+        print("link error $err");
+      });
+    } on PlatformException {
+      print("link error");
+    }
   }
 }

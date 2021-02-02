@@ -30,7 +30,8 @@ class CreditBloc extends Bloc<CreditEvent, CreditState> {
   @override
   Stream<CreditState> mapEventToState(event) async* {
     if (event is AddCredit) {
-      yield* _addCredit(event.type, event.mobile, event.amount);
+      yield* _addCredit(event.type, event.mobile, event.amount,
+          extraCallBackParams: event.extraCallBackParams);
     }
   }
 }
@@ -38,16 +39,19 @@ class CreditBloc extends Bloc<CreditEvent, CreditState> {
 // events
 abstract class CreditEvent {}
 
-class AddCreditType{
-  static int addCredit = 1;
-  static int buyScreeningPlan = 2;
-}
+enum AddCreditType { AddCredit, BuyScreeningPlan }
+
 class AddCredit extends CreditEvent {
   final int type;
   final String mobile;
   final int amount;
+  final Map<String, dynamic> extraCallBackParams;
 
-  AddCredit({@required this.type, @required this.mobile, this.amount});
+  AddCredit(
+      {@required this.type,
+      @required this.mobile,
+      this.amount,
+      this.extraCallBackParams});
 }
 
 // states

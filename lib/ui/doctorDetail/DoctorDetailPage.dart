@@ -18,9 +18,11 @@ import '../../constants/colors.dart';
 
 class DoctorDetailPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
-  final Function(String, dynamic, Function()) onPush;
+  final int screeningId;
+  final Function(String, dynamic, Function(), int) onPush;
 
-  DoctorDetailPage({Key key, this.doctorEntity, this.onPush}) : super(key: key);
+  DoctorDetailPage({Key key, this.doctorEntity, this.onPush, this.screeningId})
+      : super(key: key);
 
   @override
   _DoctorDetailPageState createState() => _DoctorDetailPageState();
@@ -106,7 +108,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   callBack: () => widget.onPush(
                       NavigatorRoutes.physicalVisitPage, doctorEntity, () {
                     _bloc.getDoctor(widget.doctorEntity.id, false);
-                  }),
+                  }, widget.screeningId),
                 )
               : SizedBox(),
           ALittleVerticalSpace(height: 10),
@@ -120,21 +122,21 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   callBack: () => widget.onPush(
                       NavigatorRoutes.virtualVisitPage, doctorEntity, () {
                     _bloc.getDoctor(widget.doctorEntity.id, false);
-                  }),
+                  }, widget.screeningId),
                 )
               : SizedBox(),
           ALittleVerticalSpace(height: 10),
-          ActionButton(
-            width: 250,
-            height: 60,
-            borderRadius: 15,
-            color: IColors.themeColor,
-            title: Strings.trafficPlanReservationLabel,
-            callBack: () =>
-                widget.onPush(NavigatorRoutes.textPlanPage, doctorEntity, () {
-              _bloc.getDoctor(widget.doctorEntity.id, false);
-            }),
-          )
+          // ActionButton(
+          //   width: 250,
+          //   height: 60,
+          //   borderRadius: 15,
+          //   color: IColors.themeColor,
+          //   title: Strings.trafficPlanReservationLabel,
+          //   callBack: () =>
+          //       widget.onPush(NavigatorRoutes.textPlanPage, doctorEntity, () {
+          //     _bloc.getDoctor(widget.doctorEntity.id, false);
+          //   }, null),
+          // )
         ],
       );
 

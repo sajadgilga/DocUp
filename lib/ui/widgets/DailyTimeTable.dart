@@ -126,12 +126,12 @@ class DailyWorkTimesTable extends StatefulWidget {
 
   const DailyWorkTimesTable(
       {Key key,
-      this.dayPlanTable,
-      this.startTableHour,
-      this.endTableHour,
-      this.editable,
-      this.cellHeight,
-      this.cellWidth})
+        this.dayPlanTable,
+        this.startTableHour,
+        this.endTableHour,
+        this.editable,
+        this.cellHeight,
+        this.cellWidth})
       : super(key: key);
 
   @override
@@ -142,7 +142,7 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
   Tween<int> lastHoverCell = Tween(begin: -1, end: -1);
   final LegendItem availableLegendItem = LegendItem("فعال", IColors.themeColor);
   final LegendItem unavailableLegendItem =
-      LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
+  LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
 
   @override
   Widget build(BuildContext context) {
@@ -318,11 +318,11 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
   void cellToggle(int rowNumber, int index, {bool withoutSetState = false}) {
     if (withoutSetState) {
       widget.dayPlanTable[rowNumber][index] =
-          widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
+      widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
     } else {
       setState(() {
         widget.dayPlanTable[rowNumber][index] =
-            widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
+        widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
       });
     }
   }
@@ -360,20 +360,20 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
       height: widget.cellHeight,
       child: ![0, 1].contains(key)
           ? Container(
-              width: widget.cellHeight,
-              height: widget.cellHeight,
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: CircleAvatar(
-                  backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3,
-                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
-                  ),
-                  radius: 10,
-                ),
-              ),
-            )
+        width: widget.cellHeight,
+        height: widget.cellHeight,
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: CircleAvatar(
+            backgroundColor: Color.fromARGB(0, 0, 0, 0),
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+            ),
+            radius: 10,
+          ),
+        ),
+      )
           : SizedBox(),
       decoration: BoxDecoration(
           borderRadius: res,
@@ -438,16 +438,16 @@ class DailyAvailableVisitTime extends StatefulWidget {
 
   DailyAvailableVisitTime(
       {Key key,
-      this.dayReservedTimeTable,
-      this.dailyDoctorWorkTime,
-      this.startTableHour,
-      this.endTableHour,
-      this.cellHeight,
-      this.cellWidth,
-      this.planDurationInMinute,
-      this.selectedDateController,
-      this.selectedTimeController,
-      this.onBlocTap})
+        this.dayReservedTimeTable,
+        this.dailyDoctorWorkTime,
+        this.startTableHour,
+        this.endTableHour,
+        this.cellHeight,
+        this.cellWidth,
+        this.planDurationInMinute,
+        this.selectedDateController,
+        this.selectedTimeController,
+        this.onBlocTap})
       : super(key: key);
 
   @override
@@ -459,10 +459,10 @@ class _DailyAvailableVisitTimeTableState
     extends State<DailyAvailableVisitTime> {
   final LegendItem availableLegendItem = LegendItem("فعال", IColors.themeColor);
   final LegendItem unavailableLegendItem =
-      LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
+  LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
   final LegendItem reservedLegendItem = LegendItem("رزرو شده", Colors.black54);
   final LegendItem selectedLegendItem =
-      LegendItem("انتخاب شده", Color.fromARGB(255, 44, 62, 80));
+  LegendItem("انتخاب شده", Color.fromARGB(255, 44, 62, 80));
   List<int> selectedPartNumbers = [];
   List<int> errorSelectedPartNumber = [];
 
@@ -503,10 +503,10 @@ class _DailyAvailableVisitTimeTableState
           _legend(),
           allRows.length != 0
               ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: allRows,
-                )
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: allRows,
+          )
               : emptyAvailableTime(),
         ],
       ),
@@ -615,8 +615,8 @@ class _DailyAvailableVisitTimeTableState
     List<Widget> res = [];
     res.add(getRowNumberText(rowNumber));
     for (int columnIndex = 0;
-        columnIndex < hourPlanList.length;
-        columnIndex++) {
+    columnIndex < hourPlanList.length;
+    columnIndex++) {
       Widget w = GestureDetector(
         key: ValueKey((rowNumber).toString() + columnIndex.toString()),
         child: getOneCell(rowNumber, columnIndex, hourPlanList[columnIndex]),
@@ -658,7 +658,7 @@ class _DailyAvailableVisitTimeTableState
       /// checking next cell to be available
       bool checkDurationPlan = true;
       if ((widget.dayReservedTimeTable != null &&
-              widget.dayReservedTimeTable[r][c] == 1) ||
+          widget.dayReservedTimeTable[r][c] == 1) ||
           widget.dailyDoctorWorkTime[r][c] == 0) {
         checkDurationPlan = false;
       }
@@ -757,9 +757,9 @@ class _DailyAvailableVisitTimeTableState
       height: widget.cellHeight,
       child: selectedPartNumbers.contains(partNumber)
           ? Icon(
-              Icons.check_circle,
-              color: IColors.darkBlue,
-            )
+        Icons.check_circle,
+        color: IColors.darkBlue,
+      )
           : SizedBox(),
       decoration: BoxDecoration(
           borderRadius: res,
