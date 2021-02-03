@@ -15,6 +15,7 @@ import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/customPainter/DrawerPainter.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icon_shadow/icon_shadow.dart';
@@ -148,18 +149,24 @@ class _NotificationPageState extends State<NotificationPage> {
                   itemCount: notifications.newestNotifsCounts,
                   itemBuilder: (BuildContext context, int index) {
                     NewestNotif newestNotif = notifications.newestNotifs[index];
-                    return Dismissible(
-                      key: Key(newestNotif.hashCode.toString()),
-                      onDismissed: (item) {
-                        BlocProvider.of<NotificationBloc>(context)
-                            .add(AddNotifToSeen(newestNotif.notifId));
-                      },
-                      child: NotificationItem(
-                        newestNotifs: newestNotif,
-                        color: IColors.themeColor,
-                        onPush: widget.onPush,
-                      ),
+                    return NotificationItem(
+                      newestNotifs: newestNotif,
+                      color: IColors.themeColor,
+                      onPush: widget.onPush,
                     );
+                    //   Dismissible(
+                    //   key: Key(newestNotif.hashCode.toString()),
+                    //
+                    //   onDismissed: (item) {
+                    //     BlocProvider.of<NotificationBloc>(context)
+                    //         .add(AddNotifToSeen(newestNotif.notifId));
+                    //   },
+                    //   child: NotificationItem(
+                    //     newestNotifs: newestNotif,
+                    //     color: IColors.themeColor,
+                    //     onPush: widget.onPush,
+                    //   ),
+                    // );
                   }),
             ),
           );
@@ -193,31 +200,11 @@ class NotificationItem extends StatelessWidget {
 
     /// update notif counts in home page
     /// TODO
-    BlocProvider.of<NotificationBloc>(context)
-        .add(AddNotifToSeen(notif.notifId));
+    // BlocProvider.of<NotificationBloc>(context)
+    //     .add(AddNotifToSeen(notif.notifId));
 
     NotificationNavigationRepo notifNavRepo =
         NotificationNavigationRepo(onPush);
-    // void navigate(Entity entity) {
-    //   /// change page
-    //   NotificationNavigationRepo notifNavRepo =
-    //       NotificationNavigationRepo(onPush);
-    //   if (notif is NewestVideoVoiceCallNotif) {
-    //     /// voice or video call
-    //     notifNavRepo.joinVideoOrVoiceCall(context, notif);
-    //   } else if (notif is NewestMedicalTestNotif) {
-    //     /// test send and response
-    //     notifNavRepo.navigateToTestPage(notif, context);
-    //   } else if (notif is NewestVisitNotif) {
-    //     /// visit
-    //     /// TODO for visit request reminder and visit reminder all have to navigate to panel page
-    //     if (entity.isDoctor) {
-    //       notifNavRepo.navigateToPatientRequestPage(notif, context);
-    //     } else if (entity.isPatient) {
-    //       notifNavRepo.navigateToPanel(notif, context);
-    //     }
-    //   }
-    // }
     notifNavRepo.navigate(context, notif);
   }
 
@@ -245,8 +232,9 @@ class NotificationItem extends StatelessWidget {
                         ? "هم اکنون"
                         : replaceFarsiNumber(newestNotifs.notifTime) +
                             " - " +
-                            replaceFarsiNumber(DateTimeService.getJalaliStringFormGeorgianDateTimeString(
-                                newestNotifs.notifDate)),
+                            replaceFarsiNumber(DateTimeService
+                                .getJalaliStringFormGeorgianDateTimeString(
+                                    newestNotifs.notifDate)),
                     textDirection: TextDirection.rtl,
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                   ),

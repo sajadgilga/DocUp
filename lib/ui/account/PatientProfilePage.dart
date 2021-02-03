@@ -12,6 +12,7 @@ import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Avatar.dart';
+import 'package:Neuronio/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/ui/widgets/InputDoneView.dart';
 import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
@@ -75,7 +76,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
           _loadingEnable = false;
           launchURL(event.result.paymentUrl);
         }
-      } else {
+      } else if(event is AddCreditError){
         Navigator.of(loadingContext).pop();
         showOneButtonDialog(
             context,
@@ -152,7 +153,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
-        if ((state is EntityLoaded || state.entity.mEntity != null) &&
+        if ((state?.entity?.mEntity != null) &&
             !(state is EntityError)) {
           return _widget(state);
         } else if (state is EntityError) {
@@ -237,7 +238,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
           SizedBox(height: 30),
           _addCreditWidget(),
           SizedBox(height: 10),
-          // suggestionsAndCriticism()
+          suggestionsAndCriticism()
         ],
       ),
     );
@@ -408,7 +409,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
             ),
             SizedBox(height: 10),
             ActionButton(
-              title: "اطلاعات",
+              title: "اطلاعات فردی",
               color: IColors.themeColor,
               callBack: () {
                 EditProfileDataDialog editProfileData =

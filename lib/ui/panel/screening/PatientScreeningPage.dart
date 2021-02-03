@@ -49,7 +49,6 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-    _initialApiCall();
     super.initState();
   }
 
@@ -57,7 +56,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<ScreeningBloc, ScreeningState>(
         builder: (context, state) {
-      if (state is ScreeningLoaded) {
+      if (state is ScreeningLoaded || state.result != null) {
         PatientScreeningResponse screeningResponse = state.result;
 
         /// TODO remove this part
@@ -414,7 +413,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             children: [
               Container(
                 child: menuLabel(
-                  "تست ICA",
+                  "تست هوشمند سلامت شناختی",
                 ),
                 width: MediaQuery.of(context).size.width * 0.5,
                 height: 50,
@@ -478,7 +477,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
                       patientScreeningResponse.statusSteps.doctor,
                       patientScreeningResponse.statusSteps.id);
                 } else {
-                  toast(context, "شما هنوز تست ICA را کامل نکردید.");
+                  toast(context, "شما هنوز تست هوشمند سلامت شناختی را کامل نکردید.");
                 }
               },
             ),

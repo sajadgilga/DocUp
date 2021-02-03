@@ -18,6 +18,7 @@ import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'TrackingList.dart';
 
@@ -168,7 +169,8 @@ class _HomeState extends State<Home> {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       child: GestureDetector(
         onTap: () {
-          /// TODO
+          launch(
+              "https://neuronio.ir/%D9%BE%DA%A9%DB%8C%D8%AC-%D8%B1%D9%88%D8%B2-%D9%85%D8%A7%D8%AF%D8%B1/");
         },
         child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
@@ -192,7 +194,7 @@ class _HomeState extends State<Home> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(),
-                  child: AutoText("سنجش بیمار", style: TextStyle(fontSize: 17)),
+                  child: AutoText("سنجش سلامت‌جو", style: TextStyle(fontSize: 17)),
                 ),
                 SizedBox(
                   height: 20,
@@ -200,7 +202,7 @@ class _HomeState extends State<Home> {
                 Padding(
                   padding: EdgeInsets.only(right: 40),
                   child: AutoText(
-                    "پایش سلامت شناختی" + "\n" + "غربالگری",
+                    "بسته ارزیابی سلامت مغز و شناخت",
                     style: TextStyle(fontSize: 10),
                   ),
                 )
@@ -361,15 +363,13 @@ class _HomeState extends State<Home> {
                       children: [
                         DocUpHeader(
                           docUpLogo: true,
+                          width: 60,
                         ),
                       ],
                     ),
                   ),
 //                        OnCallMedicalHeaderIcon()
           ]),
-          SizedBox(
-            height: 25,
-          ),
           _homeList(),
           SizedBox(
             height: 15,

@@ -128,7 +128,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
           //     width: 160,
           //     height: 50,
           //     fontSize: 14),
-          _doctorDurationPlanInfo(),
+          // _doctorDurationPlanInfo(),
           AnimatedSize(
             duration: Duration(milliseconds: 400),
             vsync: this,

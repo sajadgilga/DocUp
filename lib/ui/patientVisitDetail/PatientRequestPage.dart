@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -31,7 +30,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class PatientRequestPage extends StatefulWidget {
   final PatientEntity patientEntity;
@@ -147,7 +145,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   } else {
                     patientVisitStatus = visitEntity.visitType;
                   }
-                  return _headerWidget(visitEntity);
+                  return _mainWidget(visitEntity);
                   break;
                 case Status.ERROR:
                   return APICallError(
@@ -166,7 +164,14 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
     );
   }
 
-  _headerWidget(VisitEntity visitEntity) => SingleChildScrollView(
+  bool _visitStatusEditable(VisitEntity visitEntity) {
+    if (visitEntity.visitStartTimeDiffFromNow > 24 * 60 * 60) {
+      return true;
+    }
+    return false;
+  }
+
+  _mainWidget(VisitEntity visitEntity) => SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
@@ -239,13 +244,46 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
               SizedBox(
                 height: 20,
               ),
-              visitEntity.status == 0
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        ActionButton(
-                          width: 150,
-                          title: "رد",
+              _visitStatusEditable(visitEntity)
+                  ? (visitEntity.status == 0
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            ActionButton(
+                              width: 150,
+                              title: "رد",
+                              icon: Icon(Icons.close),
+                              color: IColors.red,
+                              callBack: () {
+                                if (!submitLoadingToggle) {
+                                  submitLoadingToggle = true;
+                                  _bloc.responseVisit(visitEntity, false);
+                                }
+                              },
+                            ),
+                            ActionButton(
+                              width: 150,
+                              title: "تایید",
+                              icon: Icon(Icons.check),
+                              color: IColors.green,
+                              callBack: () {
+                                if (!submitLoadingToggle) {
+                                  submitLoadingToggle = true;
+                                  _bloc.responseVisit(visitEntity, true);
+                                }
+                              },
+                            ),
+                          ],
+                        )
+                      : ActionButton(
+                          width: MediaQuery.of(context).size.width * (65 / 100),
+                          height: 50,
+                          title: "لغو کردن ویزیت " +
+                              (visitEntity.visitType == 0
+                                  ? "حضوری"
+                                  : (visitEntity.visitType == 1
+                                      ? "مجازی"
+                                      : " - ")),
                           icon: Icon(Icons.close),
                           color: IColors.red,
                           callBack: () {
@@ -254,37 +292,8 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                               _bloc.responseVisit(visitEntity, false);
                             }
                           },
-                        ),
-                        ActionButton(
-                          width: 150,
-                          title: "تایید",
-                          icon: Icon(Icons.check),
-                          color: IColors.green,
-                          callBack: () {
-                            if (!submitLoadingToggle) {
-                              submitLoadingToggle = true;
-                              _bloc.responseVisit(visitEntity, true);
-                            }
-                          },
-                        ),
-                      ],
-                    )
-                  : ActionButton(
-                      width: MediaQuery.of(context).size.width * (65 / 100),
-                      height: 50,
-                      title: "لغو کردن ویزیت " +
-                          (visitEntity.visitType == 0
-                              ? "حضوری"
-                              : (visitEntity.visitType == 1 ? "مجازی" : " - ")),
-                      icon: Icon(Icons.close),
-                      color: IColors.red,
-                      callBack: () {
-                        if (!submitLoadingToggle) {
-                          submitLoadingToggle = true;
-                          _bloc.responseVisit(visitEntity, false);
-                        }
-                      },
-                    ),
+                        ))
+                  : SizedBox(),
               ALittleVerticalSpace(),
             ],
           ),

@@ -9,8 +9,6 @@ import 'package:Neuronio/models/ChatMessage.dart';
 import 'package:Neuronio/models/TextPlan.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/repository/ChatMessageRepository.dart';
-import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
-import 'package:Neuronio/ui/panel/PanelAlert.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
@@ -120,24 +118,25 @@ class _ChatPageState extends State<ChatPage> {
         padding: EdgeInsets.only(top: 5, bottom: 10, right: 20, left: 20),
         child: Column(
           children: [
-            widget.entity.isPatient
-                ? Container(
-                    height: 20,
-                    child: AutoText(nowIsVisitTime
-                        ? "پیام نا محدود هنگام ویزیت"
-                        : "کلمات باقی مانده" +
-                            " " +
-                            widget.textPlanRemainedTraffic.remainedWords
-                                .toString()),
-                  )
-                : SizedBox(),
-            widget.entity.isPatient
-                ? Container(
-                    height: 0.2,
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    color: IColors.themeColor,
-                  )
-                : SizedBox(),
+            /// text plan temporary removed
+            // widget.entity.isPatient
+            //     ? Container(
+            //         height: 20,
+            //         child: AutoText(nowIsVisitTime
+            //             ? "پیام نا محدود هنگام ویزیت"
+            //             : "کلمات باقی مانده" +
+            //                 " " +
+            //                 widget.textPlanRemainedTraffic.remainedWords
+            //                     .toString()),
+            //       )
+            //     : SizedBox(),
+            // widget.entity.isPatient
+            //     ? Container(
+            //         height: 0.2,
+            //         width: MediaQuery.of(context).size.width * 0.6,
+            //         color: IColors.themeColor,
+            //       )
+            //     : SizedBox(),
             Row(
               children: <Widget>[
                 _submitButton(),
@@ -220,16 +219,18 @@ class _ChatPageState extends State<ChatPage> {
         if (widget.entity.isPatient) {
           return Stack(children: <Widget>[
             _ChatPage(),
-            PanelAlert(
-              label: Strings.noRemainedWordForYouPlanInChatRoom,
-              buttonLabel: Strings.goToTextPlanListPage,
-              btnColor: IColors.themeColor,
-              callback: () {
-                Navigator.pop(context);
-                widget.onPush(
-                    NavigatorRoutes.textPlanPage, widget.entity.doctor);
-              },
-            )
+
+            /// TODO text plan removed temporary
+            // PanelAlert(
+            //   label: Strings.noRemainedWordForYouPlanInChatRoom,
+            //   buttonLabel: Strings.goToTextPlanListPage,
+            //   btnColor: IColors.themeColor,
+            //   callback: () {
+            //     Navigator.pop(context);
+            //     widget.onPush(
+            //         NavigatorRoutes.textPlanPage, widget.entity.doctor);
+            //   },
+            // )
           ]);
         } else {
           return _ChatPage();

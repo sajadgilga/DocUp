@@ -96,6 +96,14 @@ class VisitEntity {
     return diff.inSeconds;
   }
 
+  int get visitStartTimeDiffFromNow {
+    DateTime now = DateTimeService.getCurrentDateTime();
+    DateTime visitStartTime =
+    DateTimeService.getDateTimeFromStandardString(visitTime);
+    Duration diff = visitStartTime.difference(now);
+    return diff.inSeconds;
+  }
+
   VisitEntity.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('id')) id = json['id'];
     if (json.containsKey('created_date')) createdDate = json['created_date'];

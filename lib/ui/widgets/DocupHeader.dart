@@ -9,8 +9,9 @@ class DocUpHeader extends StatelessWidget {
   final String title;
   final bool docUpLogo;
   final Color color;
+  final double width;
 
-  DocUpHeader({Key key, this.title, this.docUpLogo = false, this.color})
+  DocUpHeader({Key key, this.title, this.docUpLogo = false, this.color,this.width=40})
       : super(key: key);
 
   @override
@@ -20,7 +21,7 @@ class DocUpHeader extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(top: 10, right: 20),
           child: docUpLogo
-              ? Container(width: 40, child: Image.asset(Assets.logoTransparent))
+              ? Container(width: width, child: Image.asset(Assets.logoTransparent))
               : SizedBox(),
           alignment: Alignment.centerRight,
         ),

@@ -73,7 +73,7 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
         children: [
           TimeSelectorHeaderWidget(
             callback: changeBetweenTimeAndDate,
-            initialTimeIsSelected: false,
+            initialTimeIsSelected: timeIsSelected,
           ),
           !this.timeIsSelected
               ? Container(
@@ -85,8 +85,11 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                     min: DateTimeService.getYesterdayInJalilyString(),
                     disable: disableDays,
                     onSelect: (date) {
-                      widget.dateTextController.text = date;
-                      initialDate = date;
+                      setState(() {
+                        widget.dateTextController.text = date;
+                        initialDate = date;
+                        this.timeIsSelected = true;
+                      });
                     },
                   ),
                 )

@@ -7,7 +7,6 @@ import 'package:Neuronio/blocs/MedicalTestListBloc.dart';
 import 'package:Neuronio/blocs/PanelBloc.dart';
 import 'package:Neuronio/blocs/PanelSectionBloc.dart';
 import 'package:Neuronio/blocs/PatientTrackerBloc.dart';
-import 'package:Neuronio/blocs/ScreenginBloc.dart';
 import 'package:Neuronio/blocs/SearchBloc.dart';
 import 'package:Neuronio/blocs/TabSwitchBloc.dart';
 import 'package:Neuronio/blocs/VisitBloc.dart';
@@ -114,7 +113,6 @@ class NavigatorViewState extends State<NavigatorView> {
   final PanelSectionBloc _panelSectionBloc = PanelSectionBloc();
   final ChatMessageBloc _chatMessageBloc = ChatMessageBloc();
   final SearchBloc _searchBloc = SearchBloc();
-  final ScreeningBloc _screeningBloc = ScreeningBloc();
   final VisitBloc _visitBloc = VisitBloc();
   final FileBloc _pictureBloc = FileBloc();
   final PatientTrackerBloc _trackerBloc = PatientTrackerBloc();
@@ -758,12 +756,9 @@ class NavigatorViewState extends State<NavigatorView> {
   }
 
   Widget _buyScreeningPage(context) {
-    return BlocProvider.value(
-      value: _screeningBloc,
-      child: BuyScreeningPage(onPush: (direction, entity) {
-        push(context, direction, detail: entity);
-      }),
-    );
+    return BuyScreeningPage(onPush: (direction, entity) {
+      push(context, direction, detail: entity);
+    });
   }
 
   Widget _myPanelsMenuList(context) {
@@ -787,15 +782,12 @@ class NavigatorViewState extends State<NavigatorView> {
                 push(context, direction, detail: entity);
               },
             )
-          : BlocProvider.value(
-              value: _screeningBloc,
-              child: PatientScreeningPage(
-                onPush: (direction, entity, screeningId) {
-                  push(context, direction,
-                      detail: entity, extraDetail: screeningId);
-                },
-                globalOnPush: widget.pushOnBase,
-              ),
+          : PatientScreeningPage(
+              onPush: (direction, entity, screeningId) {
+                push(context, direction,
+                    detail: entity, extraDetail: screeningId);
+              },
+              globalOnPush: widget.pushOnBase,
             ),
     );
   }

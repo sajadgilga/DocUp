@@ -64,8 +64,9 @@ class IPartnerBody extends StatelessWidget {
       children: <Widget>[
         GestureDetector(
             onTap: () {
-              var _state = BlocProvider.of<EntityBloc>(context).state;
-              this.onPush(NavigatorRoutes.panel, _state.entity.partnerEntity);
+              // var _state = BlocProvider.of<EntityBloc>(context).state;
+              // this.onPush(NavigatorRoutes.panel, _state.entity.partnerEntity);
+              selectPage(1);
             },
             child: Container(
               color: Color.fromARGB(0, 0, 0, 0),
@@ -94,8 +95,9 @@ class IPartnerBody extends StatelessWidget {
 //          },
           child: GestureDetector(
             onTap: () {
-              var _state = BlocProvider.of<EntityBloc>(context).state;
-              onPush(NavigatorRoutes.myPartnerDialog, _state.entity.partnerEntity);
+              // var _state = BlocProvider.of<EntityBloc>(context).state;
+              // onPush(NavigatorRoutes.myPartnerDialog, _state.entity.partnerEntity);
+              selectPage(1);
             },
             child: Container(
               color: Color.fromARGB(0, 0, 0, 0),

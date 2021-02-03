@@ -126,30 +126,32 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
           ALittleVerticalSpace(),
           // _visitDurationTimeWidget(),
           // ALittleVerticalSpace(),
-          _enableVisitTimeWidget(),
+          // _enableVisitTimeWidget(),
           ALittleVerticalSpace(),
-          AnimatedSize(
-            vsync: this,
-            duration: Duration(milliseconds: 400),
-            child: !visitTimeChecked
-                ? _visitTypeWidget(
-                    VISIT_DURATION_PLAN,
-                    {
-                      0: "پایه ۱۵ دقیقه",
-                      1: "تکمیلی ۳۰ دقیقه",
-                      2: "طولانی ۴۵ دقیقه"
-                    }..removeWhere((key, value) {
-                        if (widget.doctorEntity.plan.virtualVisitDurationPlan
-                            .contains(key)) {
-                          return false;
-                        }
-                        return true;
-                      }),
-                    width: 160,
-                    height: 50,
-                    fontSize: 14)
-                : _doctorDurationPlanInfo(),
-          ),
+
+          /// TODO
+          // AnimatedSize(
+          //   vsync: this,
+          //   duration: Duration(milliseconds: 400),
+          //   child: !visitTimeChecked
+          //       ? _visitTypeWidget(
+          //           VISIT_DURATION_PLAN,
+          //           {
+          //             0: "پایه ۱۵ دقیقه",
+          //             1: "تکمیلی ۳۰ دقیقه",
+          //             2: "طولانی ۴۵ دقیقه"
+          //           }..removeWhere((key, value) {
+          //               if (widget.doctorEntity.plan.virtualVisitDurationPlan
+          //                   .contains(key)) {
+          //                 return false;
+          //               }
+          //               return true;
+          //             }),
+          //           width: 160,
+          //           height: 50,
+          //           fontSize: 14)
+          //       : _doctorDurationPlanInfo(),
+          // ),
           ALittleVerticalSpace(),
           AnimatedSize(
             vsync: this,
@@ -269,6 +271,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     });
     res = res.reversed.toList();
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
@@ -287,9 +290,12 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         SingleChildScrollView(
           reverse: true,
           scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: res,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: res,
+            ),
           ),
         )
       ],
@@ -543,7 +549,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   void sendNowVisitRequest() {
     DateTime now = DateTimeService.getCurrentDateTime();
     _bloc.visitRequest(
-      widget.screeningId,
+        widget.screeningId,
         widget.doctorEntity.id,
         1,
         typeSelected[VISIT_METHOD],

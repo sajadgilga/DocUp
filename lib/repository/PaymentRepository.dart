@@ -9,6 +9,7 @@ class PaymentRepository {
   ApiProvider _provider = ApiProvider();
 
   Future<PayirResponseEntity> sendDataToPay(String mobile, int amount) async {
+    /// TODO remove this api
     final response =
         await _provider.postWithBaseUrl("https://pay.ir/", "pg/send", body: {
       "api": PAY_IR_API_KEY,

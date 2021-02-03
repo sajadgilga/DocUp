@@ -20,6 +20,7 @@ import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:simple_tooltip/simple_tooltip.dart';
 import 'package:uni_links/uni_links.dart';
 
 class BuyScreeningPage extends StatefulWidget {
@@ -46,6 +47,7 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
   BuildContext _loadingContext;
   Screening screening;
   StreamSubscription _sub;
+  bool _tooltipToggle = true;
 
   void _initialApiCall() {
     var _state = BlocProvider.of<EntityBloc>(context).state;
@@ -114,9 +116,13 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
         if (_loadingContext != null) {
           Navigator.of(_loadingContext).pop();
         }
-        EntityAndPanelUpdater.updateEntity();
-        BlocProvider.of<ScreeningBloc>(context).add(GetPatientScreening());
-        Navigator.pop(context);
+        showOneButtonDialog(context, "پلن شما با موفقیا خریداری شد.", "تایید",
+            () {
+          EntityAndPanelUpdater.updateEntity();
+          Navigator.pop(context);
+          BlocProvider.of<ScreeningBloc>(context)
+              .add(GetPatientScreening(withLoading: true));
+        });
       } else if (event.status == Status.ERROR) {
         if (_loadingContext != null) {
           Navigator.of(_loadingContext).pop();
@@ -219,16 +225,48 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
     return Container(
       height: 60,
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      child: TextField(
-        controller: _discountController,
-        textDirection: TextDirection.rtl,
-        textAlign: TextAlign.right,
-        decoration: InputDecoration(
-            hintText: "کد تخفیف",
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: new BorderSide(color: IColors.darkGrey, width: 1)),
-            prefixIcon: disCountPrefixIcon()),
+      child: SimpleTooltip(
+        hideOnTooltipTap: false,
+        show: true,
+        animationDuration: Duration(milliseconds: 460),
+        tooltipDirection: TooltipDirection.up,
+        maxHeight: 150,
+        maxWidth: MediaQuery.of(context).size.width * 0.8,
+        ballonPadding: EdgeInsets.all(0),
+        backgroundColor: IColors.whiteTransparent,
+        borderColor: IColors.themeColor,
+        tooltipTap: () {
+          launchURL(Strings.appSiteLink);
+        },
+        content: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: AutoText(
+                Strings.guidToSiteForMothersDays,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 12,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+            ),
+          ],
+        ),
+        child: TextField(
+          controller: _discountController,
+          textDirection: TextDirection.rtl,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+              hintText: "کد تخفیف",
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide:
+                      new BorderSide(color: IColors.darkGrey, width: 1)),
+              prefixIcon: disCountPrefixIcon()),
+        ),
       ),
     );
   }
@@ -268,7 +306,8 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
         SizedBox(width: 5),
         Column(
           children: [
-            AutoText(replaceFarsiNumber(screening.price.toString()),
+            AutoText(
+                replaceFarsiNumber(priceWithCommaSeparator(screening.price)),
                 style: TextStyle(
                     decoration: discountStatus == DiscountStats.Valid
                         ? TextDecoration.lineThrough
@@ -282,9 +321,8 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
                         : FontWeight.w600)),
             discountStatus == DiscountStats.Valid
                 ? AutoText(
-                    replaceFarsiNumber((screening.price * (1 - discountPercent))
-                        .toInt()
-                        .toString()),
+                    replaceFarsiNumber(priceWithCommaSeparator(
+                        (screening.price * (1 - discountPercent)).toInt())),
                     style: TextStyle(
                         color: IColors.themeColor,
                         fontSize: 18,
@@ -314,7 +352,9 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
               onTap: () {},
             ),
             description(screening),
-            ALittleVerticalSpace(),
+            ALittleVerticalSpace(
+              height: 150,
+            ),
             discountWidget(),
             ALittleVerticalSpace(),
             priceWidget(screening),
@@ -344,7 +384,8 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
         final query = link.queryParameters;
         if (query["success"] == "false") {
         } else {
-          BlocProvider.of<ScreeningBloc>(context).add(GetPatientScreening());
+          BlocProvider.of<ScreeningBloc>(context)
+              .add(GetPatientScreening(withLoading: true));
           Navigator.pop(context);
         }
       }, onError: (err) {

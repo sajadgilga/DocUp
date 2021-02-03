@@ -126,12 +126,12 @@ class DailyWorkTimesTable extends StatefulWidget {
 
   const DailyWorkTimesTable(
       {Key key,
-        this.dayPlanTable,
-        this.startTableHour,
-        this.endTableHour,
-        this.editable,
-        this.cellHeight,
-        this.cellWidth})
+      this.dayPlanTable,
+      this.startTableHour,
+      this.endTableHour,
+      this.editable,
+      this.cellHeight,
+      this.cellWidth})
       : super(key: key);
 
   @override
@@ -142,7 +142,7 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
   Tween<int> lastHoverCell = Tween(begin: -1, end: -1);
   final LegendItem availableLegendItem = LegendItem("فعال", IColors.themeColor);
   final LegendItem unavailableLegendItem =
-  LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
+      LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
 
   @override
   Widget build(BuildContext context) {
@@ -318,11 +318,11 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
   void cellToggle(int rowNumber, int index, {bool withoutSetState = false}) {
     if (withoutSetState) {
       widget.dayPlanTable[rowNumber][index] =
-      widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
+          widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
     } else {
       setState(() {
         widget.dayPlanTable[rowNumber][index] =
-        widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
+            widget.dayPlanTable[rowNumber][index] == 0 ? 1 : 0;
       });
     }
   }
@@ -360,20 +360,20 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
       height: widget.cellHeight,
       child: ![0, 1].contains(key)
           ? Container(
-        width: widget.cellHeight,
-        height: widget.cellHeight,
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: CircleAvatar(
-            backgroundColor: Color.fromARGB(0, 0, 0, 0),
-            child: CircularProgressIndicator(
-              strokeWidth: 3,
-              valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
-            ),
-            radius: 10,
-          ),
-        ),
-      )
+              width: widget.cellHeight,
+              height: widget.cellHeight,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: CircleAvatar(
+                  backgroundColor: Color.fromARGB(0, 0, 0, 0),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+                  ),
+                  radius: 10,
+                ),
+              ),
+            )
           : SizedBox(),
       decoration: BoxDecoration(
           borderRadius: res,
@@ -438,16 +438,16 @@ class DailyAvailableVisitTime extends StatefulWidget {
 
   DailyAvailableVisitTime(
       {Key key,
-        this.dayReservedTimeTable,
-        this.dailyDoctorWorkTime,
-        this.startTableHour,
-        this.endTableHour,
-        this.cellHeight,
-        this.cellWidth,
-        this.planDurationInMinute,
-        this.selectedDateController,
-        this.selectedTimeController,
-        this.onBlocTap})
+      this.dayReservedTimeTable,
+      this.dailyDoctorWorkTime,
+      this.startTableHour,
+      this.endTableHour,
+      this.cellHeight,
+      this.cellWidth,
+      this.planDurationInMinute,
+      this.selectedDateController,
+      this.selectedTimeController,
+      this.onBlocTap})
       : super(key: key);
 
   @override
@@ -459,10 +459,10 @@ class _DailyAvailableVisitTimeTableState
     extends State<DailyAvailableVisitTime> {
   final LegendItem availableLegendItem = LegendItem("فعال", IColors.themeColor);
   final LegendItem unavailableLegendItem =
-  LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
+      LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
   final LegendItem reservedLegendItem = LegendItem("رزرو شده", Colors.black54);
   final LegendItem selectedLegendItem =
-  LegendItem("انتخاب شده", Color.fromARGB(255, 44, 62, 80));
+      LegendItem("انتخاب شده", Color.fromARGB(255, 44, 62, 80));
   List<int> selectedPartNumbers = [];
   List<int> errorSelectedPartNumber = [];
 
@@ -501,13 +501,46 @@ class _DailyAvailableVisitTimeTableState
           //   decoration: InputDecoration(border: InputBorder.none),
           // ),
           _legend(),
+          _columnGuid(),
           allRows.length != 0
               ? Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: allRows,
-          )
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: allRows,
+                )
               : emptyAvailableTime(),
+        ],
+      ),
+    );
+  }
+
+  Widget _columnGuid() {
+    print(widget.cellWidth);
+    Widget columnItem(String text, double linePercent, double width) {
+      return Container(
+        width: width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AutoText(text),
+            Container(
+              width: linePercent * width,
+              height: 2,
+              color: IColors.darkGrey,
+            )
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          columnItem("نیم ساعت دوم", 0.6, 2 * widget.cellWidth),
+          columnItem("نیم ساعت اول", 0.6, 2 * widget.cellWidth),
+          columnItem("ساعت", 0, widget.cellHeight * 1.5)
         ],
       ),
     );
@@ -615,8 +648,8 @@ class _DailyAvailableVisitTimeTableState
     List<Widget> res = [];
     res.add(getRowNumberText(rowNumber));
     for (int columnIndex = 0;
-    columnIndex < hourPlanList.length;
-    columnIndex++) {
+        columnIndex < hourPlanList.length;
+        columnIndex++) {
       Widget w = GestureDetector(
         key: ValueKey((rowNumber).toString() + columnIndex.toString()),
         child: getOneCell(rowNumber, columnIndex, hourPlanList[columnIndex]),
@@ -637,45 +670,85 @@ class _DailyAvailableVisitTimeTableState
     selectedPartNumbers.sort();
     if (selectedPartNumbers.contains(currentBloc)) {
       /// removing tapped bloc
-      if (selectedPartNumbers.length == 3 &&
-          selectedPartNumbers.indexOf(currentBloc) == 1) {
-        setState(() {
-          selectedPartNumbers = [selectedPartNumbers[0]];
-        });
-      } else {
-        setState(() {
-          selectedPartNumbers.remove(currentBloc);
-        });
-      }
-    } else if (selectedPartNumbers.length >= 3) {
+      /// new plan
+      setState(() {
+        selectedPartNumbers = [];
+      });
+      // if (selectedPartNumbers.length == 3 &&
+      //     selectedPartNumbers.indexOf(currentBloc) == 1) {
+      //   setState(() {
+      //     selectedPartNumbers = [selectedPartNumbers[0]];
+      //   });
+      // } else {
+      //   setState(() {
+      //     selectedPartNumbers.remove(currentBloc);
+      //   });
+      // }
+
+      /// TODO
+    } else if (selectedPartNumbers.length >= 2) {
       /// TODO max bloc per visit exceeded
       /// show snack bar
-      showSnackBar(null, "حداکثر زمان برای هر ویزیت ۴۵ دقیقه است",
+      showSnackBar(null, "حداکثر زمان برای هر ویزیت ۳۰ دقیقه است",
           context: context);
-    } else if (selectedPartNumbers.length == 0 ||
-        selectedPartNumbers.last + 1 == currentBloc ||
-        selectedPartNumbers.first - 1 == currentBloc) {
-      /// checking next cell to be available
-      bool checkDurationPlan = true;
-      if ((widget.dayReservedTimeTable != null &&
-          widget.dayReservedTimeTable[r][c] == 1) ||
-          widget.dailyDoctorWorkTime[r][c] == 0) {
-        checkDurationPlan = false;
-      }
-      if (checkDurationPlan) {
-        setState(() {
-          selectedPartNumbers.add(currentBloc);
-        });
+    }
+    // else if (selectedPartNumbers.length == 0 ||
+    //     selectedPartNumbers.last + 1 == currentBloc ||
+    //     selectedPartNumbers.first - 1 == currentBloc) {
+    //   /// checking next cell to be available
+    //   bool checkDurationPlan = true;
+    //   if ((widget.dayReservedTimeTable != null &&
+    //           widget.dayReservedTimeTable[r][c] == 1) ||
+    //       widget.dailyDoctorWorkTime[r][c] == 0) {
+    //     checkDurationPlan = false;
+    //   }
+    //   if (checkDurationPlan) {
+    //     setState(() {
+    //       selectedPartNumbers.add(currentBloc);
+    //     });
+    //   } else {
+    //     showErrorOnCells(r, c, 1);
+    //     showSnackBar(null, "زمان انتخاب شده در بازه های مناسب نیست.",
+    //         context: context);
+    //   }
+    // } else {
+    //   /// show snack bar error discrete
+    //   /// TODO amir
+    //   showSnackBar(null, "زمان های انتخاب شده باید پشت سر هم باشند.",
+    //       context: context);
+    // }
+    else {
+      if (c % 2 == 0) {
+        if (((widget.dayReservedTimeTable != null &&
+                    widget.dayReservedTimeTable[r][c] == 1) ||
+                widget.dailyDoctorWorkTime[r][c] == 0) ||
+            ((widget.dayReservedTimeTable != null &&
+                    widget.dayReservedTimeTable[r][c + 1] == 1) ||
+                widget.dailyDoctorWorkTime[r][c + 1] == 0)) {
+          showErrorOnCells(r, c, 1);
+          showSnackBar(null, "زمان انتخاب شده در بازه های مناسب نیست.",
+              context: context);
+        } else {
+          setState(() {
+            selectedPartNumbers = [currentBloc, currentBloc + 1];
+          });
+        }
       } else {
-        showErrorOnCells(r, c, 1);
-        showSnackBar(null, "زمان انتخاب شده در بازه های مناسب نیست.",
-            context: context);
+        if (((widget.dayReservedTimeTable != null &&
+                    widget.dayReservedTimeTable[r][c] == 1) ||
+                widget.dailyDoctorWorkTime[r][c] == 0) ||
+            ((widget.dayReservedTimeTable != null &&
+                    widget.dayReservedTimeTable[r][c - 1] == 1) ||
+                widget.dailyDoctorWorkTime[r][c - 1] == 0)) {
+          showErrorOnCells(r, c, 1);
+          showSnackBar(null, "زمان انتخاب شده در بازه های مناسب نیست.",
+              context: context);
+        } else {
+          setState(() {
+            selectedPartNumbers = [currentBloc, currentBloc - 1];
+          });
+        }
       }
-    } else {
-      /// show snack bar error discrete
-      /// TODO amir
-      showSnackBar(null, "زمان های انتخاب شده باید پشت سر هم باشند.",
-          context: context);
     }
     selectedPartNumbers.sort();
     if (selectedPartNumbers.length == 0) {
@@ -753,21 +826,22 @@ class _DailyAvailableVisitTimeTableState
     }
 
     return Container(
+      margin: EdgeInsets.only(
+          top: 1,
+          right: ((columnNumber + 1) % 2) * 1.0,
+          left: (columnNumber % 2) * 1.0),
       width: widget.cellWidth,
       height: widget.cellHeight,
       child: selectedPartNumbers.contains(partNumber)
           ? Icon(
-        Icons.check_circle,
-        color: IColors.darkBlue,
-      )
+              Icons.check_circle,
+              color: IColors.darkBlue,
+            )
           : SizedBox(),
       decoration: BoxDecoration(
-          borderRadius: res,
-          color: lessonColor,
-          border: BoxBorder.lerp(
-              Border.all(color: IColors.background, width: 0.5),
-              Border.all(color: IColors.background, width: 0.5),
-              1)),
+        borderRadius: res,
+        color: lessonColor,
+      ),
     );
   }
 

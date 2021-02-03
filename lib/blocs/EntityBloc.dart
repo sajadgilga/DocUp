@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
@@ -6,6 +5,7 @@ import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/repository/DoctorRepository.dart';
 import 'package:Neuronio/repository/PatientRepository.dart';
 import 'package:Neuronio/ui/start/RoleType.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +17,7 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
   get initialState => EntityLoaded(entity: Entity(type: RoleType.DOCTOR));
 
   Stream<EntityState> _get() async* {
+    print("****");
     Entity entity = state.entity;
     yield EntityLoading(entity: entity);
     try {
@@ -51,8 +52,10 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
   }
 
   void _raiseGetPartnerEntity(Entity entity) {
+    print("###########");
     if (state.entity.type == RoleType.PATIENT) {
       var panels = (entity.mEntity as PatientEntity).panels;
+      print(panels.length);
       if (panels.length > 0) {
         for (var panel in panels) {
           if (panel.doctorId == null || panel.status < 2) continue;
@@ -120,7 +123,7 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
 
   @override
   Stream<EntityState> mapEventToState(event) async* {
-    if (event  is EntityGet) {
+    if (event is EntityGet) {
       yield* _get();
     } else if (event is EntityUpdate)
       yield* _update();
@@ -172,18 +175,17 @@ abstract class EntityState extends Equatable {
 }
 
 class EntityLoading extends EntityState {
-  EntityLoading({entity}): super(entity: entity);
+  EntityLoading({entity}) : super(entity: entity);
 }
 
 class EntityPartnerLoading extends EntityState {
-  EntityPartnerLoading({entity}): super(entity: entity);
+  EntityPartnerLoading({entity}) : super(entity: entity);
 }
 
 class EntityLoaded extends EntityState {
-  EntityLoaded({entity}): super(entity: entity);
+  EntityLoaded({entity}) : super(entity: entity);
 }
 
 class EntityError extends EntityState {
-  EntityError({entity}): super(entity: entity);
-
+  EntityError({entity}) : super(entity: entity);
 }

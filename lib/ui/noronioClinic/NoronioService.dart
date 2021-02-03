@@ -1,6 +1,5 @@
 import 'package:Neuronio/blocs/MedicalTestListBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
-import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/MedicalTest.dart';
 import 'package:Neuronio/models/NoronioService.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
@@ -9,10 +8,10 @@ import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/ui/widgets/SquareBoxNoronioClinic.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
-import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NoronioServicePage extends StatefulWidget {
   final Function(String, dynamic) onPush;
@@ -34,16 +33,16 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
   List<NoronioServiceItem> convertToNoronioServiceList(
       List<MedicalTestItem> tests) {
     List<NoronioServiceItem> services = [];
-    NoronioServiceItem doctorList = NoronioServiceItem(
-        "مشاهده متخصصان",
-        Assets.noronioServiceDoctorList,
-        null,
-        NoronioClinicServiceType.DoctorsList, () {
-      // TODO
-
-      widget.onPush(NavigatorRoutes.partnerSearchView, NoronioClinic.ClinicId);
-    }, true);
-    services.insert(0, doctorList);
+    // NoronioServiceItem doctorList = NoronioServiceItem(
+    //     "مشاهده متخصصان",
+    //     Assets.noronioServiceDoctorList,
+    //     null,
+    //     NoronioClinicServiceType.DoctorsList, () {
+    //   // TODO
+    //
+    //   widget.onPush(NavigatorRoutes.partnerSearchView, NoronioClinic.ClinicId);
+    // }, true);
+    // services.insert(0, doctorList);
 
     tests.forEach((element) {
       NoronioServiceItem cognitiveTest = NoronioServiceItem(
@@ -51,27 +50,33 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
           Assets.noronioServiceBrainTest,
           element.imageURL,
           NoronioClinicServiceType.MultipleChoiceTest, () {
-        /// TODO
-        MedicalTestPageData medicalTestPageData =
-            MedicalTestPageData(MedicalPageDataType.Usual, patientEntity: null,
-                onDone: () {
-          widget.selectPage(1);
-        },
-                medicalTestItem: MedicalTestItem(element.testId, element.name),
-                editableFlag: true,
-                sendableFlag: true);
+        if (element.description == "#lifeQ") {
+          launch(
+              "https://docs.google.com/forms/d/e/1FAIpQLScCXP2RlG1TYTgeu8gCdOV1Adpaxh1Ae8-7YflIPyTpB6BjJg/viewform");
+        } else {
+          /// TODO
+          MedicalTestPageData medicalTestPageData = MedicalTestPageData(
+              MedicalPageDataType.Usual,
+              patientEntity: null, onDone: () {
+            widget.selectPage(1);
+          },
+              medicalTestItem: MedicalTestItem(element.testId, element.name),
+              editableFlag: true,
+              sendableFlag: true);
 
-        widget.globalOnPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
+          widget.globalOnPush(
+              NavigatorRoutes.cognitiveTest, medicalTestPageData);
+        }
       }, true);
-      services.insert(1, cognitiveTest);
+      services.add(cognitiveTest);
     });
 
-    NoronioServiceItem cognitiveGames = NoronioServiceItem("بازی های شناختی",
-        Assets.noronioServiceGame, null, NoronioClinicServiceType.Game, () {
-      // TODO
-      toast(context, "در آینده آماده می شود");
-    }, false);
-    services.insert(services.length, cognitiveGames);
+    // NoronioServiceItem cognitiveGames = NoronioServiceItem("بازی های شناختی",
+    //     Assets.noronioServiceGame, null, NoronioClinicServiceType.Game, () {
+    //   // TODO
+    //   toast(context, "در آینده آماده می شود");
+    // }, false);
+    // services.add(cognitiveGames);
 
     return services;
   }

@@ -60,7 +60,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
   Widget build(BuildContext context) {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
-        if ((state is EntityLoaded || state.entity.mEntity != null) &&
+        if ((state?.entity?.mEntity != null) &&
             !(state is EntityError)) {
           return _widget(state);
         } else if (state is EntityError) {
@@ -146,7 +146,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
             width: MediaQuery.of(context).size.width,
             doctorEntity: doctorEntity),
         ActionButton(
-          title: "اطلاعات",
+          title: "اطلاعات فردی",
           color: IColors.themeColor,
           callBack: () {
             EditProfileDataDialog editProfileData =

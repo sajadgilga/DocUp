@@ -1,5 +1,6 @@
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/PanelBloc.dart';
+import 'package:Neuronio/blocs/ScreenginBloc.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/ApiProvider.dart';
@@ -62,13 +63,12 @@ class _MainPageState extends State<MainPage> {
     SocketHelper().init(ApiProvider.URL_IP);
     // get user entity & panels, also periodically update entity's info
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
-    _entityBloc.add(EntityGet());
     var _panelBloc = BlocProvider.of<PanelBloc>(context);
-    _panelBloc.add(GetMyPanels());
+    final _screeningBloc = BlocProvider.of<ScreeningBloc>(context);
 
     /// start updater if it is not started already
     checkAppVersion();
-    EntityAndPanelUpdater.start(_entityBloc, _panelBloc);
+    EntityAndPanelUpdater.start(_entityBloc, _panelBloc, _screeningBloc);
 
     NotificationAndFirebaseService.initFCM(context, widget.pushOnBase);
     super.initState();
@@ -86,7 +86,7 @@ class _MainPageState extends State<MainPage> {
               context,
               "نسخه اپلیکیشن کنونی شما قدیمی است. با زدن بر روی دکمه زیر برای اپدیت اپ اقدام کنید و اطلاعات بیشتری را از سایت نورونیو دریافت کنید.",
               "تایید", () {
-            launchURL("https://neuronio.ir");
+            launchURL(Strings.appSiteLink);
           }, barrierDismissible: false);
         }
       });
@@ -247,7 +247,7 @@ class _MainPageState extends State<MainPage> {
           tooltipDirection: TooltipDirection.up,
           backgroundColor: IColors.whiteTransparent,
           borderColor: IColors.themeColor,
-          tooltipTap: (){
+          tooltipTap: () {
             _navigationBarDescriptionTooltipToggle = false;
           },
           content: AutoText(

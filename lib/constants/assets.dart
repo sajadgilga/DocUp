@@ -39,6 +39,7 @@ class Assets {
   static final String accountTelegramIcon = "assets/account/logo (1)@3x.png";
   static final String accountWhatsAppIcon =
       "assets/account/brands-and-logotypes@3x.png";
+  static final String accountInstagramIcon = "assets/account/instagram.png";
 
   static final String panelMyDoctorIcon =
       "assets/panel/Icon awesome-user-md@2x.png";

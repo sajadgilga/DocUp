@@ -108,7 +108,11 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
 
   Stream<ScreeningState> _getPatientScreeningPlan(
       GetPatientScreening event) async* {
-    yield ScreeningLoading();
+    if (event.withLoading) {
+      yield ScreeningLoading();
+    } else {
+      yield ScreeningLoading(result: this.state.result);
+    }
     try {
       final PatientScreeningResponse patientScreening =
           await _repository.getPatientScreeningPlanIfExist();
@@ -129,7 +133,11 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
 // events
 abstract class ScreeningEvent {}
 
-class GetPatientScreening extends ScreeningEvent {}
+class GetPatientScreening extends ScreeningEvent {
+  bool withLoading;
+
+  GetPatientScreening({this.withLoading = false});
+}
 
 // states
 abstract class ScreeningState {

@@ -94,7 +94,7 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
 
   Widget _userCreditCards() {
     List<Widget> creditCards = [];
-    (widget.doctorEntity.accountNumbers ?? []).forEach((element) {
+    (widget.doctorEntity?.accountNumbers ?? []).forEach((element) {
       creditCards.add(CreditCard(
         doctorEntity: widget.doctorEntity,
       ));

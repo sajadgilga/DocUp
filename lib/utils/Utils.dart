@@ -107,7 +107,11 @@ AlertDialog getLoadingDialog() => AlertDialog(
     content: Waiting());
 
 void showDatePickerDialog(
-    context, List<int> availableDays, TextEditingController controller,{bool restrictMinDate=true,}) {
+  context,
+  List<int> availableDays,
+  TextEditingController controller, {
+  bool restrictMinDate = true,
+}) {
   showDialog(
     context: context,
     builder: (BuildContext _) {
@@ -115,7 +119,7 @@ void showDatePickerDialog(
         color: IColors.themeColor,
         type: "date",
         initial: DateTimeService.getTodayInJalaliString(),
-        min: restrictMinDate?DateTimeService.getTodayInJalaliString():'',
+        min: restrictMinDate ? DateTimeService.getTodayInJalaliString() : '',
         disable: getDisableDays(availableDays),
         onSelect: (date) {
           controller.text = date;
@@ -404,7 +408,7 @@ double doublePossible(var text, {double defaultValues}) {
       return text;
     } else if (text is String) {
       return double.parse(text);
-    }else if(text is int){
+    } else if (text is int) {
       return text.toDouble();
     }
   } catch (e) {}
@@ -416,4 +420,16 @@ bool isNumeric(String s) {
     return false;
   }
   return double.parse(s, (e) => null) != null;
+}
+
+String priceWithCommaSeparator(int price) {
+  String priceString = price.toString();
+  priceString = priceString.split("").reversed.join("");
+  List<String> pricePart = [];
+  for (int i = 0; i < ((priceString.length) / 3).ceil(); i++) {
+    pricePart.add(
+        priceString.substring(3 * i, min((i + 1) * 3, priceString.length)));
+  }
+  String normPrice = pricePart.join(",");
+  return normPrice.split("").reversed.join("");
 }

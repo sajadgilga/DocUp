@@ -1,5 +1,6 @@
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/PanelBloc.dart';
+import 'package:Neuronio/blocs/ScreenginBloc.dart';
 import 'package:Neuronio/ui/start/SplashPage.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider<PanelBloc>.value(value: PanelBloc()),
           BlocProvider<EntityBloc>.value(value: EntityBloc()),
+          BlocProvider<ScreeningBloc>.value(value: ScreeningBloc()),
         ],
         child: MaterialApp(
           title: Strings.appTitle,
