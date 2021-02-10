@@ -16,7 +16,7 @@ class NotificationRepository {
       final deviceId = await getDeviceId();
       final response = await _provider.post("devices/", body: {
         "registration_id": fcmToken,
-        "type": PlatformDetection.isWeb ? 'web' : (PlatformDetection.isAndroid ? "android" : "ios"),
+        "type": CrossPlatformDeviceDetection.isWeb ? 'web' : (CrossPlatformDeviceDetection.isAndroid ? "android" : "ios"),
         "device_id": deviceId
       });
       return RegisterDeviceResponse.fromJson(response);

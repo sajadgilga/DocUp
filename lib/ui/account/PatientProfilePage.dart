@@ -86,7 +86,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
       }
     });
     _amountTextController.text = widget.defaultCreditForCharge;
-    if (PlatformDetection.isIOS) {
+    if (CrossPlatformDeviceDetection.isIOS) {
       KeyboardVisibilityNotification().addNewListener(onShow: () {
         showOverlay(context);
       }, onHide: () {

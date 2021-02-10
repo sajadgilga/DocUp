@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/models/Panel.dart';
 import 'package:Neuronio/models/Picture.dart';
 import 'package:Neuronio/repository/PictureRepository.dart';
+import 'package:bloc/bloc.dart';
 
 class FileBloc extends Bloc<FileEvent, FileState> {
   FileRepository _repository = FileRepository();
@@ -30,12 +30,19 @@ class FileBloc extends Bloc<FileEvent, FileState> {
     if (state is FileLoading)
       yield FileUploading(section: (state as FileLoading).section);
     try {
-      final response = await _repository.uploadFile(event.file, event.listId,event.partnerId);
+      print("here.....");
+      print(event.file.toJson());
+      final response = await _repository.uploadFile(
+          event.file, event.listId, event.partnerId);
+      print(response);
       yield FileUploaded();
       yield FilesLoaded(section: (state as FileUploading).section);
     } catch (e) {
-      yield FileError(section: (this.state as FileUploading).section,errorCode: e.getCode(),errorMessage: e.message);
       print(e.toString());
+      yield FileError(
+          section: (this.state as FileUploading).section,
+          errorCode: e.getCode(),
+          errorMessage: e.message);
     }
   }
 
@@ -80,7 +87,7 @@ class FileUpload extends FileEvent {
   FileEntity file;
   int partnerId;
 
-  FileUpload({this.listId, this.file,this.partnerId});
+  FileUpload({this.listId, this.file, this.partnerId});
 }
 
 class FileDelete extends FileEvent {
@@ -107,7 +114,7 @@ class FileError extends FileState {
   int errorCode;
   String errorMessage;
 
-  FileError({this.section,this.errorCode,this.errorMessage});
+  FileError({this.section, this.errorCode, this.errorMessage});
 }
 
 class FileLoading extends FileState {

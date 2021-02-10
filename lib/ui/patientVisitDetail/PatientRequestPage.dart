@@ -84,7 +84,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
         }
 
         if (data.data.status == 1) {
-          if (PlatformDetection.isAndroid) {
+          if (CrossPlatformDeviceDetection.isAndroid) {
             showTwoButtonDialog(
                 context,
                 'درخواست بیمار تایید  شد.' +
@@ -190,7 +190,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                       Navigator.pop(context, 'Nope.');
                     },
                     topRightFlag: false,
-                    topLeftFlag: PlatformDetection.isIOS,
+                    topLeftFlag: CrossPlatformDeviceDetection.isIOS,
                   ),
                 ],
               ),

@@ -82,7 +82,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
         SizedBox(height: 30),
 
         /// TODO
-        !PlatformDetection.isWeb
+        !CrossPlatformDeviceDetection.isWeb
             ? MapWidget(
                 clinic: doctorEntity.clinic,
               )

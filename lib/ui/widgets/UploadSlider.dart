@@ -1,39 +1,17 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:Neuronio/blocs/FileBloc.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/Picture.dart';
+import 'package:Neuronio/utils/CrossPlatformFilePicker.dart';
 import 'package:Neuronio/utils/Utils.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'AutoText.dart';
 import 'VerticalSpace.dart';
-
-enum AllowedFileType { image, doc }
-
-class AllowedFile {
-  static final List<String> imageFormats = ['jpg', 'jpeg', 'png'];
-  static final List<String> docs = ['pdf'];
-
-  static String getFormatFromFilePath(String path) {
-    return path.split(".").last;
-  }
-
-  static AllowedFileType getFileType(format) {
-    if (AllowedFile.imageFormats.contains(format)) {
-      return AllowedFileType.image;
-    } else if (AllowedFile.docs.contains(format)) {
-      return AllowedFileType.doc;
-    } else {
-      return null;
-    }
-  }
-}
 
 class UploadFileSlider extends StatefulWidget {
   int listId;
@@ -50,7 +28,7 @@ class UploadFileSlider extends StatefulWidget {
 }
 
 class UploadFileSliderState extends State<UploadFileSlider> {
-  FileEntity file = FileEntity(file: null, title: '', description: '');
+  FileEntity file = FileEntity(customFile: null, title: '', description: '');
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   AlertDialog _loading = getLoadingDialog();
@@ -91,20 +69,19 @@ class UploadFileSliderState extends State<UploadFileSlider> {
   }
 
   Future _getFile() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: AllowedFile.docs + AllowedFile.imageFormats,
-    );
-    File pickedFile = File(result.files.single.path);
-    var newPicture = FileEntity(
-        file: pickedFile,
-        description: '',
-        title: file.description,
-        base64: base64Encode(pickedFile.readAsBytesSync()),
-        filePath: pickedFile.path);
-    setState(() {
-      file = newPicture;
-    });
+    CustomFile customFile = await CrossPlatformFilePicker.pickCustomFile(
+        AllowedFile.docs + AllowedFile.imageFormats);
+    if (customFile != null) {
+      var newPicture = FileEntity(
+          customFile: customFile,
+          description: '',
+          title: file.description,
+          base64: base64Encode(customFile.fileBits),
+          filePath: customFile.path ?? customFile.name);
+      setState(() {
+        file = newPicture;
+      });
+    }
   }
 
   Widget _pictureHolder(width, height) {
@@ -211,17 +188,24 @@ class UploadFileSliderState extends State<UploadFileSlider> {
 
   void _uploadPic() {
     if (file != null &&
-        file.file != null &&
-        file.file.lengthSync() / (1000 * 1000) > 5) {
+        file.customFile != null &&
+        file.customFile.fileBits.length / (1000 * 1000) > 5) {
       showAlertDialog(
           context, 'حداکثر اندازه فایلی ارسالی ۵ ماگابایت است.', () {});
       return;
     }
 
-    if (BlocProvider.of<FileBloc>(context).state is FileUploading) return;
-    if (_titleController.text != '') file.title = _titleController.text;
-    if (_descriptionController.text != '')
+    if (BlocProvider.of<FileBloc>(context).state is FileUploading) {
+      showAlertDialog(
+          context, 'در حال آپلود فایل', () {});
+      return;
+    }
+    if (_titleController.text != '') {
+      file.title = _titleController.text;
+    }
+    if (_descriptionController.text != '') {
       file.description = _descriptionController.text;
+    }
     BlocProvider.of<FileBloc>(context).add(FileUpload(
         listId: widget.listId, file: file, partnerId: widget.partnerId));
     showDialog(

@@ -180,7 +180,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
                       widget.onPush(NavigatorRoutes.root, null);
                     },
                     topRightFlag: false,
-                    topLeftFlag: PlatformDetection.isIOS,
+                    topLeftFlag: CrossPlatformDeviceDetection.isIOS,
                   ),
                   DocUpHeader(
                     title: widget.testPageInitData.medicalTestItem.name,

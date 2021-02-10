@@ -57,7 +57,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
                 widget.onPush(NavigatorRoutes.root, null);
               },
               topRightFlag: false,
-              topLeftFlag: PlatformDetection.isIOS,
+              topLeftFlag: CrossPlatformDeviceDetection.isIOS,
             ),
             DocUpHeader(
               title: "پروفایل من",

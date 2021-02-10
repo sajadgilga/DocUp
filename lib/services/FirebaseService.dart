@@ -36,7 +36,7 @@ class NotificationAndFirebaseService {
           onResume: onResume,
         );
 
-        if (PlatformDetection.isIOS) {
+        if (CrossPlatformDeviceDetection.isIOS) {
           _firebaseMessaging.requestNotificationPermissions(
               const IosNotificationSettings(
                   sound: true, badge: true, alert: true, provisional: true));

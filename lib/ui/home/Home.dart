@@ -173,8 +173,11 @@ class _HomeState extends State<Home> {
               "https://neuronio.ir/%D9%BE%DA%A9%DB%8C%D8%AC-%D8%B1%D9%88%D8%B2-%D9%85%D8%A7%D8%AF%D8%B1/");
         },
         child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Image.asset(Assets.mothersDayOccasion)),
+            borderRadius: BorderRadius.circular(30),
+            child: Image.asset(
+              Assets.mothersDayOccasion,
+              width: MediaQuery.of(context).size.width * 0.72,
+            )),
       ),
     );
   }
@@ -194,7 +197,8 @@ class _HomeState extends State<Home> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(),
-                  child: AutoText("سنجش سلامت‌جو", style: TextStyle(fontSize: 17)),
+                  child:
+                      AutoText("سنجش سلامت‌جو", style: TextStyle(fontSize: 17)),
                 ),
                 SizedBox(
                   height: 20,

@@ -159,7 +159,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
         MediumVerticalSpace(),
 
         /// TODO
-        !PlatformDetection.isWeb
+        !CrossPlatformDeviceDetection.isWeb
             ? MapWidget(
                 clinic: doctorEntity.clinic,
               )

@@ -209,7 +209,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
                 color: IColors.themeColor,
                 size: 20,
               ),
-              topLeftFlag: PlatformDetection.isIOS,
+              topLeftFlag: CrossPlatformDeviceDetection.isIOS,
               topRight: Container(
                   child: Image.asset(Assets.logoTransparent, width: 50)),
               topRightFlag: false,

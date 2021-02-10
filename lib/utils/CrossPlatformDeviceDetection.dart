@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
-class PlatformDetection{
+class CrossPlatformDeviceDetection{
   static bool get isIOS{
     if(!kIsWeb && Platform.isIOS){
       return true;

@@ -366,6 +366,13 @@
             </list>
           </value>
         </entry>
+        <entry key="flutter_web_image_picker">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_web_image_picker-0.0.2/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="flutter_web_plugins">
           <value>
             <list>
@@ -446,7 +453,7 @@
         <entry key="image_picker">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.7+14/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.7+22/lib" />
             </list>
           </value>
         </entry>
@@ -1035,6 +1042,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_spinkit-4.1.2+1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_svg-0.18.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_typeahead-2.0.0/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_web_image_picker-0.0.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/google_maps_flutter-0.5.33/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/google_maps_flutter_platform_interface-1.0.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/googleapis-0.56.1/lib" />
@@ -1045,7 +1053,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/icon_shadow-1.0.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/image-2.1.19/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/image_cropper-1.3.1/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.7+14/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.7+22/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/image_picker_platform_interface-1.1.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/import_js_library-1.0.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/intl-0.16.1/lib" />

@@ -272,7 +272,7 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
   }
 
   Future<void> _handleCameraAndMic() async {
-    if(PlatformDetection.isWeb){
+    if(CrossPlatformDeviceDetection.isWeb){
       /// TODO web
     }else{
       await PermissionHandler().requestPermissions(

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:Neuronio/blocs/AuthBloc.dart';
 import 'package:Neuronio/constants/colors.dart';
@@ -10,10 +9,9 @@ import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Avatar.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/utils/CrossPlatformFilePicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 
 class EditProfileAvatarDialog {
   Entity entity;
@@ -21,7 +19,7 @@ class EditProfileAvatarDialog {
   BuildContext context;
   StateSetter accountStateSetter;
   StateSetter alertStateSetter;
-  File picture;
+  CustomFile customImageFile;
   bool emptyFlag = false;
   final Function() onDone;
 
@@ -30,7 +28,7 @@ class EditProfileAvatarDialog {
   ///0 for done,1 for loading, 2 for error
 
   EditProfileAvatarDialog(
-      this.context, this.entity, this.onDone, this.accountStateSetter) {}
+      this.context, this.entity, this.onDone, this.accountStateSetter);
 
   void showEditableAvatarDialog() {
     StreamSubscription streamSubscription;
@@ -83,17 +81,16 @@ class EditProfileAvatarDialog {
                                     ? PolygonAvatar(
                                         imageSize: 140,
                                       )
-                                    : (picture == null
+                                    : (customImageFile == null
                                         ? PolygonAvatar(
                                             user: entity.mEntity.user,
                                             imageSize: 140,
                                           )
                                         : PolygonAvatar(
                                             imageSize: 140,
-                                            defaultImage: Image.file(
-                                              picture,
-                                              fit: BoxFit.cover,
-                                            ),
+                                            defaultImage: Image.memory(
+                                                customImageFile.fileBits,
+                                                fit: BoxFit.cover),
                                           ))),
                             Padding(
                               padding: EdgeInsets.only(top: 10, bottom: 20),
@@ -101,7 +98,7 @@ class EditProfileAvatarDialog {
                                 onTap: () {
                                   alertStateSetter(() {
                                     emptyFlag = true;
-                                    picture = null;
+                                    customImageFile = null;
                                   });
                                 },
                                 child: Container(
@@ -185,34 +182,22 @@ class EditProfileAvatarDialog {
   }
 
   void updateAvatarImage(AuthBloc authBloc) async {
-    /// TODO amir: incomplete api. it should accept null image as if users don't want to have and avatar
-    if (picture == null) {
+    if (customImageFile == null) {
       authBloc.deleteAvatar(entity.mEntity.id);
     } else {
       authBloc.uploadAvatar(
-          base64Encode(picture.readAsBytesSync()), entity.mEntity.id);
+          base64Encode(customImageFile.fileBits), entity.mEntity.id);
     }
   }
 
   Future _getImage(StateSetter stateSetter) async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    File croppedFile = await ImageCropper.cropImage(
-        sourcePath: image.path,
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-        ],
-        androidUiSettings: AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: IColors.themeColor,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: true),
-        iosUiSettings: IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        ));
-    stateSetter(() {
-      emptyFlag = false;
-      picture = croppedFile;
-    });
+    var croppedFile =
+        await CrossPlatformFilePicker.pickCustomImageFile(imageCropper: true);
+    if (croppedFile != null) {
+      stateSetter(() {
+        emptyFlag = false;
+        customImageFile = croppedFile;
+      });
+    }
   }
 }

@@ -53,7 +53,7 @@ class VisitRequestsPage extends StatelessWidget {
       );
 
   Widget _backArrow(context) {
-    return (PlatformDetection.isIOS
+    return (CrossPlatformDeviceDetection.isIOS
         ? GestureDetector(
             onTap: () {
               Navigator.pop(context);
