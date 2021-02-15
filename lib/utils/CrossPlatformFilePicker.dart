@@ -1,4 +1,4 @@
-import 'dart:html' as html;
+// import 'dart:html' as html;
 import 'dart:io' as io;
 
 import 'package:Neuronio/constants/colors.dart';
@@ -47,13 +47,13 @@ class CustomFile {
     this.fileBits = file.readAsBytesSync();
   }
 
-  CustomFile.fromHtmlFile(
-      html.File file, AllowedFileType fileType, List<int> fileBits) {
-    this.fileType = fileType;
-    this.name = file.name;
-    this.path = null;
-    this.fileBits = fileBits;
-  }
+  // CustomFile.fromHtmlFile(
+  //     html.File file, AllowedFileType fileType, List<int> fileBits) {
+  //   this.fileType = fileType;
+  //   this.name = file.name;
+  //   this.path = null;
+  //   this.fileBits = fileBits;
+  // }
 }
 
 class CrossPlatformFilePicker {
@@ -66,10 +66,10 @@ class CrossPlatformFilePicker {
 
       if (result != null && result.files != null && result.files.length != 0) {
         print(result.files[0].name);
-        return CustomFile.fromHtmlFile(
-            html.File(result.files[0].bytes, result.files[0].name),
-            AllowedFileType.image,
-            result.files[0].bytes);
+        // return CustomFile.fromHtmlFile(
+        //     html.File(result.files[0].bytes, result.files[0].name),
+        //     AllowedFileType.image,
+        //     result.files[0].bytes);
       } else {
         return null;
       }
@@ -107,10 +107,10 @@ class CrossPlatformFilePicker {
       AllowedFileType allowedFileType =
           AllowedFile.getFileType(result.files[0].extension);
       if (CrossPlatformDeviceDetection.isWeb) {
-        return CustomFile.fromHtmlFile(
-            html.File(result.files[0].bytes, result.files[0].name),
-            allowedFileType,
-            result.files[0].bytes);
+        // return CustomFile.fromHtmlFile(
+        //     html.File(result.files[0].bytes, result.files[0].name),
+        //     allowedFileType,
+        //     result.files[0].bytes);
       } else {
         return CustomFile.fromIoFile(
             io.File(result.files[0].path), allowedFileType);

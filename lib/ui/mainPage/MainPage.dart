@@ -99,7 +99,7 @@ class _MainPageState extends State<MainPage> {
         ProgressDialog(context, type: ProgressDialogType.Normal);
     _progressDialogue.style(message: "لطفا منتظر بمانید");
 
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
 
     return WillPopScope(
         child: BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {

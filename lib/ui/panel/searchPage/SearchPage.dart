@@ -55,7 +55,7 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
 
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _initialSearch(context);
     super.initState();
   }
@@ -74,7 +74,7 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
           clinicId: widget.clinicIdDoctorSearch,
           expertise: filterString));
 
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
   void _initialSearch(context) {

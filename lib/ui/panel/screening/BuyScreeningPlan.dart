@@ -74,7 +74,7 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
   @override
   void initState() {
     _screeningBloc = BlocProvider.of<ScreeningBloc>(context);
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _initialApiCall();
     initUniLinks();
     super.initState();

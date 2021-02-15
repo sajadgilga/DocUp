@@ -30,7 +30,7 @@ class VisitRequestsPage extends StatelessWidget {
     searchBloc.add(SearchVisit(text: _controller.text, acceptStatus: 0));
 
 //    FocusScope.of(context).unfocus();
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+//     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
   void _initialSearch(context) {
@@ -214,7 +214,7 @@ class VisitRequestsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _initialSearch(context);
 //    _search(context);
 //    _controller.addListener((){print(_controller.text); });

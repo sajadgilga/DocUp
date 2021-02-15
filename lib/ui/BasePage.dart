@@ -1,7 +1,9 @@
 import 'package:Neuronio/blocs/NotificationBloc.dart';
+import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
 import 'package:Neuronio/utils/WebsocketHelper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BasePage extends StatefulWidget {
@@ -41,20 +43,25 @@ class _BasePageState extends State<BasePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     _notificationBloc.add(GetNewestNotifications());
     var nav = GlobalKey<NavigatorState>();
-    return MultiBlocProvider(
-        providers: [
-          BlocProvider<NotificationBloc>.value(
-            value: _notificationBloc,
-          )
-        ],
-        child: WillPopScope(
-            child: NavigatorView(
-              index: -1,
-              navigatorKey: nav,
-            ),
-            onWillPop: () async {
-              final isMain = !await nav.currentState.maybePop();
-              return isMain;
-            }));
+    return Scaffold(
+      backgroundColor: IColors.background,
+      body: SafeArea(
+        child: MultiBlocProvider(
+            providers: [
+              BlocProvider<NotificationBloc>.value(
+                value: _notificationBloc,
+              )
+            ],
+            child: WillPopScope(
+                child: NavigatorView(
+                  index: -1,
+                  navigatorKey: nav,
+                ),
+                onWillPop: () async {
+                  final isMain = !await nav.currentState.maybePop();
+                  return isMain;
+                })),
+      ),
+    );
   }
 }

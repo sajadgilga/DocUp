@@ -378,7 +378,7 @@ class TabsState extends State<Tabs> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return BlocBuilder<TabSwitchBloc, PanelTabState>(builder: (context, state) {
       return
 //        Stack(

@@ -37,10 +37,9 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //   statusBarColor: Color.fromARGB(100, 180, 180, 180),
-    // ));
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Color.fromARGB(80, 0, 0, 0)));
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     if (CrossPlatformDeviceDetection.isAndroid ||
         CrossPlatformDeviceDetection.isIOS) {
       //    Crashlytics.instance.enableInDevMode = true;  // Pass all uncaught errors from the framework to Crashlytics.
@@ -59,7 +58,10 @@ class MyApp extends StatelessWidget {
             primarySwatch: MaterialColor(IColors.themeColor.value, swatch),
           ),
 //      home: MainPage(),
-          home: _startPage,
+          home: Scaffold(
+            body: _startPage,
+            backgroundColor: Colors.white,
+          ),
         ));
   }
 }

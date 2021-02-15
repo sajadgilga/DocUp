@@ -16,7 +16,6 @@ import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -122,6 +121,12 @@ class _HomeState extends State<Home> {
         children: [
           _neuronioClinic(),
           _trackingList(),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          _neuronioClinic(),
         ],
       );
     }
@@ -278,7 +283,31 @@ class _HomeState extends State<Home> {
   Widget _iPartner() {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
-        if (state is EntityLoaded) {
+        if (state is EntityLoading || state is EntityPartnerLoading) {
+          if (state.entity.partnerEntity != null) {
+            return IPartner(
+              selectPage: widget.selectPage,
+              partner: state.entity.partnerEntity,
+              onPush: widget.onPush,
+              globalOnPush: widget.globalOnPush,
+              color: IColors.themeColor,
+              label: (state.entity.isPatient
+                  ? Strings.iDoctorLabel
+                  : Strings.iPatientLabel),
+            );
+          } else {
+            return IPartner(
+              selectPage: widget.selectPage,
+              onPush: widget.onPush,
+              globalOnPush: widget.globalOnPush,
+              color: IColors.themeColor,
+              label: (state.entity.isPatient
+                  ? Strings.iDoctorLabel
+                  : Strings.iPatientLabel),
+              partnerState: EntityPartnerState.Loading,
+            );
+          }
+        } else if (state is EntityLoaded) {
           if (state.entity.partnerEntity != null) {
             return IPartner(
               selectPage: widget.selectPage,
@@ -292,27 +321,14 @@ class _HomeState extends State<Home> {
             );
           }
         }
-        if (state is EntityLoading) {
-          if (state.entity.partnerEntity != null) {
-            return IPartner(
-              selectPage: widget.selectPage,
-              partner: state.entity.partnerEntity,
-              onPush: widget.onPush,
-              globalOnPush: widget.globalOnPush,
-              color: IColors.themeColor,
-              label: (state.entity.isPatient
-                  ? Strings.iDoctorLabel
-                  : Strings.iPatientLabel),
-            );
-          }
-        }
+
         return IPartner(
           color: IColors.themeColor,
           label: (state.entity.isPatient
               ? Strings.iDoctorLabel
               : Strings.iPatientLabel),
           onPush: widget.onPush,
-          isEmpty: true,
+          partnerState: EntityPartnerState.Empty,
         );
       },
     );
@@ -351,8 +367,8 @@ class _HomeState extends State<Home> {
                           enableFlag: false,
                           onTap: () {
                             FocusScope.of(context).unfocus();
-                            SystemChrome.setEnabledSystemUIOverlays(
-                                [SystemUiOverlay.bottom]);
+                            // SystemChrome.setEnabledSystemUIOverlays(
+                            //     [SystemUiOverlay.bottom]);
                             widget.onPush(
                                 NavigatorRoutes.partnerSearchView, null);
                           },

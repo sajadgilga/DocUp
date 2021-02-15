@@ -52,7 +52,6 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
   }
 
   void _raiseGetPartnerEntity(Entity entity) {
-    print("###########");
     if (state.entity.type == RoleType.PATIENT) {
       var panels = (entity.mEntity as PatientEntity).panels;
       print(panels.length);
@@ -94,6 +93,7 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
       entity.iPanelId = panelId;
       yield EntityLoaded(entity: entity);
     } catch (e) {
+      print(e);
       yield EntityError(entity: entity);
     }
   }

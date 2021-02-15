@@ -182,7 +182,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return BlocBuilder<TextPlanBloc, TextPlanState>(builder: (context, state) {
       if (state is TextPlanLoaded) {
         return _chatWidget(state.textPlan);
