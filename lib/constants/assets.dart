@@ -7,7 +7,7 @@ class Assets {
   static final String panelListIcon = 'assets/panelMenu.svg';
   static final String searchIcon = 'assets/search.svg';
   static final String onCallMedicalIcon = "assets/onCallIcon.svg";
-  static final String patientLoginIcon = "assets/team.svg";
+  static final String patientLoginIcon = "assets/team.png";
   static final String doctorLoginIcon = "assets/doctor.svg";
   static final String clinicLoginIcon = "assets/doctor.svg";
   static final String homeBackground = 'assets/backgroundHome.png';
@@ -18,9 +18,10 @@ class Assets {
   static final String logoRectangle = 'assets/logoTransparentNeuronio.png';
   static final String logoCircle = 'assets/logoCircle.png';
   static final String logoTransparent = 'assets/logoTransparentNeuronio.png';
-  static final String profileIcon = 'assets/profileIcon.svg';
-  static final String servicesIcon = 'assets/servicesIcon.svg';
-  static final String panelIcon = 'assets/panelIcon.svg';
+
+  static final String profileIcon = 'assets/profileIcon.png';
+  static final String servicesIcon = 'assets/servicesIcon.png';
+  static final String panelIcon = 'assets/panelIcon.png';
 
   static final String noronioServiceDoctorList =
       "assets/noronioClinic/doctor (1)@2x.png";

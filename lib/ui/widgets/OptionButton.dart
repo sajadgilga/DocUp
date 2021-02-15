@@ -33,7 +33,8 @@ class _OptionButtonState extends State<OptionButton> {
 
   Color getCurrentColor() => _isSelected ? IColors.themeColor : Colors.grey;
 
-  Widget radioButton() => Container(
+  Widget radioButton() =>
+      Container(
         width: 16,
         height: 16,
         padding: EdgeInsets.all(2.0),
@@ -42,16 +43,17 @@ class _OptionButtonState extends State<OptionButton> {
             border: Border.all(color: getCurrentColor(), width: 2.0)),
         child: _isSelected
             ? Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: getCurrentColor()),
-              )
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle, color: getCurrentColor()),
+        )
             : Container(),
       );
+
   @override
   void setState(fn) {
-    if(mounted) {
+    if (mounted) {
       super.setState(fn);
     }
   }
@@ -71,45 +73,41 @@ class _OptionButtonState extends State<OptionButton> {
     return Container(
         width: 110,
         height: 110,
-        child: Stack(
-          children: <Widget>[
-            InkWell(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    border: _isSelected
-                        ? Border.all(width: 2.0, color: IColors.themeColor)
-                        : Border.all(width: 0.0),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(children: <Widget>[
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            AutoText(
-                              roleType.name,
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: getCurrentColor(),
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(width: 10),
-                            radioButton(),
-                          ]),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        width: 60,
-                        height: 60,
-                        child: CrossPlatformSvg.asset(
-                          roleType.asset,
-                          color: getCurrentColor(),
+        child: InkWell(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                border: _isSelected
+                    ? Border.all(width: 2.0, color: IColors.themeColor)
+                    : Border.all(width: 0.0),
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(children: <Widget>[
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        AutoText(
+                          roleType.name,
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: getCurrentColor(),
+                              fontWeight: FontWeight.bold),
                         ),
-                      )
-                    ])),
-              ),
-            )
-          ],
+                        SizedBox(width: 10),
+                        radioButton(),
+                      ]),
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    width: 60,
+                    height: 60,
+                    child: Image.asset(
+                      roleType.asset,
+                      color: getCurrentColor(),
+                    ),
+                  )
+                ])),
+          ),
         ));
   }
 }

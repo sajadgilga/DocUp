@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web_socket_channel/html.dart';
 import 'package:web_socket_channel/io.dart';
 
 import 'dateTimeService.dart';
@@ -15,13 +16,14 @@ class SocketHelper {
   String url;
   String token;
   var _channel;
+
   // var _stream;
   StreamController _broadcastStreamer = StreamController.broadcast();
   final int _maxRetryTimeout = 32;
   int _retryCount = 0;
   final List<Map<String, dynamic>> messageQueue = [];
   final TextEditingController webSocketStatusController =
-      TextEditingController();
+  TextEditingController();
   bool appIsPaused = false;
 
   get channel {
@@ -68,11 +70,11 @@ class SocketHelper {
   void connect(String url) {
     getCrossPlatformWebSocket(url,
         {Iterable<String> protocols,
-        Map<String, dynamic> headers,
-        Duration pingInterval}) {
+          Map<String, dynamic> headers,
+          Duration pingInterval}) {
       if (kIsWeb) {
         /// TODO web
-        // return HtmlWebSocketChannel.connect(url);
+        return HtmlWebSocketChannel.connect(url);
       } else {
         return IOWebSocketChannel.connect(url, pingInterval: pingInterval);
       }
@@ -113,7 +115,7 @@ class SocketHelper {
 
                 /// as disconnected status
                 final _retryTimeout =
-                    min(_maxRetryTimeout, 2 ^ (_retryCount++) + 2);
+                min(_maxRetryTimeout, 2 ^ (_retryCount++) + 2);
                 Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
                   connect(url);
                 });
@@ -124,7 +126,7 @@ class SocketHelper {
                 print('websocket error ' +
                     DateTimeService.getCurrentDateTime().toString());
                 final _retryTimeout =
-                    min(_maxRetryTimeout, 2 ^ (_retryCount++) + 2);
+                min(_maxRetryTimeout, 2 ^ (_retryCount++) + 2);
                 Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
                   connect(url);
                 });
@@ -189,6 +191,7 @@ class SocketHelper {
 
   void onReceive(data) {
     _broadcastStreamer.add(data);
+
     /// TODO
   }
 }

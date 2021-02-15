@@ -193,6 +193,7 @@ class EditProfileAvatarDialog {
   Future _getImage(StateSetter stateSetter) async {
     var croppedFile =
         await CrossPlatformFilePicker.pickCustomImageFile(imageCropper: true);
+    print(croppedFile);
     if (croppedFile != null) {
       stateSetter(() {
         emptyFlag = false;

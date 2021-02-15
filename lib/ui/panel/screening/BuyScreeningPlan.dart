@@ -15,6 +15,7 @@ import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
@@ -378,21 +379,24 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
   }
 
   Future<Null> initUniLinks() async {
-    try {
-      /// profile page uni link will do the rest
-      _sub = getUriLinksStream().listen((Uri link) {
-        final query = link.queryParameters;
-        if (query["success"] == "false") {
-        } else {
-          BlocProvider.of<ScreeningBloc>(context)
-              .add(GetPatientScreening(withLoading: true));
-          Navigator.pop(context);
-        }
-      }, onError: (err) {
-        print("link error $err");
-      });
-    } on PlatformException {
-      print("link error");
+    if (CrossPlatformDeviceDetection.isAndroid ||
+        CrossPlatformDeviceDetection.isIOS) {
+      try {
+        /// profile page uni link will do the rest
+        _sub = getUriLinksStream().listen((Uri link) {
+          final query = link.queryParameters;
+          if (query["success"] == "false") {
+          } else {
+            BlocProvider.of<ScreeningBloc>(context)
+                .add(GetPatientScreening(withLoading: true));
+            Navigator.pop(context);
+          }
+        }, onError: (err) {
+          print("link error $err");
+        });
+      } on PlatformException {
+        print("link error");
+      }
     }
   }
 }

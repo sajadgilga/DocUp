@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
+/// TODO web
 enum AllowedFileType { image, doc }
 
 class AllowedFile {
@@ -98,8 +99,10 @@ class CrossPlatformFilePicker {
   }
 
   static Future<CustomFile> pickCustomFile(List<String> allowedFormats) async {
-    FilePickerResult result = await FilePicker.platform
-        .pickFiles(allowMultiple: false, allowedExtensions: allowedFormats);
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        allowedExtensions: allowedFormats,
+        type: FileType.custom);
     if (result != null && result.files != null && result.files.length != 0) {
       AllowedFileType allowedFileType =
           AllowedFile.getFileType(result.files[0].extension);

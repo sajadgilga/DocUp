@@ -50,8 +50,6 @@ class CrossPlatformSvg {
         alignment = Alignment.center,
         String semanticsLabel,
       }) {
-    // `kIsWeb` is a special Flutter variable that just exists
-    // Returns true if we're on web, false for mobile
     if (kIsWeb) {
       return Image.network(
         assetPath,

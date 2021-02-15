@@ -76,7 +76,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
           _loadingEnable = false;
           launchURL(event.result.paymentUrl);
         }
-      } else if(event is AddCreditError){
+      } else if (event is AddCreditError) {
         Navigator.of(loadingContext).pop();
         showOneButtonDialog(
             context,
@@ -153,8 +153,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
-        if ((state?.entity?.mEntity != null) &&
-            !(state is EntityError)) {
+        if ((state?.entity?.mEntity != null) && !(state is EntityError)) {
           return _widget(state);
         } else if (state is EntityError) {
           print(state);
@@ -450,28 +449,31 @@ class _PatientProfilePageState extends State<PatientProfilePage>
   StreamSubscription _sub;
 
   Future<Null> initUniLinks() async {
-    try {
-      _sub = getUriLinksStream().listen((Uri link) {
-        final query = link.queryParameters;
-        if (query["success"] == "false") {
-          showOneButtonDialog(
-              context, "پرداخت با خطا مواجه شد", "متوجه شدم", () {});
-        } else {
-          var _state = BlocProvider.of<EntityBloc>(context).state.entity;
-          EntityAndPanelUpdater.updateEntity();
-          setState(() {
-            _state.mEntity.user.credit = query["credit"];
-            _amountTextController.text = query["credit"];
-          });
+    if (CrossPlatformDeviceDetection.isIOS ||
+        CrossPlatformDeviceDetection.isAndroid) {
+      try {
+        _sub = getUriLinksStream().listen((Uri link) {
+          final query = link.queryParameters;
+          if (query["success"] == "false") {
+            showOneButtonDialog(
+                context, "پرداخت با خطا مواجه شد", "متوجه شدم", () {});
+          } else {
+            var _state = BlocProvider.of<EntityBloc>(context).state.entity;
+            EntityAndPanelUpdater.updateEntity();
+            setState(() {
+              _state.mEntity.user.credit = query["credit"];
+              _amountTextController.text = query["credit"];
+            });
 
-          showOneButtonDialog(context, "عملیات با موفقیت انجام شد.",
-              "متوجه شدم", () {});
-        }
-      }, onError: (err) {
-        print("link error $err");
-      });
-    } on PlatformException {
-      print("link error");
+            showOneButtonDialog(
+                context, "عملیات با موفقیت انجام شد.", "متوجه شدم", () {});
+          }
+        }, onError: (err) {
+          print("link error $err");
+        });
+      } on PlatformException {
+        print("link error");
+      }
     }
   }
 }

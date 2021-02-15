@@ -136,47 +136,52 @@ class _MainPageState extends State<MainPage> {
   List<BottomNavigationBarItem> _bottomNavigationItems(Entity entity) {
     return navigator_destinations
         .map<BottomNavigationBarItem>((Destination destination) {
-      return BottomNavigationBarItem(
-          icon: Container(
-              constraints: BoxConstraints.expand(
-                  width: MediaQuery.of(context).size.width / 4, height: 40),
-              child: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  Container(
-                      alignment: Alignment.center,
-                      child: (destination.hasImage
-                          ? CrossPlatformSvg.asset(
-                              destination.image,
-                              color: _getBottomNavigationColor(destination,
-                                  secondary: Colors.grey),
-                              width: 25,
-                            )
-                          : Icon(
-                              destination.icon,
-                              size: 30,
-                            ))),
-                  Align(
-                      alignment: Alignment(0, -1.65),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _getBottomNavigationColor(destination),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: _getBottomNavigationColor(destination),
-                                  offset: Offset(1, 3),
-                                  blurRadius: 10)
-                            ]),
-                        width: 10,
-                        height: 10,
-                      ))
-                ],
-              )),
-          title: AutoText(
-            destination.title,
-          ),
-          backgroundColor: Colors.white);
+      try {
+        return BottomNavigationBarItem(
+            icon: Container(
+                constraints: BoxConstraints.expand(
+                    width: MediaQuery.of(context).size.width / 4, height: 40),
+                child: Stack(
+                  overflow: Overflow.visible,
+                  children: <Widget>[
+                    Container(
+                        alignment: Alignment.center,
+                        child: (destination.hasImage
+                            ? Image.asset(
+                                destination.image,
+                                color: _getBottomNavigationColor(destination,
+                                    secondary: Colors.grey),
+                                width: 25,
+                              )
+                            : Icon(
+                                destination.icon,
+                                size: 30,
+                              ))),
+                    Align(
+                        alignment: Alignment(0, -1.65),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _getBottomNavigationColor(destination),
+                              boxShadow: [
+                                BoxShadow(
+                                    color:
+                                        _getBottomNavigationColor(destination),
+                                    offset: Offset(1, 3),
+                                    blurRadius: 10)
+                              ]),
+                          width: 10,
+                          height: 10,
+                        ))
+                  ],
+                )),
+            label: destination.title,
+            backgroundColor: Colors.white);
+      } catch (e) {
+        print("###### ERROR:");
+        print(e);
+        return BottomNavigationBarItem(icon: Icon(Icons.crop_square));
+      }
     }).toList();
   }
 
