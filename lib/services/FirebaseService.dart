@@ -160,7 +160,7 @@ class NotificationAndFirebaseService {
 
     NotificationAndFirebaseService.notifNavRepo.navigate(context, notif);
 
-    BlocProvider.of<NotificationBloc>(context).add(AddNotifToSeen(notifId));
+    // BlocProvider.of<NotificationBloc>(context).add(AddNotifToSeen(notifId));
   }
 
   static Future _showNotificationWithDefaultSound(

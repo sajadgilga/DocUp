@@ -1,7 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/models/SearchResult.dart';
-import 'package:Neuronio/repository/InfoRepository.dart';
 import 'package:Neuronio/repository/SearchRepository.dart';
+import 'package:bloc/bloc.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchRepository _repository = SearchRepository();
@@ -10,7 +9,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   get initialState => SearchUnloaded();
 
   Stream<SearchState> _searchDoctor(SearchDoctor event) async* {
-    yield SearchLoading(result: state.result);
+    if (state?.result?.isDoctor  == true) {
+      yield SearchLoading(result: state.result);
+    } else {
+      yield SearchLoading();
+    }
     try {
       SearchResult searchResult;
       if (event.isMyDoctors) {
@@ -27,11 +30,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   Stream<SearchState> _searchPatient(SearchPatient event) async* {
-    yield SearchLoading(result: state.result);
+    if (state?.result?.isPatient  == true) {
+      yield SearchLoading(result: state.result);
+    } else {
+      yield SearchLoading();
+    }
     try {
       SearchResult searchResult;
-      searchResult = await _repository.searchPatient(
-          event.text, event.patientFilter);
+      searchResult =
+          await _repository.searchPatient(event.text, event.patientFilter);
       yield SearchLoaded(result: searchResult, count: searchResult.count);
     } catch (e) {
       yield SearchError();
@@ -39,13 +46,33 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   Stream<SearchState> _searchVisit(SearchVisit event) async* {
-    yield SearchLoading(result: state.result);
+    if (state?.result?.isVisit == true) {
+      yield SearchLoading(result: state.result);
+    } else {
+      yield SearchLoading();
+    }
     try {
       SearchResult searchResult;
       searchResult = await _repository.searchPatientVisits(
           event.text, event.acceptStatus, event.visitType);
       yield SearchLoaded(result: searchResult, count: searchResult.count);
     } catch (e) {
+      yield SearchError();
+    }
+  }
+
+  Stream<SearchState> _searchClinic(SearchClinic event) async* {
+    if (state?.result?.isClinic == true) {
+      yield SearchLoading(result: state.result);
+    } else {
+      yield SearchLoading();
+    }
+    try {
+      SearchResult searchResult;
+      searchResult = await _repository.searchClinics();
+      yield SearchLoaded(result: searchResult, count: searchResult.count);
+    } catch (e) {
+      print(e);
       yield SearchError();
     }
   }
@@ -72,9 +99,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield* _searchVisit(event);
     } else if (event is SearchCountGet) {
       yield* _searchCount(event);
+    } else if (event is SearchClinic) {
+      yield* _searchClinic(event);
     } else if (event is SearchLoadingEvent) {
       yield SearchLoading();
-    }else if(event is ErrorEvent){
+    } else if (event is ErrorEvent) {
       yield SearchError();
     }
   }
@@ -91,7 +120,7 @@ class SearchPatient extends SearchEvent {
   String text;
   String patientFilter;
 
-  SearchPatient({this.text="", this.patientFilter});
+  SearchPatient({this.text = "", this.patientFilter});
 }
 
 class SearchDoctor extends SearchEvent {
@@ -108,15 +137,19 @@ class SearchDoctor extends SearchEvent {
       this.expertise,
       this.isMyDoctors = false});
 }
-class ErrorEvent extends SearchEvent{
 
-}
+class ErrorEvent extends SearchEvent {}
+
 class SearchVisit extends SearchEvent {
   String text;
   int acceptStatus;
   int visitType;
 
   SearchVisit({this.text, this.acceptStatus, this.visitType});
+}
+
+class SearchClinic extends SearchEvent {
+  SearchClinic();
 }
 
 class SearchCountGet extends SearchEvent {

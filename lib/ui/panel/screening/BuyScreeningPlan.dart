@@ -5,24 +5,22 @@ import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/ScreenginBloc.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/Screening.dart';
 import 'package:Neuronio/models/UserEntity.dart';
-import 'package:Neuronio/networking/CustomException.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:simple_tooltip/simple_tooltip.dart';
-import 'package:uni_links/uni_links.dart';
 
 class BuyScreeningPage extends StatefulWidget {
   final Function(String, UserEntity) onPush;
@@ -33,14 +31,11 @@ class BuyScreeningPage extends StatefulWidget {
   _BuyScreeningPageState createState() => _BuyScreeningPageState();
 }
 
-enum DiscountStats { Null, Loading, Valid, Invalid }
-
 class _BuyScreeningPageState extends State<BuyScreeningPage> {
   CreditBloc _creditBloc = CreditBloc();
   bool _isRequestForPay = false;
 
   TextEditingController _discountController = TextEditingController();
-  DiscountStats discountStatus = DiscountStats.Null;
   double discountPercent = 0;
   ScreeningBloc _screeningBloc;
 
@@ -55,7 +50,7 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
     EntityAndPanelUpdater.processOnEntityLoad((entity) {
       if (_state.entity.isPatient) {
         /// TODO clinic id should be dynamic here, customer journey incomplete
-        _screeningBloc.getClinicScreeningPlan(4);
+        _screeningBloc.getClinicScreeningPlan(NeuronioClinic.ClinicId);
       }
     });
   }
@@ -76,7 +71,6 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
     _screeningBloc = BlocProvider.of<ScreeningBloc>(context);
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _initialApiCall();
-    initUniLinks();
     super.initState();
 
     _creditBloc.listen((event) {
@@ -117,8 +111,7 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
         if (_loadingContext != null) {
           Navigator.of(_loadingContext).pop();
         }
-        showOneButtonDialog(context, "پلن شما با موفقیا خریداری شد.", "تایید",
-            () {
+        showOneButtonDialog(context, "پلن شما با موفقیت فعال شد.", "تایید", () {
           EntityAndPanelUpdater.updateEntity();
           Navigator.pop(context);
           BlocProvider.of<ScreeningBloc>(context)
@@ -128,43 +121,48 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
         if (_loadingContext != null) {
           Navigator.of(_loadingContext).pop();
         }
-        if ((event.error as ApiException).getCode() == 624) {
-          showOneButtonDialog(
-              context,
-              "اعتبار داخل آپ شما برای خرید کافی نیست.",
-              "هدایت به درگاه پرداخت", () {
-            var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
-            _isRequestForPay = true;
-            _creditBloc.add(AddCredit(
-                type: AddCreditType.BuyScreeningPlan.index,
-                mobile: _entity.mEntity.user.phoneNumber,
-                amount: discountStatus == DiscountStats.Valid
-                    ? (screening.price * (1 - discountPercent)).toInt() * 10
-                    : screening.price * 10,
-                extraCallBackParams: {
-                  "code": discountStatus == DiscountStats.Valid
-                      ? _discountController.text
-                      : null,
-                  "screening_id": screening.id
-                }));
-          });
-        }
+        showOneButtonDialog(
+            context, Strings.requestFailed, Strings.okAction, () {});
+
+        /// REMOVED: CHANGING CUSTOMER JOURNEY
+        // if ((event.error as ApiException).getCode() == 624) {
+        //   showOneButtonDialog(
+        //       context,
+        //       "اعتبار داخل آپ شما برای خرید کافی نیست.",
+        //       "هدایت به درگاه پرداخت", () {
+        //     var _entity = BlocProvider.of<EntityBloc>(context).state.entity;
+        //     _isRequestForPay = true;
+        //     _creditBloc.add(AddCredit(
+        //         type: AddCreditType.BuyScreeningPlan.index,
+        //         mobile: _entity.mEntity.user.phoneNumber,
+        //         amount: discountStatus == DiscountStats.Valid
+        //             ? (screening.price * (1 - discountPercent)).toInt() * 10
+        //             : screening.price * 10,
+        //         extraCallBackParams: {
+        //           "code": discountStatus == DiscountStats.Valid
+        //               ? _discountController.text
+        //               : null,
+        //           "screening_id": screening.id
+        //         }));
+        //   });
+        // }
       }
       setState(() {});
     });
 
-    _screeningBloc.discountStream.listen((event) {
-      if (event.status == Status.LOADING) {
-        discountStatus = DiscountStats.Loading;
-      } else if (event.status == Status.COMPLETED) {
-        discountStatus = DiscountStats.Valid;
-        discountPercent = event.data.percent;
-      } else if (event.status == Status.ERROR) {
-        toast(context, "کد تخفیف نامعتبر است");
-        discountStatus = DiscountStats.Null;
-      }
-      setState(() {});
-    });
+    /// REMOVED: CHANGING CUSTOMER JOURNEY
+    // _screeningBloc.discountStream.listen((event) {
+    //   if (event.status == Status.LOADING) {
+    //     discountStatus = DiscountStats.Loading;
+    //   } else if (event.status == Status.COMPLETED) {
+    //     discountStatus = DiscountStats.Valid;
+    //     discountPercent = event.data.percent;
+    //   } else if (event.status == Status.ERROR) {
+    //     toast(context, "کد تخفیف نامعتبر است");
+    //     discountStatus = DiscountStats.Null;
+    //   }
+    //   setState(() {});
+    // });
   }
 
   @override
@@ -196,92 +194,12 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
         });
   }
 
-  Widget discountWidget() {
-    Widget disCountPrefixIcon() {
-      return GestureDetector(
-        onTap: () {
-          _screeningBloc.validateScreeningDiscount(_discountController.text);
-        },
-        child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 3),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(15))),
-            child: discountStatus == DiscountStats.Null
-                ? Icon(Icons.add)
-                : (discountStatus == DiscountStats.Loading
-                    ? CircleAvatar(
-                        backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                        maxRadius: 10,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : (discountStatus == DiscountStats.Valid
-                        ? Icon(Icons.check)
-                        : Icon(Icons.add)))),
-      );
-    }
-
-    return Container(
-      height: 60,
-      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      child: SimpleTooltip(
-        hideOnTooltipTap: false,
-        show: true,
-        animationDuration: Duration(milliseconds: 460),
-        tooltipDirection: TooltipDirection.up,
-        maxHeight: 150,
-        maxWidth: MediaQuery.of(context).size.width * 0.8,
-        ballonPadding: EdgeInsets.all(0),
-        backgroundColor: IColors.whiteTransparent,
-        borderColor: IColors.themeColor,
-        tooltipTap: () {
-          launchURL(Strings.appSiteLink);
-        },
-        content: Stack(
-          alignment: Alignment.topRight,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: AutoText(
-                Strings.guidToSiteForMothersDays,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 12,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ),
-          ],
-        ),
-        child: TextField(
-          controller: _discountController,
-          textDirection: TextDirection.rtl,
-          textAlign: TextAlign.right,
-          decoration: InputDecoration(
-              hintText: "کد تخفیف",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide:
-                      new BorderSide(color: IColors.darkGrey, width: 1)),
-              prefixIcon: disCountPrefixIcon()),
-        ),
-      ),
-    );
-  }
-
   Widget description(Screening screening) {
     return Container(
       margin: EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          AutoText(
-            "توضیحات",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
           AutoText(
             Strings.neuronioClinicScreeningPlanDescription,
             style: TextStyle(fontSize: 13),
@@ -299,43 +217,44 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
     );
   }
 
-  Widget priceWidget(Screening screening) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        AutoText("تومان", style: TextStyle(fontSize: 16)),
-        SizedBox(width: 5),
-        Column(
-          children: [
-            AutoText(
-                replaceFarsiNumber(priceWithCommaSeparator(screening.price)),
-                style: TextStyle(
-                    decoration: discountStatus == DiscountStats.Valid
-                        ? TextDecoration.lineThrough
-                        : null,
-                    color: discountStatus == DiscountStats.Valid
-                        ? null
-                        : IColors.themeColor,
-                    fontSize: 18,
-                    fontWeight: discountStatus == DiscountStats.Valid
-                        ? null
-                        : FontWeight.w600)),
-            discountStatus == DiscountStats.Valid
-                ? AutoText(
-                    replaceFarsiNumber(priceWithCommaSeparator(
-                        (screening.price * (1 - discountPercent)).toInt())),
-                    style: TextStyle(
-                        color: IColors.themeColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600))
-                : SizedBox(),
-          ],
-        ),
-        SizedBox(width: 5),
-        AutoText("قیمت نهایی", style: TextStyle(fontSize: 16))
-      ],
-    );
-  }
+  /// REMOVED: CHANGING CUSTOMER JOURNEY
+  // Widget priceWidget(Screening screening) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: <Widget>[
+  //       AutoText("تومان", style: TextStyle(fontSize: 16)),
+  //       SizedBox(width: 5),
+  //       Column(
+  //         children: [
+  //           AutoText(
+  //               replaceFarsiNumber(priceWithCommaSeparator(screening.price)),
+  //               style: TextStyle(
+  //                   decoration: discountStatus == DiscountStats.Valid
+  //                       ? TextDecoration.lineThrough
+  //                       : null,
+  //                   color: discountStatus == DiscountStats.Valid
+  //                       ? null
+  //                       : IColors.themeColor,
+  //                   fontSize: 18,
+  //                   fontWeight: discountStatus == DiscountStats.Valid
+  //                       ? null
+  //                       : FontWeight.w600)),
+  //           discountStatus == DiscountStats.Valid
+  //               ? AutoText(
+  //                   replaceFarsiNumber(priceWithCommaSeparator(
+  //                       (screening.price * (1 - discountPercent)).toInt())),
+  //                   style: TextStyle(
+  //                       color: IColors.themeColor,
+  //                       fontSize: 18,
+  //                       fontWeight: FontWeight.w600))
+  //               : SizedBox(),
+  //         ],
+  //       ),
+  //       SizedBox(width: 5),
+  //       AutoText("قیمت نهایی", style: TextStyle(fontSize: 16))
+  //     ],
+  //   );
+  // }
 
   Widget _mainWidget(Screening screening) {
     return SingleChildScrollView(
@@ -345,30 +264,25 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
             PageTopLeftIcon(
               topLeft: Icon(
                 Icons.arrow_back,
-                color: IColors.themeColor,
-                size: 20,
+                size: 25,
               ),
-              topLeftFlag: false,
+              onTap: () {
+                Navigator.pop(context);
+              },
               topRightFlag: true,
-              onTap: () {},
+              topRight: DocUpHeader(
+                title: "بسته ارزیابی سلامت‌جو",
+                docUpLogo: false,
+              ),
+              topLeftFlag: CrossPlatformDeviceDetection.isIOS,
             ),
             description(screening),
-            ALittleVerticalSpace(
-              height: 150,
-            ),
-            discountWidget(),
-            ALittleVerticalSpace(),
-            priceWidget(screening),
-            ALittleVerticalSpace(),
+            ALittleVerticalSpace(height: 40),
             ActionButton(
-              title: "خرید پلن سنجش",
+              title: "فعالسازی پلن سنجش",
               color: IColors.themeColor,
               callBack: () {
-                _screeningBloc.requestToBuyScreening(
-                    screening.id,
-                    discountStatus == DiscountStats.Valid
-                        ? _discountController.text
-                        : null);
+                _screeningBloc.requestToBuyScreening(screening.id, null);
               },
             ),
             ALittleVerticalSpace()
@@ -378,25 +292,26 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
     );
   }
 
-  Future<Null> initUniLinks() async {
-    if (CrossPlatformDeviceDetection.isAndroid ||
-        CrossPlatformDeviceDetection.isIOS) {
-      try {
-        /// profile page uni link will do the rest
-        _sub = getUriLinksStream().listen((Uri link) {
-          final query = link.queryParameters;
-          if (query["success"] == "false") {
-          } else {
-            BlocProvider.of<ScreeningBloc>(context)
-                .add(GetPatientScreening(withLoading: true));
-            Navigator.pop(context);
-          }
-        }, onError: (err) {
-          print("link error $err");
-        });
-      } on PlatformException {
-        print("link error");
-      }
-    }
-  }
+  /// REMOVED: CHANGING CUSTOMER JOURNEY
+// Future<Null> initUniLinks() async {
+//   if (CrossPlatformDeviceDetection.isAndroid ||
+//       CrossPlatformDeviceDetection.isIOS) {
+//     try {
+//       /// profile page uni link will do the rest
+//       _sub = getUriLinksStream().listen((Uri link) {
+//         final query = link.queryParameters;
+//         if (query["success"] == "false") {
+//         } else {
+//           BlocProvider.of<ScreeningBloc>(context)
+//               .add(GetPatientScreening(withLoading: true));
+//           Navigator.pop(context);
+//         }
+//       }, onError: (err) {
+//         print("link error $err");
+//       });
+//     } on PlatformException {
+//       print("link error");
+//     }
+//   }
+// }
 }

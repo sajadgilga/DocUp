@@ -30,7 +30,8 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
       String birthCity,
       String currentCity,
       int genderNumber,
-      String birthDate}) async {
+      String birthDate,
+      int clinic}) async {
     dataSink.add(Response.loading());
     try {
       PatientEntity patient = await _repository.update(PatientEntity(
@@ -43,7 +44,8 @@ class PatientBloc extends Bloc<PatientEvent, PatientState> {
           birthLocation: birthCity,
           city: currentCity,
           genderNumber: genderNumber,
-          birthDate: birthDate));
+          birthDate: birthDate,
+          clinicId: clinic));
       dataSink.add(Response.completed(patient));
     } catch (e) {
       dataSink.add(Response.error(e));

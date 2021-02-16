@@ -22,8 +22,12 @@ class Strings {
   static const String verificationCodeMessage =
       "کد ارسال شده به ایمیل یا شماره همراه خود را وارد کنید";
   static const String oneStepToDoctorMessage = "یک قدم تا پزشک فاصله دارید";
+  static const String requiredPatientInfoMessage =
+      "این اطلاعات به ما کمک می کند تا راحت‌تر خدمات مورد نیاز شما را ارائه دهیم.";
   static const String oneStepToOfficeMessage =
       ".یک قدم تا مطب مجازی خود فاصله دارید";
+  static const String patientClinicSuggestionMessage =
+      "شما از طریق کدام کلینیک با ما آشنا شدید؟";
   static const String usernameInputHint = "شماره همراه";
   static const String verificationHint = "ورود کد ارسال شده";
   static const String doctorIdInputHint = "شماره نظام پزشکی";
@@ -35,7 +39,9 @@ class Strings {
   static const String passInputHint = "رمز عبور";
   static const String verifyAction = "دریافت";
   static const String registerAction = "ثبت نام";
+  static const String nextStepAction = "گام بعد";
   static const String welcome = "خوش آمدید";
+  static const String requiredPatientInfo = "اطلاعات مورد نیاز";
   static const String continueAction = "ادامه";
   static const String requestAction = "درخواست";
   static const String enterAction = "ورود";
@@ -131,6 +137,12 @@ class Strings {
     "  ۷- از اونجا که مغز سالم در بدن سالمه توی برنامه تون پیشنهادهایی توسط متخصصین برای بهسازی و ارتقای توانمدی های فیزیکی هم داده میشه. که همه این موارد شما رو در ادامه مسیر کمک میکنه.",
     "  ۸- حالا شما از پیشنهادهایی که بتون داده شده اونی رو که به شرایطتون می خوره و براتون مناسبه انتخاب می کنید و بعد ادامه مسیر رو در کنار هم در نورونیو هستیم.",
   ];
+
+  static final String screeningDoctorSelection =
+      "اگر دکتری را از قبل می شناسید وارد کنید تا ما ارتباط شما را فراهم کنیم.";
+  static final String requestFailed = "درخواست با خطا مواجه شد.";
+  /// TODO link should become dynamic
+  static final String lifeQuestionerTestLink = "https://docs.google.com/forms/d/e/1FAIpQLScCXP2RlG1TYTgeu8gCdOV1Adpaxh1Ae8-7YflIPyTpB6BjJg/viewform";
 
 //
   static final String panelEventPageLabel = 'رویدادها';

@@ -74,7 +74,6 @@ class MedicalTestRepository {
 
   Future<MedicalTestResponseEntity> addPatientResponse(
       MedicalTestResponse testResponse) async {
-    /// TODO amir: need to test
     String params = "";
     if (testResponse.panelId != null) {
       params = "?panel_id=${testResponse.panelId}";

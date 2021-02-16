@@ -2,6 +2,7 @@ import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/SearchBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
+import 'package:Neuronio/models/SearchResult.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
@@ -78,8 +79,8 @@ class MyPartners extends StatelessWidget {
             onPush: onPush,
             isDoctor: state.result.isDoctor,
             results: (state.result.isDoctor
-                ? state.result.doctor_results
-                : state.result.patient_results),
+                ? state.result.doctorResults
+                : state.result.patientResults),
             isRequestsOnly: false,
           );
         } else if (state is SearchError) {
@@ -108,8 +109,8 @@ class MyPartners extends StatelessWidget {
               onPush: onPush,
               isDoctor: state.result.isDoctor,
               results: (state.result.isDoctor
-                  ? state.result.doctor_results
-                  : state.result.patient_results),
+                  ? state.result.doctorResults
+                  : state.result.patientResults),
               isRequestsOnly: false,
             );
         }

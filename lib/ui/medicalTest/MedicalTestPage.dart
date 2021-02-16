@@ -606,12 +606,12 @@ class SendToPartnerDialog {
                                     if (state is SearchLoaded) {
                                       List<Widget> list = [];
                                       entity.isDoctor
-                                          ? state.result.patient_results
-                                              .forEach((element) {
+                                          ? state.result?.patientResults
+                                              ?.forEach((element) {
                                               list.add(getPatientItem(element));
                                             })
-                                          : state.result.doctor_results
-                                              .forEach((element) {
+                                          : state.result?.doctorResults
+                                              ?.forEach((element) {
                                               list.add(getPatientItem(element));
                                             });
                                       return Container(
@@ -632,8 +632,8 @@ class SendToPartnerDialog {
                                         );
                                       else {
                                         List<Widget> list = [];
-                                        state.result.patient_results
-                                            .forEach((element) {
+                                        state.result.patientResults
+                                            ?.forEach((element) {
                                           list.add(getPatientItem(element));
                                         });
                                         return Container(

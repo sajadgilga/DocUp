@@ -21,10 +21,8 @@ import 'package:Neuronio/ui/widgets/SquareBoxNoronioClinic.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timelines/timelines.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PatientScreeningPage extends StatefulWidget {
   final Function(String, UserEntity, int) onPush;
@@ -198,7 +196,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
                 ),
               );
             } else if (index == 1) {
-              bool done = patientScreeningResponse.statusSteps.icaStatus;
+              bool done = patientScreeningResponse.statusSteps.visitStatus;
               return Indicator.outlined(
                 borderWidth: 2,
                 size: 25,
@@ -214,6 +212,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               );
             } else if (index == 2) {
               bool done = patientScreeningResponse.statusSteps.visitStatus;
+
               return Indicator.outlined(
                 borderWidth: 2,
                 size: 25,
@@ -228,8 +227,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
                 ),
               );
             } else if (index == 3) {
-              bool done = patientScreeningResponse.statusSteps.visitStatus;
-
+              bool done = patientScreeningResponse.statusSteps.icaStatus;
               return Indicator.outlined(
                 borderWidth: 2,
                 size: 25,
@@ -250,11 +248,11 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             if (index == 0) {
               return onlineTestTimeLineItem(patientScreeningResponse);
             } else if (index == 1) {
-              return icaTestTimeLineItem(patientScreeningResponse);
-            } else if (index == 2) {
               return visitRequestTimeLineItem(patientScreeningResponse);
-            } else if (index == 3) {
+            } else if (index == 2) {
               return doctorPanelTimeLineItem(patientScreeningResponse);
+            } else if (index == 3) {
+              return icaTestTimeLineItem(patientScreeningResponse);
             }
             return Container();
           },
@@ -288,8 +286,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
                 .then((value) {
               _initialApiCall();
             });
-            launch(
-                "https://docs.google.com/forms/d/e/1FAIpQLScCXP2RlG1TYTgeu8gCdOV1Adpaxh1Ae8-7YflIPyTpB6BjJg/viewform");
+            launchURL(Strings.lifeQuestionerTestLink);
           } else {
             MedicalTestPageData medicalTestPageData = MedicalTestPageData(
                 MedicalPageDataType.Screening,
@@ -472,12 +469,11 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               height: 50,
               callBack: () {
                 if (patientScreeningResponse.statusSteps.icaStatus) {
-                  widget.onPush(
-                      NavigatorRoutes.doctorDialogue,
-                      patientScreeningResponse.statusSteps.doctor,
+                  widget.onPush(NavigatorRoutes.selectDoctorForScreening, null,
                       patientScreeningResponse.statusSteps.id);
                 } else {
-                  toast(context, "شما هنوز تست هوشمند سلامت شناختی را کامل نکردید.");
+                  toast(context,
+                      "شما هنوز تست هوشمند سلامت شناختی را کامل نکردید.");
                 }
               },
             ),

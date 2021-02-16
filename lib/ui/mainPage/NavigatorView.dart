@@ -40,6 +40,7 @@ import 'package:Neuronio/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
 import 'package:Neuronio/ui/panel/partnerContact/videoOrVoiceCallPage/VideoOrVoiceCallPage.dart';
 import 'package:Neuronio/ui/panel/screening/BuyScreeningPlan.dart';
 import 'package:Neuronio/ui/panel/screening/PatientScreeningPage.dart';
+import 'package:Neuronio/ui/panel/screening/SelectingDoctor.dart';
 import 'package:Neuronio/ui/panel/searchPage/SearchPage.dart';
 import 'package:Neuronio/ui/patientVisitDetail/PatientRequestPage.dart';
 import 'package:Neuronio/ui/plan/PlanPage.dart';
@@ -59,6 +60,7 @@ import 'MainPage.dart';
 class NavigatorRoutes {
   static const String mainPage = '/mainPage';
   static const String doctorDialogue = '/doctorDialogue';
+  static const String selectDoctorForScreening = "/selectDoctorForScreening";
   static const String patientDialogue = '/patientDialogue';
   static const String root = '/';
   static const String notificationView = '/notification';
@@ -149,6 +151,8 @@ class NavigatorViewState extends State<NavigatorView> {
               body: _panel(context, detail: detail, extraDetail: extraDetail)),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail, extraDetail),
+          NavigatorRoutes.selectDoctorForScreening: (context) =>
+              _screeningDoctorSelectionPage(context, extraDetail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
           NavigatorRoutes.partnerSearchView: (context) =>
@@ -181,6 +185,8 @@ class NavigatorViewState extends State<NavigatorView> {
               _account(context, defaultCreditForCharge: detail),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail, extraDetail),
+          NavigatorRoutes.selectDoctorForScreening: (context) =>
+              _screeningDoctorSelectionPage(context, extraDetail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
           NavigatorRoutes.cognitiveTest: (context) =>
@@ -228,6 +234,8 @@ class NavigatorViewState extends State<NavigatorView> {
               _textPlanPage(context, detail),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail, extraDetail),
+          NavigatorRoutes.selectDoctorForScreening: (context) =>
+              _screeningDoctorSelectionPage(context, extraDetail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
           NavigatorRoutes.cognitiveTest: (context) =>
@@ -264,6 +272,8 @@ class NavigatorViewState extends State<NavigatorView> {
               _virtualVisitPage(context, detail, extraDetail),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail, extraDetail),
+          NavigatorRoutes.selectDoctorForScreening: (context) =>
+              _screeningDoctorSelectionPage(context, extraDetail),
         };
       case 3:
         return {
@@ -288,6 +298,8 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.notificationView: (context) => _notificationPage(),
           NavigatorRoutes.doctorDialogue: (context) =>
               _doctorDetailPage(context, detail, extraDetail),
+          NavigatorRoutes.selectDoctorForScreening: (context) =>
+              _screeningDoctorSelectionPage(context, extraDetail),
           NavigatorRoutes.patientDialogue: (context) =>
               _patientDetailPage(context, detail),
           NavigatorRoutes.partnerSearchView: (context) =>
@@ -651,6 +663,18 @@ class NavigatorViewState extends State<NavigatorView> {
           //   },
           // );
         }));
+  }
+
+  Widget _screeningDoctorSelectionPage(context, extraDetail) {
+    return BlocProvider.value(
+      value: _searchBloc,
+      child: ScreeningDoctorSelectionPage(
+        onPush: (String, UserEntity) {
+          push(context, String, extraDetail: UserEntity);
+        },
+        screeningId: extraDetail,
+      ),
+    );
   }
 
   Widget _doctorDetailPage(context, doctor, extraDetail) {

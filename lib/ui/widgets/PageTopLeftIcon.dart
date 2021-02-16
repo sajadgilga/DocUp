@@ -20,7 +20,7 @@ class PageTopLeftIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 25, left: 20, bottom: 5),
+      padding: EdgeInsets.only(top: 10, left: 20, bottom: 5),
       width: MediaQuery.of(context).size.width,
       alignment: Alignment.centerLeft,
       child: Row(

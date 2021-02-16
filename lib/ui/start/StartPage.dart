@@ -15,6 +15,7 @@ import 'package:Neuronio/networking/CustomException.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/ui/BasePage.dart';
 import 'package:Neuronio/ui/start/RoleType.dart';
+import 'package:Neuronio/ui/start/SelectClinicWidget.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoCompleteTextField.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
@@ -36,7 +37,12 @@ import 'package:toggle_switch/toggle_switch.dart';
 import '../../blocs/timer/TimerBloc.dart';
 import '../../blocs/timer/Tricker.dart';
 
-enum StartType { SIGN_UP, LOGIN, REGISTER }
+enum StartType {
+  SIGN_UP,
+  LOGIN,
+  USER_PROFILE_REGISTER_DATA,
+  PATIENT_SELECT_CLINIC
+}
 
 class StartPage extends StatefulWidget {
   StartPage({Key key, this.title}) : super(key: key);
@@ -69,6 +75,9 @@ class _StartPageState extends State<StartPage> {
   /// city controller
   final TextEditingController _birthCity = TextEditingController();
   final TextEditingController _currentCity = TextEditingController();
+
+  /// clinic
+  final TextEditingController _clinicIdController = TextEditingController();
 
   RoleType currentRoleType = RoleType.PATIENT;
   StartType startType = StartType.SIGN_UP;
@@ -212,7 +221,7 @@ class _StartPageState extends State<StartPage> {
               context, MaterialPageRoute(builder: (context) => BasePage()));
         } else {
           setState(() {
-            startType = StartType.REGISTER;
+            startType = StartType.USER_PROFILE_REGISTER_DATA;
           });
         }
       }
@@ -268,15 +277,11 @@ class _StartPageState extends State<StartPage> {
                   currentRoleType == RoleType.PATIENT);
             }
             break;
-          case StartType.REGISTER:
+          case StartType.USER_PROFILE_REGISTER_DATA:
             if (currentRoleType == RoleType.PATIENT) {
-              _patientBloc.updateProfile(
-                  firstName: _firstNameController.text,
-                  lastName: _lastNameController.text,
-                  nationalCode: _nationalCodeController.text,
-                  birthCity: _birthCity.text,
-                  currentCity: _currentCity.text,
-                  genderNumber: intPossible(_genderController.text));
+              setState(() {
+                startType = StartType.PATIENT_SELECT_CLINIC;
+              });
             } else if (currentRoleType == RoleType.DOCTOR) {
               _doctorBloc.updateProfile(
                   firstName: _firstNameController.text,
@@ -284,6 +289,20 @@ class _StartPageState extends State<StartPage> {
                   nationalCode: _nationalCodeController.text,
                   expertise: _expertiseCodeController.text);
             }
+
+            break;
+          case StartType.PATIENT_SELECT_CLINIC:
+            int clinicId =
+                intPossible(_clinicIdController.text, defaultValues: -1);
+            clinicId = clinicId == -1 ? NeuronioClinic.ClinicId : clinicId;
+            _patientBloc.updateProfile(
+                firstName: _firstNameController.text,
+                lastName: _lastNameController.text,
+                nationalCode: _nationalCodeController.text,
+                birthCity: _birthCity.text,
+                currentCity: _currentCity.text,
+                genderNumber: intPossible(_genderController.text),
+                clinic: clinicId);
             break;
         }
       });
@@ -407,7 +426,14 @@ class _StartPageState extends State<StartPage> {
         return _signUpActionWidget();
       case StartType.LOGIN:
         return _loginActionWidget();
-      case StartType.REGISTER:
+      case StartType.USER_PROFILE_REGISTER_DATA:
+        if (currentRoleType == RoleType.DOCTOR) {
+          return _registerActionWidget();
+        } else if (currentRoleType == RoleType.PATIENT) {
+          return _nextActionWidget();
+        }
+        return _registerActionWidget();
+      case StartType.PATIENT_SELECT_CLINIC:
         return _registerActionWidget();
     }
   }
@@ -452,10 +478,21 @@ class _StartPageState extends State<StartPage> {
   _registerActionWidget() => ActionButton(
         color: validationFormError ? IColors.red : IColors.themeColor,
         title: Strings.registerAction,
-        icon: Icon(
-          Icons.arrow_back_ios,
-          size: 18,
-        ),
+        // icon: Icon(
+        //   Icons.arrow_back_ios,
+        //   size: 18,
+        // ),
+        rtl: false,
+        callBack: submit,
+      );
+
+  _nextActionWidget() => ActionButton(
+        color: validationFormError ? IColors.red : IColors.themeColor,
+        title: Strings.nextStepAction,
+        // icon: Icon(
+        //   Icons.arrow_back_ios,
+        //   size: 18,
+        // ),
         rtl: false,
         callBack: submit,
       );
@@ -569,7 +606,7 @@ class _StartPageState extends State<StartPage> {
                 isContinueEnable = _isVerificationCodeValid(text);
               });
             });
-      case StartType.REGISTER:
+      case StartType.USER_PROFILE_REGISTER_DATA:
         return Column(
           children: <Widget>[
             InputField(
@@ -649,6 +686,10 @@ class _StartPageState extends State<StartPage> {
                 : SizedBox(),
           ],
         );
+      case StartType.PATIENT_SELECT_CLINIC:
+        return Column(
+          children: <Widget>[SelectClinicWidget(_clinicIdController)],
+        );
     }
   }
 
@@ -658,12 +699,18 @@ class _StartPageState extends State<StartPage> {
         return currentRoleType == RoleType.PATIENT
             ? Strings.yourDoctorMessage
             : Strings.yourPatientMessage;
-      default:
+      case StartType.LOGIN:
+        return "";
+      case StartType.USER_PROFILE_REGISTER_DATA:
+        return currentRoleType == RoleType.PATIENT
+            ? Strings.requiredPatientInfo
+            : Strings.welcome;
+      case StartType.PATIENT_SELECT_CLINIC:
         return Strings.welcome;
     }
   }
 
-  getMessageText() {
+  String getMessageText() {
     switch (startType) {
       case StartType.SIGN_UP:
         return currentRoleType == RoleType.PATIENT
@@ -671,12 +718,12 @@ class _StartPageState extends State<StartPage> {
             : Strings.doctorRegisterMessage;
       case StartType.LOGIN:
         return Strings.verificationCodeMessage;
-      case StartType.REGISTER:
+      case StartType.USER_PROFILE_REGISTER_DATA:
         return currentRoleType == RoleType.PATIENT
-            ? Strings.oneStepToDoctorMessage
+            ? Strings.requiredPatientInfoMessage
             : Strings.oneStepToOfficeMessage;
-      default:
-        return "";
+      case StartType.PATIENT_SELECT_CLINIC:
+        return Strings.oneStepToDoctorMessage;
     }
   }
 }

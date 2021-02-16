@@ -68,7 +68,7 @@ class _IllnessPageState extends State<IllnessPage> {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     if (_state.entity.isDoctor) {
       if (_state.entity.doctor.clinic == null ||
-          _state.entity.doctor.clinic.id != NoronioClinic.ClinicId) {
+          _state.entity.doctor.clinic.id != NeuronioClinic.ClinicId) {
         noronioClinicTestsAvailable = false;
       }
     }
@@ -91,7 +91,7 @@ class _IllnessPageState extends State<IllnessPage> {
   Widget _IllnessPage() {
     if (widget.entity.isDoctor &&
         (widget.entity.doctor.clinic == null ||
-            widget.entity.doctor.clinic.id != NoronioClinic.ClinicId)) {
+            widget.entity.doctor.clinic.id != NeuronioClinic.ClinicId)) {
       return Container(
         padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
         alignment: Alignment.center,

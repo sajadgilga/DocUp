@@ -9,7 +9,6 @@ import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/PopupMenues/PopUpMenus.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'ResultList.dart';
@@ -39,7 +38,7 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
 
   void _updatePageItemsAndPagingFlags(SearchResult result) {
     orderedPageItems[result.next ?? 1] =
-        (result.isDoctor ? result.doctor_results : result.patient_results);
+        (result.isDoctor ? result.doctorResults : result.patientResults);
     allItemsFetched = allItemsFetched || result.next == null;
   }
 
@@ -100,6 +99,7 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
     } catch (e) {}
     super.dispose();
   }
+
 //  Widget _docupIcon() => Container(
 //        padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
 //        child: Image.asset(Assets.docupIcon, width: 50),
@@ -170,8 +170,8 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
       builder: (context, state) {
         if (state is SearchLoaded &&
             (state.result.isDoctor
-                ? state.result.doctor_results != null
-                : state.result.patient_results != null)) {
+                ? state.result.doctorResults != null
+                : state.result.patientResults != null)) {
           _updatePageItemsAndPagingFlags(state.result);
           return PartnerResultList(
             onPush: onPush,
@@ -191,8 +191,8 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
         if (state is SearchLoading) {
           if (state.result == null ||
               (state.result.isDoctor
-                  ? state.result.doctor_results == null
-                  : state.result.patient_results == null))
+                  ? state.result.doctorResults == null
+                  : state.result.patientResults == null))
             return Container(
               child: Waiting(),
             );

@@ -15,6 +15,7 @@ class PatientEntity extends UserEntity {
   String city;
   int genderNumber;
   String birthDate;
+  int clinicId;
   List<VisitItem> visits;
 
   PatientEntity(
@@ -25,6 +26,7 @@ class PatientEntity extends UserEntity {
       this.city,
       this.genderNumber,
       this.birthDate,
+      this.clinicId,
       user,
       id,
       panels,
@@ -80,6 +82,7 @@ class PatientEntity extends UserEntity {
         });
       }
       birthDate = json['date_of_birth'];
+      clinicId = intPossible(json['clinic']);
     } catch (e) {
       /// TODO
       print(e);
@@ -109,6 +112,9 @@ class PatientEntity extends UserEntity {
     }
     if (birthDate != null) {
       data['date_of_birth'] = birthDate;
+    }
+    if (clinicId != null) {
+      data['clinic'] = clinicId;
     }
 
     return data;

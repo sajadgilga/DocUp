@@ -7,7 +7,7 @@ import 'UserEntity.dart';
 class DoctorEntity extends UserEntity {
   String councilCode;
   String expert;
-  Clinic clinic;
+  ClinicEntity clinic;
   String clinicNumber;
   String clinicAddress;
   int fee;
@@ -39,7 +39,7 @@ class DoctorEntity extends UserEntity {
       if (json.containsKey('expert')) expert = utf8IfPossible(json['expert']);
       if (json.containsKey('clinic'))
         clinic =
-            json['clinic'] != null ? new Clinic.fromJson(json['clinic']) : null;
+            json['clinic'] != null ? new ClinicEntity.fromJson(json['clinic']) : null;
       fee = json['fee'];
       if (json.containsKey('clinic_address'))
         clinicAddress = json['clinic_address'];
@@ -176,7 +176,7 @@ class ClinicTrafficTextPlan {
   }
 }
 
-class Clinic {
+class ClinicEntity {
   int id;
   User user;
   int subType;
@@ -187,7 +187,7 @@ class Clinic {
   double latitude;
   List<ClinicTrafficTextPlan> pClinic;
 
-  Clinic(
+  ClinicEntity(
       {this.id,
       this.user,
       this.subType,
@@ -197,7 +197,7 @@ class Clinic {
       this.longitude,
       this.latitude});
 
-  Clinic.fromJson(Map<String, dynamic> json) {
+  ClinicEntity.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     subType = json['sub_type'];
@@ -230,10 +230,10 @@ class Clinic {
   }
 }
 
-class NoronioClinic extends Clinic {
+class NeuronioClinic extends ClinicEntity {
   static const ClinicId = 4;
 
-  NoronioClinic() {
+  NeuronioClinic() {
     this.id = ClinicId;
   }
 }
