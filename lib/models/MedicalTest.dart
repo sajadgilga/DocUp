@@ -1,3 +1,4 @@
+import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/utils/Utils.dart';
 
@@ -36,15 +37,9 @@ class MedicalTestResponse {
     for (int i = 0; i < questionIds.length; i++) {
       QuestionAnswer ans = answers[questionIds[i]];
       if (ans.type == QuestionType.MultipleChoice) {
-        res.add({
-          'question_id': questionIds[i],
-          'answer_id': ans.answer.id
-        });
+        res.add({'question_id': questionIds[i], 'answer_id': ans.answer.id});
       } else if (ans.type == QuestionType.Descriptive) {
-        res.add({
-          'question_id': questionIds[i],
-          'desc': ans.text
-        });
+        res.add({'question_id': questionIds[i], 'desc': ans.text});
       }
     }
     data['questions'] = res;
@@ -78,17 +73,40 @@ class MedicalTestPageData {
       this.onDone});
 }
 
+enum TestType { GoogleDoc, InApplication }
+
 class MedicalTestItem {
   /// this model is for loading test list from database and showing theme in
   /// noronioClinicService or panel after sending to a patient
   int testId;
+  TestType testType;
   String name;
   String description;
   String imageURL;
   bool done;
+  String testLink;
+
+  bool get isInAppTest {
+    if (testType == TestType.InApplication) {
+      return true;
+    }
+    return false;
+  }
+
+  bool get isGoogleDocTest {
+    if (testType == TestType.GoogleDoc) {
+      return true;
+    }
+    return false;
+  }
+
+  /// set just in case of google doc test type
 
   MedicalTestItem(this.testId, this.name,
-      {this.description, this.imageURL, this.done});
+      {this.description,
+      this.imageURL,
+      this.done,
+      this.testType = TestType.InApplication});
 
   MedicalTestItem.fromJson(Map<String, dynamic> json) {
     testId = json['id'];
@@ -98,6 +116,14 @@ class MedicalTestItem {
     /// TODO amir: incomplete api
     imageURL = json['logo'];
     done = json['done'] ?? false;
+
+    /// TODO this may change for general google doc tests
+    if (description == "#lifeQ") {
+      testType = TestType.GoogleDoc;
+      testLink = Strings.lifeQuestionerTestLink;
+    } else {
+      testType = TestType.InApplication;
+    }
   }
 }
 

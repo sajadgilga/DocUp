@@ -111,7 +111,6 @@ class _HomeState extends State<Home> {
     if (entity.isPatient) {
       return Column(
         children: [
-          _occasion(),
           _neuronioScreening(),
           _learningVideos(),
         ],
@@ -168,24 +167,24 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
-  Widget _occasion() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-      child: GestureDetector(
-        onTap: () {
-          launch(
-              "https://neuronio.ir/%D9%BE%DA%A9%DB%8C%D8%AC-%D8%B1%D9%88%D8%B2-%D9%85%D8%A7%D8%AF%D8%B1/");
-        },
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: Image.asset(
-              Assets.mothersDayOccasion,
-              width: MediaQuery.of(context).size.width * 0.72,
-            )),
-      ),
-    );
-  }
+  /// REMOVED: CHANGING CUSTOMER JOURNEY
+  // Widget _occasion() {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+  //     child: GestureDetector(
+  //       onTap: () {
+  //         launch(
+  //             "https://neuronio.ir/%D9%BE%DA%A9%DB%8C%D8%AC-%D8%B1%D9%88%D8%B2-%D9%85%D8%A7%D8%AF%D8%B1/");
+  //       },
+  //       child: ClipRRect(
+  //           borderRadius: BorderRadius.circular(30),
+  //           child: Image.asset(
+  //             Assets.mothersDayOccasion,
+  //             width: MediaQuery.of(context).size.width * 0.72,
+  //           )),
+  //     ),
+  //   );
+  // }
 
   Widget _neuronioScreening() {
     return Padding(

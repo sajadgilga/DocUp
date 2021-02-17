@@ -278,7 +278,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             Assets.noronioServiceBrainTest,
             element.imageURL,
             NoronioClinicServiceType.MultipleChoiceTest, () {
-          if (element.description == "#lifeQ") {
+          if (element.isGoogleDocTest) {
             ScreeningRepository repo = ScreeningRepository();
             repo
                 .doScreeningTestLifeQ(
@@ -286,8 +286,8 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
                 .then((value) {
               _initialApiCall();
             });
-            launchURL(Strings.lifeQuestionerTestLink);
-          } else {
+            launchURL(element.testLink);
+          } else if (element.isInAppTest) {
             MedicalTestPageData medicalTestPageData = MedicalTestPageData(
                 MedicalPageDataType.Screening,
                 patientEntity: null, onDone: () {

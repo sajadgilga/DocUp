@@ -179,18 +179,26 @@ class NotificationNavigationRepo {
         loadingAlertDialog.disposeDialog();
       }
 
-      MedicalTestPageData medicalTestPageData = MedicalTestPageData(
-          MedicalPageDataType.Panel,
-          editableFlag: true,
-          sendableFlag: false,
-          medicalTestItem: medicalTestItem,
-          patientEntity: uEntity,
-          panelId: test.panelId, onDone: () {
-        BlocProvider.of<MedicalTestListBloc>(context)
-            .add(GetPanelMedicalTest(panelId: test.panelId));
-      });
-      onPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
-      NotificationNavigationRepo.lastTestIdPage = test.testId;
+      if (medicalTestItem.isGoogleDocTest) {
+        if (isDoctor) {
+          /// TODO
+        } else {
+          launchURL(medicalTestItem.testLink);
+        }
+      } else if (medicalTestItem.isInAppTest) {
+        MedicalTestPageData medicalTestPageData = MedicalTestPageData(
+            MedicalPageDataType.Panel,
+            editableFlag: true,
+            sendableFlag: false,
+            medicalTestItem: medicalTestItem,
+            patientEntity: uEntity,
+            panelId: test.panelId, onDone: () {
+          BlocProvider.of<MedicalTestListBloc>(context)
+              .add(GetPanelMedicalTest(panelId: test.panelId));
+        });
+        onPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
+        NotificationNavigationRepo.lastTestIdPage = test.testId;
+      }
     }
   }
 }

@@ -50,10 +50,9 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
           Assets.noronioServiceBrainTest,
           element.imageURL,
           NoronioClinicServiceType.MultipleChoiceTest, () {
-        if (element.description == "#lifeQ") {
-          launch(
-              "https://docs.google.com/forms/d/e/1FAIpQLScCXP2RlG1TYTgeu8gCdOV1Adpaxh1Ae8-7YflIPyTpB6BjJg/viewform");
-        } else {
+        if (element.isGoogleDocTest) {
+          launch(element.testLink);
+        } else if(element.isInAppTest) {
           /// TODO
           MedicalTestPageData medicalTestPageData = MedicalTestPageData(
               MedicalPageDataType.Usual,
