@@ -22,8 +22,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
-import 'EditProfileAvatarDialog.dart';
-import 'EditProfileDataDialog.dart';
+import '../EditProfileAvatarDialog.dart';
+import '../EditProfileDataDialog.dart';
 
 class DoctorProfilePage extends StatefulWidget {
   final Function(String, dynamic) onPush;

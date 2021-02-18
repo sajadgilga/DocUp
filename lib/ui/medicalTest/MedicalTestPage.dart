@@ -425,31 +425,38 @@ class _QuestionAnswersWidgetState extends State<QuestionAnswersWidget> {
   }
 
   Widget _multipleChoiceQuestion() {
-    return Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          for (var index = 0; index < widget.question.answers.length; index++)
-            ActionButton(
-                width: 90,
-                height: 40,
-                title: widget.question.answers[index].text,
-                color: getButtonColor(widget.question.answers[index].id),
-                textColor: Colors.black,
-                borderRadius: 10,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                boxShadowFlag: true,
-                callBack: () {
-                  if (_editable) {
-                    QuestionAnswer questionAnswer = QuestionAnswer(
-                        QuestionType.MultipleChoice,
-                        widget.question.answers[index],
-                        null);
-                    answerChanged(questionAnswer);
-                  }
-                })
-        ]);
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      reverse: true,
+      child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            for (var index = 0; index < widget.question.answers.length; index++)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: ActionButton(
+                    height: 40,
+                    title: widget.question.answers[index].text,
+                    color: getButtonColor(widget.question.answers[index].id),
+                    textColor: Colors.black,
+                    borderRadius: 10,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    boxShadowFlag: true,
+                    callBack: () {
+                      if (_editable) {
+                        QuestionAnswer questionAnswer = QuestionAnswer(
+                            QuestionType.MultipleChoice,
+                            widget.question.answers[index],
+                            null);
+                        answerChanged(questionAnswer);
+                      }
+                    }),
+              )
+          ]),
+    );
   }
 
   Widget _descriptiveQuestion() {

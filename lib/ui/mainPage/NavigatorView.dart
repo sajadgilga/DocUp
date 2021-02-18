@@ -14,14 +14,16 @@ import 'package:Neuronio/blocs/visit_time/TextPlanBloc.dart';
 import 'package:Neuronio/blocs/visit_time/visit_time_bloc.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/DoctorPlan.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/models/TextPlan.dart';
 import 'package:Neuronio/models/UserEntity.dart';
-import 'package:Neuronio/ui/account/DoctorProfileMenuPage.dart';
-import 'package:Neuronio/ui/account/DoctorProfilePage.dart';
-import 'package:Neuronio/ui/account/PatientProfileMenuPage.dart';
-import 'package:Neuronio/ui/account/PatientProfilePage.dart';
-import 'package:Neuronio/ui/account/VisitConfPage.dart';
+import 'package:Neuronio/ui/account/doctorProfileAndPlans/DoctorProfileMenuPage.dart';
+import 'package:Neuronio/ui/account/doctorProfileAndPlans/DoctorProfilePage.dart';
+import 'package:Neuronio/ui/account/doctorProfileAndPlans/EditableEventTable.dart';
+import 'package:Neuronio/ui/account/doctorProfileAndPlans/VisitConfPage.dart';
+import 'package:Neuronio/ui/account/patientProfile/PatientProfileMenuPage.dart';
+import 'package:Neuronio/ui/account/patientProfile/PatientProfilePage.dart';
 import 'package:Neuronio/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:Neuronio/ui/home/notification/NotificationPage.dart';
 import 'package:Neuronio/ui/medicalTest/MedicalTestPage.dart';
@@ -86,6 +88,7 @@ class NavigatorRoutes {
   static const String cognitiveTest = '/cognitiveTest';
 
   static const String visitConfig = '/visitConfig';
+  static const String doctorTimeTable = "/doctorTimeTable";
   static const String doctorProfileMenuPage = '/doctorProfileMenuPage';
   static const String patientProfileMenuPage = '/patientProfileMenuPage';
 }
@@ -280,6 +283,8 @@ class NavigatorViewState extends State<NavigatorView> {
           NavigatorRoutes.root: (context) => _account(context),
           // NavigatorRoutes.panelMenu: (context) => _panelMenu(context),
           NavigatorRoutes.visitConfig: (context) => _visitConf(context, detail),
+          NavigatorRoutes.doctorTimeTable: (context) =>
+              _doctorTimeTable(context, detail, extraDetail),
           NavigatorRoutes.uploadFileDialogue: (context) => BlocProvider.value(
               value: _pictureBloc,
               child: UploadFileSlider(
@@ -859,11 +864,23 @@ class NavigatorViewState extends State<NavigatorView> {
     );
   }
 
+  _doctorTimeTable(
+      BuildContext context, List<int> availableVisitTypes, DoctorPlan plan) {
+    return EditableDoctorPlanEventTable(
+      plan,
+      availableVisitTypes,
+      showEventTitle: false,
+    );
+  }
+
   _visitConf(BuildContext context, entity) {
     return VisitConfPage(
       doctorId: (entity as DoctorEntity).id,
-      onPush: (direction, entity) {
-        push(context, direction);
+      onPush: (direction, visitTypes, plan, returnCallBack) {
+        push(context, direction,
+            detail: visitTypes,
+            extraDetail: plan,
+            returnCallBack: returnCallBack);
       },
     );
   }

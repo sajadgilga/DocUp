@@ -106,15 +106,19 @@ class DateTimeService {
     return timeString;
   }
 
+  static DateTime getDateTimeFormDateString(String date){
+    return DateTime(
+        int.parse(date.split(new RegExp(r"/|-|\\"))[0]),
+        int.parse(date.split(new RegExp(r"/|-|\\"))[1]),
+        int.parse(date.split(new RegExp(r"/|-|\\"))[2]));
+  }
+
   static String getJalaliStringFormGeorgianDateTimeString(String date) {
     try{
       if (date.split("T").length > 1) {
         date = date.split("T")[0];
       }
-      final jalaliDate = Jalali.fromDateTime(DateTime(
-          int.parse(date.split(new RegExp(r"/|-|\\"))[0]),
-          int.parse(date.split(new RegExp(r"/|-|\\"))[1]),
-          int.parse(date.split(new RegExp(r"/|-|\\"))[2])));
+      final jalaliDate = Jalali.fromDateTime(getDateTimeFormDateString(date));
       return "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
     }catch(e){
       return null;

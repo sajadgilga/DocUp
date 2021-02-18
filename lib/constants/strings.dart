@@ -141,8 +141,10 @@ class Strings {
   static final String screeningDoctorSelection =
       "اگر دکتری را از قبل می شناسید وارد کنید تا ما ارتباط شما را فراهم کنیم.";
   static final String requestFailed = "درخواست با خطا مواجه شد.";
+
   /// TODO link should become dynamic
-  static final String lifeQuestionerTestLink = "https://docs.google.com/forms/d/e/1FAIpQLScCXP2RlG1TYTgeu8gCdOV1Adpaxh1Ae8-7YflIPyTpB6BjJg/viewform";
+  static final String lifeQuestionerTestLink =
+      "https://docs.google.com/forms/d/e/1FAIpQLScCXP2RlG1TYTgeu8gCdOV1Adpaxh1Ae8-7YflIPyTpB6BjJg/viewform";
 
 //
   static final String panelEventPageLabel = 'رویدادها';
@@ -245,6 +247,8 @@ class Strings {
   static final String addCreditAction = "افزایش اعتبار";
   static final String understandAction = "متوجه شدم";
   static final String okAction = "باشه";
+  static final String deleteAction = "حذف";
+  static final String cancelAction = "لغو";
   static final String virtualVisitPrivacyPolicyMessage =
       "من همه قوانین و مقررات رزرو ویزیت مجازی را خوانده و موافقت میکنم";
   static final String physicalVisitPrivacyPolicyMessage =

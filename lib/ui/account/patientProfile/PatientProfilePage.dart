@@ -30,7 +30,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 import 'package:uni_links/uni_links.dart';
 
-import 'EditProfileAvatarDialog.dart';
+import '../EditProfileAvatarDialog.dart';
 
 class PatientProfilePage extends StatefulWidget {
   final Function(String, dynamic) onPush;
