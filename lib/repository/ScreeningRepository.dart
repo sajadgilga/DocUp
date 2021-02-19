@@ -14,11 +14,18 @@ class ScreeningRepository {
     return PatientScreeningResponse.fromJson(response);
   }
 
-  Future<BuyScreeningPlanResponse> buyScreeningPlan(
+  Future<ActivateScreeningPlanResponse> activateScreeningPlan(
       int screeningId, String discountString) async {
-    final response = await _provider.post('api/buy-screening-plan/',
+    final response = await _provider.post('api/activate-screening-plan/',
         body: {"screening_id": screeningId, "code": discountString});
-    return BuyScreeningPlanResponse.fromJson(response);
+    return ActivateScreeningPlanResponse.fromJson(response);
+  }
+
+  Future<ActivateScreeningPlanResponse> setDoctorForScreeningPlan(
+      int screeningId, int doctorId) async {
+    final response = await _provider.post('api/set-doctor/',
+        body: {"screening_step_id": screeningId, "doctor_id": doctorId});
+    return ActivateScreeningPlanResponse.fromJson(response);
   }
 
   Future<ScreeningDiscountDetailResponse> validateDiscount(

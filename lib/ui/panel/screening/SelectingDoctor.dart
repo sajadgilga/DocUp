@@ -1,7 +1,9 @@
+import 'package:Neuronio/blocs/ScreenginBloc.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/SearchResult.dart';
 import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/repository/SearchRepository.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoCompleteTextField.dart';
@@ -10,7 +12,10 @@ import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
+import 'package:Neuronio/utils/Utils.dart';
+import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScreeningDoctorSelectionPage extends StatefulWidget {
   final Function(String, UserEntity) onPush;
@@ -28,14 +33,49 @@ class ScreeningDoctorSelectionPage extends StatefulWidget {
 
 class ScreeningDoctorSelectionPageState
     extends State<ScreeningDoctorSelectionPage> {
+  ScreeningBloc _screeningBloc = ScreeningBloc();
   final Function(String, UserEntity) onPush;
   TextEditingController _controller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  /// dirty code
+  List<UserEntity> allFetchedDoctors = [];
+
+  AlertDialog _loadingDialog = getLoadingDialog();
+  BuildContext _loadingContext;
 
   ScreeningDoctorSelectionPageState({@required this.onPush});
 
   @override
   void initState() {
+    _screeningBloc.doctorSelectionStream.listen((event) {
+      if (event.status == Status.LOADING) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              _loadingContext = context;
+              return _loadingDialog;
+            },
+            barrierDismissible: false);
+      } else if (event.status == Status.COMPLETED) {
+        if (_loadingContext != null) {
+          Navigator.of(_loadingContext).pop();
+        }
+        showOneButtonDialog(context, "دکتر شما با موفقیت تعیین گردید.", "تایید",
+            () {
+          EntityAndPanelUpdater.updateEntity();
+          Navigator.pop(context);
+          BlocProvider.of<ScreeningBloc>(context)
+              .add(GetPatientScreening(withLoading: true));
+        });
+      } else if (event.status == Status.ERROR) {
+        if (_loadingContext != null) {
+          Navigator.of(_loadingContext).pop();
+        }
+        showOneButtonDialog(
+            context, Strings.requestFailed, Strings.okAction, () {});
+      }
+    });
     super.initState();
   }
 
@@ -43,6 +83,10 @@ class ScreeningDoctorSelectionPageState
   void dispose() {
     try {
       _controller?.dispose();
+    } catch (e) {}
+
+    try {
+      _screeningBloc.reNewStreams();
     } catch (e) {}
     super.dispose();
   }
@@ -82,6 +126,7 @@ class ScreeningDoctorSelectionPageState
               SearchRepository searchRepository = SearchRepository();
               SearchResult searchResult =
                   await searchRepository.searchDoctor(pattern, null, null);
+              allFetchedDoctors.addAll(searchResult.doctorResults);
               return searchResult.doctorResults.map((e) => e.fullName).toList();
             }),
       ),
@@ -94,7 +139,16 @@ class ScreeningDoctorSelectionPageState
       color: IColors.themeColor,
       height: 45,
       callBack: () {
-        if (_formKey.currentState.validate()) {}
+        if (_formKey.currentState.validate()) {
+          int doctorId = null;
+          for (UserEntity doctor in allFetchedDoctors) {
+            if (doctor.fullName == _controller.text) {
+              doctorId = doctor.id;
+            }
+          }
+          _screeningBloc.requestToSetDoctorForScreeningPlan(
+              widget.screeningId, doctorId);
+        }
       },
     );
   }

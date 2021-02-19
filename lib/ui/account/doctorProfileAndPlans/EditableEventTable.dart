@@ -94,74 +94,98 @@ class _EditableDoctorPlanEventTableState
   }
 
   Widget speedDialFloatingButton() {
-    return SpeedDial(
-      // both default to 16
-      marginRight: 18,
-      marginBottom: 20,
-      animatedIcon: AnimatedIcons.add_event,
-      animatedIconTheme: IconThemeData(size: 22.0),
-      // this is ignored if animatedIcon is non null
-      // child: Icon(Icons.add),
-      visible: widget.availableVisitTypes.contains(0) ||
-          widget.availableVisitTypes.contains(1),
-      // If true user is forced to close dial manually
-      // by tapping main button and overlay is not rendered.
-      closeManually: false,
-      curve: Curves.bounceIn,
-      overlayColor: Colors.black,
-      overlayOpacity: 0.5,
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black,
-      elevation: 8.0,
-      shape: CircleBorder(),
-      children: ((widget.availableVisitTypes.contains(0))
-              ? [
-                  SpeedDialChild(
-                    labelWidget: Container(
-                      padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white),
-                      child: AutoText(
-                        "اضافه کردن زمان ویزیت حضوری",
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                    ),
-                    child: Icon(Icons.add),
-                    backgroundColor: IColors.blue,
-                    onTap: () {
-                      AddWorkTimeDataSourceDialog ad =
-                          AddWorkTimeDataSourceDialog.AddDialog(context, 0,
-                              widget.plan, updateStateWithDirtyDaysWorkTime);
-                      ad.showWorkTimeDialog();
-                    },
-                  )
-                ]
-              : <SpeedDialChild>[]) +
-          ((widget.availableVisitTypes.contains(1))
-              ? [
-                  SpeedDialChild(
-                    child: Icon(Icons.add),
-                    labelWidget: Container(
-                      padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white),
-                      child: AutoText(
-                        "اضافه کردن زمان ویزیت مجازی",
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                    ),
-                    backgroundColor: IColors.green,
-                    onTap: () {
-                      AddWorkTimeDataSourceDialog ad =
-                          AddWorkTimeDataSourceDialog.AddDialog(context, 1,
-                              widget.plan, updateStateWithDirtyDaysWorkTime);
-                      ad.showWorkTimeDialog();
-                    },
-                  )
-                ]
-              : <SpeedDialChild>[]),
+    return Stack(
+      alignment: Alignment.bottomLeft,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: FloatingActionButton(
+            child: Icon(
+              Icons.done,
+              color: IColors.themeColor,
+            ),
+            backgroundColor: Colors.white,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        SpeedDial(
+          // both default to 16
+          marginRight: 18,
+          marginBottom: 20,
+          animatedIcon: AnimatedIcons.add_event,
+          animatedIconTheme: IconThemeData(size: 22.0),
+          // this is ignored if animatedIcon is non null
+          // child: Icon(Icons.add),
+          visible: widget.availableVisitTypes.contains(0) ||
+              widget.availableVisitTypes.contains(1),
+          // If true user is forced to close dial manually
+          // by tapping main button and overlay is not rendered.
+          closeManually: false,
+          curve: Curves.bounceIn,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.5,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 8.0,
+          shape: CircleBorder(),
+          children: ((widget.availableVisitTypes.contains(0))
+                  ? [
+                      SpeedDialChild(
+                        labelWidget: Container(
+                          padding: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white),
+                          child: AutoText(
+                            "اضافه کردن زمان ویزیت حضوری",
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        ),
+                        child: Icon(Icons.add),
+                        backgroundColor: IColors.blue,
+                        onTap: () {
+                          AddWorkTimeDataSourceDialog ad =
+                              AddWorkTimeDataSourceDialog.AddDialog(
+                                  context,
+                                  0,
+                                  widget.plan,
+                                  updateStateWithDirtyDaysWorkTime);
+                          ad.showWorkTimeDialog();
+                        },
+                      )
+                    ]
+                  : <SpeedDialChild>[]) +
+              ((widget.availableVisitTypes.contains(1))
+                  ? [
+                      SpeedDialChild(
+                        child: Icon(Icons.add),
+                        labelWidget: Container(
+                          padding: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white),
+                          child: AutoText(
+                            "اضافه کردن زمان ویزیت مجازی",
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        ),
+                        backgroundColor: IColors.green,
+                        onTap: () {
+                          AddWorkTimeDataSourceDialog ad =
+                              AddWorkTimeDataSourceDialog.AddDialog(
+                                  context,
+                                  1,
+                                  widget.plan,
+                                  updateStateWithDirtyDaysWorkTime);
+                          ad.showWorkTimeDialog();
+                        },
+                      )
+                    ]
+                  : <SpeedDialChild>[]),
+        ),
+      ],
     );
   }
 

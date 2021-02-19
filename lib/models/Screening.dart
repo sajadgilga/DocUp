@@ -92,12 +92,12 @@ class ScreeningDiscountDetailResponse {
   }
 }
 
-class BuyScreeningPlanResponse {
+class ActivateScreeningPlanResponse {
   bool success;
   String msg;
   int code;
 
-  BuyScreeningPlanResponse.fromJson(Map<String, dynamic> json) {
+  ActivateScreeningPlanResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'] ?? false;
     msg = utf8IfPossible(json['msg']??"");
     code = intPossible(json['code']);

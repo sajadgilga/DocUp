@@ -22,16 +22,16 @@ import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BuyScreeningPage extends StatefulWidget {
+class ActivateScreeningPage extends StatefulWidget {
   final Function(String, UserEntity) onPush;
 
-  BuyScreeningPage({@required this.onPush});
+  ActivateScreeningPage({@required this.onPush});
 
   @override
-  _BuyScreeningPageState createState() => _BuyScreeningPageState();
+  _ActivateScreeningPageState createState() => _ActivateScreeningPageState();
 }
 
-class _BuyScreeningPageState extends State<BuyScreeningPage> {
+class _ActivateScreeningPageState extends State<ActivateScreeningPage> {
   CreditBloc _creditBloc = CreditBloc();
   bool _isRequestForPay = false;
 
@@ -43,7 +43,7 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
   BuildContext _loadingContext;
   Screening screening;
   StreamSubscription _sub;
-  bool _tooltipToggle = true;
+  // bool _tooltipToggle = true;
 
   void _initialApiCall() {
     var _state = BlocProvider.of<EntityBloc>(context).state;
@@ -279,10 +279,10 @@ class _BuyScreeningPageState extends State<BuyScreeningPage> {
             description(screening),
             ALittleVerticalSpace(height: 40),
             ActionButton(
-              title: "فعالسازی پلن سنجش",
+              title: "فعال‌سازی پلن سنجش",
               color: IColors.themeColor,
               callBack: () {
-                _screeningBloc.requestToBuyScreening(screening.id, null);
+                _screeningBloc.requestActivateScreening(screening.id, null);
               },
             ),
             ALittleVerticalSpace()

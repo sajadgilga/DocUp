@@ -309,7 +309,7 @@ class Strings {
   static final String errorCode_615 = "لطفا عنوان کاربر را درست انتخاب کنید،" +
       "\n" +
       "این کاربر قبلا با عنوان دیگری ثبت نام کرده است.";
-  static final String errorCode_616 = "کد فعالسازی را اشتباه وارد کردید";
+  static final String errorCode_616 = "کد فعال‌سازی را اشتباه وارد کردید";
 
   static final String visitEventAddedToGoogleCalendar =
       "ویزیت با موفقیت به گوگل کلندر شما اضافه شد.";

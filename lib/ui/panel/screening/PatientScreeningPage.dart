@@ -463,17 +463,17 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             width: MediaQuery.of(context).size.width * 0.5,
             child: ActionButton(
               title: "صفحه درخواست ویزیت",
-              color: patientScreeningResponse.statusSteps.icaStatus
+              color: patientScreeningResponse.statusSteps.remainingTestsToBeDone==0
                   ? IColors.themeColor
                   : IColors.disabledButton,
               height: 50,
               callBack: () {
-                if (patientScreeningResponse.statusSteps.icaStatus) {
+                if (patientScreeningResponse.statusSteps.remainingTestsToBeDone==0) {
                   widget.onPush(NavigatorRoutes.selectDoctorForScreening, null,
                       patientScreeningResponse.statusSteps.id);
                 } else {
                   toast(context,
-                      "شما هنوز تست هوشمند سلامت شناختی را کامل نکردید.");
+                      "شما هنوز تست‌های اولیه را کامل نکردید.");
                 }
               },
             ),

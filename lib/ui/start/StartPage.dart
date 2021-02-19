@@ -600,7 +600,7 @@ class _StartPageState extends State<StartPage> {
             textInputType: TextInputType.number,
             validationCallback: (text) =>
                 _isVerificationCodeValid(text) || resendCodeEnabled,
-            errorMessage: "کدفعالسازی ۶رقمی است",
+            errorMessage: "کدفعال‌سازی ۶رقمی است",
             onChanged: (text) {
               setState(() {
                 isContinueEnable = _isVerificationCodeValid(text);

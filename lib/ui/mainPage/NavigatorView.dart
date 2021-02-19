@@ -40,7 +40,7 @@ import 'package:Neuronio/ui/panel/panelMenu/PanelMenu.dart';
 import 'package:Neuronio/ui/panel/partnerContact/chatPage/ChatPage.dart';
 import 'package:Neuronio/ui/panel/partnerContact/illnessPage/IllnessPage.dart';
 import 'package:Neuronio/ui/panel/partnerContact/videoOrVoiceCallPage/VideoOrVoiceCallPage.dart';
-import 'package:Neuronio/ui/panel/screening/BuyScreeningPlan.dart';
+import 'package:Neuronio/ui/panel/screening/ActivateScreeningPlan.dart';
 import 'package:Neuronio/ui/panel/screening/PatientScreeningPage.dart';
 import 'package:Neuronio/ui/panel/screening/SelectingDoctor.dart';
 import 'package:Neuronio/ui/panel/searchPage/SearchPage.dart';
@@ -785,7 +785,7 @@ class NavigatorViewState extends State<NavigatorView> {
   }
 
   Widget _buyScreeningPage(context) {
-    return BuyScreeningPage(onPush: (direction, entity) {
+    return ActivateScreeningPage(onPush: (direction, entity) {
       push(context, direction, detail: entity);
     });
   }

@@ -54,27 +54,54 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
     }
   }
 
-  /// discount buyapi
-  StreamController<Response<BuyScreeningPlanResponse>> _buyScreeningController =
-      StreamController<Response<BuyScreeningPlanResponse>>();
+  /// discount buy api
+  StreamController<Response<ActivateScreeningPlanResponse>>
+      _buyScreeningController =
+      StreamController<Response<ActivateScreeningPlanResponse>>();
 
-  StreamSink<Response<BuyScreeningPlanResponse>> get buySink =>
+  StreamSink<Response<ActivateScreeningPlanResponse>> get buySink =>
       _buyScreeningController.sink;
 
-  Stream<Response<BuyScreeningPlanResponse>> get buyStream =>
+  Stream<Response<ActivateScreeningPlanResponse>> get buyStream =>
       _buyScreeningController.stream;
 
-  requestToBuyScreening(int screeningId, String discountString) async {
+  requestActivateScreening(int screeningId, String discountString) async {
     buySink.add(Response.loading());
     try {
-      BuyScreeningPlanResponse response =
-          await _repository.buyScreeningPlan(screeningId, discountString);
+      ActivateScreeningPlanResponse response =
+          await _repository.activateScreeningPlan(screeningId, discountString);
       if (!response.success) {
         throw ApiException(response.code, response.msg);
       }
       buySink.add(Response.completed(response));
     } catch (e) {
       buySink.add(Response.error(e));
+      print(e);
+    }
+  }
+
+  /// screening doctor selection api
+  StreamController<Response<ActivateScreeningPlanResponse>>
+      _screeningDoctorSelectionController =
+      StreamController<Response<ActivateScreeningPlanResponse>>();
+
+  StreamSink<Response<ActivateScreeningPlanResponse>> get doctorSelectionSink =>
+      _screeningDoctorSelectionController.sink;
+
+  Stream<Response<ActivateScreeningPlanResponse>> get doctorSelectionStream =>
+      _screeningDoctorSelectionController.stream;
+
+  requestToSetDoctorForScreeningPlan(int screeningId, int doctorId) async {
+    doctorSelectionSink.add(Response.loading());
+    try {
+      ActivateScreeningPlanResponse response =
+          await _repository.setDoctorForScreeningPlan(screeningId, doctorId);
+      if (!response.success) {
+        throw ApiException(response.code, response.msg);
+      }
+      doctorSelectionSink.add(Response.completed(response));
+    } catch (e) {
+      doctorSelectionSink.add(Response.error(e));
       print(e);
     }
   }
@@ -98,7 +125,14 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
       _buyScreeningController.close();
     } finally {
       _buyScreeningController =
-          StreamController<Response<BuyScreeningPlanResponse>>();
+          StreamController<Response<ActivateScreeningPlanResponse>>();
+    }
+
+    try {
+      _screeningDoctorSelectionController.close();
+    } finally {
+      _screeningDoctorSelectionController =
+          StreamController<Response<ActivateScreeningPlanResponse>>();
     }
   }
 
