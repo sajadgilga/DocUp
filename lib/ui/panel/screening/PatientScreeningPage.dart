@@ -469,8 +469,14 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               height: 50,
               callBack: () {
                 if (patientScreeningResponse.statusSteps.remainingTestsToBeDone==0) {
-                  widget.onPush(NavigatorRoutes.selectDoctorForScreening, null,
-                      patientScreeningResponse.statusSteps.id);
+                  if(patientScreeningResponse.statusSteps.doctor == null){
+                    widget.onPush(NavigatorRoutes.selectDoctorForScreening, null,
+                        patientScreeningResponse.statusSteps.id);
+                  }else{
+                    widget.onPush(NavigatorRoutes.doctorDialogue, patientScreeningResponse.statusSteps.doctor,
+                        patientScreeningResponse.statusSteps.id);
+                  }
+
                 } else {
                   toast(context,
                       "شما هنوز تست‌های اولیه را کامل نکردید.");

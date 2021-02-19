@@ -238,20 +238,20 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
             ],
           ),
           /// TODO
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: <Widget>[
-          //     AutoText("ریال", style: TextStyle(fontSize: 16)),
-          //     SizedBox(width: 5),
-          //     AutoText(replaceFarsiNumber(_calculateVisitCost()),
-          //         style: TextStyle(
-          //             color: IColors.themeColor,
-          //             fontSize: 18,
-          //             fontWeight: FontWeight.w600)),
-          //     SizedBox(width: 5),
-          //     AutoText("قیمت نهایی", style: TextStyle(fontSize: 16))
-          //   ],
-          // ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              AutoText("ریال", style: TextStyle(fontSize: 16)),
+              SizedBox(width: 5),
+              AutoText(replaceFarsiNumber(_calculateVisitCost()),
+                  style: TextStyle(
+                      color: IColors.themeColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600)),
+              SizedBox(width: 5),
+              AutoText("قیمت نهایی", style: TextStyle(fontSize: 16))
+            ],
+          ),
         ],
       );
 

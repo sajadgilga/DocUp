@@ -239,13 +239,37 @@ class VisitType {
     initializeWeeklyWorkTimesIfNecessary();
   }
 
-  int getMinWorkTimeHour(int dayIndex) {
+  DailyWorkTimes getDailyWorkTimesByDateString(String dateString) {
+    for (DailyWorkTimes dailyWorkTimes in daysWorkTimes) {
+      String dayDateString =
+          DateTimeService.getDateStringFormDateTime(dailyWorkTimes.date);
+      if (dayDateString == dateString) {
+        return dailyWorkTimes;
+      }
+    }
+    return null;
+  }
+
+  int getMinWorkTimeHour(String dateString) {
     int res = 24;
-    daysWorkTimes[dayIndex].workTimes.forEach((element) {
+
+    getDailyWorkTimesByDateString(dateString)?.workTimes?.forEach((element) {
       if (element.startTimeHour < res) {
         res = element.startTimeHour;
       }
     });
+    return res;
+  }
+
+  int getMaxWorkTimeHour(String dateString) {
+    int res = 0;
+
+    getDailyWorkTimesByDateString(dateString)?.workTimes?.forEach((element) {
+      if (element.endTimeHour + 1 > res) {
+        res = element.endTimeHour + 1;
+      }
+    });
+
     return res;
   }
 
@@ -294,16 +318,6 @@ class VisitType {
     }
   }
 
-  int getMaxWorkTimeHour(int dayIndex) {
-    int res = 0;
-    daysWorkTimes[dayIndex].workTimes.forEach((element) {
-      if (element.endTimeHour + 1 > res) {
-        res = element.endTimeHour + 1;
-      }
-    });
-    return res;
-  }
-
   static List<List<int>> getEmptyTablePlan() {
     List<List<int>> workTimeTable = [];
     for (int i = 0; i < DoctorPlan.dayHours; i++) {
@@ -316,15 +330,32 @@ class VisitType {
     return workTimeTable;
   }
 
+  List<List<int>> getDailyWorkTimeTable(String dateString) {
+    /// TODO amir: heavy process
+    /// initial empty table
+    List<List<int>> workTimeTable = VisitType.getEmptyTablePlan();
+
+    /// fill table
+    getDailyWorkTimesByDateString(dateString)?.workTimes?.forEach((WorkTime workTime) {
+      int start = DateTimeService.getTimeMinute(workTime.startTime);
+      int startPart = start ~/ DoctorPlan.hourMinutePart;
+      int end = DateTimeService.getTimeMinute(workTime.endTime);
+      end = start > 0 && end == 0 ? 24 * 60 : end;
+      int endPart = end ~/ DoctorPlan.hourMinutePart;
+      for (int index = startPart; index <= endPart - 1; index++) {
+        int i = index ~/ DoctorPlan.hourParts;
+        int j = index % DoctorPlan.hourParts;
+        workTimeTable[i][j] = 1;
+      }
+    });
+    return workTimeTable;
+  }
+
   List<int> get availableDays {
     List<int> availableDays = [];
 
     /// TODO
-    // DaysWorkTimes.forEach((element) {
-    //   if (element.workTimes != null && element.workTimes.length > 0) {
-    //     availableDays.add(element.date);
-    //   }
-    // });
+
     return availableDays;
   }
 
@@ -390,8 +421,7 @@ class DailyWorkTimes {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] =
-        DateTimeService.getDateStringFormDateTime(date, dateSeparator: "-");
+    data['date'] = DateTimeService.getDateStringFormDateTime(date);
     data['work_times'] = [];
     workTimes.forEach((element) {
       data['work_times'].add(element.toJson());

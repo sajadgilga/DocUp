@@ -675,7 +675,7 @@ class NavigatorViewState extends State<NavigatorView> {
       value: _searchBloc,
       child: ScreeningDoctorSelectionPage(
         onPush: (String, UserEntity) {
-          push(context, String, extraDetail: UserEntity);
+          push(context, String, detail: UserEntity);
         },
         screeningId: extraDetail,
       ),

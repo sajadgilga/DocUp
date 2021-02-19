@@ -508,8 +508,7 @@ class EditProfileDataDialog {
             String birthDate = DateTimeService.getDateStringFormDateTime(
                 DateTimeService.getJalalyDateFromJalilyString(
                         _jalaliBirthDate.text)
-                    ?.toDateTime(),
-                dateSeparator: "-");
+                    ?.toDateTime());
             (dataBloc as PatientBloc).updateProfile(
                 firstName: _firstNameController.text,
                 lastName: _lastNameController.text,

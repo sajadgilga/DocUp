@@ -53,7 +53,7 @@ class DateTimeService {
     return Jalali.fromDateTime(DateTimeService.getCurrentDateTime());
   }
 
-  static String getDateStringFormDateTime(DateTime date,{String dateSeparator = "/"}) {
+  static String getDateStringFormDateTime(DateTime date,{String dateSeparator = "-"}) {
     try {
       return "${date.year}${dateSeparator}${date.month}${dateSeparator}${date.day}";
     }catch(e){

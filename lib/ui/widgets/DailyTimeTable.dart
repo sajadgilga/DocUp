@@ -492,14 +492,6 @@ class _DailyAvailableVisitTimeTableState
             textDirection: TextDirection.rtl,
             decoration: InputDecoration(border: InputBorder.none),
           ),
-          // TextField(
-          //   controller: widget.selectedTimeController,
-          //   maxLines: 1,
-          //   enabled: false,
-          //   textAlign: TextAlign.center,
-          //   textDirection: TextDirection.rtl,
-          //   decoration: InputDecoration(border: InputBorder.none),
-          // ),
           _legend(),
           _columnGuid(),
           allRows.length != 0

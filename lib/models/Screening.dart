@@ -41,7 +41,7 @@ class PatientScreening {
     }
     icaStatus = json['ica_status'] ?? false;
     visitStatus = json['visit_status'] ?? false;
-    if (json.containsKey('doctor_info')) {
+    if (json['doctor_info']!=null) {
       doctor = DoctorEntity.fromJson(json['doctor_info']);
     }
   }

@@ -4,7 +4,9 @@ import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/SearchResult.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/Response.dart';
+import 'package:Neuronio/repository/DoctorRepository.dart';
 import 'package:Neuronio/repository/SearchRepository.dart';
+import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoCompleteTextField.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
@@ -62,11 +64,18 @@ class ScreeningDoctorSelectionPageState
           Navigator.of(_loadingContext).pop();
         }
         showOneButtonDialog(context, "دکتر شما با موفقیت تعیین گردید.", "تایید",
-            () {
+            () async {
           EntityAndPanelUpdater.updateEntity();
           Navigator.pop(context);
           BlocProvider.of<ScreeningBloc>(context)
               .add(GetPatientScreening(withLoading: true));
+          /// fetching doctor date and got push to doctor dialog for requesting for visit
+          LoadingAlertDialog loadingAlertDialog = LoadingAlertDialog(context);
+          loadingAlertDialog.showLoading();
+          int doctorId = _findDoctorIdByNameFormFetchedDoctors();
+          UserEntity doctor = await DoctorRepository().getDoctor(doctorId);
+          loadingAlertDialog.disposeDialog();
+          widget.onPush(NavigatorRoutes.doctorDialogue, doctor);
         });
       } else if (event.status == Status.ERROR) {
         if (_loadingContext != null) {
@@ -133,19 +142,24 @@ class ScreeningDoctorSelectionPageState
     );
   }
 
+  int _findDoctorIdByNameFormFetchedDoctors() {
+    int doctorId;
+    for (UserEntity doctor in allFetchedDoctors) {
+      if (doctor.fullName == _controller.text) {
+        doctorId = doctor.id;
+      }
+    }
+    return doctorId;
+  }
+
   Widget applyButton() {
     return ActionButton(
       title: "ویرایش",
       color: IColors.themeColor,
       height: 45,
-      callBack: () {
+      callBack: () async {
         if (_formKey.currentState.validate()) {
-          int doctorId = null;
-          for (UserEntity doctor in allFetchedDoctors) {
-            if (doctor.fullName == _controller.text) {
-              doctorId = doctor.id;
-            }
-          }
+          int doctorId = _findDoctorIdByNameFormFetchedDoctors();
           _screeningBloc.requestToSetDoctorForScreeningPlan(
               widget.screeningId, doctorId);
         }
