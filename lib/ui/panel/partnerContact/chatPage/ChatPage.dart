@@ -23,11 +23,11 @@ import 'PartnerInfo.dart';
 class ChatPage extends StatefulWidget {
   final Entity entity;
   final Function(String, UserEntity) onPush;
-  final TextPlanRemainedTraffic textPlanRemainedTraffic;
+  // final TextPlanRemainedTraffic textPlanRemainedTraffic;
 
   ChatPage(
       {Key key,
-      this.textPlanRemainedTraffic,
+      // this.textPlanRemainedTraffic,
       this.entity,
       @required this.onPush})
       : super(key: key);
@@ -65,10 +65,10 @@ class _ChatPageState extends State<ChatPage> {
       return;
     }
     SocketHelper().sendMessage(panelId: widget.entity.iPanelId, message: text);
-    if (!nowIsVisitTime) {
-      widget.textPlanRemainedTraffic.remainedWords -= min(
-          text.split(" ").length, widget.textPlanRemainedTraffic.remainedWords);
-    }
+    // if (!nowIsVisitTime) {
+    //   widget.textPlanRemainedTraffic.remainedWords -= min(
+    //       text.split(" ").length, widget.textPlanRemainedTraffic.remainedWords);
+    // }
     _controller.text = '';
     setState(() {});
   }
@@ -215,112 +215,34 @@ class _ChatPageState extends State<ChatPage> {
             }
           },
         );
-      } else if (widget.textPlanRemainedTraffic.remainedWords <= 0) {
-        if (widget.entity.isPatient) {
-          return Stack(children: <Widget>[
-            _ChatPage(),
-
-            /// TODO text plan removed temporary
-            // PanelAlert(
-            //   label: Strings.noRemainedWordForYouPlanInChatRoom,
-            //   buttonLabel: Strings.goToTextPlanListPage,
-            //   btnColor: IColors.themeColor,
-            //   callback: () {
-            //     Navigator.pop(context);
-            //     widget.onPush(
-            //         NavigatorRoutes.textPlanPage, widget.entity.doctor);
-            //   },
-            // )
-          ]);
-        } else {
-          return _ChatPage();
-        }
-      } else if ([0, 1, 2, 3, 6, 7].contains(widget.entity.panel.status)) {
+      }
+      // else if (widget.textPlanRemainedTraffic.remainedWords <= 0) {
+      //   if (widget.entity.isPatient) {
+      //     return Stack(children: <Widget>[
+      //       _ChatPage(),
+      //
+      //       /// TODO text plan removed temporary
+      //       // PanelAlert(
+      //       //   label: Strings.noRemainedWordForYouPlanInChatRoom,
+      //       //   buttonLabel: Strings.goToTextPlanListPage,
+      //       //   btnColor: IColors.themeColor,
+      //       //   callback: () {
+      //       //     Navigator.pop(context);
+      //       //     widget.onPush(
+      //       //         NavigatorRoutes.textPlanPage, widget.entity.doctor);
+      //       //   },
+      //       // )
+      //     ]);
+      //   } else {
+      //     return _ChatPage();
+      //   }
+      // }
+      else if ([0, 1, 2, 3, 6, 7].contains(widget.entity.panel.status)) {
         /// no visit for now
         return _ChatPage();
       }
-//       if (widget.entity.panel.status == 0 || widget.entity.panel.status == 1) {
-//         if (widget.entity.isPatient)
-//           return Stack(children: <Widget>[
-//             _ChatPage(),
-//             PanelAlert(
-//               label: Strings.requestSentLabel,
-//               buttonLabel: Strings.waitingForApproval,
-//               btnColor: IColors.disabledButton,
-//             )
-//           ]);
-//         else
-//           return Stack(children: <Widget>[
-//             _ChatPage(),
-//             PanelAlert(
-//               label: Strings.requestSentLabelDoctorSide,
-//               buttonLabel: Strings.waitingForApprovalDoctorSide,
-//               callback: () {
-//                 widget.onPush(NavigatorRoutes.patientDialogue,
-//                     widget.entity.partnerEntity);
-//               },
-//             )
-//           ]);
-//       } else if (widget.entity.panel.status == 3 ||
-//           widget.entity.panel.status == 2) {
-// //            return _ChatPage();
-//         return BlocBuilder<VisitTimeBloc, VisitTimeState>(
-//           builder: (context, _visitTimeState) {
-//             String _visitTime;
-//             if (_visitTimeState is VisitTimeLoadedState) {
-//               _visitTime = replaceFarsiNumber(
-//                   DateTimeService.normalizeDateAndTime(
-//                       _visitTimeState.visit.visitTime));
-//               return Stack(children: <Widget>[
-//                 _ChatPage(),
-//                 PanelAlert(
-//                   label: 'ویزیت شما '
-//                       '\n'
-//                       '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
-//                       '\n'
-//                       'است' /* Strings.notRequestTimeDoctorSide*/,
-//                   buttonLabel: Strings.waitLabel,
-//                   btnColor: IColors.disabledButton,
-//                   size: AlertSize.LG,
-//                 ) //TODO: change to timer
-//               ]);
-//             } else if (_visitTimeState is VisitTimeErrorState) {
-//               return APICallError(() {
-//                 BlocProvider.of<VisitTimeBloc>(context)
-//                     .add(VisitTimeGet(partnerId: widget.entity.pId));
-//               });
-//             } else {
-//               return DocUpAPICallLoading2();
-//             }
-//           },
-//         );
-//       } else if (widget.entity.panel.status == 6 ||
-//           widget.entity.panel.status == 7) {
-//         if (widget.entity.isPatient) {
-//           return Stack(children: <Widget>[
-//             _ChatPage(),
-//             PanelAlert(
-//               label: Strings.noAvailableVirtualVisit,
-//               buttonLabel: Strings.reserveVirtualVisit,
-//               callback: () {
-//                 widget.onPush(NavigatorRoutes.doctorDialogue,
-//                     widget.entity.partnerEntity);
-//               },
-//             )
-//           ]);
-//         } else {
-//           return Stack(children: <Widget>[
-//             _ChatPage(),
-//             PanelAlert(
-//               label: Strings.noAvailableVirtualVisit,
-//               buttonLabel: Strings.reserveVirtualVisitDoctorSide,
-//               btnColor: IColors.disabledButton,
-//             )
-//           ]);
-//         }
-//       }
     } catch (_) {
-      return Container();
+      return APICallError(() {});
     }
   }
 }

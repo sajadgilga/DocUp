@@ -96,53 +96,6 @@ class DoctorEntity extends UserEntity {
     return data;
   }
 }
-//
-//class User {
-//  String avatar;
-//  String firstName;
-//  String lastName;
-//  String name;
-//  String email;
-//  int credit;
-//  int type;
-//  int online;
-//  String nationalId;
-//  String phoneNumber;
-//
-//  User(
-//      {this.avatar,
-//      this.firstName,
-//      this.lastName,
-//      this.email,
-//      this.credit,
-//      this.type,
-//      this.online});
-//
-//  User.fromJson(Map<String, dynamic> json) {
-//    avatar = json['avatar'];
-//    firstName = json['first_name'];
-//    lastName = json['last_name'];
-//    name = '$firstName $lastName';
-//    email = json['email'];
-//    if (json.containsKey('credit')) credit = json['credit'];
-//    type = json['type'];
-//    online = json['online'];
-//    if (json.containsKey('national_id')) nationalId = json['national_id'];
-//    if (json.containsKey('phone_number')) phoneNumber = json['phone_number'];
-//  }
-//
-//  Map<String, dynamic> toJson() {
-//    final Map<String, dynamic> data = new Map<String, dynamic>();
-//    data['avatar'] = this.avatar;
-//    data['first_name'] = this.firstName;
-//    data['last_name'] = this.lastName;
-//    data['email'] = this.email;
-//    data['credit'] = this.credit;
-//    data['type'] = this.type;
-//    data['online'] = this.online;
-//    return data;
-//  }
-//}
 
 class ClinicTrafficTextPlan {
   int id;

@@ -660,12 +660,12 @@ class AddWorkTimeDataSourceDialog {
             DateTimeService.getDateAndTimeFromJalali(dateController.text);
         if (this.addFor4Weeks) {
           for (int i = 0; i < 4; i++) {
-            plan.getVisitTypeDataWithType(visitType).addWorkTime(
+            plan.getVisitTypeDataWithType(visitType,initialIfNull: true).addWorkTime(
                 date, startTimeController.text, endTimeController.text);
             date = date.add(Duration(days: 7));
           }
         } else {
-          plan.getVisitTypeDataWithType(visitType).addWorkTime(
+          plan.getVisitTypeDataWithType(visitType,initialIfNull: true).addWorkTime(
               date, startTimeController.text, endTimeController.text);
         }
 

@@ -116,22 +116,6 @@ class NotificationAndFirebaseService {
       await _showNotificationWithDefaultSound(notifId, title, body, dataJson);
       BlocProvider.of<NotificationBloc>(context).add(GetNewestNotifications());
 
-      // Map<String, dynamic> data =
-      //     new Map<String, dynamic>.from(message['data']);
-      // if (data.containsKey('payload')) {
-      //   if ([5, 6].contains(data['type'])) {
-      //     NewestVisit visit = NewestVisit.fromJson(data['payload']);
-      //
-      //     /// notification bloc events
-      //     // ignore: close_sinks
-      //     NotificationBloc notificationBloc =
-      //         BlocProvider.of<NotificationBloc>(context);
-      //
-      //     /// TODO amir: this condition should check type of notification later
-      //   } else if (true) {
-      //     /// TODO amir: handling event type of notification
-      //   }
-      // }
     } catch (e) {
       print(e.toString());
     } finally {
@@ -156,7 +140,7 @@ class NotificationAndFirebaseService {
   static void handleNotifNavigation(int notifId, String payload, int type,
       {String title, String description, String time, String date}) {
     NewestNotif notif = NewestNotif.getChildFromJsonAndData(
-        notifId, "", "", "00:00:00", "2020/01/01", json.decode(payload), type);
+        notifId, "", "", "00:00:00", "2020/01/01", json.decode(payload.isEmpty?"{}":payload), type);
 
     NotificationAndFirebaseService.notifNavRepo.navigate(context, notif);
 

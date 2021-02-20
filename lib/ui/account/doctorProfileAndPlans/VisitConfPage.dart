@@ -115,7 +115,6 @@ class _VisitConfPageState extends State<VisitConfPage>
 
   bool timeIsSelected = true;
 
-
   @override
   void initState() {
     /// intial doctor loading
@@ -438,9 +437,51 @@ class _VisitConfPageState extends State<VisitConfPage>
 
   void submit(DoctorPlan plan) async {
     /// updating plan by table data
-    _bloc.updateDoctor(widget.doctorId, plan);
+    List<int> visitTypesListNumber =
+        typeSelected[TypeSelect.visitType.title].toList();
+
+    _bloc.updateDoctor(
+        widget.doctorId,
+        DoctorPlan(
+          visitTypes: (visitTypesListNumber.contains(0)
+                  ? <VisitType>[getPhysicalVisitTypeDetail()]
+                  : <VisitType>[]) +
+              (visitTypesListNumber.contains(1)
+                  ? <VisitType>[getVirtualVisitTypeDetail()]
+                  : <VisitType>[]),
+          enabled: true,
+        ));
   }
 
+  VisitType getVirtualVisitTypeDetail() {
+    return VisitType(
+        visitType: 1,
+        visitMethod: typeSelected[TypeSelect.virtualVisitMethod.title].toList(),
+        visitDurationPlan:
+            typeSelected[TypeSelect.virtualDurationPlan.title].toList(),
+        baseTextPrice:
+            intPossible(textBasePriceController.text, defaultValues: 0),
+        baseVideoPrice:
+            intPossible(videoBasePriceController.text, defaultValues: 0),
+        baseVoicePrice:
+            intPossible(voiceBasePriceController.text, defaultValues: 0),
+        basePhysicalVisitPrice: 0,
+        daysWorkTimes: plan.virtualVisitType?.daysWorkTimes??[]);
+  }
+
+  VisitType getPhysicalVisitTypeDetail() {
+    return VisitType(
+        visitType: 0,
+        visitMethod: [],
+        visitDurationPlan:
+            typeSelected[TypeSelect.physicalDurationPlan.title].toList(),
+        basePhysicalVisitPrice:
+            intPossible(physicalBasePriceController.text, defaultValues: 0),
+        baseTextPrice: 0,
+        baseVideoPrice: 0,
+        baseVoicePrice: 0,
+        daysWorkTimes: plan.physicalVisitType?.daysWorkTimes??[]);
+  }
 
   @override
   void dispose() {

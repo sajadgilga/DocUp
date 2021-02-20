@@ -147,7 +147,7 @@ class MyPartners extends StatelessWidget {
             onTap: () {},
           ),
           Padding(
-            padding: EdgeInsets.only(right: 25, top: 20),
+            padding: EdgeInsets.only(right: 25, top: 10),
             child: _header(context),
           ),
           _resultList()

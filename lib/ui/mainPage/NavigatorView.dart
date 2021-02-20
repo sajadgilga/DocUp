@@ -481,7 +481,7 @@ class NavigatorViewState extends State<NavigatorView> {
                 [
                   ChatPage(
                     entity: copyEntity,
-                    textPlanRemainedTraffic: textPlanRemainedTraffic,
+                    // textPlanRemainedTraffic: textPlanRemainedTraffic,
                     onPush: (direction, entity) {
                       push(context, direction, detail: entity);
                     },

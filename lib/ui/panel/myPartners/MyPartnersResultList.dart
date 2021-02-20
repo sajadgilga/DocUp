@@ -86,13 +86,13 @@ class _MyPartnersResultListState extends State<MyPartnersResultList> {
           entity: result,
         ));
     }
-    return Container(
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 230),
-      margin: EdgeInsets.only(top: 20, right: 15, left: 15),
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(top: 16, right: 15, left: 15),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[_list(results)],
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[_list(results)],
+        ),
       ),
     );
   }

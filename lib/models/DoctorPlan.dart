@@ -26,11 +26,16 @@ class DoctorPlan {
   bool enabled;
 
   /// just for keeping same interface as befor
-  VisitType getVisitTypeDataWithType(int type) {
-    if (type == 0) {
+  VisitType getVisitTypeDataWithType(int type,{bool initialIfNull=false}) {
+    if (type == 0 && physicalVisitType != null) {
       return physicalVisitType;
-    } else if (type == 1) {
+    } else if (type == 1 && virtualVisitType !=null ) {
       return virtualVisitType;
+    }
+    if(initialIfNull){
+      VisitType visitType = VisitType(visitType: type,daysWorkTimes: [],visitDurationPlan: [],visitMethod: []);
+      visitTypes.add(visitType);
+      return visitType;
     }
     return null;
   }
@@ -338,7 +343,7 @@ class VisitType {
     /// fill table
     getDailyWorkTimesByDateString(dateString)?.workTimes?.forEach((WorkTime workTime) {
       int start = DateTimeService.getTimeMinute(workTime.startTime);
-      int startPart = start ~/ DoctorPlan.hourMinutePart;
+      int startPart = (start / DoctorPlan.hourMinutePart).round();
       int end = DateTimeService.getTimeMinute(workTime.endTime);
       end = start > 0 && end == 0 ? 24 * 60 : end;
       int endPart = end ~/ DoctorPlan.hourMinutePart;

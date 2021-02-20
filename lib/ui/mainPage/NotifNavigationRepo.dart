@@ -57,6 +57,8 @@ class NotificationNavigationRepo {
     } else if (type == 8) {
       /// visit reminder
       navigateToPanel(newestNotifs as NewestVisitNotif, context);
+    } else if (type == 9) {
+      /// do nothing for now
     }
   }
 

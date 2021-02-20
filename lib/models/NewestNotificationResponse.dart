@@ -66,7 +66,10 @@ class NewestNotificationResponse {
         String description = v['body'];
         String notifDate = v['time'].split("T")[0];
         String notifTime = v['time'].split("T")[1].split("+")[0];
-        Map<String, dynamic> jsonData = v['data']['payload'];
+        Map<String, dynamic> jsonData = {};
+        if (v['data']['payload'] is Map<String, dynamic>) {
+          jsonData = v['data']['payload'];
+        }
         newestNotifs.add(NewestNotif.getChildFromJsonAndData(
             notifId, title, description, notifTime, notifDate, jsonData, type));
       });
@@ -144,6 +147,9 @@ abstract class NewestNotif {
     } else if (type == 8) {
       /// visit reminder
       return NewestVisitNotif.fromJson(
+          notifId, title, description, time, date, type, payload);
+    } else if (type == 9) {
+      return NewestPatientRegister.fromJson(
           notifId, title, description, time, date, type, payload);
     }
   }
@@ -400,7 +406,7 @@ class NewestMedicalTestNotif extends NewestNotif {
             notifDate: notifDate,
             notifType: notifType) {
     panelCognitiveTestId = intPossible(json['panel_cognitive_test_id']);
-    testTitle = utf8IfPossible(json['title'])??"";
+    testTitle = utf8IfPossible(json['title']) ?? "";
     doctorId = intPossible(json['doctor_id']);
     patientId = intPossible(json['patient_id']);
     testId = intPossible(json['test_id']);
@@ -452,7 +458,10 @@ class NewestVideoVoiceCallNotif extends NewestNotif {
             notifTime: notifTime,
             notifDate: notifDate,
             notifType: notifType) {
-    user = User.fromJson(json['partner_info']);
+    if(json['partner_info'] != null){
+      user = User.fromJson(json['partner_info']);
+
+    }
     channelName = json['channel_name'];
     if (json.containsKey('visit')) visit = VisitEntity.fromJson(json['visit']);
   }
@@ -462,6 +471,46 @@ class NewestVideoVoiceCallNotif extends NewestNotif {
     data['partner_info'] = user.toJson();
     data['channel_name'] = channelName;
     data['visit'] = visit.toJson();
+    return data;
+  }
+}
+
+class NewestPatientRegister extends NewestNotif {
+  User patient;
+
+  NewestPatientRegister(int notifId, String title, String description,
+      String notifTime, String notifDate, int notifType, {this.patient})
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType);
+
+  NewestPatientRegister.fromJson(
+      int notifId,
+      String title,
+      String description,
+      String notifTime,
+      String notifDate,
+      int notifType,
+      Map<String, dynamic> json)
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType) {
+    if(json['patient_info']!=null){
+      patient = User.fromJson(json['patient_info']);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['patient_info'] = patient?.toJson();
     return data;
   }
 }
