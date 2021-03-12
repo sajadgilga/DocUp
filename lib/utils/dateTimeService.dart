@@ -14,25 +14,52 @@ class DateTimeService {
     } catch (e) {}
   }
 
+  static Jalali getNewestJalaliSaturday() {
+    Jalali now = getCurrentJalali();
+    now = now.add(days: -1 * (now.weekDay - 1));
+    return now;
+  }
+
   static DateTime getCurrentDateTime() {
     DateTime now;
     if (_currentMobileDateTime == null || _currentNTPDateTime == null) {
       now = DateTime.now();
-      print("mobile now:" + now.toString());
     } else {
       Duration delta = DateTime.now().difference(_currentMobileDateTime);
       now = _currentNTPDateTime.add(delta);
-      print("ntp now:" + now.toString());
     }
     loadCurrentDateTimes();
     return now;
   }
 
+
+  static String getCurrentTime() {
+    DateTime now;
+    if (_currentMobileDateTime == null || _currentNTPDateTime == null) {
+      now = DateTime.now();
+    } else {
+      Duration delta = DateTime.now().difference(_currentMobileDateTime);
+      now = _currentNTPDateTime.add(delta);
+    }
+    loadCurrentDateTimes();
+    return "${now.hour}:${now.minute}:${now.second}";
+  }
+
   static Jalali getJalaliformDateTime(DateTime date) {
     return Jalali.fromDateTime(date);
   }
+
   static Jalali getCurrentJalali() {
     return Jalali.fromDateTime(getCurrentDateTime());
+  }
+
+  static String getJalaliStringFromJalali(Jalali j) {
+    final date = "${j.year}" +
+        "/" +
+        "${addExtraZeroOnLeftSideIfNeeded(j.month.toString())}" +
+        "/" +
+        "${addExtraZeroOnLeftSideIfNeeded(j.day.toString())}";
+    return date;
   }
 
   static String getYesterdayInJalilyString() {
@@ -53,8 +80,13 @@ class DateTimeService {
     return Jalali.fromDateTime(DateTimeService.getCurrentDateTime());
   }
 
-  static String getDateStringFormDateTime(DateTime date) {
-    return "${date.year}/${date.month}/${date.day}";
+  static String getDateStringFormDateTime(DateTime date,
+      {String dateSeparator = "-"}) {
+    try {
+      return "${date.year}${dateSeparator}${date.month}${dateSeparator}${date.day}";
+    } catch (e) {
+      return null;
+    }
   }
 
   static String getTomorrowInJalali() {
@@ -102,15 +134,23 @@ class DateTimeService {
     return timeString;
   }
 
+  static DateTime getDateTimeFormDateString(String date) {
+    return DateTime(
+        int.parse(date.split(new RegExp(r"/|-|\\"))[0]),
+        int.parse(date.split(new RegExp(r"/|-|\\"))[1]),
+        int.parse(date.split(new RegExp(r"/|-|\\"))[2]));
+  }
+
   static String getJalaliStringFormGeorgianDateTimeString(String date) {
-    if (date.split("T").length > 1) {
-      date = date.split("T")[0];
+    try {
+      if (date.split("T").length > 1) {
+        date = date.split("T")[0];
+      }
+      final jalaliDate = Jalali.fromDateTime(getDateTimeFormDateString(date));
+      return "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
+    } catch (e) {
+      return null;
     }
-    final jalaliDate = Jalali.fromDateTime(DateTime(
-        int.parse(date.split("-")[0]),
-        int.parse(date.split("-")[1]),
-        int.parse(date.split("-")[2])));
-    return "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
   }
 
   static String normalizeDateAndTime(String str,
@@ -127,6 +167,12 @@ class DateTimeService {
 
   static DateTime getDateTimeFromStandardString(String str) {
     return DateTime.parse(str);
+  }
+
+  static String getTimeStringFromDateTime(DateTime dateTime,
+      {bool withSeconds = true}) {
+    return "${dateTime.hour}:${dateTime.minute}" +
+        (withSeconds ? ":${dateTime.second}" : "");
   }
 
   static DateTime getDateAndTimeFromWS(String str) {

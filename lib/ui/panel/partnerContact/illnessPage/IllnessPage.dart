@@ -14,7 +14,7 @@ import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:Neuronio/ui/widgets/PanelTestList.dart';
+import 'package:Neuronio/ui/panel/partnerContact/illnessPage/PanelTestList.dart';
 import 'package:Neuronio/ui/widgets/VisitBox.dart';
 import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:Neuronio/utils/Utils.dart';
@@ -30,7 +30,7 @@ class IllnessPage extends StatefulWidget {
   final Function(String, dynamic) onPush;
   final Function(int) selectPage;
   final Function(String, dynamic) globalOnPush;
-  final TextPlanRemainedTraffic textPlanRemainedTraffic;
+  final PatientTextPlan textPlanRemainedTraffic;
 
   IllnessPage(
       {Key key,
@@ -68,7 +68,7 @@ class _IllnessPageState extends State<IllnessPage> {
     var _state = BlocProvider.of<EntityBloc>(context).state;
     if (_state.entity.isDoctor) {
       if (_state.entity.doctor.clinic == null ||
-          _state.entity.doctor.clinic.id != NoronioClinic.ClinicId) {
+          _state.entity.doctor.clinic.id != NeuronioClinic.ClinicId) {
         noronioClinicTestsAvailable = false;
       }
     }
@@ -91,7 +91,7 @@ class _IllnessPageState extends State<IllnessPage> {
   Widget _IllnessPage() {
     if (widget.entity.isDoctor &&
         (widget.entity.doctor.clinic == null ||
-            widget.entity.doctor.clinic.id != NoronioClinic.ClinicId)) {
+            widget.entity.doctor.clinic.id != NeuronioClinic.ClinicId)) {
       return Container(
         padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
         alignment: Alignment.center,
@@ -103,7 +103,7 @@ class _IllnessPageState extends State<IllnessPage> {
           child: Container(
         child: Column(children: <Widget>[
           PartnerInfo(
-            entity: widget.entity,
+            entity: widget.entity.partnerEntity,
             onPush: widget.onPush,
             bgColor: IColors.background,
           ),

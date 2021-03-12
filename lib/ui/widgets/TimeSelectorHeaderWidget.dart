@@ -6,59 +6,65 @@ import 'AutoText.dart';
 
 class TimeSelectorHeaderWidget extends StatefulWidget {
   final Function(bool) callback;
-  final bool initialTimeIsSelected;
+  bool initialTimeIsSelected;
   final bool timeDateWidgetsFlag;
 
-  TimeSelectorHeaderWidget({this.callback, this.initialTimeIsSelected=false,this.timeDateWidgetsFlag=true});
+  TimeSelectorHeaderWidget(
+      {this.callback,
+      this.initialTimeIsSelected = false,
+      this.timeDateWidgetsFlag = true});
 
   @override
   _TimeSelectorHeaderWidgetState createState() =>
-      _TimeSelectorHeaderWidgetState(
-          timeIsSelected: this.initialTimeIsSelected);
+      _TimeSelectorHeaderWidgetState();
 }
 
 class _TimeSelectorHeaderWidgetState extends State<TimeSelectorHeaderWidget> {
-  bool timeIsSelected = false;
-
-  _TimeSelectorHeaderWidgetState({this.timeIsSelected = false});
+  _TimeSelectorHeaderWidgetState();
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        widget.timeDateWidgetsFlag?Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(width: 20),
-            GestureDetector(
-                child: Icon(Icons.calendar_today,
-                    color: timeIsSelected ? Colors.grey : IColors.themeColor),
-                onTap: () {
-                  setState(() {
-                    timeIsSelected = false;
-                  });
-                  widget.callback(timeIsSelected);
-                }),
-            SizedBox(width: 20),
-            GestureDetector(
-                child: Icon(Icons.access_time,
-                    color: timeIsSelected ? IColors.themeColor : Colors.grey),
-                onTap: () {
-                  setState(() {
-                    timeIsSelected = true;
-                  });
-                  widget.callback(timeIsSelected);
-                }),
-            SizedBox(width: 20),
-          ],
-        ):SizedBox(),
+        widget.timeDateWidgetsFlag
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(width: 20),
+                  GestureDetector(
+                      child: Icon(Icons.calendar_today,
+                          color: widget.initialTimeIsSelected
+                              ? Colors.grey
+                              : IColors.themeColor),
+                      onTap: () {
+                        setState(() {
+                          widget.initialTimeIsSelected = false;
+                        });
+                        widget.callback(widget.initialTimeIsSelected);
+                      }),
+                  SizedBox(width: 20),
+                  GestureDetector(
+                      child: Icon(Icons.access_time,
+                          color: widget.initialTimeIsSelected
+                              ? IColors.themeColor
+                              : Colors.grey),
+                      onTap: () {
+                        setState(() {
+                          widget.initialTimeIsSelected = true;
+                        });
+                        widget.callback(widget.initialTimeIsSelected);
+                      }),
+                  SizedBox(width: 20),
+                ],
+              )
+            : SizedBox(),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: AutoText("زمان برگزاری",
+              child: AutoText("زمان‌های ویزیت با پزشک",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   textAlign: TextAlign.right),
             ),

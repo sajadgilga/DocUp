@@ -1,8 +1,73 @@
+import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/utils/Utils.dart';
 
 import 'MedicalTest.dart';
-class PatientScreening{
+class PatientScreening {
+  int id;
+  bool paymentStatus;
+  Map<int, MedicalTestItem> testsResponseStatus;
+  bool icaStatus;
+  bool visitStatus;
+  DoctorEntity doctor;
+  DoctorEntity clinicDoctor;
+  ClinicEntity clinic;
 
+  List<MedicalTestItem> get medicalTestItems {
+    return testsResponseStatus.values.toList();
+  }
+
+  int get remainingTestsToBeDone {
+    int doneCounts = 0;
+    (testsResponseStatus ?? {}).forEach((key, value) {
+      if (value.done) {
+        doneCounts += 1;
+      }
+    });
+    return (testsResponseStatus?.length ?? 0) - doneCounts;
+  }
+
+  PatientScreening.fromJson(Map<String, dynamic> json) {
+    id = intPossible(json['screening_step_id'] ?? -1);
+    paymentStatus = json['payment_status'] ?? false;
+    testsResponseStatus = {};
+    if (json.containsKey("tests_response_status")) {
+      (json['tests_response_status'] as Map<String, dynamic>)
+          .forEach((key, value) {
+        int testId = intPossible(key);
+        bool done = value['status'] ?? false;
+        MedicalTestItem test = MedicalTestItem.fromJson(value['info']);
+        test.done = done;
+        testsResponseStatus[testId] = test;
+      });
+    }
+    icaStatus = json['ica_status'] ?? false;
+    visitStatus = json['visit_status'] ?? false;
+    if (json['doctor_info']!=null) {
+      doctor = DoctorEntity.fromJson(json['doctor_info']);
+    }
+    if (json['clinic_doctor_info']!=null) {
+      clinicDoctor = DoctorEntity.fromJson(json['clinic_doctor_info']);
+    }
+    if(json['clinic_info'] != null){
+      clinic = ClinicEntity.fromJson(json['clinic_info']);
+    }
+  }
+}
+
+class PatientScreeningResponse {
+  bool success;
+  int inactive;
+  int active;
+  PatientScreening statusSteps;
+
+  PatientScreeningResponse.fromJson(Map<String, dynamic> json) {
+    success = json['success'] ?? false;
+    inactive = intPossible(json['inactive']);
+    active = intPossible(json['active']);
+    if (json.containsKey('status_steps')) {
+      statusSteps = PatientScreening.fromJson(json['status_steps']);
+    }
+  }
 }
 
 class Screening {
@@ -21,5 +86,27 @@ class Screening {
         medicalTests.add(MedicalTestItem.fromJson(element));
       });
     }
+  }
+}
+
+class ScreeningDiscountDetailResponse {
+  bool success;
+  double percent;
+
+  ScreeningDiscountDetailResponse.fromJson(Map<String, dynamic> json) {
+    success = json['success'] ?? false;
+    percent = doublePossible(json['percent'] ?? 1);
+  }
+}
+
+class ActivateScreeningPlanResponse {
+  bool success;
+  String msg;
+  int code;
+
+  ActivateScreeningPlanResponse.fromJson(Map<String, dynamic> json) {
+    success = json['success'] ?? false;
+    msg = utf8IfPossible(json['msg']??"");
+    code = intPossible(json['code']);
   }
 }

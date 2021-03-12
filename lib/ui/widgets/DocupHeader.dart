@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 
 import 'AutoText.dart';
 
-class DocUpHeader extends StatelessWidget {
+class NeuronioHeader extends StatelessWidget {
   final String title;
   final bool docUpLogo;
   final Color color;
+  final double width;
 
-  DocUpHeader({Key key, this.title, this.docUpLogo = false, this.color})
+  NeuronioHeader({Key key, this.title, this.docUpLogo = false, this.color,this.width=40})
       : super(key: key);
 
   @override
@@ -20,7 +21,7 @@ class DocUpHeader extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(top: 10, right: 20),
           child: docUpLogo
-              ? Container(width: 40, child: Image.asset(Assets.logoTransparent))
+              ? Container(width: width, child: Image.asset(Assets.logoTransparent))
               : SizedBox(),
           alignment: Alignment.centerRight,
         ),
@@ -72,6 +73,7 @@ class DocUpSubHeader extends StatelessWidget {
 }
 
 Widget menuLabel(title, {double fontSize = 14, bool divider = true}) => Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         AutoText(

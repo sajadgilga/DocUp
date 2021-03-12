@@ -1,7 +1,6 @@
-import 'package:Neuronio/constants/settings.dart';
-
 class Strings {
   static const String appTitle = 'Neuronio';
+  static const String appSiteLink = "https://neuronio.ir";
   static const String bottomNavigationHomeTitle = 'خانه';
   static const String bottomNavigationPanelTitle = 'پنل کاربری';
   static const String bottomNavigationServicesTitle = 'خدمات';
@@ -23,8 +22,12 @@ class Strings {
   static const String verificationCodeMessage =
       "کد ارسال شده به ایمیل یا شماره همراه خود را وارد کنید";
   static const String oneStepToDoctorMessage = "یک قدم تا پزشک فاصله دارید";
+  static const String requiredPatientInfoMessage =
+      "این اطلاعات به ما کمک می کند تا راحت‌تر خدمات مورد نیاز شما را ارائه دهیم.";
   static const String oneStepToOfficeMessage =
       ".یک قدم تا مطب مجازی خود فاصله دارید";
+  static const String patientClinicSuggestionMessage =
+      "شما از طریق کدام کلینیک با ما آشنا شدید؟";
   static const String usernameInputHint = "شماره همراه";
   static const String verificationHint = "ورود کد ارسال شده";
   static const String doctorIdInputHint = "شماره نظام پزشکی";
@@ -36,7 +39,9 @@ class Strings {
   static const String passInputHint = "رمز عبور";
   static const String verifyAction = "دریافت";
   static const String registerAction = "ثبت نام";
+  static const String nextStepAction = "گام بعد";
   static const String welcome = "خوش آمدید";
+  static const String requiredPatientInfo = "اطلاعات مورد نیاز";
   static const String continueAction = "ادامه";
   static const String requestAction = "درخواست";
   static const String enterAction = "ورود";
@@ -104,7 +109,44 @@ class Strings {
   static final String panelTestResultsPicUploadLabel = 'ارسال آزمایش';
   static final String panelTestResultsPicListLabel = 'نتایج آزمایش‌های پیشین';
   static final String emptyTestFiles = 'فایل آزمایشی موجود نمی باشد.';
-  static final String seeTestResultsUseScreeningPlan = "نتیجه تست شما ثبت شد، برای اینکه بتوانید تحلیل تست های خود را مشاهده کنید، باید با پزشک خود ویزیتی داشته باشید. ";
+  static final String seeTestResultsUseScreeningPlan =
+      "نتیجه ارزیابی شما ثبت شد. ابتدا باید توسط پزشک خود ویزیت شوید تا نتایج ارزیابی شما به صورت دقیق‌تر تحلیل شود.";
+
+  // screening
+  static final String noActiveScreeningPlanForPatient =
+      "شما پلن فعالی را ندارید. سلامتی مغز اصلی ترین رکن بدن هست و باید به آن اهمیت داده شود.";
+  static final String noActiveScreeningPlanForDoctor =
+      "بیمار پلن غربالگری فعالی ندارد.";
+
+  static final String neuronioClinicScreeningPlanDescription =
+      "خوشحالیم که در مسیر مراقبت از سلامتی  شما همراهتون هستیم." +
+          "\n" +
+          "همه میدونیم که اگه بخوایم از چیزی مراقبت کنیمُ لازمه اون رو بسنجیم و چه چیزی مهم تر از سلامتی شما! " +
+          "\n" +
+          "ما اینجا هستیم تا با شما در مسیر سلامتی مغزتون که اصلی ترین رکن بدن هست کمک کنیم." +
+          "\n" +
+          "اول لازمه تا سلامتی مغز و توانمدی های شناختی شما ارزیابی بشه تا اول از همه به وضعیتش آگاه بشیم و بعد با توجه به سابقه سلامتی شما و شرایط منحصر به فردتون اطلاعات خوبی از سلامت مغز و شناخت  شما بتون داده می شه تا با کمک هم سلامت مغز و شناخت رو ارتقا بدیم و بتونیم به موقع از بیماری های مغز و شناخت مانند آلزایمر پیشگیری کنیم." +
+          "\n" +
+          "پس به شما میگیم که قراره تو این سفر چه اتفاق هایی بیفته.";
+
+  static final List<String> neuronioClinicScreeningSteps = [
+    "  ۱- اول از همه از شما می خواهیم تا تست های خودارزیابی سلامت رو تکمیل کنید و اون ها رو برای ما بفرستین.",
+    "  ۲- بعد لازمه تا تست هوشمند سنجش یکپارچه سلامت شناختی رو تکمیل کنید. از اونجا که این تست توسط تبلت از شما گرفته میشه لازمه تا زمان مشترکی رو هماهنگ کنیم. یا شما به محل های تعیین شده تشریف بیارید یا ما تبلت رو درب منزل شما میرسونیم و تست گرفته میشه.",
+    "  ۳- بعد از انجام ارزیابی های شناختی نتایج این ارزیابی ها توسط پزشکان متخصص حوزه مغز و شناخت بررسی میشه و شما زمانی رو با پزشک هماهنگ می کنید.",
+    "  ۴- شما با پزشک یک ویزیت ۱۵ تا ۳۰  دقیقه ای خواهید داشت. سابقه پزشکی شما بررسی میشه و پزشک نتایج تست های شما که تحلیل و بررسی شدند رو به شما انتقال میده.",
+    "  ۵- بر اساس جلسه ای که با پزشک داشتید پروفایلی از سلامت شما بر محور سلامت مغز و شناخت به شما نشون داده میشه.",
+    "  ۶- برای حفظ و ارتقای سلامت شما و پیشگیری از بیماری های مغز و شناخت مانند آلزایمر یه سری پیشنهاد مشخص مانند پایش توانمندی های شناختی٬ ویزیت پزشک متخصص در صورت نیاز٬ برنامه بهسازی و توانمندی شناختی شامل بازی های فیزیکی و کاغذی٬ بازی های شناختی بر بستر واقعیت مجازی و ... به شما پیشنهاد میشه.",
+    "  ۷- از اونجا که مغز سالم در بدن سالمه توی برنامه تون پیشنهادهایی توسط متخصصین برای بهسازی و ارتقای توانمدی های فیزیکی هم داده میشه. که همه این موارد شما رو در ادامه مسیر کمک میکنه.",
+    "  ۸- حالا شما از پیشنهادهایی که بتون داده شده اونی رو که به شرایطتون می خوره و براتون مناسبه انتخاب می کنید و بعد ادامه مسیر رو در کنار هم در نورونیو هستیم.",
+  ];
+
+  static final String screeningDoctorSelection =
+      "اگر دکتری را از قبل می شناسید وارد کنید تا ما ارتباط شما را فراهم کنیم.";
+  static final String requestFailed = "درخواست با خطا مواجه شد.";
+
+  /// TODO link should become dynamic
+  static final String lifeQuestionerTestLink =
+      "https://docs.google.com/forms/d/e/1FAIpQLScCXP2RlG1TYTgeu8gCdOV1Adpaxh1Ae8-7YflIPyTpB6BjJg/viewform";
 
 //
   static final String panelEventPageLabel = 'رویدادها';
@@ -117,9 +159,10 @@ class Strings {
   static final String panelVideoCallLabel = 'تماس';
 
 //
-  static final String physicalReservationLabel = 'رزرو ویزیت حضوری';
-  static final String virtualReservationLabel = 'رزرو ویزیت مجازی';
-  static final String trafficPlanReservationLabel = "خرید پلن متنی";
+  static final String physicalReservationLabel = 'رزرو مشاوره حضوری';
+  static final String ICAReservationLabel = "رزرو مشاوره ica";
+  static final String virtualReservationLabel = 'رزرو مشاوره مجازی';
+  static final String trafficPlanReservationLabel = "خرید مشاوره متنی";
 
 //
   static final String patientTrackingVisitFaceToFaceLabel = 'ویزیت حضوری';
@@ -169,13 +212,14 @@ class Strings {
 //
   static final String emptyDoctorLabel = 'شما به پزشکی متصل نیستید '
       '\n'
-      ' لطفا از صفحه جست‌و‌جو متخصصان به پزشک مورد نظر وصل شوید';
+      'بعد از فعال سازی پلن مورد نظر خود دکتر شما تعیین می شود.';
   static final String emptyPatientLabel = 'شما به بیماری متصل نیستید '
       '\n'
       ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
 
   /// TODO
-  static final String learningVideosLink = "http://neuronio.ir";
+  static final String learningVideosLink =
+      "https://www.aparat.com/Neuronio.Clinic";
 
 //
   static final String emptyWaitDoctorLabel = 'منتظر بمانید';
@@ -185,6 +229,8 @@ class Strings {
 //      ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
 
   static final String emptyChatPage = 'پیامی تاکنون ارسال نشده است';
+  static final String chatFileMessageSent = "فایل با موفقیت ارسال شد.";
+  static final String chatFileMessageFailed = "ارسال فایل با مشکل مواجه شد.";
 
 //
   static final String emptyDoctorSearch =
@@ -206,6 +252,8 @@ class Strings {
   static final String addCreditAction = "افزایش اعتبار";
   static final String understandAction = "متوجه شدم";
   static final String okAction = "باشه";
+  static final String deleteAction = "حذف";
+  static final String cancelAction = "لغو";
   static final String virtualVisitPrivacyPolicyMessage =
       "من همه قوانین و مقررات رزرو ویزیت مجازی را خوانده و موافقت میکنم";
   static final String physicalVisitPrivacyPolicyMessage =
@@ -213,7 +261,7 @@ class Strings {
   static final String emptyStartVisitTimeMessage =
       "لطفا زمان ویزیت مناسبی را وارد کنید";
   static final String pastStartVisitTimeMessage =
-      "شما نمی توانید ساعتی که گذشته است را به عنوان زمان شروع ویزیت انتخاب کنید.";
+      "نمی توان ویزیتی رو دیرتر از ۶ ساعت مانده به زمان آن درخواست دهید.";
   static final String invalidDurationPlan_EmptyDurationPlan =
       "پزشک زمانی را برای ویزیت تایید نمی کند.";
   static final List<String> invalidDurationPlan_Plans = [
@@ -233,9 +281,12 @@ class Strings {
   static final String periodTextFieldHint = 'هر چند ساعت';
   static final String submitDrugLabel = 'ارسال برای بیمار';
 
-  static final String supportWhatsAppPhoneNumber =
-      Settings.bazaarBuild ? "+989335705997" : "+989128123351";
-  static final String supportTelegramId = "amirmosio";
+  static final String supportWhatsAppLink =
+      "whatsapp://send?phone=+989981508215";
+  static final String supportTelegramLLink =
+      "http://telegram.me/Neuroniosupport";
+  static final String supportInstagramLink =
+      "http://Instagram.com/neuronio.clinic";
 
   static final String noVirtualAppointment =
       "هیچ سابقه ای از مشاوره" + "\n" + "مجازی موجود نمی باشد.";
@@ -249,21 +300,25 @@ class Strings {
     "",
     " " + "مطمین هستید؟"
   ];
+  static final String textPlanDescription =
+      "توضیحات سنیپبنسید سدلسد یبتد ستیدب ...";
   static final String planSuccessfullyActivated =
       "پلن متنی با موفقیت خریداری شد.";
   static final String noCreditErrorCode_602 =
       "اعتبار شما برای خرید پلن کافی نمی باشد.";
   static final String oldPlanExistedErrorCode_603 =
       "پلن قبلی شما هنوز تمام نشده است.";
-  static final String noRemainedWordForYouPlanInChatRoom =
-      "برای چت با پزشک در ساعت های غیر ویزیت، باید پلن متنی تهیه کنید.هنوز پلنی نخریده اید یا پلن قبلی شما تمام شده است.";
+  static final String noActivePatientTextPlanForChatRoom =
+      "برای چت با پزشک، باید پلن متنی تهیه کنید. هنوز پلنی نخریده اید یا پلن قبلی شما توسط مشاور بسته شده است.";
+  static final String activatePatientTextPlan = "فعال کردن چت برای بیمار";
+  static final String deactivatePatientTextPlan = "بستن چت برای بیمار";
   static final String goToTextPlanListPage = "خرید پلن متنی";
 
   /// Errors
   static final String errorCode_615 = "لطفا عنوان کاربر را درست انتخاب کنید،" +
       "\n" +
       "این کاربر قبلا با عنوان دیگری ثبت نام کرده است.";
-  static final String errorCode_616 = "کد فعالسازی را اشتباه وارد کردید";
+  static final String errorCode_616 = "کد فعال‌سازی را اشتباه وارد کردید";
 
   static final String visitEventAddedToGoogleCalendar =
       "ویزیت با موفقیت به گوگل کلندر شما اضافه شد.";
@@ -272,41 +327,27 @@ class Strings {
 
   static final String privacyAndPolicy = "قوانین و سیاست ها";
   static final String policyDescription =
-      "نورونیو به حریم خصوص کاربران خود احترام می گذارد و متعهد به حفظ اطلاعات شخصی است که شما در اختیار ان می گذارید." +
+      "1- نورونیو به حریم خصوصی کاربران خود احترام می‌گذارد و متعهد است که اطلاعات کاربران خود را محفوظ بدارد." +
           "\n" +
-          "پس از افزایش اعتبار و پس از هر ویزیت با دکتر هزینه ویزیت از اعتبار بیمار کسر می شود." +
+          "2 – شماره تلفن همراه شما، تنها برای ورود به اپلیکیشن نورونیو و کد ملی شما تنها برای تشکیل پرونده سلامتی استفاده می‌شود و در اختیار سایرین قرار نخواهد گرفت." +
           "\n" +
-          "هزینه ویزیت توسط خود دکتر و با توجه به نوع ویزیت (حضوری، متنی، صوتی، تصویری) تعیین می شود."
-              " اطلاعاتی مثل شماره تلفن قرار داده شده که صرفا برای امنیت هنگام ورود به اکانت اپلیکیشن گرفته می شود، در اختیار کاربران دیگر قرار نمی گیرد." +
+          "3- تمامی اطلاعات و مدارکی که از شما طی مسیر سلامتی خواسته می‌شود، تنها کاربرد پزشکی دارد و هییچگونه استفاده دیگری از آن‌ها نخواهد شد. تمامی این اطلاعات محرمانه نزد نورونیو باقی می‌ماند." +
           "\n" +
-          "کد‌ملی برای پرونده سلامت کلینیک نورونیو استفاده می شود، و این کلینیک دیتا های مربوط به بیماران را برای خدمات خود استفاده می کند." +
-          "\n" +
-          "اطلاعات دیگری که کاربر نیاز به استفاده از ان ها در برنامه دارد برای اطمینان از هویت اشخاص و مدارک دیگر صرفا استفاده پزشکی دارد." +
-          "\n" +
-          "درمورد اعتبار درون برنامه، هرگونه درخواست برگشت وجه از طریق راه های ارتباطی قرار داده شده در صفحه پروفایل کاربران قابل پیگیری است.";
+          "پرداخت هزینه بسته‌های سنجش سلامتی از طریق استفاده از اعتبار و همچنین پرداخت مستقیم بانکی امکان پذیر است. در صورتیکه مایل به بازگشت وجه باقی‌مانده اعتبار خود هستید، می‌توانید از طریق راه‌های ارتباطی با ما موضوع را مطرح کنید.";
   static final String aboutUsTitle = "درباره ما";
   static final String aboutUsDescription = "اپلیکیشن نورونیو";
   static final String paymentDescriptionTitle = "روش های پرداخت";
   static final String paymentDescriptionPatient =
-      "با انتخاب مبلغ مورد نظر برای افزایش اعتبار و زدن بر روی دکمه آن، به درگاه پرداخت منتقل می شوید، که با تمکیل فرایند، مبلغ مورد نظر، به اعتبار شما اضافه می شود. لازم به ذکر است بعد از افزایش حساب بعد از پذیرش هر ویزیت توسط دکتر، به اندازه هزینه ویزیت از اعتبار شما کاسته می شود و مبلغ برای پزشک ارسال می گردد.";
+      "پرداخت هزینه بسته‌های سنجش سلامتی از طریق استفاده از اعتبار و همچنین پرداخت مستقیم بانکی امکان پذیر است. درصورتیکه مایل به افزایش اعتبار خود هستید، مبلغ مورد نظر را وارد نمایید و سپس از طریق درگاه بانکی اعتبار خود را افزایش دهید. همچنین، درصورتیکه بسته سنجش سلامتی خریداری کنید اما اعتبار کافی نداشته باشید، به صورت خودکار به صفحه پرداخت بانکی هدایت خواهید شد. اگر مایل به بازگشت وجه باقی‌مانده اعتبار خود هستید، می‌توانید از طریق راه‌های ارتباطی با ما موضوع را مطرح کنید.";
   static final String paymentDescriptionDoctor =
-      "بعد از پذیرفتن هر ویزیت از طریق اپلیکیشن، هزینه ای که بیمار بابت، ویزیت پرداخته است به موجودی شما اضافه می گردد.";
+      "این بخش در آینده تعیین می گردد.";
 
-  // static final String billingDescriptionTitle = "روش های پرداخت";
   static final String doctorBillingDescription =
-      "با هر ویزیت بیمار، هزینه ویزیت به اعتبار شما اضافه می شود" +
-          "\n" +
-          " و شما در هر زمان می توانید اعتبار را به حساب بانکی خود منتقل کنید." +
-          "\n" +
-          "برای اینکار کافی است پس از ثبت شماره بانکی خود در قسمت پروفایل، با یکی از راه های ارتباطی ذکر شده با ما تماس برقرار کرده تا در اسرع وقت اعتبار مورد نظر به حساب شما واریز گردد." +
-          "\n" +
-          "هزینه ویزیت های مختلف را نیز در صفحه منو پروفایل خود می توانید تعیین کنید.";
+      "این بخش در آینده تعیین می گردد.";
+
   static final String patientBillingDescription =
-      ".پس از افزایش اعتبار، پس از هر ویزیت با دکتر هزینه ویزیت از اعتبار شما کسر می شود" +
-          "\n" +
-          "هزینه ویزیت توسط خود دکتر و با توجه به نوع ویزیت (مجازی، حضوری) تعیین می شود." +
-          "\n" +
-          "درصورتی که مایل به برگشت وجه خود از اپلیکیشن هستید می توانید با یکی از راه های ارتباطی قرار داده شده با ما تماس برقرار کنید تا در اسرع وجه درخواست شما انجام گردد.";
+      "درصورتیکه اعتبار خود را افزایش دهید، هزینه بسته‌های سنجش سلامت شناختی می‌تواند از حساب کاربری شما کسر شود. همچنین در صورتیکه مایل به بازگشت وجه باقی‌مانده اعتبار خود هستید، می‌توانید از طریق راه‌های ارتباطی با ما موضوع را مطرح کنید.";
+
   static final String minimumRequestedCredit =
       "مبلغ درخواست شده کمتر از حد مجاز دو هزار تومان است.";
   static final String videoCallPatientPanelDescription =
@@ -333,6 +374,25 @@ class Strings {
           "در صورتی که ویزیت را تمدید نکنید تماس به صورت اتوماتیک در پایان زمان ویزین قطع می گردد.";
   static final String endedVisitCallAlertToCloseCall =
       "زمان ویزیت مجازی به پایان رسیده است و امکان برقراری تماس هم اکنون وجود ندارد.";
+
+  /// in-app guid
+  static final String navigationBarDescription =
+      "در نوار پایین، می‌توانید در بخش‌های خانه، پنل کاربری، خدمات و صفحه پروفایل جابجا شوید." +
+          "\n"
+              "خانه، جایی است که می‌توانید اعلان‌های جدید و پیام‌های دریافتی خود را مشاهده کنید." +
+          "\n" +
+          "پنل کاربری، محلی است که می‌توانید پیشرفت برنامه سلامتی خود را ببینید و با پزشک خود ارتباط برقرار کنید." +
+          "\n" +
+          "در بخش خدمات نیز، تمامی ارزیابی‌ها و انواع خدماتی که به صورت مجازی توسط نورونیو قابل دسترس است نمایش داده می‌شود." +
+          "\n" +
+          "و نهایتا در صفحه پروفایل، اطلاعات کاربری،  اطلاعات شخصی و پرونده سلامتی شما وجود دارد که می‌توانید آن را ویرایش نمایید.";
+
+  /// occasions
+  static final String guidToSiteForMothersDays = "روز مادر مبارک" +
+      "\n" +
+      "برای استفاده از پکیج ویژه روز مادر و استفاده از تخفیف ۳۰٪ به سایت نورونیو مراجعه کنید و از آنجا کد تخفیف ۳۰٪ را خریداری کنید." +
+      "\n" +
+      "neuronio.ir";
 
   static final bankCodes = {
     '207177': 'بانک توسعه صادرات ایران',
@@ -375,7 +435,22 @@ class Strings {
     '639607': 'بانک سرمایه',
     '991975': 'بانک ملت'
   };
-  static final persianDaysSigns = [
+
+  static final List<String> jalaliMonths = [
+    "فروردین",
+    "اردیبهشت",
+    "خرداد",
+    "تیر",
+    "مرداد",
+    "شهریور",
+    "مهر",
+    "آبان",
+    "آذر",
+    "دی",
+    "بهمن",
+    "اسفند"
+  ];
+  static final List<String> persianDaysSigns = [
     "شنبه",
     "یکشنبه",
     "دوشنبه",
@@ -384,7 +459,16 @@ class Strings {
     "‌پنج‌شنبه",
     "جمعه"
   ];
-
+  static final List<String> shortEnglishDaysJalaliOrder = [
+    "S",
+    "S",
+    "M",
+    "T",
+    "W",
+    "T",
+    "F"
+  ];
+  static final genders = ["آقا", "خانم"];
   static final Map<String, int> cities = {
     "اوز": 166,
     "آب بر": 1,

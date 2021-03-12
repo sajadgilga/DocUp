@@ -1,8 +1,5 @@
-import 'dart:async';
 
-import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
-import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+
 import 'package:Neuronio/blocs/timer/TimerBloc.dart';
 import 'package:Neuronio/blocs/timer/TimerEvent.dart';
 import 'package:Neuronio/blocs/timer/Tricker.dart';
@@ -16,6 +13,9 @@ import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Avatar.dart';
 import 'package:Neuronio/ui/widgets/Timer.dart';
 import 'package:Neuronio/utils/Utils.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
+import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,6 +93,7 @@ class _CallPageState extends State<CallPage> {
 
   @override
   void initState() {
+    print("channel_name:" + widget.channelName ?? "");
     _timerBloc = TimerBloc(
         ticker: Ticker(),
         duration: widget.visit.visitEndTimeDiffFromNow <= 0
@@ -135,7 +136,7 @@ class _CallPageState extends State<CallPage> {
     }
 
     // initialize agora sdk
-    if(widget.visit.visitEndTimeDiffFromNow >=0){
+    if (widget.visit.visitEndTimeDiffFromNow >= 0) {
       initialize();
     }
     super.initState();

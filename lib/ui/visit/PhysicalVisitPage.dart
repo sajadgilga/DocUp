@@ -25,9 +25,16 @@ import 'VisitUtils.dart';
 
 class PhysicalVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
+  final int screeningId;
+  final VisitSource type;
   final Function(String, dynamic) onPush;
 
-  PhysicalVisitPage({Key key, this.doctorEntity, this.onPush})
+  PhysicalVisitPage(
+      {Key key,
+      this.doctorEntity,
+      this.onPush,
+      this.screeningId,
+      @required this.type})
       : super(key: key);
 
   @override
@@ -129,7 +136,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
           //     width: 160,
           //     height: 50,
           //     fontSize: 14),
-          _doctorDurationPlanInfo(),
+          // _doctorDurationPlanInfo(),
           AnimatedSize(
             duration: Duration(milliseconds: 400),
             vsync: this,
@@ -238,6 +245,8 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
               AutoText("مدت زمان ویزیت", style: TextStyle(fontSize: 16))
             ],
           ),
+
+          /// TODO
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -443,7 +452,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
       /// empty time
       showOneButtonDialog(
           context, Strings.emptyStartVisitTimeMessage, Strings.okAction, () {});
-    } else if (DateTimeService.getTimeMinute(timeTextController.text) <
+    } else if (DateTimeService.getTimeMinute(timeTextController.text) - 6 * 60 <
             DateTimeService.getTimeMinute(currentTime) &&
         DateTimeService.getTodayInJalaliString() == dateTextController.text) {
       /// invalid time
@@ -495,6 +504,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
     // String visitDuration = "+" + convertMinuteToTimeString(duration);
     String timeZone = "+03:30";
     _bloc.visitRequest(
+        widget.screeningId,
         widget.doctorEntity.id,
         0,
         0,
@@ -503,7 +513,8 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
         convertToGeorgianDate(dateTextController.text) +
             "T" +
             startTime +
-            timeZone);
+            timeZone,
+        widget.type);
     setState(() {
       submitLoadingToggle = true;
     });

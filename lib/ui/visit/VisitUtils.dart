@@ -2,9 +2,9 @@ const VISIT_METHOD = "نوع مشاوره";
 const VISIT_DURATION_PLAN = "مدت زمان مشاوره";
 const String TIME_SELECTION = "انتخاب ساعت";
 
-enum VisitTypes{
-  VIRTUAL,PHYSICAL
-}
+enum VisitTypes { PHYSICAL, VIRTUAL }
+enum VisitSource{USUAL, ICA, GAME, SCREENING}
+
 extension VisitTypeExtension on VisitTypes {
   String get title {
     switch (this) {
@@ -18,14 +18,13 @@ extension VisitTypeExtension on VisitTypes {
   }
 }
 
-// enum VirtualVisitMethod { TEXT, VOICE,  VIDEO}
-enum VirtualVisitMethod { VOICE,  VIDEO}
+enum VirtualVisitMethod { TEXT, VOICE, VIDEO }
 
 extension VisitMethodExtension on VirtualVisitMethod {
   String get title {
     switch (this) {
-      // case VirtualVisitMethod.TEXT:
-      //   return "متنی";
+      case VirtualVisitMethod.TEXT:
+        return "متنی";
       case VirtualVisitMethod.VOICE:
         return "صوتی";
       case VirtualVisitMethod.VIDEO:

@@ -30,7 +30,6 @@ class PhysicalVisitList extends StatelessWidget {
   PhysicalVisitList({@required this.onPush});
 
   void _search(context) {
-    var _state = BlocProvider.of<EntityBloc>(context).state;
     var searchBloc = BlocProvider.of<SearchBloc>(context);
     searchBloc.add(SearchVisit(
         text: _controller.text,
@@ -38,7 +37,7 @@ class PhysicalVisitList extends StatelessWidget {
         visitType: patientVisitStatus));
 
 //    FocusScope.of(context).unfocus();
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+//     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
   void _initialSearch(context) {
@@ -65,7 +64,7 @@ class PhysicalVisitList extends StatelessWidget {
       );
 
   Widget _backArrow(context) {
-    return (PlatformDetection.isIOS
+    return (CrossPlatformDeviceDetection.isIOS
         ? GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -170,7 +169,7 @@ class PhysicalVisitList extends StatelessWidget {
 //      }
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
-        if (state is SearchLoaded && state.result.visit_results != null) {
+        if (state is SearchLoaded && state.result.visitResults != null) {
           return Container(
               margin: EdgeInsets.only(top: 20),
               constraints: BoxConstraints(
@@ -178,8 +177,8 @@ class PhysicalVisitList extends StatelessWidget {
               child: ListView(
                 children: <Widget>[
                   _searchListTitle(),
-                  _todayItems(state.result.visit_results),
-                  _nextDayItems(state.result.visit_results)
+                  _todayItems(state.result.visitResults),
+                  _nextDayItems(state.result.visitResults)
                 ],
               ));
         }
@@ -202,7 +201,7 @@ class PhysicalVisitList extends StatelessWidget {
             ),
           );
         if (state is SearchLoading) {
-          if (state.result == null || state.result.visit_results == null)
+          if (state.result == null || state.result.visitResults == null)
             return Container(
               child: Waiting(),
             );
@@ -214,8 +213,8 @@ class PhysicalVisitList extends StatelessWidget {
                 child: ListView(
                   children: <Widget>[
                     _searchListTitle(),
-                    _todayItems(state.result.visit_results),
-                    _nextDayItems(state.result.visit_results)
+                    _todayItems(state.result.visitResults),
+                    _nextDayItems(state.result.visitResults)
                   ],
                 ));
         }
@@ -226,7 +225,7 @@ class PhysicalVisitList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _initialSearch(context);
 //    _search(context);
 //    _controller.addListener((){print(_controller.text); });

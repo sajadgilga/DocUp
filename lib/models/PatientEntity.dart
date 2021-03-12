@@ -1,3 +1,4 @@
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 
 import 'DoctorPlan.dart';
@@ -10,10 +11,26 @@ class PatientEntity extends UserEntity {
   int status;
   double height;
   double weight;
+  String birthLocation;
+  String city;
+  int genderNumber;
+  String birthDate;
+  int clinicId;
   List<VisitItem> visits;
 
   PatientEntity(
-      {this.documents, this.height, this.weight, user, id, panels, vid})
+      {this.documents,
+      this.height,
+      this.weight,
+      this.birthLocation,
+      this.city,
+      this.genderNumber,
+      this.birthDate,
+      this.clinicId,
+      user,
+      id,
+      panels,
+      vid})
       : super(user: user, id: id, panels: panels, vid: vid);
 
   PatientEntity.fromJson(Map<String, dynamic> json) {
@@ -43,11 +60,20 @@ class PatientEntity extends UserEntity {
         }
       }
 
-      if (json.containsKey('height')) {
+      if (json.containsKey('height') && json['height'] != null) {
         height = double.parse(json['height'].toString());
       }
-      if (json.containsKey('weight')) {
+      if (json.containsKey('weight') && json['weight'] != null) {
         weight = double.parse(json['weight'].toString());
+      }
+      if (json.containsKey('city')) {
+        city = utf8IfPossible(json['city']);
+      }
+      if (json.containsKey('birth_location')) {
+        birthLocation = utf8IfPossible(json['birth_location']);
+      }
+      if (json.containsKey('gender')) {
+        genderNumber = intPossible(json['gender']);
       }
       if (json.containsKey('visits')) {
         visits = [];
@@ -55,8 +81,11 @@ class PatientEntity extends UserEntity {
           visits.add(VisitItem.fromJson(element));
         });
       }
-    } catch (_) {
-      // TODO
+      birthDate = json['date_of_birth'];
+      clinicId = intPossible(json['clinic']);
+    } catch (e) {
+      /// TODO
+      print(e);
     }
   }
 
@@ -72,6 +101,22 @@ class PatientEntity extends UserEntity {
     if (weight != null) {
       data['weight'] = weight;
     }
+    if (city != null) {
+      data['city'] = city;
+    }
+    if (birthLocation != null) {
+      data['birth_location'] = birthLocation;
+    }
+    if (genderNumber != null) {
+      data['gender'] = genderNumber;
+    }
+    if (birthDate != null) {
+      data['date_of_birth'] = birthDate;
+    }
+    if (clinicId != null) {
+      data['clinic'] = clinicId;
+    }
+
     return data;
   }
 
@@ -84,8 +129,8 @@ class PatientEntity extends UserEntity {
       DateTime now = DateTimeService.getCurrentDateTime();
       for (int i = 0; i < visits?.length; i++) {
         VisitItem visitItem = visits[i];
-        DateTime date =
-            DateTimeService.getDateTimeFromStandardString(visitItem.requestVisitTime.split("+")[0]);
+        DateTime date = DateTimeService.getDateTimeFromStandardString(
+            visitItem.requestVisitTime.split("+")[0]);
         if (date.compareTo(now) > 0 && visitItem.status == 0) {
           return visitItem;
         }
@@ -100,8 +145,9 @@ class PatientEntity extends UserEntity {
       DateTime now = DateTimeService.getCurrentDateTime();
       for (int i = 0; i < visits?.length; i++) {
         VisitItem visitItem = visits[i];
-        DateTime date =
-        DateTimeService.getDateTimeFromStandardString(visitItem.requestVisitTime.split("+")[0]);
+        DateTime date = DateTimeService.getDateTimeFromStandardString(
+            visitItem.requestVisitTime.split("+")[0]);
+
         /// TODO amir: add duration plan in visits for better accuracy
         date = date.add(Duration(minutes: DoctorPlan.hourMinutePart * 3));
         if (date.compareTo(now) > 0 && visitItem.status == 1) {

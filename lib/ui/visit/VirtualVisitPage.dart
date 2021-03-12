@@ -24,9 +24,17 @@ import 'VisitUtils.dart';
 
 class VirtualVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
+  final int screeningId;
+  final VisitSource type;
   final Function(String, dynamic) onPush;
 
-  VirtualVisitPage({Key key, this.doctorEntity, this.onPush}) : super(key: key);
+  VirtualVisitPage(
+      {Key key,
+      this.doctorEntity,
+      this.onPush,
+      this.screeningId,
+      @required this.type})
+      : super(key: key);
 
   @override
   _VirtualVisitPageState createState() => _VirtualVisitPageState();
@@ -124,30 +132,32 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
           ALittleVerticalSpace(),
           // _visitDurationTimeWidget(),
           // ALittleVerticalSpace(),
-          _enableVisitTimeWidget(),
+          // _enableVisitTimeWidget(),
           ALittleVerticalSpace(),
-          AnimatedSize(
-            vsync: this,
-            duration: Duration(milliseconds: 400),
-            child: !visitTimeChecked
-                ? _visitTypeWidget(
-                    VISIT_DURATION_PLAN,
-                    {
-                      0: "پایه ۱۵ دقیقه",
-                      1: "تکمیلی ۳۰ دقیقه",
-                      2: "طولانی ۴۵ دقیقه"
-                    }..removeWhere((key, value) {
-                        if (widget.doctorEntity.plan.virtualVisitDurationPlan
-                            .contains(key)) {
-                          return false;
-                        }
-                        return true;
-                      }),
-                    width: 160,
-                    height: 50,
-                    fontSize: 14)
-                : _doctorDurationPlanInfo(),
-          ),
+
+          /// TODO
+          // AnimatedSize(
+          //   vsync: this,
+          //   duration: Duration(milliseconds: 400),
+          //   child: !visitTimeChecked
+          //       ? _visitTypeWidget(
+          //           VISIT_DURATION_PLAN,
+          //           {
+          //             0: "پایه ۱۵ دقیقه",
+          //             1: "تکمیلی ۳۰ دقیقه",
+          //             2: "طولانی ۴۵ دقیقه"
+          //           }..removeWhere((key, value) {
+          //               if (widget.doctorEntity.plan.virtualVisitDurationPlan
+          //                   .contains(key)) {
+          //                 return false;
+          //               }
+          //               return true;
+          //             }),
+          //           width: 160,
+          //           height: 50,
+          //           fontSize: 14)
+          //       : _doctorDurationPlanInfo(),
+          // ),
           ALittleVerticalSpace(),
           AnimatedSize(
             vsync: this,
@@ -267,6 +277,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     });
     res = res.reversed.toList();
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
@@ -285,9 +296,12 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         SingleChildScrollView(
           reverse: true,
           scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: res,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: res,
+            ),
           ),
         )
       ],
@@ -310,6 +324,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
               AutoText("مدت زمان ویزیت", style: TextStyle(fontSize: 16))
             ],
           ),
+
+          /// TODO
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -493,7 +509,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         /// empty time
         showOneButtonDialog(context, Strings.emptyStartVisitTimeMessage,
             Strings.okAction, () {});
-      } else if (DateTimeService.getTimeMinute(timeTextController.text) <
+      } else if (DateTimeService.getTimeMinute(timeTextController.text) -
+                  6 * 60 <
               DateTimeService.getTimeMinute(currentTime) &&
           DateTimeService.getTodayInJalaliString() == dateTextController.text) {
         /// invalid time
@@ -539,6 +556,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   void sendNowVisitRequest() {
     DateTime now = DateTimeService.getCurrentDateTime();
     _bloc.visitRequest(
+        widget.screeningId,
         widget.doctorEntity.id,
         1,
         typeSelected[VISIT_METHOD],
@@ -547,7 +565,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         convertToGeorgianDate(DateTimeService.getTodayInJalaliString()) +
             "T" +
             "${now.hour}:${now.minute}" +
-            "+04:30");
+            "+04:30",
+        widget.type);
     setState(() {
       submitLoadingToggle = true;
     });
@@ -568,6 +587,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     // String visitDuration = "+" + convertMinuteToTimeString(duration);
     String timeZone = "+03:30";
     _bloc.visitRequest(
+        widget.screeningId,
         widget.doctorEntity.id,
         1,
         typeSelected[VISIT_METHOD],
@@ -576,7 +596,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         convertToGeorgianDate(dateTextController.text) +
             "T" +
             startTime +
-            timeZone);
+            timeZone,
+        widget.type);
     setState(() {
       submitLoadingToggle = true;
     });

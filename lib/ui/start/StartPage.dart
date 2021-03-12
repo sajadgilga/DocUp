@@ -9,19 +9,23 @@ import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/AuthResponseEntity.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/networking/CustomException.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/ui/BasePage.dart';
 import 'package:Neuronio/ui/start/RoleType.dart';
+import 'package:Neuronio/ui/start/SelectClinicWidget.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
+import 'package:Neuronio/ui/widgets/AutoCompleteTextField.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:Neuronio/ui/widgets/CityAutoComplete.dart';
 import 'package:Neuronio/ui/widgets/ContactUsAndPolicy.dart';
 import 'package:Neuronio/ui/widgets/InputField.dart';
 import 'package:Neuronio/ui/widgets/OptionButton.dart';
 import 'package:Neuronio/ui/widgets/SnackBar.dart';
 import 'package:Neuronio/ui/widgets/Timer.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -29,11 +33,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_autofill/sms_autofill.dart' as sms;
+import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../blocs/timer/TimerBloc.dart';
 import '../../blocs/timer/Tricker.dart';
 
-enum StartType { SIGN_UP, LOGIN, REGISTER }
+enum StartType {
+  SIGN_UP,
+  LOGIN,
+  USER_PROFILE_REGISTER_DATA,
+  PATIENT_SELECT_CLINIC
+}
 
 class StartPage extends StatefulWidget {
   StartPage({Key key, this.title}) : super(key: key);
@@ -44,7 +55,7 @@ class StartPage extends StatefulWidget {
   _StartPageState createState() => _StartPageState();
 }
 
-class _StartPageState extends State<StartPage> {
+class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
   TimerBloc _timerBloc = TimerBloc(ticker: Ticker());
   final AuthBloc _authBloc = AuthBloc();
   final PatientBloc _patientBloc = PatientBloc();
@@ -59,9 +70,16 @@ class _StartPageState extends State<StartPage> {
   final _nationalCodeController = TextEditingController();
   final _expertiseCodeController = TextEditingController();
 
+  /// initial gender with 1
+  final TextEditingController _genderController = TextEditingController()
+    ..text = "1";
+
   /// city controller
   final TextEditingController _birthCity = TextEditingController();
   final TextEditingController _currentCity = TextEditingController();
+
+  /// clinic
+  final TextEditingController _clinicIdController = TextEditingController();
 
   RoleType currentRoleType = RoleType.PATIENT;
   StartType startType = StartType.SIGN_UP;
@@ -71,6 +89,78 @@ class _StartPageState extends State<StartPage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void codeUpdated() {
+    _verificationController.text = code;
+  }
+
+  @override
+  void dispose() {
+    try {
+      _controller.close();
+      _usernameController.dispose();
+      _doctorIdController.dispose();
+      _verificationController.dispose();
+      _firstNameController.dispose();
+      _authBloc.dispose();
+      _patientBloc.dispose();
+      _doctorBloc.dispose();
+    } catch (e) {}
+
+    cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    if (!CrossPlatformDeviceDetection.isWeb) {
+      listenForCode();
+    }
+    switchRole(currentRoleType);
+    checkToken();
+    listenToTime();
+    _authBloc.loginStream.listen((data) {
+      if (handle(data)) {
+        setState(() {
+          startType = StartType.LOGIN;
+        });
+        _timerBloc.add(Start(duration: 60));
+      }
+    });
+
+    _authBloc.verifyStream.listen((data) {
+      if (handle(data)) {
+        if (_firstNameController.text +
+                _lastNameController.text +
+                _nationalCodeController.text !=
+            "") {
+          /// user has been registered before
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => BasePage()));
+        } else {
+          setState(() {
+            startType = StartType.USER_PROFILE_REGISTER_DATA;
+          });
+        }
+      }
+    });
+
+    _patientBloc.dataStream.listen((data) {
+      if (handle(data)) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => BasePage()));
+      }
+    });
+
+    _doctorBloc.doctorStream.listen((data) {
+      if (handle(data)) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => BasePage()));
+      }
+    });
+    super.initState();
+  }
 
   handle(Response response) {
     switch (response.status) {
@@ -110,6 +200,7 @@ class _StartPageState extends State<StartPage> {
           _loadingEnable = false;
         }
         if (response.data.runtimeType == VerifyResponseEntity) {
+          /// loading data to field
           try {
             String firstName =
                 (utf8IfPossible(response.data.firstName) ?? "").trim();
@@ -124,6 +215,16 @@ class _StartPageState extends State<StartPage> {
               showDescriptionAlertDialog(context,
                   title: Strings.privacyAndPolicy,
                   description: Strings.policyDescription);
+            }
+            if (response.data is PatientEntity) {
+              _currentCity.text = (response.data as PatientEntity).city;
+              _birthCity.text = (response.data as PatientEntity).birthLocation;
+              _genderController.text =
+                  ((response.data as PatientEntity).genderNumber ?? 0)
+                      .toString();
+            } else if (response.data is DoctorEntity) {
+              _expertiseCodeController.text =
+                  (response.data as DoctorEntity).expert;
             }
           } catch (e) {}
         }
@@ -169,53 +270,6 @@ class _StartPageState extends State<StartPage> {
     listenToTime();
   }
 
-  @override
-  void initState() {
-    switchRole(currentRoleType);
-    checkToken();
-    listenToTime();
-    _authBloc.loginStream.listen((data) {
-      if (handle(data)) {
-        setState(() {
-          startType = StartType.LOGIN;
-        });
-        _timerBloc.add(Start(duration: 60));
-      }
-    });
-
-    _authBloc.verifyStream.listen((data) {
-      if (handle(data)) {
-        if (_firstNameController.text +
-                _lastNameController.text +
-                _nationalCodeController.text !=
-            "") {
-          /// user has been registered before
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => BasePage()));
-        } else {
-          setState(() {
-            startType = StartType.REGISTER;
-          });
-        }
-      }
-    });
-
-    _patientBloc.dataStream.listen((data) {
-      if (handle(data)) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => BasePage()));
-      }
-    });
-
-    _doctorBloc.doctorStream.listen((data) {
-      if (handle(data)) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => BasePage()));
-      }
-    });
-    super.initState();
-  }
-
   void listenToTime() {
     _timerBloc.listen((time) {
       setState(() {
@@ -250,14 +304,11 @@ class _StartPageState extends State<StartPage> {
                   currentRoleType == RoleType.PATIENT);
             }
             break;
-          case StartType.REGISTER:
+          case StartType.USER_PROFILE_REGISTER_DATA:
             if (currentRoleType == RoleType.PATIENT) {
-              _patientBloc.updateProfile(
-                  firstName: _firstNameController.text,
-                  lastName: _lastNameController.text,
-                  nationalCode: _nationalCodeController.text,
-                  birthCity: _birthCity.text,
-                  currentCity: _currentCity.text);
+              setState(() {
+                startType = StartType.PATIENT_SELECT_CLINIC;
+              });
             } else if (currentRoleType == RoleType.DOCTOR) {
               _doctorBloc.updateProfile(
                   firstName: _firstNameController.text,
@@ -265,6 +316,20 @@ class _StartPageState extends State<StartPage> {
                   nationalCode: _nationalCodeController.text,
                   expertise: _expertiseCodeController.text);
             }
+
+            break;
+          case StartType.PATIENT_SELECT_CLINIC:
+            int clinicId =
+                intPossible(_clinicIdController.text, defaultValues: -1);
+            clinicId = clinicId == -1 ? NeuronioClinic.ClinicId : clinicId;
+            _patientBloc.updateProfile(
+                firstName: _firstNameController.text,
+                lastName: _lastNameController.text,
+                nationalCode: _nationalCodeController.text,
+                birthCity: _birthCity.text,
+                currentCity: _currentCity.text,
+                genderNumber: intPossible(_genderController.text),
+                clinic: clinicId);
             break;
         }
       });
@@ -342,21 +407,6 @@ class _StartPageState extends State<StartPage> {
     );
   }
 
-  @override
-  void dispose() {
-    try {
-      _controller.close();
-      _usernameController.dispose();
-      _doctorIdController.dispose();
-      _verificationController.dispose();
-      _firstNameController.dispose();
-      _authBloc.dispose();
-      _patientBloc.dispose();
-      _doctorBloc.dispose();
-    } catch (e) {}
-    super.dispose();
-  }
-
   _timerWidget() => startType == StartType.LOGIN
       ? Padding(
           padding: EdgeInsets.only(right: 40),
@@ -388,7 +438,14 @@ class _StartPageState extends State<StartPage> {
         return _signUpActionWidget();
       case StartType.LOGIN:
         return _loginActionWidget();
-      case StartType.REGISTER:
+      case StartType.USER_PROFILE_REGISTER_DATA:
+        if (currentRoleType == RoleType.DOCTOR) {
+          return _registerActionWidget();
+        } else if (currentRoleType == RoleType.PATIENT) {
+          return _nextActionWidget();
+        }
+        return _registerActionWidget();
+      case StartType.PATIENT_SELECT_CLINIC:
         return _registerActionWidget();
     }
   }
@@ -433,10 +490,21 @@ class _StartPageState extends State<StartPage> {
   _registerActionWidget() => ActionButton(
         color: validationFormError ? IColors.red : IColors.themeColor,
         title: Strings.registerAction,
-        icon: Icon(
-          Icons.arrow_back_ios,
-          size: 18,
-        ),
+        // icon: Icon(
+        //   Icons.arrow_back_ios,
+        //   size: 18,
+        // ),
+        rtl: false,
+        callBack: submit,
+      );
+
+  _nextActionWidget() => ActionButton(
+        color: validationFormError ? IColors.red : IColors.themeColor,
+        title: Strings.nextStepAction,
+        // icon: Icon(
+        //   Icons.arrow_back_ios,
+        //   size: 18,
+        // ),
         rtl: false,
         callBack: submit,
       );
@@ -542,15 +610,16 @@ class _StartPageState extends State<StartPage> {
             inputHint: Strings.verificationHint,
             controller: _verificationController,
             textInputType: TextInputType.number,
+            maxChars: 6,
             validationCallback: (text) =>
-                _isVerificationCodeValid(text) || resendCodeEnabled,
-            errorMessage: "کدفعالسازی ۶رقمی است",
+                _isVerificationCodeValid(text),
+            errorMessage: "کدفعال‌سازی ۶رقمی است",
             onChanged: (text) {
               setState(() {
                 isContinueEnable = _isVerificationCodeValid(text);
               });
             });
-      case StartType.REGISTER:
+      case StartType.USER_PROFILE_REGISTER_DATA:
         return Column(
           children: <Widget>[
             InputField(
@@ -592,14 +661,47 @@ class _StartPageState extends State<StartPage> {
             currentRoleType == RoleType.PATIENT
                 ? Column(
                     children: [
-                      CityAutoComplete(
-                          hintText: 'شهر تولد', controller: _birthCity),
-                      CityAutoComplete(
-                          hintText: 'شهر زندگی', controller: _currentCity),
+                      AutoCompleteTextField(
+                        hintText: 'شهر تولد',
+                        controller: _birthCity,
+                        emptyFieldError: 'لظفا شهری را وارد کنید',
+                        notFoundError: "شهر موردنظر یافت نشد",
+                        items: Strings.cities.keys.toList(),
+                        forced: false,
+                      ),
+                      ALittleVerticalSpace(),
+                      AutoCompleteTextField(
+                          emptyFieldError: 'لظفا شهری را وارد کنید',
+                          notFoundError: "شهر موردنظر یافت نشد",
+                          items: Strings.cities.keys.toList(),
+                          forced: false,
+                          hintText: 'شهر زندگی',
+                          controller: _currentCity),
+                      ALittleVerticalSpace(),
+                      ToggleSwitch(
+                        minWidth: 90.0,
+                        initialLabelIndex:
+                            intPossible(_genderController.text) ?? 0,
+                        cornerRadius: 20.0,
+                        activeFgColor: Colors.white,
+                        inactiveBgColor: Colors.grey,
+                        inactiveFgColor: Colors.white,
+                        labels: Strings.genders,
+                        activeBgColors: [
+                          for (var i in Strings.genders) IColors.themeColor
+                        ],
+                        onToggle: (index) {
+                          _genderController.text = index.toString();
+                        },
+                      )
                     ],
                   )
-                : SizedBox()
+                : SizedBox(),
           ],
+        );
+      case StartType.PATIENT_SELECT_CLINIC:
+        return Column(
+          children: <Widget>[SelectClinicWidget(_clinicIdController)],
         );
     }
   }
@@ -610,12 +712,18 @@ class _StartPageState extends State<StartPage> {
         return currentRoleType == RoleType.PATIENT
             ? Strings.yourDoctorMessage
             : Strings.yourPatientMessage;
-      default:
+      case StartType.LOGIN:
+        return "";
+      case StartType.USER_PROFILE_REGISTER_DATA:
+        return currentRoleType == RoleType.PATIENT
+            ? Strings.requiredPatientInfo
+            : Strings.welcome;
+      case StartType.PATIENT_SELECT_CLINIC:
         return Strings.welcome;
     }
   }
 
-  getMessageText() {
+  String getMessageText() {
     switch (startType) {
       case StartType.SIGN_UP:
         return currentRoleType == RoleType.PATIENT
@@ -623,12 +731,12 @@ class _StartPageState extends State<StartPage> {
             : Strings.doctorRegisterMessage;
       case StartType.LOGIN:
         return Strings.verificationCodeMessage;
-      case StartType.REGISTER:
+      case StartType.USER_PROFILE_REGISTER_DATA:
         return currentRoleType == RoleType.PATIENT
-            ? Strings.oneStepToDoctorMessage
+            ? Strings.requiredPatientInfoMessage
             : Strings.oneStepToOfficeMessage;
-      default:
-        return "";
+      case StartType.PATIENT_SELECT_CLINIC:
+        return Strings.oneStepToDoctorMessage;
     }
   }
 }

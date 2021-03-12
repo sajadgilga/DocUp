@@ -7,6 +7,7 @@ import 'package:Neuronio/models/VisitResponseEntity.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/repository/DoctorRepository.dart';
 import 'package:Neuronio/repository/PatientRepository.dart';
+import 'package:Neuronio/ui/visit/VisitUtils.dart';
 
 class DoctorInfoBloc {
   DoctorRepository _repository;
@@ -56,10 +57,11 @@ class DoctorInfoBloc {
   }
 
   getDoctor(int doctorId, bool isDoctor) async {
+    /// TODO clean this method
     doctorInfoSink.add(Response.loading());
     try {
       DoctorEntity doctorEntity = await _repository.getDoctor(doctorId);
-      if(isDoctor) {
+      if (isDoctor) {
         doctorEntity.plan = await _repository.getDoctorPlan();
       } else {
         doctorEntity.plan = await _repository.getDoctorPlanById(doctorId);
@@ -83,12 +85,12 @@ class DoctorInfoBloc {
     }
   }
 
-  visitRequest(int doctorId, int visitType, int visitMethod, int durationPlan,
-      String visitTime) async {
+  visitRequest(int screeningId, int doctorId, int visitType, int visitMethod,
+      int durationPlan, String visitTime, VisitSource source) async {
     visitRequestSink.add(Response.loading());
     try {
-      VisitEntity response = await _repository.visitRequest(
-          doctorId, visitType, visitMethod, durationPlan, visitTime);
+      VisitEntity response = await _repository.visitRequest(screeningId,
+          doctorId, visitType, visitMethod, durationPlan, visitTime, source);
       visitRequestSink.add(Response.completed(response));
     } catch (e) {
       visitRequestSink.add(Response.error(e));

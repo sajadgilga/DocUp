@@ -1,16 +1,18 @@
+import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import '../../../calendar_views.dart';
 
-
 /// Widget that builds a child in place of each day in a day view.
 class DayViewDaysHeader extends StatefulWidget {
   DayViewDaysHeader({
     @required this.headerItemBuilder,
+    this.leftPaddingChild,
   }) : assert(headerItemBuilder != null);
 
   /// Function that builds a header item.
+  final Widget leftPaddingChild;
   final DayViewDaysHeaderItemBuilder headerItemBuilder;
 
   @override
@@ -75,6 +77,8 @@ This widget must be a decendant of DayViewEssentials.
 
     return new Container(
       width: width,
+      height: 10,
+      child: Center(child: widget.leftPaddingChild),
     );
   }
 

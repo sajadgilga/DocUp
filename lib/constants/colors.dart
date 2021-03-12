@@ -21,6 +21,7 @@ class IColors {
   static const Color blue = Color.fromRGBO(50, 200, 240, 1);
   static const Color green = Color.fromRGBO(19, 205, 157, 1);
   static const Color black = Color.fromRGBO(55, 63, 80, 1);
+  static const Color yelllow = Color.fromARGB(255, 255, 153, 1);
   static const Color darkBlue = Color.fromRGBO(44, 62, 80, 1);
   static const Color background = Color.fromRGBO(242, 242, 242, 1);
   static const Color doctorChatBubble = Color.fromRGBO(242, 242, 242, 1);
@@ -47,7 +48,7 @@ class IColors {
 
   static void changeThemeColor(RoleType roleType) {
     Assets.changeIcons(roleType);
-    switch(roleType) {
+    switch (roleType) {
       case RoleType.PATIENT:
         themeColor = blue;
         break;

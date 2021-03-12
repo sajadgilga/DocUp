@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:Neuronio/blocs/SearchBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
@@ -14,7 +12,6 @@ import 'package:Neuronio/ui/widgets/Waiting.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VisitRequestsPage extends StatelessWidget {
@@ -30,7 +27,7 @@ class VisitRequestsPage extends StatelessWidget {
     searchBloc.add(SearchVisit(text: _controller.text, acceptStatus: 0));
 
 //    FocusScope.of(context).unfocus();
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+//     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
   void _initialSearch(context) {
@@ -53,7 +50,7 @@ class VisitRequestsPage extends StatelessWidget {
       );
 
   Widget _backArrow(context) {
-    return (PlatformDetection.isIOS
+    return (CrossPlatformDeviceDetection.isIOS
         ? GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -115,7 +112,8 @@ class VisitRequestsPage extends StatelessWidget {
   Widget _todayItems(List<VisitEntity> results) {
     List<VisitEntity> todayVisits = [];
     results.forEach((element) {
-      DateTime visitTime = DateTimeService.getDateTimeFromStandardString(element.visitTime);
+      DateTime visitTime =
+          DateTimeService.getDateTimeFromStandardString(element.visitTime);
       var now = DateTimeService.getCurrentDateTime();
       DateTime _today = DateTime(now.year, now.month, now.day, 23, 59, 59);
       if (visitTime.isBefore(_today)) todayVisits.add(element);
@@ -133,7 +131,8 @@ class VisitRequestsPage extends StatelessWidget {
   Widget _nextDayItems(List<VisitEntity> results) {
     List<VisitEntity> nextDayVisits = [];
     results.forEach((element) {
-      DateTime visitTime = DateTimeService.getDateTimeFromStandardString(element.visitTime);
+      DateTime visitTime =
+          DateTimeService.getDateTimeFromStandardString(element.visitTime);
       var now = DateTimeService.getCurrentDateTime();
       DateTime _today = DateTime(now.year, now.month, now.day, 23, 59, 59);
       if (visitTime.isAfter(_today)) nextDayVisits.add(element);
@@ -158,7 +157,7 @@ class VisitRequestsPage extends StatelessWidget {
 //      }
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
-        if (state is SearchLoaded && state.result.visit_results != null) {
+        if (state is SearchLoaded && state.result.visitResults != null) {
           return Container(
               margin: EdgeInsets.only(top: 20),
               constraints: BoxConstraints(
@@ -166,8 +165,8 @@ class VisitRequestsPage extends StatelessWidget {
               child: ListView(
                 children: <Widget>[
                   _searchListTitle(),
-                  _todayItems(state.result.visit_results),
-                  _nextDayItems(state.result.visit_results)
+                  _todayItems(state.result.visitResults),
+                  _nextDayItems(state.result.visitResults)
                 ],
               ));
         }
@@ -190,7 +189,7 @@ class VisitRequestsPage extends StatelessWidget {
             ),
           );
         if (state is SearchLoading) {
-          if (state.result == null || state.result.visit_results == null)
+          if (state.result == null || state.result.visitResults == null)
             return Container(
               child: Waiting(),
             );
@@ -202,8 +201,8 @@ class VisitRequestsPage extends StatelessWidget {
                 child: ListView(
                   children: <Widget>[
                     _searchListTitle(),
-                    _todayItems(state.result.visit_results),
-                    _nextDayItems(state.result.visit_results)
+                    _todayItems(state.result.visitResults),
+                    _nextDayItems(state.result.visitResults)
                   ],
                 ));
         }
@@ -214,7 +213,7 @@ class VisitRequestsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _initialSearch(context);
 //    _search(context);
 //    _controller.addListener((){print(_controller.text); });

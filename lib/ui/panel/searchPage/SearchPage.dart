@@ -5,17 +5,17 @@ import 'package:Neuronio/blocs/SearchBloc.dart';
 import 'package:Neuronio/models/SearchResult.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/ui/home/SearchBox.dart';
+import 'package:Neuronio/ui/visit/VisitUtils.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/PopupMenues/PopUpMenus.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'ResultList.dart';
 
 class PartnerSearchPage extends StatefulWidget {
-  final Function(String, UserEntity) onPush;
+  final Function(String, UserEntity, int, VisitSource) onPush;
   final int clinicIdDoctorSearch;
   final Function(int) selectPage;
 
@@ -26,12 +26,11 @@ class PartnerSearchPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return PartnerSearchPageState(onPush: onPush);
+    return PartnerSearchPageState();
   }
 }
 
 class PartnerSearchPageState extends State<PartnerSearchPage> {
-  final Function(String, UserEntity) onPush;
   TextEditingController _controller = TextEditingController();
   LinkedHashMap<int, List<UserEntity>> orderedPageItems = new LinkedHashMap();
   bool allItemsFetched = false;
@@ -39,7 +38,7 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
 
   void _updatePageItemsAndPagingFlags(SearchResult result) {
     orderedPageItems[result.next ?? 1] =
-        (result.isDoctor ? result.doctor_results : result.patient_results);
+        (result.isDoctor ? result.doctorResults : result.patientResults);
     allItemsFetched = allItemsFetched || result.next == null;
   }
 
@@ -51,11 +50,11 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
     return res;
   }
 
-  PartnerSearchPageState({@required this.onPush});
+  PartnerSearchPageState();
 
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     _initialSearch(context);
     super.initState();
   }
@@ -74,7 +73,7 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
           clinicId: widget.clinicIdDoctorSearch,
           expertise: filterString));
 
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
   void _initialSearch(context) {
@@ -100,6 +99,7 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
     } catch (e) {}
     super.dispose();
   }
+
 //  Widget _docupIcon() => Container(
 //        padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
 //        child: Image.asset(Assets.docupIcon, width: 50),
@@ -170,11 +170,11 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
       builder: (context, state) {
         if (state is SearchLoaded &&
             (state.result.isDoctor
-                ? state.result.doctor_results != null
-                : state.result.patient_results != null)) {
+                ? state.result.doctorResults != null
+                : state.result.patientResults != null)) {
           _updatePageItemsAndPagingFlags(state.result);
           return PartnerResultList(
-            onPush: onPush,
+            onPush: widget.onPush,
             isDoctor: state.result.isDoctor,
             selectPage: widget.selectPage,
             results: _getItemsFromOrderedPageItem(),
@@ -191,15 +191,15 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
         if (state is SearchLoading) {
           if (state.result == null ||
               (state.result.isDoctor
-                  ? state.result.doctor_results == null
-                  : state.result.patient_results == null))
+                  ? state.result.doctorResults == null
+                  : state.result.patientResults == null))
             return Container(
               child: Waiting(),
             );
           else {
             _updatePageItemsAndPagingFlags(state.result);
             return PartnerResultList(
-              onPush: onPush,
+              onPush: widget.onPush,
               isDoctor: state.result.isDoctor,
               selectPage: widget.selectPage,
               results: _getItemsFromOrderedPageItem(),

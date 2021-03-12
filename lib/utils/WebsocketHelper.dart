@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:Neuronio/models/SocketRequestModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Web
+// import 'package:web_socket_channel/html.dart';
 import 'package:web_socket_channel/io.dart';
 
 import 'dateTimeService.dart';
@@ -17,6 +18,7 @@ class SocketHelper {
   String url;
   String token;
   var _channel;
+
   // var _stream;
   StreamController _broadcastStreamer = StreamController.broadcast();
   final int _maxRetryTimeout = 32;
@@ -73,7 +75,7 @@ class SocketHelper {
         Map<String, dynamic> headers,
         Duration pingInterval}) {
       if (kIsWeb) {
-        /// web
+        /// TODO web
         // return HtmlWebSocketChannel.connect(url);
       } else {
         return IOWebSocketChannel.connect(url, pingInterval: pingInterval);
@@ -161,18 +163,12 @@ class SocketHelper {
     } catch (e) {}
   }
 
-  void sendMessage(
-      {type = 'NEW_MESSAGE', panelId, message, msgType = 0, file}) {
-    Map data = Map<String, dynamic>();
-    data['request_type'] = type;
-    data['panel_id'] = panelId;
-    data['message'] = message;
-    data['type'] = msgType;
-    data['file'] = file;
-    data['isMe'] = '';
+  void sendToSocket({SocketRequest socketRequest}) {
     try {
-      _channel.sink.add(jsonEncode(data));
+      print("Sending:" + jsonEncode(socketRequest.toJson()));
+      _channel.sink.add(jsonEncode(socketRequest.toJson()));
     } catch (e) {
+      print(e);
       // SocketHelper().connect(ApiProvider.URL_IP);
     }
   }
@@ -191,6 +187,7 @@ class SocketHelper {
 
   void onReceive(data) {
     _broadcastStreamer.add(data);
+
     /// TODO
   }
 }

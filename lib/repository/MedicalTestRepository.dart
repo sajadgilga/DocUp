@@ -10,17 +10,24 @@ class MedicalTestRepository {
     return MedicalTest.fromJson(response);
   }
 
-  Future<MedicalTest> getPatientTestAndResponse(int id, int patientId,
-      {panelId, panelTestId}) async {
-    String extraArgs = "";
-    if (panelTestId != null) {
-      extraArgs += "&panel_cognitive_test_id=$panelTestId";
+  Future<MedicalTest> getPatientTestAndResponse(
+      MedicalPageDataType type, int id, int patientId,
+      {panelId, panelTestId, screeningId}) async {
+    Map<String, dynamic> args = {};
+    args['test_id'] = id;
+
+    if (type == MedicalPageDataType.Panel) {
+      args["panel_cognitive_test_id"] = panelTestId;
+      args['patient_id'] = patientId;
+    } else if (type == MedicalPageDataType.Screening) {
+      args["screening_step_id"] = screeningId;
+    } else if (type == MedicalPageDataType.Usual) {
+      args['patient_id'] = patientId;
     }
+
     final response = await _provider.get(
-        "medical-test/cognitive-tests-response?test_id=$id&patient_id=$patientId" +
-            extraArgs,
-        utf8Support: true,
-        body: {'test_id': id, "patient_id": patientId});
+        "medical-test/cognitive-tests-response?${ApiProvider.getURLParametersString(args)}",
+        utf8Support: true);
     return MedicalTest.fromJson(response);
   }
 
@@ -66,7 +73,6 @@ class MedicalTestRepository {
 
   Future<MedicalTestResponseEntity> addPatientResponse(
       MedicalTestResponse testResponse) async {
-    /// TODO amir: need to test
     String params = "";
     if (testResponse.panelId != null) {
       params = "?panel_id=${testResponse.panelId}";

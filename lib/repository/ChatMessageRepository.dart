@@ -1,3 +1,4 @@
+import 'package:Neuronio/blocs/ChatMessageBloc.dart';
 import 'package:Neuronio/models/ChatMessage.dart';
 import 'package:Neuronio/networking/ApiProvider.dart';
 
@@ -15,7 +16,8 @@ class ChatMessageRepository {
     var response;
     if (messageId == null)
       response = await _provider.get(
-          'api/chat/messages/$panel/?message_id=&up=$up&down=$down&size=$size',
+          'api/chat/'
+              'messages/$panel/?message_id=&up=$up&down=$down&size=$size',
           utf8Support: true);
     else
       response = await _provider.get(
@@ -24,9 +26,9 @@ class ChatMessageRepository {
     return _getList(response, isPatient);
   }
 
-  Future<String> send({panel, ChatMessage message}) async {
+  Future<ChatFileMessageResponse> uploadFileMessage({panel, ChatMessage message}) async {
     final response = await _provider.post('api/chat/messages/$panel/',
         body: message.toJson(), withToken: true);
-    return '';
+    return ChatFileMessageResponse.fromJson(response);
   }
 }

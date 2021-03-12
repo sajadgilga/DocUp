@@ -1,7 +1,6 @@
 import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:flutter/material.dart';
-import 'package:Neuronio/constants/colors.dart';
 
 /// Destination item data container for bottom navigation in main page.
 ///

@@ -53,31 +53,6 @@ class _ChatBoxState extends State<ChatBox> {
         )
       ]);
 
-  Widget _chatList() {
-    var message = ChatMessage(
-      message: 'سلام دکتر',
-      fromMe: false,
-      createdDate: DateTimeService.getCurrentDateTime(),
-    );
-    return Container(
-      child: ListView(
-        reverse: true,
-        scrollDirection: Axis.vertical,
-        children: <Widget>[
-          ChatBubble(
-            message: message,
-          ),
-          ChatBubble(
-            message: message,
-          ),
-          ChatBubble(
-            message: message,
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -87,10 +62,6 @@ class _ChatBoxState extends State<ChatBox> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            // Expanded(
-            //   child: _chatList(),
-            //   flex: 2,
-            // ),
             _myMessages(),
           ],
         ),

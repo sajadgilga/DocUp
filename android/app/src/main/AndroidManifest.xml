@@ -25,11 +25,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="Neuronio"
         android:screenOrientation="portrait"
-        android:usesCleartextTraffic="true">
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        android:usesCleartextTraffic="true"
+        android:allowBackup="false"
+        android:fullBackupContent="false">
+<!--        <activity-->
+<!--            android:name="com.yalantis.ucrop.UCropActivity"-->
+<!--            android:screenOrientation="portrait"-->
+<!--            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />-->
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -45,7 +47,7 @@
 
                 <data
                     android:host="com.nilva.docup"
-                    android:scheme="docup" />
+                    android:scheme="neuronio" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

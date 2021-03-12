@@ -7,7 +7,7 @@ import 'UserEntity.dart';
 class DoctorEntity extends UserEntity {
   String councilCode;
   String expert;
-  Clinic clinic;
+  ClinicEntity clinic;
   String clinicNumber;
   String clinicAddress;
   int fee;
@@ -39,7 +39,7 @@ class DoctorEntity extends UserEntity {
       if (json.containsKey('expert')) expert = utf8IfPossible(json['expert']);
       if (json.containsKey('clinic'))
         clinic =
-            json['clinic'] != null ? new Clinic.fromJson(json['clinic']) : null;
+            json['clinic'] != null ? new ClinicEntity.fromJson(json['clinic']) : null;
       fee = json['fee'];
       if (json.containsKey('clinic_address'))
         clinicAddress = json['clinic_address'];
@@ -96,53 +96,6 @@ class DoctorEntity extends UserEntity {
     return data;
   }
 }
-//
-//class User {
-//  String avatar;
-//  String firstName;
-//  String lastName;
-//  String name;
-//  String email;
-//  int credit;
-//  int type;
-//  int online;
-//  String nationalId;
-//  String phoneNumber;
-//
-//  User(
-//      {this.avatar,
-//      this.firstName,
-//      this.lastName,
-//      this.email,
-//      this.credit,
-//      this.type,
-//      this.online});
-//
-//  User.fromJson(Map<String, dynamic> json) {
-//    avatar = json['avatar'];
-//    firstName = json['first_name'];
-//    lastName = json['last_name'];
-//    name = '$firstName $lastName';
-//    email = json['email'];
-//    if (json.containsKey('credit')) credit = json['credit'];
-//    type = json['type'];
-//    online = json['online'];
-//    if (json.containsKey('national_id')) nationalId = json['national_id'];
-//    if (json.containsKey('phone_number')) phoneNumber = json['phone_number'];
-//  }
-//
-//  Map<String, dynamic> toJson() {
-//    final Map<String, dynamic> data = new Map<String, dynamic>();
-//    data['avatar'] = this.avatar;
-//    data['first_name'] = this.firstName;
-//    data['last_name'] = this.lastName;
-//    data['email'] = this.email;
-//    data['credit'] = this.credit;
-//    data['type'] = this.type;
-//    data['online'] = this.online;
-//    return data;
-//  }
-//}
 
 class ClinicTrafficTextPlan {
   int id;
@@ -176,7 +129,7 @@ class ClinicTrafficTextPlan {
   }
 }
 
-class Clinic {
+class ClinicEntity {
   int id;
   User user;
   int subType;
@@ -187,7 +140,7 @@ class Clinic {
   double latitude;
   List<ClinicTrafficTextPlan> pClinic;
 
-  Clinic(
+  ClinicEntity(
       {this.id,
       this.user,
       this.subType,
@@ -197,7 +150,7 @@ class Clinic {
       this.longitude,
       this.latitude});
 
-  Clinic.fromJson(Map<String, dynamic> json) {
+  ClinicEntity.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     subType = json['sub_type'];
@@ -230,10 +183,10 @@ class Clinic {
   }
 }
 
-class NoronioClinic extends Clinic {
+class NeuronioClinic extends ClinicEntity {
   static const ClinicId = 4;
 
-  NoronioClinic() {
+  NeuronioClinic() {
     this.id = ClinicId;
   }
 }

@@ -1,6 +1,6 @@
-# DocUp Client
+# Neuronio Client
 
-DocUp is An Application for both **android** and **ios** devices that help to improve connection between people and doctors. This app is writen in **dart** with **flutter** framework to support different devices at the same time and also flutter is a good choice if you want a better performance.
+Neuronio is An Application for both **android** and **ios** devices that help to improve connection between people and doctors. This app is writen in **dart** with **flutter** framework to support different devices at the same time and also flutter is a good choice if you want a better performance.
 
 
 ## Project Code Structure and Architecture
@@ -124,7 +124,7 @@ Here we have all the ui elements, widgets and the part that navigate between pag
    - #### /visitsList
      So as expected every doctor has some visit appintments and some patient visit requests. They can see all of them at visits list that are available in three item in home page of doctor view. By tapping on every one of the items it navigate to items list and can scroll down and search between them for a better experience.
    - #### /widgets
-     In every described page there are some widgets part of the pages that are common such as **Actionbutton**, **OptionButton**, **DocUpHeader**, **FloatingButton** ... .
+     In every described page there are some widgets part of the pages that are common such as **Actionbutton**, **OptionButton**, **NeuronioHeader**, **FloatingButton** ... .
      They are used in different pages multiple times so to prevent copying every one of them they are gathered in widgets folder.
 
 ## utils
@@ -132,7 +132,7 @@ It contains some utilities such as **websocket**, **Extensions**, **customPainte
 ## main.dart
 As a default configuration this file is the start of a flutter project that run the app and beside it uses google firebase crashlytics that report crashes and non-fatal errors that users experience.
 
-## DocUp Page Navigation
+## Neuronio Page Navigation
 The Main file that handle page navigations is in **/lib/ui/mainPage/NavigatorView**. Build method of this widget is as below:
 
     @override

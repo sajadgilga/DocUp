@@ -12,17 +12,18 @@ import 'package:Neuronio/ui/home/SearchBox.dart';
 import 'package:Neuronio/ui/home/iPartner/IPartner.dart';
 import 'package:Neuronio/ui/home/notification/Notification.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/panel/myPartners/MyPartners.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'TrackingList.dart';
 
 class Home extends StatefulWidget {
-  final Function(String, dynamic) onPush;
+  final Function(String, dynamic, dynamic, dynamic, Function) onPush;
   final Function(int) selectPage;
   final Function(String, UserEntity) globalOnPush;
 
@@ -99,7 +100,9 @@ class _HomeState extends State<Home> {
             cured: state.patientTracker.cured,
             curing: state.patientTracker.curing,
             visitPending: state.patientTracker.visitPending,
-            onPush: widget.onPush,
+            onPush: (string, entity) {
+              widget.onPush(string, entity, null, null, null);
+            },
           ),
         ],
       );
@@ -120,6 +123,12 @@ class _HomeState extends State<Home> {
         children: [
           _neuronioClinic(),
           _trackingList(),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          _neuronioClinic(),
         ],
       );
     }
@@ -162,12 +171,30 @@ class _HomeState extends State<Home> {
     );
   }
 
+  /// REMOVED: CHANGING CUSTOMER JOURNEY
+  // Widget _occasion() {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+  //     child: GestureDetector(
+  //       onTap: () {
+  //         launch(
+  //             "https://neuronio.ir/%D9%BE%DA%A9%DB%8C%D8%AC-%D8%B1%D9%88%D8%B2-%D9%85%D8%A7%D8%AF%D8%B1/");
+  //       },
+  //       child: ClipRRect(
+  //           borderRadius: BorderRadius.circular(30),
+  //           child: Image.asset(
+  //             Assets.mothersDayOccasion,
+  //             width: MediaQuery.of(context).size.width * 0.72,
+  //           )),
+  //     ),
+  //   );
+  // }
+
   Widget _neuronioScreening() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       child: GestureDetector(
         onTap: () {
-          /// TODO
           widget.selectPage(1);
         },
         child: Stack(
@@ -178,7 +205,8 @@ class _HomeState extends State<Home> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(),
-                  child: AutoText("سنجش بیمار", style: TextStyle(fontSize: 17)),
+                  child:
+                      AutoText("سنجش سلامت‌جو", style: TextStyle(fontSize: 17)),
                 ),
                 SizedBox(
                   height: 20,
@@ -186,7 +214,7 @@ class _HomeState extends State<Home> {
                 Padding(
                   padding: EdgeInsets.only(right: 40),
                   child: AutoText(
-                    "پایش سلامت شناختی" + "\n" + "غربالگری",
+                    "بسته ارزیابی سلامت مغز و شناخت",
                     style: TextStyle(fontSize: 10),
                   ),
                 )
@@ -258,7 +286,31 @@ class _HomeState extends State<Home> {
   Widget _iPartner() {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
-        if (state is EntityLoaded) {
+        if (state.partnerEntityStatus == BlocState.Loading) {
+          if (state.entity.partnerEntity != null) {
+            return IPartner(
+              selectPage: widget.selectPage,
+              partner: state.entity.partnerEntity,
+              onPush: widget.onPush,
+              globalOnPush: widget.globalOnPush,
+              color: IColors.themeColor,
+              label: (state.entity.isPatient
+                  ? Strings.iDoctorLabel
+                  : Strings.iPatientLabel),
+            );
+          } else {
+            return IPartner(
+              selectPage: widget.selectPage,
+              onPush: widget.onPush,
+              globalOnPush: widget.globalOnPush,
+              color: IColors.themeColor,
+              label: (state.entity.isPatient
+                  ? Strings.iDoctorLabel
+                  : Strings.iPatientLabel),
+              partnerState: BlocState.Loading,
+            );
+          }
+        } else if (state.partnerEntityStatus == BlocState.Loaded) {
           if (state.entity.partnerEntity != null) {
             return IPartner(
               selectPage: widget.selectPage,
@@ -272,27 +324,14 @@ class _HomeState extends State<Home> {
             );
           }
         }
-        if (state is EntityLoading) {
-          if (state.entity.partnerEntity != null) {
-            return IPartner(
-              selectPage: widget.selectPage,
-              partner: state.entity.partnerEntity,
-              onPush: widget.onPush,
-              globalOnPush: widget.globalOnPush,
-              color: IColors.themeColor,
-              label: (state.entity.isPatient
-                  ? Strings.iDoctorLabel
-                  : Strings.iPatientLabel),
-            );
-          }
-        }
+
         return IPartner(
           color: IColors.themeColor,
           label: (state.entity.isPatient
               ? Strings.iDoctorLabel
               : Strings.iPatientLabel),
           onPush: widget.onPush,
-          isEmpty: true,
+          partnerState: BlocState.Empty,
         );
       },
     );
@@ -312,9 +351,11 @@ class _HomeState extends State<Home> {
             BlocBuilder<NotificationBloc, NotificationState>(
                 builder: (context, state) {
               return HomeNotification(
-                  onPush: widget.onPush,
+                  onPush: (string, entity) {
+                    widget.onPush(string, entity, null, null, null);
+                  },
                   newNotificationCount:
-                      state.notifications?.newestNotifsCounts ?? 0);
+                      state.notifications?.newestNotifsNotReadCounts ?? 0);
             }),
             BlocProvider.of<EntityBloc>(context).state.entity.isDoctor
                 ? Expanded(
@@ -323,7 +364,9 @@ class _HomeState extends State<Home> {
                         padding:
                             const EdgeInsets.only(left: 10, right: 10, top: 15),
                         child: SearchBox(
-                          onPush: widget.onPush,
+                          onPush: (string, entity) {
+                            widget.onPush(string, entity, null, null, null);
+                          },
                           isPatient: BlocProvider.of<EntityBloc>(context)
                               .state
                               .entity
@@ -331,26 +374,39 @@ class _HomeState extends State<Home> {
                           enableFlag: false,
                           onTap: () {
                             FocusScope.of(context).unfocus();
-                            SystemChrome.setEnabledSystemUIOverlays(
-                                [SystemUiOverlay.bottom]);
-                            widget.onPush(
-                                NavigatorRoutes.partnerSearchView, null);
+                            // SystemChrome.setEnabledSystemUIOverlays(
+                            //     [SystemUiOverlay.bottom]);
+                            widget.onPush(NavigatorRoutes.partnerSearchView,
+                                null, null, null, null);
                           },
                         ),
                       ),
                     ),
                   )
-                : SizedBox(),
+                : Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        NeuronioHeader(
+                          docUpLogo: true,
+                          width: 60,
+                        ),
+                      ],
+                    ),
+                  ),
 //                        OnCallMedicalHeaderIcon()
           ]),
-          SizedBox(
-            height: 25,
-          ),
           _homeList(),
           SizedBox(
             height: 15,
           ),
-          _iPartner()
+          _iPartner(),
+          BlocProvider.of<EntityBloc>(context).state.entity.isPatient
+              ? MyPartners(onPush: (string, entity) {
+                  widget.onPush(string, entity, null, null, null);
+                })
+              : SizedBox()
         ],
       )),
     );

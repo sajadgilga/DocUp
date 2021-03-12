@@ -15,6 +15,7 @@ class InputField extends StatefulWidget {
   bool obscureText;
   ValueChanged<String> onChanged;
   bool disableInvalidIcon;
+  int maxChars;
 
   InputField(
       {this.inputHint,
@@ -25,6 +26,7 @@ class InputField extends StatefulWidget {
       this.errorMessage,
       this.onChanged,
       this.disableInvalidIcon = true,
+      this.maxChars,
       this.obscureText = false});
 
   @override
@@ -47,6 +49,8 @@ class _InputFieldState extends State<InputField> {
       controller: widget.controller,
       textAlign: TextAlign.right,
       keyboardType: widget.textInputType,
+      maxLength: widget.maxChars,
+      maxLengthEnforced: widget.maxChars == null ? false : true,
       validator: (value) {
         if (widget.validationCallback(value)) {
           return null;

@@ -18,7 +18,7 @@ class Header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           child,
-          DocUpHeader(),
+          NeuronioHeader(),
         ],
       ),
     );

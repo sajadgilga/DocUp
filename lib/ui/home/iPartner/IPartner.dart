@@ -1,22 +1,22 @@
 import 'package:Neuronio/blocs/EntityBloc.dart';
-import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/UserEntity.dart';
-import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:flutter/material.dart';
-
 import 'package:Neuronio/ui/home/iPartner/IPartnerBody.dart';
-import 'package:Neuronio/ui/widgets/DoctorSummary.dart';
+import 'package:Neuronio/ui/widgets/AutoText.dart';
+import 'package:Neuronio/ui/widgets/Waiting.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+
 
 class IPartner extends StatelessWidget {
   final UserEntity partner;
-  final Function(String, dynamic) onPush;
+  final Function(String, dynamic,dynamic,dynamic,Function) onPush;
   final Function(int) selectPage;
   final Function(String, UserEntity) globalOnPush;
   final Color color;
   final String label;
-  final bool isEmpty;
+  final BlocState partnerState;
 
   IPartner(
       {Key key,
@@ -26,7 +26,7 @@ class IPartner extends StatelessWidget {
       this.color,
       this.selectPage,
       this.label,
-      this.isEmpty = false})
+      this.partnerState = BlocState.Loaded})
       : super(key: key);
 
   Widget _IDoctorLabel() => Container(
@@ -62,7 +62,7 @@ class IPartner extends StatelessWidget {
 
   Widget _body(context) {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    if (isEmpty)
+    if (partnerState == BlocState.Empty) {
       return Expanded(
         child: Center(
           child: AutoText(
@@ -74,13 +74,21 @@ class IPartner extends StatelessWidget {
           ),
         ),
       );
-    return Expanded(
-        child: IPartnerBody(
-            selectPage: selectPage,
-            partner: partner,
-            onPush: onPush,
-            globalOnPush: globalOnPush,
-            color: color));
+    } else if (partnerState == BlocState.Loaded) {
+      return Expanded(
+          child: IPartnerBody(
+              selectPage: selectPage,
+              partner: partner,
+              onPush: onPush,
+              globalOnPush: globalOnPush,
+              color: color));
+    } else if (partnerState == BlocState.Loading) {
+      return Expanded(
+        child: Center(
+          child: Waiting(),
+        ),
+      );
+    }
   }
 
   @override

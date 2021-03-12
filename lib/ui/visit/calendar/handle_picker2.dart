@@ -130,7 +130,7 @@ class _HandlePicker2State extends State<HandlePicker2>
 //                Navigator.pop(context);
               },
               onSelectDate: (date) {
-                widget.onSelect("${date.year}/${date.month}/${date.date}");
+                widget.onSelect("${date.year}/${date.month}/${date.day}");
                 setState(() {
                   startSelectedInitDate = outPutFormat(date);
                   endSelectedInitDate = outPutFormat(date);

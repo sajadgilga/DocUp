@@ -23,8 +23,7 @@ suggestionsAndCriticism() {
       mainAxisSize: MainAxisSize.min,
       children: [
         GestureDetector(
-          onTap: () =>
-              launch("http://telegram.me/" + Strings.supportTelegramId),
+          onTap: () => launch(Strings.supportTelegramLLink),
           child: Container(
               padding: EdgeInsets.all(5),
               width: iconsSize * telegramIconScale,
@@ -34,13 +33,23 @@ suggestionsAndCriticism() {
               )),
         ),
         GestureDetector(
-          onTap: () => launch(
-              "whatsapp://send?phone=" + Strings.supportWhatsAppPhoneNumber),
+          onTap: () => launch(Strings.supportWhatsAppLink),
           child: Container(
               padding: EdgeInsets.all(5),
               width: iconsSize,
               child: Image.asset(
                 Assets.accountWhatsAppIcon,
+                width: iconsSize,
+              )),
+        ),
+        GestureDetector(
+          onTap: () => launch(Strings.supportInstagramLink),
+          child: Container(
+              margin: EdgeInsets.all(5),
+              padding: EdgeInsets.all(6),
+              width: iconsSize * 0.8,
+              child: Image.asset(
+                Assets.accountInstagramIcon,
                 width: iconsSize,
               )),
         ),
@@ -59,7 +68,7 @@ Widget aboutUsButton(BuildContext context) {
     color: IColors.themeColor,
     fontWeight: FontWeight.bold,
     callBack: () {
-      launchURL("https://docup.ir");
+      launchURL(Strings.appSiteLink);
     },
   );
   // return GestureDetector(
@@ -87,7 +96,7 @@ Widget aboutUsButton(BuildContext context) {
 
 Widget paymentDescription(BuildContext context) {
   return ActionButton(
-    title: "روش های پرداخت",
+    title: Strings.paymentDescriptionTitle,
     color: IColors.themeColor,
     fontWeight: FontWeight.bold,
     callBack: () {

@@ -1,5 +1,7 @@
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/PanelBloc.dart';
+import 'package:Neuronio/blocs/ScreenginBloc.dart';
+import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/ApiProvider.dart';
 import 'package:Neuronio/repository/UtilRepository.dart';
@@ -14,15 +16,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_tooltip/simple_tooltip.dart';
 
 import '../../constants/colors.dart';
 import 'NavigatorView.dart';
 
 class MainPage extends StatefulWidget {
-  final Function(String, dynamic) pushOnBase;
+  final Function(String, dynamic, dynamic, dynamic, Function) pushOnBase;
 
   MainPage({Key key, this.pushOnBase}) : super(key: key);
 
@@ -50,27 +53,29 @@ class _MainPageState extends State<MainPage> {
     3: GlobalKey<NavigatorState>(),
     4: GlobalKey<NavigatorState>(),
   };
+  bool _navigationBarDescriptionTooltipToggle = false;
 
   @override
   void initState() {
+    /// init in-app guid
+    checkNavigationBarDescription();
     // initialize socket helper for web socket messages
     SocketHelper().init(ApiProvider.URL_IP);
     // get user entity & panels, also periodically update entity's info
     final _entityBloc = BlocProvider.of<EntityBloc>(context);
-    _entityBloc.add(EntityGet());
     var _panelBloc = BlocProvider.of<PanelBloc>(context);
-    _panelBloc.add(GetMyPanels());
+    final _screeningBloc = BlocProvider.of<ScreeningBloc>(context);
 
     /// start updater if it is not started already
     checkAppVersion();
-    EntityAndPanelUpdater.start(_entityBloc, _panelBloc);
+    EntityAndPanelUpdater.start(_entityBloc, _panelBloc, _screeningBloc);
 
     NotificationAndFirebaseService.initFCM(context, widget.pushOnBase);
     super.initState();
   }
 
   checkAppVersion() {
-    if(!kIsWeb){
+    if (!kIsWeb) {
       UtilRepository utilRepository = UtilRepository();
       utilRepository.getLatestAppBuildNumber().then((value) async {
         PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -81,7 +86,7 @@ class _MainPageState extends State<MainPage> {
               context,
               "نسخه اپلیکیشن کنونی شما قدیمی است. با زدن بر روی دکمه زیر برای اپدیت اپ اقدام کنید و اطلاعات بیشتری را از سایت نورونیو دریافت کنید.",
               "تایید", () {
-            launchURL("https://neuronio.ir");
+            launchURL(Strings.appSiteLink);
           }, barrierDismissible: false);
         }
       });
@@ -94,7 +99,7 @@ class _MainPageState extends State<MainPage> {
         ProgressDialog(context, type: ProgressDialogType.Normal);
     _progressDialogue.style(message: "لطفا منتظر بمانید");
 
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
 
     return WillPopScope(
         child: BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
@@ -131,47 +136,52 @@ class _MainPageState extends State<MainPage> {
   List<BottomNavigationBarItem> _bottomNavigationItems(Entity entity) {
     return navigator_destinations
         .map<BottomNavigationBarItem>((Destination destination) {
-      return BottomNavigationBarItem(
-          icon: Container(
-              constraints: BoxConstraints.expand(
-                  width: MediaQuery.of(context).size.width / 4, height: 40),
-              child: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  Container(
-                      alignment: Alignment.center,
-                      child: (destination.hasImage
-                          ? CrossPlatformSvg.asset(
-                              destination.image,
-                              color: _getBottomNavigationColor(destination,
-                                  secondary: Colors.grey),
-                              width: 25,
-                            )
-                          : Icon(
-                              destination.icon,
-                              size: 30,
-                            ))),
-                  Align(
-                      alignment: Alignment(0, -1.65),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _getBottomNavigationColor(destination),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: _getBottomNavigationColor(destination),
-                                  offset: Offset(1, 3),
-                                  blurRadius: 10)
-                            ]),
-                        width: 10,
-                        height: 10,
-                      ))
-                ],
-              )),
-          title: AutoText(
-            destination.title,
-          ),
-          backgroundColor: Colors.white);
+      try {
+        return BottomNavigationBarItem(
+            icon: Container(
+                constraints: BoxConstraints.expand(
+                    width: MediaQuery.of(context).size.width / 4, height: 40),
+                child: Stack(
+                  overflow: Overflow.visible,
+                  children: <Widget>[
+                    Container(
+                        alignment: Alignment.center,
+                        child: (destination.hasImage
+                            ? Image.asset(
+                                destination.image,
+                                color: _getBottomNavigationColor(destination,
+                                    secondary: Colors.grey),
+                                width: 25,
+                              )
+                            : Icon(
+                                destination.icon,
+                                size: 30,
+                              ))),
+                    Align(
+                        alignment: Alignment(0, -1.65),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _getBottomNavigationColor(destination),
+                              boxShadow: [
+                                BoxShadow(
+                                    color:
+                                        _getBottomNavigationColor(destination),
+                                    offset: Offset(1, 3),
+                                    blurRadius: 10)
+                              ]),
+                          width: 10,
+                          height: 10,
+                        ))
+                  ],
+                )),
+            label: destination.title,
+            backgroundColor: Colors.white);
+      } catch (e) {
+        print("###### ERROR:");
+        print(e);
+        return BottomNavigationBarItem(icon: Icon(Icons.crop_square));
+      }
     }).toList();
   }
 
@@ -195,7 +205,7 @@ class _MainPageState extends State<MainPage> {
 
   void _chatPage(int section) {
     _selectPage(1);
-    _children[1].currentState.push(null, NavigatorRoutes.panel, detail: 'chat');
+    _children[1].currentState.push(null, NavigatorRoutes.panel, param1: 'chat');
   }
 
   Widget _buildOffstageNavigator(int index) {
@@ -219,11 +229,44 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  Future<void> checkNavigationBarDescription(
+      {bool changeTooltip = true}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShown = false;
+    if (prefs.containsKey("navigationBarDescription")) {
+      hasShown = prefs.getBool("navigationBarDescription");
+    }
+    prefs.setBool("navigationBarDescription", true);
+    if (changeTooltip) {
+      _navigationBarDescriptionTooltipToggle = !hasShown;
+    }
+  }
+
   Widget _mainPage() {
     return Scaffold(
         backgroundColor: IColors.background,
-        bottomNavigationBar: SizedBox(
-          child: _bottomNavigationBar(),
+        bottomNavigationBar: SimpleTooltip(
+          hideOnTooltipTap: true,
+          show: _navigationBarDescriptionTooltipToggle,
+          animationDuration: Duration(milliseconds: 700),
+          tooltipDirection: TooltipDirection.up,
+          backgroundColor: IColors.whiteTransparent,
+          borderColor: IColors.themeColor,
+          tooltipTap: () {
+            _navigationBarDescriptionTooltipToggle = false;
+          },
+          content: AutoText(
+            Strings.navigationBarDescription,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black87,
+              fontSize: 12,
+              decoration: TextDecoration.none,
+            ),
+          ),
+          child: SizedBox(
+            child: _bottomNavigationBar(),
+          ),
         ),
         body: IndexedStack(
           index: _currentIndex,

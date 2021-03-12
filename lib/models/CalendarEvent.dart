@@ -17,4 +17,5 @@ class Event {
   final String title;
 
   final Color color;
+
 }

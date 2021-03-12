@@ -62,14 +62,6 @@ String normalizeCredit(String credit) {
     return credit;
 }
 
-String getJalaliDateStringFromJalali(Jalali jalali) {
-  return "${jalali.year}/${jalali.month}/${jalali.day}";
-}
-
-String getTimeStringFromDateTime(DateTime dateTime, {bool withSeconds = true}) {
-  return "${dateTime.hour}:${dateTime.minute}" +
-      (withSeconds ? ":${dateTime.second}" : "");
-}
 
 String convertToGeorgianDate(String jalaliDate) {
   var array = jalaliDate.split("/");
@@ -107,7 +99,11 @@ AlertDialog getLoadingDialog() => AlertDialog(
     content: Waiting());
 
 void showDatePickerDialog(
-    context, List<int> availableDays, TextEditingController controller) {
+  context,
+  List<int> availableDays,
+  TextEditingController controller, {
+  bool restrictMinDate = true,
+}) {
   showDialog(
     context: context,
     builder: (BuildContext _) {
@@ -115,7 +111,7 @@ void showDatePickerDialog(
         color: IColors.themeColor,
         type: "date",
         initial: DateTimeService.getTodayInJalaliString(),
-        min: DateTimeService.getTodayInJalaliString(),
+        min: restrictMinDate ? DateTimeService.getTodayInJalaliString() : '',
         disable: getDisableDays(availableDays),
         onSelect: (date) {
           controller.text = date;
@@ -186,6 +182,13 @@ void showOneButtonDialog(
       callback();
     }
   });
+}
+
+String addExtraZeroOnLeftSideIfNeeded(String t,{int z=2}){
+  for(int i =0;i<z-t.length;i++){
+    t = "0"+t;
+  }
+  return t;
 }
 
 void showTwoButtonDialog(context, String message, String applyTitle,
@@ -398,9 +401,49 @@ int intPossible(var text, {int defaultValues}) {
   return defaultValues;
 }
 
+double doublePossible(var text, {double defaultValues}) {
+  try {
+    if (text is double) {
+      return text;
+    } else if (text is String) {
+      return double.parse(text);
+    } else if (text is int) {
+      return text.toDouble();
+    }
+  } catch (e) {}
+  return defaultValues;
+}
+
 bool isNumeric(String s) {
   if (s == null) {
     return false;
   }
   return double.parse(s, (e) => null) != null;
+}
+
+String priceWithCommaSeparator(int price) {
+  String priceString = price.toString();
+  priceString = priceString.split("").reversed.join("");
+  List<String> pricePart = [];
+  for (int i = 0; i < ((priceString.length) / 3).ceil(); i++) {
+    pricePart.add(
+        priceString.substring(3 * i, min((i + 1) * 3, priceString.length)));
+  }
+  String normPrice = pricePart.join(",");
+  return normPrice.split("").reversed.join("");
+}
+
+Widget getButtonLoadingProgress({double r = 30, double stroke = 3,double value}) {
+  return SizedBox(
+    height: r,
+    width: r,
+    child: CircleAvatar(
+      radius: r,
+      backgroundColor: Color.fromARGB(0, 0, 0, 0),
+      child: CircularProgressIndicator(
+        strokeWidth: stroke,
+        value: value,
+      ),
+    ),
+  );
 }

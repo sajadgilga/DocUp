@@ -1,15 +1,21 @@
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/Panel.dart';
+import 'package:Neuronio/models/TextPlan.dart';
 import 'package:Neuronio/models/UserEntity.dart';
+import 'package:Neuronio/repository/DoctorRepository.dart';
+import 'package:Neuronio/repository/PatientRepository.dart';
+import 'package:Neuronio/repository/TextPlanRepository.dart';
 import 'package:Neuronio/ui/home/iPartner/ChatBox.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
 import 'package:Neuronio/ui/widgets/DoctorSummary.dart';
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IPartnerBody extends StatelessWidget {
   final UserEntity partner;
-  final Function(String, dynamic) onPush;
+  final Function(String, dynamic, dynamic, dynamic, Function) onPush;
   final Function(int) selectPage;
   final Function(String, UserEntity) globalOnPush;
   final Color color;
@@ -22,17 +28,6 @@ class IPartnerBody extends StatelessWidget {
       this.selectPage,
       this.globalOnPush})
       : super(key: key);
-
-  void _showDoctorDialogue(context) {
-//    globalOnPush(NavigatorRoutes.doctorDialogue);
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    if (entity.isPatient)
-      onPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
-//      globalOnPush(NavigatorRoutes.doctorDialogue, entity.partnerEntity);
-    else if (entity.isDoctor)
-      onPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
-//      globalOnPush(NavigatorRoutes.patientDialogue, entity.partnerEntity);
-  }
 
   String _getSubHeader(context) {
     if (partner == null) return '';
@@ -64,15 +59,21 @@ class IPartnerBody extends StatelessWidget {
       children: <Widget>[
         GestureDetector(
             onTap: () {
+              // var _state = BlocProvider.of<EntityBloc>(context).state;
+              // this.onPush(NavigatorRoutes.panel, _state.entity.partnerEntity);
+              // selectPage(1);
               var _state = BlocProvider.of<EntityBloc>(context).state;
-              this.onPush(NavigatorRoutes.panel, _state.entity.partnerEntity);
+              navigateToPanelByChatMessage(_state.entity.panelByPartnerId.id,
+                  _state.entity.partnerEntity, context);
             },
             child: Container(
               color: Color.fromARGB(0, 0, 0, 0),
               child: ChatBox(
                 selectPage: selectPage,
                 color: color,
-                onPush: this.onPush,
+                onPush: (string, entity) {
+                  onPush(string, entity, null, null, null);
+                },
               ),
             )),
         SizedBox(
@@ -94,8 +95,14 @@ class IPartnerBody extends StatelessWidget {
 //          },
           child: GestureDetector(
             onTap: () {
+              // var _state = BlocProvider.of<EntityBloc>(context).state;
+              // onPush(NavigatorRoutes.myPartnerDialog, _state.entity.partnerEntity);
+
               var _state = BlocProvider.of<EntityBloc>(context).state;
-              onPush(NavigatorRoutes.myPartnerDialog, _state.entity.partnerEntity);
+              navigateToPanelByChatMessage(_state.entity.panelByPartnerId.id,
+                  _state.entity.partnerEntity, context);
+              // this.onPush(NavigatorRoutes.panel, _state.entity.partnerEntity);
+              // selectPage(1);
             },
             child: Container(
               color: Color.fromARGB(0, 0, 0, 0),
@@ -109,5 +116,31 @@ class IPartnerBody extends StatelessWidget {
         )
       ],
     );
+  }
+
+  Future<void> navigateToPanelByChatMessage(
+      int panelId, UserEntity partner, BuildContext context) {
+    Entity entity = BlocProvider.of<EntityBloc>(context).state?.entity;
+    bool isDoctor = entity?.isDoctor;
+
+    Future<PatientTextPlan> getPatientTextPlan() async {
+      PatientTextPlan patientTextPlan;
+      Panel panel = entity.getPanelByPanelId(panelId);
+      if (!isDoctor) {
+        patientTextPlan =
+            await TextPlanRepository().getTextPlan(panel.doctorId);
+      } else {
+        patientTextPlan =
+            await TextPlanRepository().getTextPlan(panel.patientId);
+      }
+      return patientTextPlan;
+    }
+
+    LoadingAlertDialog loadingAlertDialog = LoadingAlertDialog(context);
+    loadingAlertDialog.showLoading();
+    getPatientTextPlan().then((textPlan) {
+      loadingAlertDialog.disposeDialog();
+      onPush(NavigatorRoutes.panel, partner, textPlan, null, null);
+    });
   }
 }

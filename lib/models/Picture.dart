@@ -1,8 +1,5 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:Neuronio/constants/colors.dart';
-import 'package:Neuronio/ui/widgets/UploadSlider.dart';
+import 'package:Neuronio/utils/CrossPlatformFilePicker.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
@@ -45,14 +42,14 @@ class FileEntity {
   String description;
   DateTime created_date;
   String fileURL;
-  File file;
+  CustomFile customFile;
   String filePath;
   String base64;
   String extension;
   FileEntityUser user;
 
   FileEntity(
-      {this.file,
+      {this.customFile,
       this.title,
       this.description,
       this.base64,
@@ -60,24 +57,12 @@ class FileEntity {
       this.fileURL,
       this.extension});
 
-  FormData toFormData() {
-    FormData data = FormData.fromMap({
-      "title": title,
-      "description": description,
-      "file": MultipartFile.fromFile(filePath)
-    });
-    return data;
-  }
-
   Map<String, dynamic> toJson() {
     Map json = Map<String, dynamic>();
     json['title'] = title;
     json['description'] = description;
-    if (file != null)
-      json['file'] = "data:file/" +
-          AllowedFile.getFormatFromFilePath(file.path) +
-          ";base64," +
-          base64;
+    if (customFile != null)
+      json['file'] = "data:file/" + customFile.extension + ";base64," + base64;
 
     return json;
   }
@@ -102,8 +87,8 @@ class FileEntity {
 
   Image get image {
     if (AllowedFile.getFileType(extension) == AllowedFileType.image) {
-      if (file != null) {
-        return Image.file(file);
+      if (customFile != null) {
+        return Image.memory(customFile.fileBits);
       }
       if (fileURL != null) {
         return Image.network(fileURL);
@@ -113,14 +98,13 @@ class FileEntity {
   }
 
   AllowedFileType get fileType {
-    extension = extension ??
-        AllowedFile.getFormatFromFilePath(file.path) ??
-        AllowedFile.getFormatFromFilePath(fileURL);
-    return AllowedFile.getFileType(extension);
+    return customFile?.fileType ??
+        AllowedFile.getFileType(extension ??
+            AllowedFile.getFormatFromFilePath(filePath ?? fileURL));
   }
 
   Widget get defaultFileWidget {
-    if (file == null) {
+    if (customFile == null) {
       if (fileURL != null) {
         if (fileType == AllowedFileType.image) {
           return Image.network(fileURL);
@@ -151,10 +135,8 @@ class FileEntity {
         );
       }
     } else if (fileType == AllowedFileType.image) {
-      return Image.file(file);
-    } else if (AllowedFile.getFileType(
-            AllowedFile.getFormatFromFilePath(file.path)) ==
-        AllowedFileType.doc) {
+      return Image.memory(customFile.fileBits);
+    } else if (customFile.fileType == AllowedFileType.pdf) {
       return Container(
         color: Colors.white,
         child: Padding(

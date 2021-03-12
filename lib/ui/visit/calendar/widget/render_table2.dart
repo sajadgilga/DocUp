@@ -36,7 +36,7 @@ class _RenderTable2State extends State<RenderTable2> {
         initDate = widget.initDate;
         monthLength = initDate.monthLength;
         currentDayOfMonth = int.parse(initDate.formatter.d);
-        numberOfFirstDayOfMonthInWeek = initDate.copy(date: 1).weekDay;
+        numberOfFirstDayOfMonthInWeek = initDate.copy(day: 1).weekDay;
 
         for (int i = 1; i <= 42; i++) {
           if (i < numberOfFirstDayOfMonthInWeek) {
@@ -59,7 +59,7 @@ class _RenderTable2State extends State<RenderTable2> {
     initDate = widget.initDate;
     monthLength = initDate.monthLength;
     currentDayOfMonth = int.parse(initDate.formatter.d);
-    numberOfFirstDayOfMonthInWeek = initDate.copy(date: 1).weekDay;
+    numberOfFirstDayOfMonthInWeek = initDate.copy(day: 1).weekDay;
 
     for (int i = 1; i <= 42; i++) {
       if (i < numberOfFirstDayOfMonthInWeek) {
@@ -80,7 +80,7 @@ class _RenderTable2State extends State<RenderTable2> {
 
 
     List<Widget> allDaysWidget = allDaysOfTable.map((dayNumber) {
-      var date = dayNumber != '' ? initDate.copy(date: dayNumber) : '';
+      var date = dayNumber != '' ? initDate.copy(day: dayNumber) : '';
       return DayContainer2(
         date: date,
         startDate: widget.startSelectedDate,

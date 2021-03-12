@@ -5,14 +5,15 @@ import 'package:Neuronio/models/DoctorPlan.dart';
 import 'package:Neuronio/ui/visit/calendar/persian_datetime_picker2.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/DailyTimeTable.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/FlutterDateTimePickerCustom/flutter_datetime_picker.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/FlutterDateTimePickerCustom/src/datetime_picker_theme.dart';
+import 'package:Neuronio/ui/widgets/modifiedPackages/FlutterDateTimePickerCustom/src/i18n_model.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
-import 'FlutterDateTimePickerCustom/flutter_datetime_picker.dart';
-import 'FlutterDateTimePickerCustom/src/datetime_picker_theme.dart';
-import 'FlutterDateTimePickerCustom/src/i18n_model.dart';
 import 'TimeSelectorHeaderWidget.dart';
 import 'TimeSelectorWidget.dart';
 
@@ -46,34 +47,33 @@ class VisitDateTimePicker extends StatefulWidget {
 
 class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
   bool timeIsSelected = false;
-  int selectedDay = 0;
-  String initialDate;
-  Map<int, String> disableDays = {};
 
   @override
   void initState() {
-    disableDays = getDisableDays(
-        (widget.visitType == null) ? <int>[] : widget.visitType.availableDays);
-    initialDate = ['', null].contains(widget.dateTextController.text)
-        ? getInitialDate(disableDays)
-        : widget.dateTextController.text;
-    widget.dateTextController.text = initialDate;
+    widget.dateTextController.text =
+        ['', null].contains(widget.dateTextController.text)
+            ? (widget.visitType.jalaliStringNewestActiveVisitTime ??
+                DateTimeService.getJalaliStringFromJalali(
+                    DateTimeService.getCurrentJalali()))
+            : widget.dateTextController.text;
+    print(widget.dateTextController.text);
     super.initState();
+  }
+
+  String get selectedGeorgianDateString {
+    return DateTimeService.getDateStringFormDateTime(
+        DateTimeService.getDateAndTimeFromJalali(
+            widget.dateTextController.text));
   }
 
   @override
   Widget build(BuildContext context) {
-    var jalali = DateTimeService.getJalalyDateFromJalilyString(
-        widget.dateTextController.text);
-    if (jalali != null) {
-      selectedDay = jalali.weekDay - 1;
-    }
     return Container(
       child: Column(
         children: [
           TimeSelectorHeaderWidget(
             callback: changeBetweenTimeAndDate,
-            initialTimeIsSelected: false,
+            initialTimeIsSelected: timeIsSelected,
           ),
           !this.timeIsSelected
               ? Container(
@@ -81,12 +81,17 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                   child: PersianDateTimePicker2(
                     color: IColors.themeColor,
                     type: "date",
-                    initial: initialDate,
+                    initial: widget.dateTextController.text,
                     min: DateTimeService.getYesterdayInJalilyString(),
-                    disable: disableDays,
+                    availableDates: widget.visitType.daysWorkTimes
+                        .map((e) => DateTimeService.getJalaliStringFromJalali(
+                            DateTimeService.getJalaliformDateTime(e.date)))
+                        .toList(),
                     onSelect: (date) {
-                      widget.dateTextController.text = date;
-                      initialDate = date;
+                      setState(() {
+                        widget.dateTextController.text = date;
+                        this.timeIsSelected = true;
+                      });
                     },
                   ),
                 )
@@ -101,23 +106,21 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                         )
                       : DailyAvailableVisitTime(
                           startTableHour: widget.visitType
-                                  ?.getMinWorkTimeHour(selectedDay) ??
-                              0,
+                              ?.getMinWorkTimeHour(selectedGeorgianDateString),
                           endTableHour: widget.visitType
-                                  ?.getMaxWorkTimeHour(selectedDay) ??
-                              0,
-
-                          /// TODO
+                              ?.getMaxWorkTimeHour(selectedGeorgianDateString),
                           planDurationInMinute: widget.planDurationInMinute,
                           selectedDateController: widget.dateTextController,
                           selectedTimeController: widget.timeTextController,
-                          /// TODO
-                          dailyDoctorWorkTime: null ??
+                          dailyDoctorWorkTime: widget.visitType
+                                  ?.getDailyWorkTimeTable(
+                                      selectedGeorgianDateString) ??
                               VisitType.getEmptyTablePlan(),
                           dayReservedTimeTable: widget.doctorPlan
                               .getTakenVisitDailyTimeTable(
                                   widget.dateTextController.text),
                           onBlocTap: widget.onBlocTap,
+                          minutesGapBetweenNow: 6 * 60,
                         )))
         ],
       ),

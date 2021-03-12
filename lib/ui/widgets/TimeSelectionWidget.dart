@@ -1,16 +1,26 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 
-
 class TimeSelectionWidget extends StatelessWidget {
   String title;
+  bool enable;
+  InputBorder border;
+  bool forced = false;
+  Function(DateTime) extraValidator;
+  final TextEditingController timeTextController;
 
-  TimeSelectionWidget({Key key, this.title, @required this.timeTextController})
+
+  TimeSelectionWidget(
+      {Key key,
+      this.title,
+      @required this.timeTextController,
+      this.enable = true,
+      this.border,
+      this.forced,this.extraValidator})
       : super(key: key);
 
-  final TextEditingController timeTextController;
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +29,21 @@ class TimeSelectionWidget extends StatelessWidget {
       child: DateTimeField(
         controller: timeTextController,
         format: intl.DateFormat("HH:mm"),
+        enabled: this.enable,
         textAlign: TextAlign.center,
         textDirection: TextDirection.rtl,
-        decoration: InputDecoration(hintText: title, labelText: title),
+        validator: (pattern) {
+          if (this.forced) {
+            if (pattern == null) {
+              return "فیلد خالی است!";
+            }
+          }
+          return extraValidator != null
+              ? (extraValidator(pattern) ?? null)
+              : null;
+        },
+        decoration: InputDecoration(
+            hintText: title, labelText: title, border: this.border),
         onShowPicker: (context, currentValue) async {
           final time = await showTimePicker(
             context: context,

@@ -1,6 +1,6 @@
-# docup
+# neuronio
 
-docup project
+neuronio project
 
 ## Getting Started
 

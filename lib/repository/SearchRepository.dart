@@ -14,12 +14,12 @@ class SearchRepository {
       urlParam += "&expertise=$expertise";
     }
     final response = await _provider.get('api/search/doctors$urlParam');
-    return SearchResult.fromJson(response, true);
+    return SearchResult.fromJson(response, EntityType.DoctorEntity);
   }
 
   Future<SearchResult> searchMyDoctor() async {
     final response = await _provider.get('api/my-doctors');
-    return SearchResult.fromJson(response, true);
+    return SearchResult.fromJson(response, EntityType.DoctorEntity);
   }
 
   Future<SearchResult> searchPatient(searchParam, patientFilter) async {
@@ -32,7 +32,7 @@ class SearchRepository {
     }
     final response =
         await _provider.get('api/search/patients-list/' + urlParams);
-    return SearchResult.fromJson(response, false, isVisit: false);
+    return SearchResult.fromJson(response, EntityType.PatientEntity);
   }
 
   Future<SearchResult> searchPatientVisits(
@@ -45,12 +45,18 @@ class SearchRepository {
       urlParams += "&visit_type=$visitType";
     }
     final response = await _provider.get('api/visits/${urlParams}');
-    return SearchResult.fromJson(response, false, isVisit: true);
+    return SearchResult.fromJson(response, EntityType.VisitEntity);
   }
 
   Future<SearchResult> searchCount(param) async {
     final response = await _provider
         .get('api/search/patients-list?query=$param&status=0,1&page=0');
-    return SearchResult.fromJson(response, false);
+    return SearchResult.fromJson(response, EntityType.PatientEntity);
+  }
+
+
+  Future<SearchResult> searchClinics() async {
+    var response = await _provider.get('api/search/clinics', utf8Support: true);
+    return SearchResult.fromJson(response, EntityType.ClinicEntity);
   }
 }

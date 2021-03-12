@@ -7,6 +7,7 @@ import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/visit/VisitUtils.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Avatar.dart';
@@ -15,7 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class PartnerResultList extends StatefulWidget {
-  final Function(String, UserEntity) onPush;
+  final Function(String, UserEntity, int, VisitSource) onPush;
   List<UserEntity> results;
   bool isDoctor;
   bool isRequestsOnly;
@@ -108,7 +109,7 @@ class _PartnerResultListState extends State<PartnerResultList> {
 
 class _SearchResultDoctorItem extends StatelessWidget {
   final DoctorEntity entity;
-  final Function(String, UserEntity) onPush;
+  final Function(String, UserEntity, int, VisitSource) onPush;
   final Function(int) selectPage;
 
   _SearchResultDoctorItem({Key key, this.entity, this.onPush, this.selectPage})
@@ -130,7 +131,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
 //        });
     var _state = BlocProvider.of<EntityBloc>(context).state;
     if (!_state.entity.isDoctor) {
-      onPush(NavigatorRoutes.doctorDialogue, entity);
+      onPush(NavigatorRoutes.doctorDialogue, entity, null, VisitSource.USUAL);
     }
   }
 
@@ -167,7 +168,9 @@ class _SearchResultDoctorItem extends StatelessWidget {
 
   Widget _tags(context) {
     List<Widget> res = [];
-    if(entity.plan== null || entity.plan.visitTypes==null || entity.plan.visitTypes.length==0){
+    if (entity.plan == null ||
+        entity.plan.visitTypes == null ||
+        entity.plan.visitTypes.length == 0) {
       res.add(_tag("ویزیتی ثبت نشده", context));
     }
     entity.plan?.virtualVisitMethod?.forEach((element) {
@@ -271,7 +274,7 @@ class _SearchResultDoctorItem extends StatelessWidget {
 
 class _SearchResultPatientItem extends StatelessWidget {
   final PatientEntity entity;
-  final Function(String, UserEntity) onPush;
+  final Function(String, UserEntity, int, VisitSource) onPush;
   final Function(int) selectPage;
 
   _SearchResultPatientItem({Key key, this.entity, this.onPush, this.selectPage})
@@ -292,7 +295,7 @@ class _SearchResultPatientItem extends StatelessWidget {
 //          );
 //        });
 //     selectPage(1);
-    onPush(NavigatorRoutes.myPartnerDialog, entity);
+    onPush(NavigatorRoutes.myPartnerDialog, entity, null, VisitSource.USUAL);
   }
 
   Widget _image(context) => Container(

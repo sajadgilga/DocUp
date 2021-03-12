@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/models/MedicalTest.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/repository/MedicalTestRepository.dart';
+import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 
 class SingleMedicalTestBloc extends Bloc<MedicalTestEvent, MedicalTestState> {
   MedicalTestRepository _repository = MedicalTestRepository();
-  StreamController _utilController = StreamController<
-      Response<MedicalTestResponseEntity>>();
+  StreamController _utilController =
+      StreamController<Response<MedicalTestResponseEntity>>();
 
   StreamSink<Response<MedicalTestResponseEntity>> get apiSink =>
       _utilController.sink;
@@ -21,7 +21,7 @@ class SingleMedicalTestBloc extends Bloc<MedicalTestEvent, MedicalTestState> {
     apiSink.add(Response.loading());
     try {
       final MedicalTestResponseEntity result =
-      await _repository.addTestToPatient(testId, patientId);
+          await _repository.addTestToPatient(testId, patientId);
       apiSink.add(Response.completed(result));
     } catch (e) {
       apiSink.add(Response.error(e));
@@ -42,28 +42,27 @@ class SingleMedicalTestBloc extends Bloc<MedicalTestEvent, MedicalTestState> {
     }
   }
 
-  Stream<MedicalTestState> _getPatientTestAndResponse(int id, int patientId,
-      {panelId, panelTestId}) async* {
+  Stream<MedicalTestState> _getPatientTestAndResponse(
+      GetPatientTestAndResponse event) async* {
     yield GetTestLoading();
     try {
-      final MedicalTest result =
-      await _repository.getPatientTestAndResponse(
-          id, patientId, panelId: panelId, panelTestId: panelTestId);
+      final MedicalTest result = await _repository.getPatientTestAndResponse(
+          event.type, event.testId, event.patientId,
+          panelId: event.panelId,
+          panelTestId: event.panelTestId,
+          screeningId: event.screeningId);
       yield GetTestLoaded(result: result);
     } catch (e) {
       yield GetTestError();
     }
   }
 
-
   @override
   Stream<MedicalTestState> mapEventToState(event) async* {
     if (event is GetTest) {
       yield* _getTest(event.id);
     } else if (event is GetPatientTestAndResponse) {
-      yield* _getPatientTestAndResponse(
-          event.testId, event.patientId, panelTestId: event.panelTestId,
-          panelId: event.panelId);
+      yield* _getPatientTestAndResponse(event);
     } else if (event is AddTestToPatient) {
       yield* addTestToPartner(event.testId, event.patientId);
     }
@@ -80,13 +79,19 @@ class GetTest extends MedicalTestEvent {
 }
 
 class GetPatientTestAndResponse extends MedicalTestEvent {
+  final MedicalPageDataType type;
   final int panelTestId;
   final int testId;
   final int patientId;
   final int panelId;
+  final int screeningId;
 
-  GetPatientTestAndResponse(
-      {@required this.testId, @required this.patientId, this.panelId, this.panelTestId});
+  GetPatientTestAndResponse(this.type,
+      {@required this.testId,
+      @required this.patientId,
+      this.panelId,
+      this.panelTestId,
+      this.screeningId});
 }
 
 class AddTestToPatient extends MedicalTestEvent {

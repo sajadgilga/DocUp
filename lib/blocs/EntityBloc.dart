@@ -1,24 +1,34 @@
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/models/DoctorEntity.dart';
+import 'package:Neuronio/models/Panel.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
+import 'package:Neuronio/models/Screening.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/repository/DoctorRepository.dart';
 import 'package:Neuronio/repository/PatientRepository.dart';
+import 'package:Neuronio/repository/ScreeningRepository.dart';
 import 'package:Neuronio/ui/start/RoleType.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class EntityBloc extends Bloc<EntityEvent, EntityState> {
   PatientRepository _patientRepository = PatientRepository();
   DoctorRepository _doctorRepository = DoctorRepository();
+  ScreeningRepository _screeningRepository = ScreeningRepository();
 
   @override
-  get initialState => EntityLoaded(entity: Entity(type: RoleType.DOCTOR));
+  get initialState => EntityState(
+      entity: Entity(type: RoleType.DOCTOR),
+      mEntityStatus: BlocState.Loading,
+      partnerEntityStatus: BlocState.Loading);
 
   Stream<EntityState> _get() async* {
     Entity entity = state.entity;
-    yield EntityLoading(entity: entity);
+    yield EntityState(
+        entity: entity,
+        mEntityStatus: BlocState.Loading,
+        partnerEntityStatus: state.partnerEntityStatus);
     try {
       UserEntity uEntity;
       if (state.entity.type == RoleType.PATIENT)
@@ -26,11 +36,18 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
       else if (state.entity.type == RoleType.DOCTOR)
         uEntity = await _doctorRepository.get();
       entity.mEntity = uEntity;
-      _raiseGetPartnerEntity(entity);
+
       add(EntityChangeType(type: entity.type));
-      yield EntityLoaded(entity: entity);
+      yield EntityState(
+          entity: entity,
+          mEntityStatus: BlocState.Loaded,
+          partnerEntityStatus: state.partnerEntityStatus);
+      _raiseGetPartnerEntity(entity);
     } catch (e) {
-      yield EntityError(entity: entity);
+      yield EntityState(
+          entity: entity,
+          mEntityStatus: BlocState.Error,
+          partnerEntityStatus: state.partnerEntityStatus);
     }
   }
 
@@ -43,55 +60,91 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
       else if (state.entity.type == RoleType.DOCTOR)
         uEntity = await _doctorRepository.get();
       entity.mEntity = uEntity;
+      yield EntityState(
+          entity: entity,
+          mEntityStatus: BlocState.Loaded,
+          partnerEntityStatus: state.partnerEntityStatus);
       _raiseUpdatePartnerEntity(entity);
-      yield EntityLoaded(entity: entity);
     } catch (e) {
       print(e);
     }
   }
 
-  void _raiseGetPartnerEntity(Entity entity) {
+  Future<Panel> _raiseGetPartnerEntity(Entity entity) async {
     if (state.entity.type == RoleType.PATIENT) {
-      var panels = (entity.mEntity as PatientEntity).panels;
-      if (panels.length > 0) {
-        for (var panel in panels) {
-          if (panel.doctorId == null || panel.status < 2) continue;
-          add(PartnerEntitySet(id: panel.doctorId, panelId: panel.id));
-          break;
+      /// REMOVED CHANGING PARTNER ENTITY
+      PatientScreeningResponse patientScreeningResponse =
+          (await _screeningRepository.getPatientScreeningPlanIfExist());
+      if (patientScreeningResponse.active == 1) {
+        var panels = (entity.mEntity as PatientEntity).panels;
+        if (panels.length > 0) {
+          for (var panel in panels) {
+            if (panel.doctorId ==
+                patientScreeningResponse?.statusSteps?.doctor?.id) {
+              add(PartnerEntitySet(id: panel.doctorId, panelId: panel.id));
+              return panel;
+            }
+          }
         }
       }
     } else if (state.entity.type == RoleType.DOCTOR) {
       var panels = (state.entity.mEntity as DoctorEntity).panels;
       if (panels.length > 0) {
         for (var panel in panels) {
-          if (panel.patientId == null || panel.status < 2) continue;
+          if (panel.patientId == null) continue;
           add(PartnerEntitySet(id: panel.patientId, panelId: panel.id));
-          break;
+          return panel;
+        }
+      }
+    }
+    add(PartnerEntitySet(id: null, panelId: null));
+    return null;
+  }
+
+  void _raiseUpdatePartnerEntity(Entity entity) async {
+    if (entity.partnerEntity != null) {
+      var partner = entity.partnerEntity?.id;
+      var panelId = entity.iPanelId;
+      add(PartnerEntityUpdate(id: partner, panelId: panelId));
+    } else {
+      Panel panel = await _raiseGetPartnerEntity(entity);
+      if (panel != null) {
+        if (state.entity.type == RoleType.PATIENT) {
+          add(PartnerEntityUpdate(id: panel.doctorId, panelId: panel.id));
+        } else if (state.entity.type == RoleType.DOCTOR) {
+          add(PartnerEntityUpdate(id: panel.patientId, panelId: panel.id));
         }
       }
     }
   }
 
-  void _raiseUpdatePartnerEntity(Entity entity) {
-    var partner = entity.partnerEntity.id;
-    var panelId = entity.iPanelId;
-    add(PartnerEntityUpdate(id: partner, panelId: panelId));
-  }
-
   Stream<EntityState> _getPartner(id, panelId) async* {
     Entity entity = state.entity;
-    yield EntityPartnerLoading(entity: entity);
+    yield EntityState(
+        entity: entity,
+        mEntityStatus: state.mEntityStatus,
+        partnerEntityStatus: BlocState.Loading);
     try {
-      UserEntity uEntity;
-      if (state.entity.type == RoleType.PATIENT)
-        uEntity = await _doctorRepository.getDoctor(id);
-      else if (state.entity.type == RoleType.DOCTOR)
-        uEntity = await _patientRepository.getPatient(id);
-      entity.partnerEntity = uEntity;
-      entity.iPanelId = panelId;
-      yield EntityLoaded(entity: entity);
+      if(id != null){
+        UserEntity uEntity;
+        if (state.entity.type == RoleType.PATIENT)
+          uEntity = await _doctorRepository.getDoctor(id);
+        else if (state.entity.type == RoleType.DOCTOR)
+          uEntity = await _patientRepository.getPatient(id);
+        entity.partnerEntity = uEntity;
+        entity.iPanelId = panelId;
+      }
+
+      yield EntityState(
+          entity: entity,
+          mEntityStatus: state.mEntityStatus,
+          partnerEntityStatus: BlocState.Loaded);
     } catch (e) {
-      yield EntityError(entity: entity);
+      print(e);
+      yield EntityState(
+          entity: entity,
+          mEntityStatus: state.mEntityStatus,
+          partnerEntityStatus: BlocState.Error);
     }
   }
 
@@ -105,9 +158,15 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
         uEntity = await _patientRepository.getPatient(id);
       entity.partnerEntity = uEntity;
       entity.iPanelId = panelId;
-      yield EntityLoaded(entity: entity);
+      yield EntityState(
+          entity: entity,
+          mEntityStatus: state.mEntityStatus,
+          partnerEntityStatus: BlocState.Loaded);
     } catch (e) {
-      yield EntityError(entity: entity);
+      yield EntityState(
+          entity: entity,
+          mEntityStatus: state.mEntityStatus,
+          partnerEntityStatus: BlocState.Error);
     }
   }
 
@@ -115,12 +174,15 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
     Entity entity = state.entity;
     entity.type = type;
     IColors.changeThemeColor(type);
-    yield EntityLoaded(entity: entity);
+    yield EntityState(
+        entity: entity,
+        mEntityStatus: state.partnerEntityStatus,
+        partnerEntityStatus: state.partnerEntityStatus);
   }
 
   @override
   Stream<EntityState> mapEventToState(event) async* {
-    if (event  is EntityGet) {
+    if (event is EntityGet) {
       yield* _get();
     } else if (event is EntityUpdate)
       yield* _update();
@@ -147,6 +209,8 @@ class EntityChangeType extends EntityEvent {
 
 class EntityUpdate extends EntityEvent {}
 
+/// partner events
+
 class PartnerEntityUpdate extends EntityEvent {
   final int id;
   final int panelId;
@@ -162,28 +226,18 @@ class PartnerEntitySet extends EntityEvent {
 }
 
 //states
-abstract class EntityState extends Equatable {
+enum BlocState { Loading, Empty, Loaded, Error }
+
+class EntityState {
+  final BlocState mEntityStatus;
+  final BlocState partnerEntityStatus;
   final Entity entity;
 
-  EntityState({@required this.entity});
+  EntityState(
+      {@required this.entity,
+      this.mEntityStatus = BlocState.Loading,
+      this.partnerEntityStatus = BlocState.Loading});
 
   @override
   List<Object> get props => [];
-}
-
-class EntityLoading extends EntityState {
-  EntityLoading({entity}): super(entity: entity);
-}
-
-class EntityPartnerLoading extends EntityState {
-  EntityPartnerLoading({entity}): super(entity: entity);
-}
-
-class EntityLoaded extends EntityState {
-  EntityLoaded({entity}): super(entity: entity);
-}
-
-class EntityError extends EntityState {
-  EntityError({entity}): super(entity: entity);
-
 }
