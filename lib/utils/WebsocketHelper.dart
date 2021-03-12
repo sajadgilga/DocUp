@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:Neuronio/models/SocketRequestModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // import 'package:web_socket_channel/html.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -23,7 +25,7 @@ class SocketHelper {
   int _retryCount = 0;
   final List<Map<String, dynamic>> messageQueue = [];
   final TextEditingController webSocketStatusController =
-  TextEditingController();
+      TextEditingController();
   bool appIsPaused = false;
 
   get channel {
@@ -70,8 +72,8 @@ class SocketHelper {
   void connect(String url) {
     getCrossPlatformWebSocket(url,
         {Iterable<String> protocols,
-          Map<String, dynamic> headers,
-          Duration pingInterval}) {
+        Map<String, dynamic> headers,
+        Duration pingInterval}) {
       if (kIsWeb) {
         /// TODO web
         // return HtmlWebSocketChannel.connect(url);
@@ -115,7 +117,7 @@ class SocketHelper {
 
                 /// as disconnected status
                 final _retryTimeout =
-                min(_maxRetryTimeout, 2 ^ (_retryCount++) + 2);
+                    min(_maxRetryTimeout, 2 ^ (_retryCount++) + 2);
                 Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
                   connect(url);
                 });
@@ -126,7 +128,7 @@ class SocketHelper {
                 print('websocket error ' +
                     DateTimeService.getCurrentDateTime().toString());
                 final _retryTimeout =
-                min(_maxRetryTimeout, 2 ^ (_retryCount++) + 2);
+                    min(_maxRetryTimeout, 2 ^ (_retryCount++) + 2);
                 Future.delayed(Duration(seconds: _retryTimeout)).then((value) {
                   connect(url);
                 });
@@ -161,18 +163,12 @@ class SocketHelper {
     } catch (e) {}
   }
 
-  void sendMessage(
-      {type = 'NEW_MESSAGE', panelId, message, msgType = 0, file}) {
-    Map data = Map<String, dynamic>();
-    data['request_type'] = type;
-    data['panel_id'] = panelId;
-    data['message'] = message;
-    data['type'] = msgType;
-    data['file'] = file;
-    data['isMe'] = '';
+  void sendToSocket({SocketRequest socketRequest}) {
     try {
-      _channel.sink.add(jsonEncode(data));
+      print("Sending:" + jsonEncode(socketRequest.toJson()));
+      _channel.sink.add(jsonEncode(socketRequest.toJson()));
     } catch (e) {
+      print(e);
       // SocketHelper().connect(ApiProvider.URL_IP);
     }
   }

@@ -9,6 +9,7 @@ import 'package:Neuronio/repository/TextPlanRepository.dart';
 class TextPlanBloc extends Bloc<TextPlanEvent, TextPlanState> {
   TextPlanRepository _repository;
   StreamController _buyTextPlanController;
+  StreamController _activateAndDeactivatePatientTextPlan;
 
   StreamSink<Response<BuyTextPlanResponse>> get buyTextPlanSink =>
       _buyTextPlanController.sink;
@@ -16,12 +17,19 @@ class TextPlanBloc extends Bloc<TextPlanEvent, TextPlanState> {
   Stream<Response<BuyTextPlanResponse>> get buyTextPlanStream =>
       _buyTextPlanController.stream;
 
+  StreamSink<Response<PatientTextPlan>> get togglePatientTextPlanSink =>
+      _activateAndDeactivatePatientTextPlan.sink;
+
+  Stream<Response<PatientTextPlan>> get togglePatientTextPlanStream =>
+      _activateAndDeactivatePatientTextPlan.stream;
+
   @override
   get initialState => TextPlanLoading();
 
   TextPlanBloc() {
     _buyTextPlanController = StreamController<Response<BuyTextPlanResponse>>();
-
+    _activateAndDeactivatePatientTextPlan =
+        StreamController<Response<PatientTextPlan>>();
     _repository = TextPlanRepository();
   }
 
@@ -32,13 +40,33 @@ class TextPlanBloc extends Bloc<TextPlanEvent, TextPlanState> {
       _buyTextPlanController =
           StreamController<Response<BuyTextPlanResponse>>();
     }
+
+    try {
+      _activateAndDeactivatePatientTextPlan.close();
+    } finally {
+      _activateAndDeactivatePatientTextPlan =
+          StreamController<Response<PatientTextPlan>>();
+    }
+  }
+
+  activateAndDeactivatePatientTextPlan(
+      int patientTextPlan, int panelId, bool enable) async {
+    togglePatientTextPlanSink.add(Response.loading());
+    try {
+      PatientTextPlan response = await _repository.toggleTextPlanChat(
+          patientTextPlan, panelId, enable);
+      togglePatientTextPlanSink.add(Response.completed(response));
+    } catch (e) {
+      togglePatientTextPlanSink.add(Response.error(e));
+      print(e);
+    }
   }
 
   textPlanActivation(int doctorId, int textPlanId) async {
     buyTextPlanSink.add(Response.loading());
     try {
       BuyTextPlanResponse response =
-          await _repository.buyPlan(doctorId, textPlanId);
+          await _repository.buyTextPlan(doctorId, textPlanId);
       if (!response.created && response.success) {
         throw ApiException(603, "");
       } else if (!response.success) {
@@ -51,26 +79,10 @@ class TextPlanBloc extends Bloc<TextPlanEvent, TextPlanState> {
     }
   }
 
-  Stream<TextPlanState> _getPatientRemainedTextPlanTraffic(int panelId) async* {
+  Stream<TextPlanState> _getTextPlanIfExist(int partnerId) async* {
     yield TextPlanLoading();
     try {
-      TextPlanRemainedTraffic response =
-          await _repository.loadTextPlanRemainedTraffic(panelId);
-
-      yield TextPlanLoaded(response);
-    } catch (e) {
-      yield TextPlanError(error: e);
-      print(e);
-    }
-  }
-
-  Stream<TextPlanState> _getDoctorRemainedTextPlanTraffic(int panelId) async* {
-    yield TextPlanLoading();
-    try {
-      TextPlanRemainedTraffic response =
-          TextPlanRemainedTraffic(remainedWords: 9999999);
-
-      /// as infinite traffic
+      PatientTextPlan response = await _repository.getTextPlan(partnerId);
 
       yield TextPlanLoaded(response);
     } catch (e) {
@@ -85,10 +97,8 @@ class TextPlanBloc extends Bloc<TextPlanEvent, TextPlanState> {
 
   @override
   Stream<TextPlanState> mapEventToState(TextPlanEvent event) async* {
-    if (event is GetPatientTextPlanTrafficEvent) {
-      yield* _getPatientRemainedTextPlanTraffic(event.panelId);
-    } else if (event is GetDoctorTextPlanTrafficEvent) {
-      yield* _getDoctorRemainedTextPlanTraffic(event.panelId);
+    if (event is GetPatientTextPlanEvent) {
+      yield* _getTextPlanIfExist(event.partnerId);
     }
   }
 }
@@ -106,16 +116,10 @@ class BuyTextPlanResponse {
 /// event
 abstract class TextPlanEvent {}
 
-class GetPatientTextPlanTrafficEvent extends TextPlanEvent {
-  int panelId;
+class GetPatientTextPlanEvent extends TextPlanEvent {
+  int partnerId;
 
-  GetPatientTextPlanTrafficEvent({this.panelId});
-}
-
-class GetDoctorTextPlanTrafficEvent extends TextPlanEvent {
-  int panelId;
-
-  GetDoctorTextPlanTrafficEvent({this.panelId});
+  GetPatientTextPlanEvent({this.partnerId});
 }
 
 ///states
@@ -124,13 +128,13 @@ abstract class TextPlanState {
 }
 
 class TextPlanLoading extends TextPlanState {
-  final TextPlanRemainedTraffic textPlanTraffic;
+  final PatientTextPlan textPlanTraffic;
 
   TextPlanLoading({this.textPlanTraffic});
 }
 
 class TextPlanLoaded extends TextPlanState {
-  final TextPlanRemainedTraffic textPlan;
+  final PatientTextPlan textPlan;
 
   TextPlanLoaded(this.textPlan);
 }

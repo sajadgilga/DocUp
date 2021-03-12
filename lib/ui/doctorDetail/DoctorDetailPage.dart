@@ -3,6 +3,7 @@ import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/visit/VisitUtils.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
@@ -19,9 +20,15 @@ import '../../constants/colors.dart';
 class DoctorDetailPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
   final int screeningId;
-  final Function(String, dynamic, Function(), int) onPush;
+  final VisitSource type;
+  final Function(String, dynamic, Function(), int, VisitSource) onPush;
 
-  DoctorDetailPage({Key key, this.doctorEntity, this.onPush, this.screeningId})
+  DoctorDetailPage(
+      {Key key,
+      this.doctorEntity,
+      this.onPush,
+      this.screeningId,
+      @required this.type})
       : super(key: key);
 
   @override
@@ -98,45 +105,78 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
           ALittleVerticalSpace(
             height: 20,
           ),
-          doctorEntity.plan.visitTypesNumber.contains(0)
+          [VisitSource.ICA].contains(widget.type)
+              ? ActionButton(
+                  width: 250,
+                  height: 60,
+                  borderRadius: 15,
+                  color: doctorEntity.plan.visitTypesNumber.contains(0)
+                      ? IColors.themeColor
+                      : IColors.darkGrey,
+                  title: Strings.ICAReservationLabel,
+                  callBack: () {
+                    if (doctorEntity.plan.visitTypesNumber.contains(0)) {
+                      return widget.onPush(
+                          NavigatorRoutes.physicalVisitPage, doctorEntity, () {
+                        _bloc.getDoctor(widget.doctorEntity.id, false);
+                      }, widget.screeningId, widget.type);
+                    }
+                  },
+                )
+              : SizedBox(),
+          [VisitSource.USUAL, VisitSource.SCREENING].contains(widget.type)
+              ? ActionButton(
+                  width: 250,
+                  height: 60,
+                  borderRadius: 15,
+                  color: doctorEntity.plan.visitTypesNumber.contains(0)
+                      ? IColors.themeColor
+                      : IColors.darkGrey,
+                  title: Strings.physicalReservationLabel,
+                  callBack: () {
+                    if (doctorEntity.plan.visitTypesNumber.contains(0)) {
+                      return widget.onPush(
+                          NavigatorRoutes.physicalVisitPage, doctorEntity, () {
+                        _bloc.getDoctor(widget.doctorEntity.id, false);
+                      }, widget.screeningId, widget.type);
+                    }
+                  },
+                )
+              : SizedBox(),
+          ALittleVerticalSpace(height: 10),
+          [VisitSource.USUAL, VisitSource.SCREENING].contains(widget.type)
+              ? ActionButton(
+                  width: 250,
+                  height: 60,
+                  borderRadius: 15,
+                  color: doctorEntity.plan.visitTypesNumber.contains(1)
+                      ? IColors.darkBlue
+                      : IColors.darkGrey,
+                  title: Strings.virtualReservationLabel,
+                  callBack: () {
+                    if (doctorEntity.plan.visitTypesNumber.contains(1)) {
+                      return widget.onPush(
+                          NavigatorRoutes.virtualVisitPage, doctorEntity, () {
+                        _bloc.getDoctor(widget.doctorEntity.id, false);
+                      }, widget.screeningId, widget.type);
+                    }
+                  },
+                )
+              : SizedBox(),
+          ALittleVerticalSpace(height: 10),
+          [VisitSource.USUAL, VisitSource.SCREENING].contains(widget.type)
               ? ActionButton(
                   width: 250,
                   height: 60,
                   borderRadius: 15,
                   color: IColors.themeColor,
-                  title: Strings.physicalReservationLabel,
-                  callBack: () => widget.onPush(
-                      NavigatorRoutes.physicalVisitPage, doctorEntity, () {
+                  title: Strings.trafficPlanReservationLabel,
+                  callBack: () => widget
+                      .onPush(NavigatorRoutes.textPlanPage, doctorEntity, () {
                     _bloc.getDoctor(widget.doctorEntity.id, false);
-                  }, widget.screeningId),
+                  }, null, widget.type),
                 )
-              : SizedBox(),
-          ALittleVerticalSpace(height: 10),
-          doctorEntity.plan.visitTypesNumber.contains(1)
-              ? ActionButton(
-                  width: 250,
-                  height: 60,
-                  borderRadius: 15,
-                  color: IColors.darkBlue,
-                  title: Strings.virtualReservationLabel,
-                  callBack: () => widget.onPush(
-                      NavigatorRoutes.virtualVisitPage, doctorEntity, () {
-                    _bloc.getDoctor(widget.doctorEntity.id, false);
-                  }, widget.screeningId),
-                )
-              : SizedBox(),
-          ALittleVerticalSpace(height: 10),
-          // ActionButton(
-          //   width: 250,
-          //   height: 60,
-          //   borderRadius: 15,
-          //   color: IColors.themeColor,
-          //   title: Strings.trafficPlanReservationLabel,
-          //   callBack: () =>
-          //       widget.onPush(NavigatorRoutes.textPlanPage, doctorEntity, () {
-          //     _bloc.getDoctor(widget.doctorEntity.id, false);
-          //   }, null),
-          // )
+              : SizedBox()
         ],
       );
 

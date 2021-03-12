@@ -21,7 +21,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 
 class NotificationPage extends StatefulWidget {
-  final Function(String, dynamic) onPush;
+  final Function(String, dynamic, dynamic, dynamic, dynamic) onPush;
 
   const NotificationPage({Key key, this.onPush}) : super(key: key);
 
@@ -112,7 +112,7 @@ class _NotificationPageState extends State<NotificationPage> {
                       style: TextStyle(fontSize: 24),
                     ),
                   ),
-                  _notificationCountCircle(data.newestNotifsCounts),
+                  _notificationCountCircle(data.newestNotifsNotReadCounts),
                   _notificationsWidget(context, data),
                 ],
               )),
@@ -129,8 +129,7 @@ class _NotificationPageState extends State<NotificationPage> {
       );
 
   _notificationsWidget(buildContext, NewestNotificationResponse notifications) {
-    print(notifications.newestNotifsCounts);
-    return (notifications.newestNotifsCounts) == 0
+    return (notifications.newestNotifsTotalCounts) == 0
         ? Expanded(
             child: Positioned(
                 right: MediaQuery.of(buildContext).size.width * 0.4,
@@ -146,7 +145,7 @@ class _NotificationPageState extends State<NotificationPage> {
               child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  itemCount: notifications.newestNotifsCounts,
+                  itemCount: notifications.newestNotifsTotalCounts,
                   itemBuilder: (BuildContext context, int index) {
                     NewestNotif newestNotif = notifications.newestNotifs[index];
                     return NotificationItem(
@@ -177,7 +176,7 @@ class NotificationItem extends StatelessWidget {
   final NewestNotif newestNotifs;
   final String location;
   final Color color;
-  final Function onPush;
+  final Function(String, dynamic, dynamic, dynamic, dynamic) onPush;
 
   const NotificationItem(
       {Key key, this.newestNotifs, this.location, this.color, this.onPush})
@@ -200,8 +199,8 @@ class NotificationItem extends StatelessWidget {
 
     /// update notif counts in home page
     /// TODO
-    // BlocProvider.of<NotificationBloc>(context)
-    //     .add(AddNotifToSeen(notif.notifId));
+    BlocProvider.of<NotificationBloc>(context)
+        .add(AddNotifToSeen(notif.notifId));
 
     NotificationNavigationRepo notifNavRepo =
         NotificationNavigationRepo(onPush);
@@ -214,85 +213,91 @@ class NotificationItem extends StatelessWidget {
       onTap: () {
         onItemTap(newestNotifs, context);
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Material(
-          color: IColors.grey,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16))),
-          child: Padding(
-            padding: EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: AutoText(
-                    newestNotifs.notifTime == null
-                        ? "هم اکنون"
-                        : replaceFarsiNumber(newestNotifs.notifTime) +
-                            " - " +
-                            replaceFarsiNumber(DateTimeService
-                                .getJalaliStringFormGeorgianDateTimeString(
-                                    newestNotifs.notifDate)),
-                    textDirection: TextDirection.rtl,
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  textDirection: TextDirection.rtl,
-                  children: <Widget>[
-                    IconShadowWidget(
-                        Icon(
-                          Icons.brightness_1,
-                          size: 16,
-                          color: color ?? IColors.black,
-                        ),
-                        showShadow: true,
-                        shadowColor: color ?? IColors.black),
-                    SizedBox(width: 5),
-                    AutoText(
-                      newestNotifs.title == null
-                          ? "اعلان جدید"
-                          : newestNotifs.title,
+      child: Opacity(
+        opacity: newestNotifs.isRead ? 0.5 : 1,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Material(
+            color: IColors.grey,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16))),
+            child: Padding(
+              padding: EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: AutoText(
+                      newestNotifs.notifTime == null
+                          ? "هم اکنون"
+                          : replaceFarsiNumber(DateTimeService.normalizeTime(
+                                  newestNotifs.notifTime,
+                                  cutSeconds: true)) +
+                              " - " +
+                              replaceFarsiNumber(DateTimeService
+                                  .getJalaliStringFormGeorgianDateTimeString(
+                                      newestNotifs.notifDate)),
                       textDirection: TextDirection.rtl,
-                      style: TextStyle(
-                          color: color ?? IColors.black, fontSize: 14),
-                    ),
-                    SizedBox(width: 10),
-                  ],
-                ),
-                AutoText(
-                  newestNotifs.description == null
-                      ? ""
-                      : newestNotifs.description,
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(color: IColors.darkGrey, fontSize: 12),
-                ),
-                SizedBox(height: 5),
-                Visibility(
-                  visible: location != null,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: Row(
-                      children: <Widget>[
-                        AutoText(
-                          location != null ? location : "",
-                          style: TextStyle(color: IColors.darkGrey),
-                        ),
-                        Icon(
-                          Icons.location_on,
-                          size: 16,
-                          color: IColors.darkGrey,
-                        )
-                      ],
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ),
-                )
-              ],
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    textDirection: TextDirection.rtl,
+                    children: <Widget>[
+                      IconShadowWidget(
+                          Icon(
+                            Icons.brightness_1,
+                            size: 16,
+                            color: color ?? IColors.black,
+                          ),
+                          showShadow: true,
+                          shadowColor: color ?? IColors.black),
+                      SizedBox(width: 5),
+                      AutoText(
+                        newestNotifs.title == null
+                            ? "اعلان جدید"
+                            : newestNotifs.title,
+                        textDirection: TextDirection.rtl,
+                        style: TextStyle(
+                            color: color ?? IColors.black, fontSize: 14),
+                      ),
+                      SizedBox(width: 10),
+                    ],
+                  ),
+                  AutoText(
+                    newestNotifs.description == null
+                        ? ""
+                        : newestNotifs.description,
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(color: IColors.darkGrey, fontSize: 12),
+                  ),
+                  SizedBox(height: 5),
+                  Visibility(
+                    visible: location != null,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Row(
+                        children: <Widget>[
+                          AutoText(
+                            location != null ? location : "",
+                            style: TextStyle(color: IColors.darkGrey),
+                          ),
+                          Icon(
+                            Icons.location_on,
+                            size: 16,
+                            color: IColors.darkGrey,
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

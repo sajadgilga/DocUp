@@ -25,10 +25,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../EditProfileAvatarDialog.dart';
 
@@ -87,10 +87,12 @@ class _PatientProfilePageState extends State<PatientProfilePage>
     });
     _amountTextController.text = widget.defaultCreditForCharge;
     if (CrossPlatformDeviceDetection.isIOS) {
-      KeyboardVisibilityNotification().addNewListener(onShow: () {
-        showOverlay(context);
-      }, onHide: () {
-        removeOverlay();
+      KeyboardVisibilityController().onChange.listen((bool isVisible) {
+        if (isVisible) {
+          showOverlay(context);
+        } else {
+          removeOverlay();
+        }
       });
     }
     super.initState();
@@ -153,9 +155,10 @@ class _PatientProfilePageState extends State<PatientProfilePage>
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
-        if ((state?.entity?.mEntity != null) && !(state is EntityError)) {
+        if ((state?.entity?.mEntity != null) &&
+            !(state.mEntityStatus == BlocState.Error)) {
           return _widget(state);
-        } else if (state is EntityError) {
+        } else if (state.mEntityStatus == BlocState.Error) {
           print(state);
           return APICallError(() {
             EntityBloc entityBloc = BlocProvider.of<EntityBloc>(context);
@@ -188,7 +191,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                 topRightFlag: false,
                 topLeftFlag: true,
               ),
-              DocUpHeader(
+              NeuronioHeader(
                 title: "پروفایل من",
                 docUpLogo: false,
               ),
@@ -259,7 +262,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   AutoText(
-                    " ${state is EntityLoaded && state.entity != null && state.entity.mEntity != null ? replaceFarsiNumber(normalizeCredit(state.entity.mEntity.user.credit)) : "0"}",
+                    " ${state.mEntityStatus == BlocState.Loaded && state.entity != null && state.entity.mEntity != null ? replaceFarsiNumber(normalizeCredit(state.entity.mEntity.user.credit)) : "0"}",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white, fontSize: 18),
                     textDirection: TextDirection.rtl,

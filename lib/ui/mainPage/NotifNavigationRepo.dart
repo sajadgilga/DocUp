@@ -4,10 +4,13 @@ import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/MedicalTestListBloc.dart';
 import 'package:Neuronio/models/MedicalTest.dart';
 import 'package:Neuronio/models/NewestNotificationResponse.dart';
+import 'package:Neuronio/models/Panel.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
+import 'package:Neuronio/models/TextPlan.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/repository/DoctorRepository.dart';
 import 'package:Neuronio/repository/PatientRepository.dart';
+import 'package:Neuronio/repository/TextPlanRepository.dart';
 import 'package:Neuronio/ui/panel/partnerContact/videoOrVoiceCallPage/call.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
@@ -23,7 +26,7 @@ class NotificationNavigationRepo {
   static bool isCallStarted = false;
   static int lastVisitIdPage;
   static int lastTestIdPage;
-  final Function onPush;
+  final Function(String, dynamic, dynamic, dynamic, Function) onPush;
 
   NotificationNavigationRepo(this.onPush);
 
@@ -49,16 +52,24 @@ class NotificationNavigationRepo {
       if (entity.isDoctor) {
         navigateToPatientRequestPage(newestNotifs as NewestVisitNotif, context);
       } else if (entity.isPatient) {
-        navigateToPanel(newestNotifs as NewestVisitNotif, context);
+        navigateToPanelByVisitNotification(
+            newestNotifs as NewestVisitNotif, context);
       }
     } else if (type == 7) {
       /// visit request reminder
-      navigateToPanel(newestNotifs as NewestVisitNotif, context);
+      navigateToPanelByVisitNotification(
+          newestNotifs as NewestVisitNotif, context);
     } else if (type == 8) {
       /// visit reminder
-      navigateToPanel(newestNotifs as NewestVisitNotif, context);
+      navigateToPanelByVisitNotification(
+          newestNotifs as NewestVisitNotif, context);
     } else if (type == 9) {
       /// do nothing for now
+    } else if (type == 10) {
+      navigateToPanelByChatMessage(
+        newestNotifs as NewestChatMessage,
+        context,
+      );
     }
   }
 
@@ -106,7 +117,8 @@ class NotificationNavigationRepo {
   //       });
   // }
 
-  Future<void> navigateToPanel(NewestVisitNotif visit, BuildContext context) {
+  Future<void> navigateToPanelByVisitNotification(
+      NewestVisitNotif visit, BuildContext context) {
     bool isDoctor =
         BlocProvider.of<EntityBloc>(context).state?.entity?.isDoctor;
     Future<UserEntity> getPartnerEntity() async {
@@ -119,17 +131,69 @@ class NotificationNavigationRepo {
       return uEntity;
     }
 
+    Future<PatientTextPlan> getPatientTextPlan() async {
+      PatientTextPlan patientTextPlan;
+      if (!isDoctor) {
+        patientTextPlan =
+            await TextPlanRepository().getTextPlan(visit.doctorId);
+      } else {
+        patientTextPlan =
+            await TextPlanRepository().getTextPlan(visit.patientId);
+      }
+      return patientTextPlan;
+    }
+
     /// TODO maybe it is better to delete true
     if (isDoctor != null && lastVisitIdPage != visit.visitId || true) {
       LoadingAlertDialog loadingAlertDialog = LoadingAlertDialog(context);
       loadingAlertDialog.showLoading();
       getPartnerEntity().then((partner) {
-        loadingAlertDialog.disposeDialog();
-        partner.vid = visit.visitId;
-        lastVisitIdPage = visit.visitId;
-        onPush(NavigatorRoutes.panel, partner);
+        getPatientTextPlan().then((textPlan) {
+          loadingAlertDialog.disposeDialog();
+          partner.vid = visit.visitId;
+          lastVisitIdPage = visit.visitId;
+          onPush(NavigatorRoutes.panel, partner, textPlan, null , null);
+        });
       });
     }
+  }
+
+  Future<void> navigateToPanelByChatMessage(
+      NewestChatMessage chatMessageNotif, BuildContext context) {
+    Entity entity = BlocProvider.of<EntityBloc>(context).state?.entity;
+    bool isDoctor = entity?.isDoctor;
+    Future<UserEntity> getPartnerEntity() async {
+      UserEntity uEntity;
+      Panel panel = entity.getPanelByPanelId(chatMessageNotif.panelId);
+      if (!isDoctor) {
+        uEntity = await DoctorRepository().getDoctor(panel.doctorId);
+      } else {
+        uEntity = await PatientRepository().getPatient(panel.patientId);
+      }
+      return uEntity;
+    }
+
+    Future<PatientTextPlan> getPatientTextPlan() async {
+      PatientTextPlan patientTextPlan;
+      Panel panel = entity.getPanelByPanelId(chatMessageNotif.panelId);
+      if (!isDoctor) {
+        patientTextPlan =
+            await TextPlanRepository().getTextPlan(panel.doctorId);
+      } else {
+        patientTextPlan =
+            await TextPlanRepository().getTextPlan(panel.patientId);
+      }
+      return patientTextPlan;
+    }
+
+    LoadingAlertDialog loadingAlertDialog = LoadingAlertDialog(context);
+    loadingAlertDialog.showLoading();
+    getPartnerEntity().then((partner) {
+      getPatientTextPlan().then((textPlan) {
+        loadingAlertDialog.disposeDialog();
+        onPush(NavigatorRoutes.panel, partner, textPlan, null, null);
+      });
+    });
   }
 
   Future<void> navigateToPatientRequestPage(
@@ -154,7 +218,7 @@ class NotificationNavigationRepo {
         loadingAlertDialog.disposeDialog();
         partner.vid = visit.visitId;
         lastVisitIdPage = visit.visitId;
-        onPush(NavigatorRoutes.patientDialogue, partner);
+        onPush(NavigatorRoutes.patientDialogue, partner, null, null, null);
       });
     }
   }
@@ -198,7 +262,8 @@ class NotificationNavigationRepo {
           BlocProvider.of<MedicalTestListBloc>(context)
               .add(GetPanelMedicalTest(panelId: test.panelId));
         });
-        onPush(NavigatorRoutes.cognitiveTest, medicalTestPageData);
+        onPush(NavigatorRoutes.cognitiveTest, medicalTestPageData, null, null,
+            null);
         NotificationNavigationRepo.lastTestIdPage = test.testId;
       }
     }

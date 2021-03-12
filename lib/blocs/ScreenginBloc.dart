@@ -9,6 +9,7 @@ import 'package:bloc/bloc.dart';
 class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
   ScreeningRepository _repository = ScreeningRepository();
 
+
   /// buy and load clinic screening plan
   StreamController _screeningController =
       StreamController<Response<Screening>>();
@@ -69,7 +70,7 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
     buySink.add(Response.loading());
     try {
       ActivateScreeningPlanResponse response =
-          await _repository.activateScreeningPlan(screeningId, discountString);
+          await _repository.buyScreeningPlan(screeningId, discountString);
       if (!response.success) {
         throw ApiException(response.code, response.msg);
       }
@@ -148,8 +149,8 @@ class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
       yield ScreeningLoading(result: this.state.result);
     }
     try {
-      final PatientScreeningResponse patientScreening =
-          await _repository.getPatientScreeningPlanIfExist();
+      final PatientScreeningResponse patientScreening = await _repository
+          .getPatientScreeningPlanIfExist(panelId: event.panelId);
       yield ScreeningLoaded(result: patientScreening);
     } catch (e) {
       yield ScreeningError();
@@ -169,8 +170,9 @@ abstract class ScreeningEvent {}
 
 class GetPatientScreening extends ScreeningEvent {
   bool withLoading;
+  int panelId;
 
-  GetPatientScreening({this.withLoading = false});
+  GetPatientScreening({this.withLoading = false, this.panelId});
 }
 
 // states

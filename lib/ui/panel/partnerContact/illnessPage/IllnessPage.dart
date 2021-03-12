@@ -30,7 +30,7 @@ class IllnessPage extends StatefulWidget {
   final Function(String, dynamic) onPush;
   final Function(int) selectPage;
   final Function(String, dynamic) globalOnPush;
-  final TextPlanRemainedTraffic textPlanRemainedTraffic;
+  final PatientTextPlan textPlanRemainedTraffic;
 
   IllnessPage(
       {Key key,

@@ -61,9 +61,9 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
         if ((state?.entity?.mEntity != null) &&
-            !(state is EntityError)) {
+            !(state.mEntityStatus == BlocState.Error)) {
           return _widget(state);
-        } else if (state is EntityError) {
+        } else if (state.mEntityStatus == BlocState.Error) {
           return APICallError(() {
             EntityBloc entityBloc = BlocProvider.of<EntityBloc>(context);
             entityBloc.add(EntityGet());

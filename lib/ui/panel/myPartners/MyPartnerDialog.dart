@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/PanelSectionBloc.dart';
-import 'package:Neuronio/blocs/visit_time/TextPlanBloc.dart';
+import 'package:Neuronio/blocs/TextPlanBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/settings.dart';
@@ -24,8 +24,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyPartnerDialog extends StatefulWidget {
-  final Function(String, UserEntity, TextPlanRemainedTraffic, Function())
-      onPush;
+  final Function(String, UserEntity, PatientTextPlan, int, Function()) onPush;
   final UserEntity partner;
 
   MyPartnerDialog({@required this.onPush, @required this.partner});
@@ -48,11 +47,11 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
     TextPlanBloc _textPlanBloc = BlocProvider.of<TextPlanBloc>(context);
 
     if (entity.isDoctor) {
-      var panel = entity.mEntity.getPanelByPatientId(widget.partner.id);
-      _textPlanBloc.add(GetDoctorTextPlanTrafficEvent(panelId: panel.id));
+      // var panel = entity.mEntity.getPanelByPatientId(widget.partner.id);
+      _textPlanBloc.add(GetPatientTextPlanEvent(partnerId: widget.partner.id));
     } else {
-      var panel = entity.mEntity.getPanelByDoctorId(widget.partner.id);
-      _textPlanBloc.add(GetPatientTextPlanTrafficEvent(panelId: panel.id));
+      // var panel = entity.mEntity.getPanelByDoctorId(widget.partner.id);
+      _textPlanBloc.add(GetPatientTextPlanEvent(partnerId: widget.partner.id));
     }
   }
 
@@ -196,7 +195,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
     });
   }
 
-  Widget _chatWidget(TextPlanRemainedTraffic textPlanRemainedTraffic) {
+  Widget _chatWidget(PatientTextPlan textPlanRemainedTraffic) {
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
@@ -214,7 +213,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
                   child: Image.asset(Assets.logoTransparent, width: 50)),
               topRightFlag: false,
               onTap: () {
-                widget.onPush(NavigatorRoutes.root, null, null, null);
+                widget.onPush(NavigatorRoutes.root, null, null, null, null);
               },
             ),
             Padding(
@@ -251,8 +250,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
     );
   }
 
-  Widget _myDoctorItems(
-      context, TextPlanRemainedTraffic textPlanRemainedTraffic) {
+  Widget _myDoctorItems(context, PatientTextPlan textPlanRemainedTraffic) {
     return Column(
       children: [
         _myPartnerItem(() {
@@ -261,7 +259,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
           _panelSectionBloc.add(PanelSectionSelect(
               patientSection: PatientPanelSection.DOCTOR_INTERFACE));
           widget.onPush(NavigatorRoutes.panel, widget.partner,
-              textPlanRemainedTraffic, () => initialApiCall());
+              textPlanRemainedTraffic, null, () => initialApiCall());
 
           /// #
         }, Assets.panelDoctorDialogDoctorIcon, "ویزیت پزشک",
@@ -272,7 +270,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
           _panelSectionBloc.add(PanelSectionSelect(
               patientSection: PatientPanelSection.HEALTH_FILE));
           widget.onPush(NavigatorRoutes.panel, widget.partner,
-              textPlanRemainedTraffic, () => initialApiCall());
+              textPlanRemainedTraffic, null, () => initialApiCall());
 
           /// #
         }, Assets.panelDoctorDialogPatientIcon, "پرونده سلامت",
@@ -289,18 +287,16 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
                 _panelSectionBloc.add(PanelSectionSelect(
                     patientSection: PatientPanelSection.HEALTH_CALENDAR));
                 widget.onPush(NavigatorRoutes.panel, widget.partner,
-                    textPlanRemainedTraffic, () => initialApiCall());
+                    textPlanRemainedTraffic, null, () => initialApiCall());
 
                 /// #
               }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
                 "رویداد های سلامت اتان را پیگیری کنید", IColors.black),
       ],
     );
-    ;
   }
 
-  Widget _myPatientItems(
-      context, TextPlanRemainedTraffic textPlanRemainedTraffic) {
+  Widget _myPatientItems(context, PatientTextPlan textPlanRemainedTraffic) {
     return Column(
       children: [
         _myPartnerItem(() {
@@ -310,7 +306,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
           _panelSectionBloc.add(PanelSectionSelect(
               patientSection: PatientPanelSection.DOCTOR_INTERFACE));
           widget.onPush(NavigatorRoutes.panel, widget.partner,
-              textPlanRemainedTraffic, () => initialApiCall());
+              textPlanRemainedTraffic, null, () => initialApiCall());
 
           /// #
         }, Assets.panelDoctorDialogDoctorIcon, "ویزیت بیمار",
@@ -322,7 +318,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
           _panelSectionBloc.add(PanelSectionSelect(
               patientSection: PatientPanelSection.HEALTH_FILE));
           widget.onPush(NavigatorRoutes.panel, widget.partner,
-              textPlanRemainedTraffic, () => initialApiCall());
+              textPlanRemainedTraffic, null, () => initialApiCall());
 
           /// #
         }, Assets.panelDoctorDialogPatientIcon, "پرونده سلامت",
@@ -340,11 +336,28 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
                 _panelSectionBloc.add(PanelSectionSelect(
                     patientSection: PatientPanelSection.HEALTH_CALENDAR));
                 widget.onPush(NavigatorRoutes.panel, widget.partner,
-                    textPlanRemainedTraffic, () => initialApiCall());
+                    textPlanRemainedTraffic, null, () => initialApiCall());
 
                 /// #
               }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
                 "رویداد های سلامت اتان را پیگیری کنید", IColors.red),
+
+        _myPartnerItem(() {
+          /// navigation
+          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
+          _panelSectionBloc.add(PanelSectionSelect(
+              patientSection: PatientPanelSection.HEALTH_FILE));
+          var _state = BlocProvider.of<EntityBloc>(context).state;
+          widget.onPush(
+              NavigatorRoutes.patientScreening,
+              widget.partner,
+              null,
+              _state.entity.mEntity.getPanelByPatientId(widget.partner.id).id,
+              null);
+
+          /// #
+        }, Assets.panelDoctorDialogPatientIcon, "پلن غربالگری بیمار",
+            "بررسی پلن غربالگری و مشاهده تایم لاین بیمار", IColors.green),
       ],
     );
   }

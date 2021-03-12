@@ -13,9 +13,12 @@ class SearchResult {
   List<VisitEntity> visitResults;
   List<ClinicEntity> clinicResults;
   EntityType entityType;
+
   bool get isUserEntity {
-    return entityType == EntityType.DoctorEntity || entityType == EntityType.PatientEntity;
+    return entityType == EntityType.DoctorEntity ||
+        entityType == EntityType.PatientEntity;
   }
+
   bool get isDoctor {
     return entityType == EntityType.DoctorEntity;
   }
@@ -36,6 +39,7 @@ class SearchResult {
     count = json['count'];
     next = json['next'];
     previous = json['previous'];
+    this.entityType = entityType;
     switch (entityType) {
       case EntityType.DoctorEntity:
         doctorResults = (json['results'] as List)

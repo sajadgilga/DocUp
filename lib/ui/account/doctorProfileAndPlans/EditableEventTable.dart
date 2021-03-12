@@ -26,7 +26,7 @@ class EditableDoctorPlanEventTable extends StatefulWidget {
 
   EditableDoctorPlanEventTable(this.plan, this.availableVisitTypes,
       {this.showEventTitle = true,
-      this.daysPerPage = 4,
+      this.daysPerPage = 7,
       this.smallPreviewFlag = false});
 
   /// state managing
@@ -220,10 +220,19 @@ class _EditableDoctorPlanEventTableState
         ),
         child: new Column(
           children: <Widget>[
+            AutoText(Strings.jalaliMonths[
+                DateTimeService.getJalaliformDateTime(days[0]).month - 1]),
             new Container(
               color: Colors.grey[200],
               child: new DayViewDaysHeader(
                 headerItemBuilder: _headerItemBuilder,
+                leftPaddingChild: Container(
+                  height: 30,
+                  child: AutoText(
+                    "ساعت",
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
             new Expanded(
@@ -263,7 +272,7 @@ class _EditableDoctorPlanEventTableState
       child: new Column(
         children: <Widget>[
           new Text(
-            "${Strings.persianDaysSigns[jalali.weekDay - 1]}",
+            "${Strings.shortEnglishDaysJalaliOrder[jalali.weekDay - 1]}",
             style: new TextStyle(fontWeight: FontWeight.bold),
             maxLines: 1,
           ),
@@ -377,7 +386,8 @@ class _EditableDoctorPlanEventTableState
   @override
   Widget build(BuildContext context) {
     DaysPageController _daysPageController = new DaysPageController(
-      firstDayOnInitialPage: DateTimeService.getCurrentDateTime(),
+      firstDayOnInitialPage:
+          DateTimeService.getNewestJalaliSaturday().toDateTime(),
       daysPerPage: widget.daysPerPage,
     );
     if (widget.smallPreviewFlag) {
@@ -403,7 +413,7 @@ class _EditableDoctorPlanEventTableState
                 Navigator.pop(context);
               },
               topRightFlag: true,
-              topRight: DocUpHeader(
+              topRight: NeuronioHeader(
                 title: "زمان‌های ویزیت پزشک",
                 docUpLogo: false,
               ),
@@ -427,7 +437,7 @@ class _EditableDoctorPlanEventTableState
 
 class AddWorkTimeDataSourceDialog {
   bool detailMode = false;
-  int visitType;
+  int visitTypeNumber;
   BuildContext dialogContext;
   BuildContext context;
   StateSetter alertStateSetter;
@@ -441,7 +451,7 @@ class AddWorkTimeDataSourceDialog {
   final _formKey = GlobalKey<FormState>();
 
   AddWorkTimeDataSourceDialog.AddDialog(
-      this.context, this.visitType, this.plan, this.onApplyChange);
+      this.context, this.visitTypeNumber, this.plan, this.onApplyChange);
 
   AddWorkTimeDataSourceDialog.DetailDialog(
       this.context, DataSourceWorkTime event, this.plan, this.onApplyChange) {
@@ -450,7 +460,7 @@ class AddWorkTimeDataSourceDialog {
     dateController.text =
         DateTimeService.getJalaliStringFormGeorgianDateTimeString(
             event.dateString);
-    visitType = event.visitType;
+    visitTypeNumber = event.visitType;
     startTimeController.text = event.workTime.startTime;
     endTimeController.text = event.workTime.endTime;
   }
@@ -505,6 +515,14 @@ class AddWorkTimeDataSourceDialog {
                                       borderRadius: BorderRadius.circular(15),
                                       borderSide: new BorderSide(
                                           color: IColors.darkGrey, width: 1)),
+                                  extraValidator: (DateTime date) {
+                                    if (startTimeController.text.isNotEmpty) {
+                                      if (![0, 30].contains(date.minute)) {
+                                        return "زمان را نیم ساعتی انتخاب کنید";
+                                      }
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                               ALittleVerticalSpace(),
@@ -515,9 +533,12 @@ class AddWorkTimeDataSourceDialog {
                                     timeTextController: endTimeController,
                                     enable: !this.detailMode,
                                     forced: true,
-                                    extraValidator: (DateTime) {
+                                    extraValidator: (DateTime date) {
                                       if (startTimeController.text.isNotEmpty &&
                                           endTimeController.text.isNotEmpty) {
+                                        if (![0, 30].contains(date.minute)) {
+                                          return "زمان را نیم ساعتی انتخاب کنید";
+                                        }
                                         int startMinute =
                                             DateTimeService.getTimeMinute(
                                                 startTimeController.text);
@@ -562,7 +583,7 @@ class AddWorkTimeDataSourceDialog {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        menuLabel("ویزیت " + VisitTypes.values[visitType].title),
+        menuLabel("ویزیت " + VisitTypes.values[visitTypeNumber].title),
       ],
     );
   }
@@ -650,27 +671,52 @@ class AddWorkTimeDataSourceDialog {
     if (detailMode) {
       DateTime date =
           DateTimeService.getDateAndTimeFromJalali(dateController.text);
-      plan.getVisitTypeDataWithType(visitType).removeWorkTime(
+      plan.getVisitTypeDataWithType(visitTypeNumber).removeWorkTime(
           date, startTimeController.text, endTimeController.text);
       onApplyChange();
       _closeDialog();
     } else {
       if (_formKey.currentState.validate()) {
+        Map<DateTime, WorkTime> conflictWorkTimes = {};
         DateTime date =
             DateTimeService.getDateAndTimeFromJalali(dateController.text);
+        VisitType visitType =
+            plan.getVisitTypeDataWithType(visitTypeNumber, initialIfNull: true);
         if (this.addFor4Weeks) {
           for (int i = 0; i < 4; i++) {
-            plan.getVisitTypeDataWithType(visitType,initialIfNull: true).addWorkTime(
+            WorkTime workTime = visitType.addWorkTimeOrReturnConflict(
                 date, startTimeController.text, endTimeController.text);
             date = date.add(Duration(days: 7));
+            if (workTime != null) {
+              conflictWorkTimes[date] = workTime;
+            }
           }
         } else {
-          plan.getVisitTypeDataWithType(visitType,initialIfNull: true).addWorkTime(
+          WorkTime workTime = visitType.addWorkTimeOrReturnConflict(
               date, startTimeController.text, endTimeController.text);
+          if (workTime != null) {
+            conflictWorkTimes[date] = workTime;
+          }
         }
-
         onApplyChange();
         _closeDialog();
+        if (conflictWorkTimes.length > 0) {
+          String conflictTimes = "";
+          conflictWorkTimes.forEach((date, workTime) {
+            conflictTimes += DateTimeService.getJalaliStringFromJalali(
+                DateTimeService.getJalaliformDateTime(date)) +
+                ": " +
+                workTime.toString();
+            conflictTimes += "\n";
+          });
+          showOneButtonDialog(
+              context,
+              "بازه های زیر با زمان تعیین شده منافات دارند و در نتیجه اضافه نشدند:" +
+                  "\n" +
+                  conflictTimes,
+              Strings.okAction,
+                  () {});
+        }
       }
     }
   }

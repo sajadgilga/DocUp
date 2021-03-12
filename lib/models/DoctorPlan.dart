@@ -26,14 +26,18 @@ class DoctorPlan {
   bool enabled;
 
   /// just for keeping same interface as befor
-  VisitType getVisitTypeDataWithType(int type,{bool initialIfNull=false}) {
+  VisitType getVisitTypeDataWithType(int type, {bool initialIfNull = false}) {
     if (type == 0 && physicalVisitType != null) {
       return physicalVisitType;
-    } else if (type == 1 && virtualVisitType !=null ) {
+    } else if (type == 1 && virtualVisitType != null) {
       return virtualVisitType;
     }
-    if(initialIfNull){
-      VisitType visitType = VisitType(visitType: type,daysWorkTimes: [],visitDurationPlan: [],visitMethod: []);
+    if (initialIfNull) {
+      VisitType visitType = VisitType(
+          visitType: type,
+          daysWorkTimes: [],
+          visitDurationPlan: [],
+          visitMethod: []);
       visitTypes.add(visitType);
       return visitType;
     }
@@ -244,6 +248,23 @@ class VisitType {
     initializeWeeklyWorkTimesIfNecessary();
   }
 
+  String get jalaliStringNewestActiveVisitTime {
+    DateTime now = DateTimeService.getCurrentDateTime();
+    DateTime nearest;
+    daysWorkTimes.forEach((d) {
+      if (d.date.isAfter(now)) {
+        if (nearest == null || d.date.isBefore(nearest)) {
+          nearest = d.date;
+        }
+      }
+    });
+    if (nearest == null) {
+      return null;
+    }
+    return DateTimeService.getJalaliStringFromJalali(
+        DateTimeService.getJalaliformDateTime(nearest));
+  }
+
   DailyWorkTimes getDailyWorkTimesByDateString(String dateString) {
     for (DailyWorkTimes dailyWorkTimes in daysWorkTimes) {
       String dayDateString =
@@ -278,23 +299,32 @@ class VisitType {
     return res;
   }
 
-  void addWorkTime(DateTime date, String startTime, String endTime) {
+  WorkTime addWorkTimeOrReturnConflict(
+      DateTime date, String startTime, String endTime) {
     /// TODO manage conflicts
     String newDate = DateTimeService.getDateStringFormDateTime(date);
-    WorkTime workTime = WorkTime(endTime: endTime, startTime: startTime);
+    WorkTime newWorkTime = WorkTime(endTime: endTime, startTime: startTime);
+    DailyWorkTimes dailyWorkTimes = getDailyWorkTimesByDateString(newDate);
+    if (dailyWorkTimes != null) {
+      /// check conflict
+      int ws1 = DateTimeService.getTimeMinute(newWorkTime.startTime);
+      int we1 = DateTimeService.getTimeMinute(newWorkTime.endTime);
 
-    for (DailyWorkTimes dailyWorkTimes in this.daysWorkTimes) {
-      String date =
-          DateTimeService.getDateStringFormDateTime(dailyWorkTimes.date);
-      if (date == newDate) {
-        dailyWorkTimes.workTimes.add(workTime);
-        return;
+      for(WorkTime workTime in dailyWorkTimes.workTimes){
+        int ws2 = DateTimeService.getTimeMinute(workTime.startTime);
+        int we2 = DateTimeService.getTimeMinute(workTime.endTime);
+        if ((ws2 < we1 && we1 < we2) || (ws1 < we2 && we2 < we1)) {
+          return workTime;
+        }
       }
+      dailyWorkTimes.workTimes.add(newWorkTime);
+      return null;
+    } else {
+      /// new DailyWorkTimes
+      dailyWorkTimes = DailyWorkTimes(date, [newWorkTime]);
+      this.daysWorkTimes.add(dailyWorkTimes);
+      return null;
     }
-
-    /// new DailyWorkTimes
-    DailyWorkTimes dailyWorkTimes = DailyWorkTimes(date, [workTime]);
-    this.daysWorkTimes.add(dailyWorkTimes);
   }
 
   void removeWorkTime(DateTime date, String startTime, String endTime) {
@@ -341,7 +371,9 @@ class VisitType {
     List<List<int>> workTimeTable = VisitType.getEmptyTablePlan();
 
     /// fill table
-    getDailyWorkTimesByDateString(dateString)?.workTimes?.forEach((WorkTime workTime) {
+    getDailyWorkTimesByDateString(dateString)
+        ?.workTimes
+        ?.forEach((WorkTime workTime) {
       int start = DateTimeService.getTimeMinute(workTime.startTime);
       int startPart = (start / DoctorPlan.hourMinutePart).round();
       int end = DateTimeService.getTimeMinute(workTime.endTime);
@@ -448,8 +480,9 @@ class ReservedVisit {
         visitDateTime.split("+")[0]);
     Jalali jalali = Jalali.fromDateTime(dateTime);
 
-    jalaliDate = getJalaliDateStringFromJalali(jalali);
-    startTime = getTimeStringFromDateTime(dateTime, withSeconds: false);
+    jalaliDate = DateTimeService.getJalaliStringFromJalali(jalali);
+    startTime =
+        DateTimeService.getTimeStringFromDateTime(dateTime, withSeconds: false);
     durationPlan = json['visit_duration_plan'];
     // status
   }
@@ -458,6 +491,10 @@ class ReservedVisit {
 class WorkTime {
   String startTime;
   String endTime;
+
+  String toString() {
+    return startTime + "-" + endTime;
+  }
 
   int get minuteDuration {
     return DateTimeService.getTimeMinute(endTime) -

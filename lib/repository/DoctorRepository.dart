@@ -4,6 +4,7 @@ import 'package:Neuronio/models/ListResult.dart';
 import 'package:Neuronio/models/PatientTracker.dart';
 import 'package:Neuronio/models/VisitResponseEntity.dart';
 import 'package:Neuronio/networking/ApiProvider.dart';
+import 'package:Neuronio/ui/visit/VisitUtils.dart';
 
 class DoctorRepository {
   ApiProvider _provider = ApiProvider();
@@ -62,8 +63,17 @@ class DoctorRepository {
     return VisitEntity.fromJson(response);
   }
 
-  Future<VisitEntity> visitRequest(int screeningId, int doctorId, int visitType,
-      int visitMethod, int durationPlan, String visitTime) async {
+  Future<VisitEntity> visitRequest(
+      int screeningId,
+      int doctorId,
+      int visitType,
+      int visitMethod,
+      int durationPlan,
+      String visitTime,
+      VisitSource type) async {
+    /// visit type : {physical virtual}
+    /// type: {from_screening: 3 , game: 2, ica: 1 , ....}
+    /// visit method: {text, voice, video}
     final response = await _provider.post("api/visits/",
         body: {
           "doctor": doctorId,
@@ -72,6 +82,7 @@ class DoctorRepository {
           "visit_duration_plan": durationPlan,
           "request_visit_time": visitTime,
           "screening_step_id": screeningId,
+          'type': type.index
         },
         utf8Support: true);
     return VisitEntity.fromJson(response);

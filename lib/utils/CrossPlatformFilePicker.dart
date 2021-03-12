@@ -1,4 +1,5 @@
 // import 'dart:html' as html;
+import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:Neuronio/constants/colors.dart';
@@ -9,21 +10,25 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 /// TODO web
-enum AllowedFileType { image, doc }
+enum AllowedFileType { image, pdf, video }
 
 class AllowedFile {
-  static final List<String> imageFormats = ['jpg', 'jpeg', 'png'];
-  static final List<String> docs = ['pdf'];
+  static final List<String> images = ['jpg', 'jpeg', 'png'];
+  static final List<String> pdf = ['pdf'];
+  static final List<String> videos = ['mp4', 'mov', 'mpeg4', 'avi', 'wmv'];
 
   static String getFormatFromFilePath(String path) {
     return path.split(".").last.toLowerCase();
   }
 
   static AllowedFileType getFileType(String format) {
-    if (AllowedFile.imageFormats.contains(format)) {
+    format = format?.toLowerCase();
+    if (AllowedFile.images.contains(format)) {
       return AllowedFileType.image;
-    } else if (AllowedFile.docs.contains(format)) {
-      return AllowedFileType.doc;
+    } else if (AllowedFile.pdf.contains(format)) {
+      return AllowedFileType.pdf;
+    } else if (AllowedFile.videos.contains(format)) {
+      return AllowedFileType.video;
     } else {
       return null;
     }
@@ -40,6 +45,10 @@ class CustomFile {
     return AllowedFile.getFormatFromFilePath(path ?? name);
   }
 
+  String get convertToBase64 {
+    return base64Encode(fileBits);
+  }
+
   CustomFile.fromIoFile(io.File file, AllowedFileType fileType) {
     this.fileType = fileType;
     this.name = file.path?.split("/")?.last;
@@ -47,13 +56,13 @@ class CustomFile {
     this.fileBits = file.readAsBytesSync();
   }
 
-  // CustomFile.fromHtmlFile(
-  //     html.File file, AllowedFileType fileType, List<int> fileBits) {
-  //   this.fileType = fileType;
-  //   this.name = file.name;
-  //   this.path = null;
-  //   this.fileBits = fileBits;
-  // }
+// CustomFile.fromHtmlFile(
+//     html.File file, AllowedFileType fileType, List<int> fileBits) {
+//   this.fileType = fileType;
+//   this.name = file.name;
+//   this.path = null;
+//   this.fileBits = fileBits;
+// }
 }
 
 class CrossPlatformFilePicker {

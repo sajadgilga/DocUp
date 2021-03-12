@@ -12,6 +12,7 @@ import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 import 'TimeSelectorHeaderWidget.dart';
 import 'TimeSelectorWidget.dart';
@@ -46,14 +47,16 @@ class VisitDateTimePicker extends StatefulWidget {
 
 class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
   bool timeIsSelected = false;
-  String initialDate;
 
   @override
   void initState() {
-    initialDate = ['', null].contains(widget.dateTextController.text)
-        ? getInitialDate({})
-        : widget.dateTextController.text;
-    widget.dateTextController.text = initialDate;
+    widget.dateTextController.text =
+        ['', null].contains(widget.dateTextController.text)
+            ? (widget.visitType.jalaliStringNewestActiveVisitTime ??
+                DateTimeService.getJalaliStringFromJalali(
+                    DateTimeService.getCurrentJalali()))
+            : widget.dateTextController.text;
+    print(widget.dateTextController.text);
     super.initState();
   }
 
@@ -65,8 +68,6 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
 
   @override
   Widget build(BuildContext context) {
-    var jalali = DateTimeService.getJalalyDateFromJalilyString(
-        widget.dateTextController.text);
     return Container(
       child: Column(
         children: [
@@ -80,13 +81,15 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                   child: PersianDateTimePicker2(
                     color: IColors.themeColor,
                     type: "date",
-                    initial: initialDate,
+                    initial: widget.dateTextController.text,
                     min: DateTimeService.getYesterdayInJalilyString(),
-                    disable: {},
+                    availableDates: widget.visitType.daysWorkTimes
+                        .map((e) => DateTimeService.getJalaliStringFromJalali(
+                            DateTimeService.getJalaliformDateTime(e.date)))
+                        .toList(),
                     onSelect: (date) {
                       setState(() {
                         widget.dateTextController.text = date;
-                        initialDate = date;
                         this.timeIsSelected = true;
                       });
                     },
@@ -102,12 +105,10 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                           timeController: widget.timeTextController,
                         )
                       : DailyAvailableVisitTime(
-                          startTableHour: widget.visitType?.getMinWorkTimeHour(
-                                  selectedGeorgianDateString),
-                          endTableHour: widget.visitType?.getMaxWorkTimeHour(
-                                  selectedGeorgianDateString),
-
-                          /// TODO
+                          startTableHour: widget.visitType
+                              ?.getMinWorkTimeHour(selectedGeorgianDateString),
+                          endTableHour: widget.visitType
+                              ?.getMaxWorkTimeHour(selectedGeorgianDateString),
                           planDurationInMinute: widget.planDurationInMinute,
                           selectedDateController: widget.dateTextController,
                           selectedTimeController: widget.timeTextController,
@@ -119,6 +120,7 @@ class _VisitDateTimePickerState extends State<VisitDateTimePicker> {
                               .getTakenVisitDailyTimeTable(
                                   widget.dateTextController.text),
                           onBlocTap: widget.onBlocTap,
+                          minutesGapBetweenNow: 6 * 60,
                         )))
         ],
       ),

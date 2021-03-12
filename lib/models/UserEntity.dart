@@ -141,6 +141,18 @@ class Entity {
     return null;
   }
 
+  Panel getPanelByPanelId(int panelId) {
+    if (mEntity != null) {
+      for (int i = 0; i < mEntity.panels.length; i++) {
+        Panel element = mEntity.panels[i];
+        if (element.id == panelId) {
+          return element;
+        }
+      }
+    }
+    return null;
+  }
+
   int sectionId(String name) {
     try {
       return mEntity.panelMap[iPanelId].sections[name].id;

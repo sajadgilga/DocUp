@@ -15,6 +15,7 @@ import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PatientProfileMenuPage extends StatefulWidget {
@@ -30,10 +31,16 @@ class PatientProfileMenuPage extends StatefulWidget {
 
 class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
   final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _appVersionController = TextEditingController();
 
   @override
   void initState() {
     _phoneNumberController.text = widget.patientEntity.user.phoneNumber;
+    PackageInfo.fromPlatform().then((value) {
+      setState(() {
+        _appVersionController.text = value.version;
+      });
+    });
     super.initState();
   }
 
@@ -59,7 +66,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
               topRightFlag: false,
               topLeftFlag: CrossPlatformDeviceDetection.isIOS,
             ),
-            DocUpHeader(
+            NeuronioHeader(
               title: "پروفایل من",
               docUpLogo: false,
             ),
@@ -91,6 +98,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
   Widget _accountSetting() {
     return Container(
       width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -98,7 +106,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
           Padding(
             padding: EdgeInsets.only(right: 20),
             child: AutoText(
-              "تنطیمات اکانت",
+              "اطلاعات",
               softWrap: true,
               overflow: TextOverflow.fade,
               textAlign: TextAlign.end,
@@ -109,6 +117,7 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
           Container(
             width: MediaQuery.of(context).size.width,
             height: 60,
+            padding: EdgeInsets.symmetric(horizontal: 20),
             color: Colors.white,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,10 +125,9 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
                   Expanded(
                     child: Container(
                       alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextField(
                         style: TextStyle(fontSize: 18, color: IColors.darkGrey),
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.left,
                         controller: _phoneNumberController,
                         enabled: false,
                         decoration: InputDecoration(border: InputBorder.none),
@@ -128,6 +136,34 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
                   ),
                   AutoText(
                     "شماره تلفن",
+                    softWrap: true,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(fontSize: 15, color: IColors.darkGrey),
+                  )
+                ]),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 60,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            color: Colors.white,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: TextField(
+                        style: TextStyle(fontSize: 18, color: IColors.darkGrey),
+                        textAlign: TextAlign.left,
+                        controller: _appVersionController,
+                        enabled: false,
+                        decoration: InputDecoration(border: InputBorder.none),
+                      ),
+                    ),
+                  ),
+                  AutoText(
+                    "ورژن کنونی اپلیکیشن",
                     softWrap: true,
                     overflow: TextOverflow.fade,
                     style: TextStyle(fontSize: 15, color: IColors.darkGrey),

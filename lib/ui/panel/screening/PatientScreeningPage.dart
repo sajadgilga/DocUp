@@ -11,6 +11,7 @@ import 'package:Neuronio/repository/ScreeningRepository.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
 import 'package:Neuronio/ui/panel/PanelAlert.dart';
 import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
+import 'package:Neuronio/ui/visit/VisitUtils.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
@@ -25,10 +26,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timelines/timelines.dart';
 
 class PatientScreeningPage extends StatefulWidget {
-  final Function(String, UserEntity, int) onPush;
+  final Function(String, UserEntity, int, VisitSource) onPush;
   final Function(String, MedicalTestPageData) globalOnPush;
+  final int panelId;
+  final UserEntity partner;
 
-  PatientScreeningPage({@required this.onPush, @required this.globalOnPush});
+  PatientScreeningPage(
+      {@required this.onPush,
+      @required this.globalOnPush,
+      this.panelId,
+      this.partner});
 
   @override
   _PatientScreeningPageState createState() => _PatientScreeningPageState();
@@ -36,16 +43,30 @@ class PatientScreeningPage extends StatefulWidget {
 
 class _PatientScreeningPageState extends State<PatientScreeningPage> {
   void _initialApiCall() {
-    var _state = BlocProvider.of<EntityBloc>(context).state;
     EntityAndPanelUpdater.processOnEntityLoad((entity) {
-      if (_state.entity.isPatient) {
-        BlocProvider.of<ScreeningBloc>(context).add(GetPatientScreening());
+      /// it could be patient or doctor requesting screening step detail for monitoring
+      if (entity.isDoctor) {
+        BlocProvider.of<ScreeningBloc>(context).add(
+            GetPatientScreening(panelId: widget.panelId, withLoading: true));
+      } else {
+        int panelId = entity.panelByPartnerId.id;
+
+        BlocProvider.of<ScreeningBloc>(context)
+            .add(GetPatientScreening(panelId: panelId, withLoading: true));
       }
     });
   }
 
   @override
   void initState() {
+    var _state = BlocProvider.of<EntityBloc>(context).state;
+    if (_state.entity.isDoctor) {
+      /// we should initial api call because it is not called in entity updater cause here it us not in main page
+      _initialApiCall();
+    } else if (_state.entity.isPatient) {
+      /// do nothing because it is already initialed in entity updater
+    }
+
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     super.initState();
   }
@@ -64,7 +85,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
           return Stack(
             children: [
               _mainWidget(state.result),
-              buyScreeningPanelAlert(state.result)
+              _noActiveScreeningSteps(state.result)
             ],
           );
         }
@@ -78,18 +99,28 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
     });
   }
 
-  Widget buyScreeningPanelAlert(
+  Widget _noActiveScreeningSteps(
       PatientScreeningResponse patientScreeningResponse) {
+    if (BlocProvider.of<EntityBloc>(context).state.entity.isPatient) {
+      return PanelAlert(
+        callback: () {
+          widget.onPush(
+              NavigatorRoutes.buyScreening, null, null, VisitSource.SCREENING);
+        },
+        label: Strings.noActiveScreeningPlanForPatient,
+        buttonLabel: "توضیحات بیشتر درباره سنجش",
+      );
+    }
     return PanelAlert(
       callback: () {
-        widget.onPush(NavigatorRoutes.buyScreening, null, null);
+        Navigator.pop(context);
       },
-      label: Strings.noActiveScreeningPlan,
-      buttonLabel: "توضیحات بیشتر درباره سنجش",
+      buttonLabel: "بازگشت",
+      label: Strings.noActiveScreeningPlanForDoctor,
     );
   }
 
-  Widget _myDoctor(PatientScreeningResponse patientScreeningResponse) {
+  Widget _myPartner(PatientScreeningResponse patientScreeningResponse) {
     return Padding(
       padding: EdgeInsets.only(right: 23, top: 20, left: 10),
       child: Column(
@@ -102,7 +133,9 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               Padding(
                 padding: EdgeInsets.symmetric(),
                 child: AutoText(
-                  "پزشک من",
+                  BlocProvider.of<EntityBloc>(context).state.entity.isPatient
+                      ? "پزشک من"
+                      : "بیمار من",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -130,7 +163,12 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               : Container(
                   alignment: Alignment.centerRight,
                   child: PartnerInfo(
-                    entity: patientScreeningResponse.statusSteps.doctor,
+                    entity: BlocProvider.of<EntityBloc>(context)
+                            .state
+                            .entity
+                            .isPatient
+                        ? patientScreeningResponse.statusSteps.doctor
+                        : widget.partner,
                     bgColor: Color.fromARGB(0, 0, 0, 0),
                     padding: EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
                   ),
@@ -154,12 +192,12 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               topLeftFlag: false,
               topRight: Padding(
                 padding: EdgeInsets.only(right: 25),
-                child: menuLabel("پنل کاربری", fontSize: 20),
+                child: menuLabel("پلن غربالگری", fontSize: 20),
               ),
               topRightFlag: true,
               onTap: () {},
             ),
-            _myDoctor(patientScreeningResponse),
+            _myPartner(patientScreeningResponse),
             _timeLineWidget(patientScreeningResponse),
           ],
         ),
@@ -196,7 +234,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
                 ),
               );
             } else if (index == 1) {
-              bool done = patientScreeningResponse.statusSteps.visitStatus;
+              bool done = patientScreeningResponse.statusSteps.icaStatus;
               return Indicator.outlined(
                 borderWidth: 2,
                 size: 25,
@@ -212,7 +250,6 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               );
             } else if (index == 2) {
               bool done = patientScreeningResponse.statusSteps.visitStatus;
-
               return Indicator.outlined(
                 borderWidth: 2,
                 size: 25,
@@ -227,7 +264,8 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
                 ),
               );
             } else if (index == 3) {
-              bool done = patientScreeningResponse.statusSteps.icaStatus;
+              bool done = patientScreeningResponse.statusSteps.visitStatus;
+
               return Indicator.outlined(
                 borderWidth: 2,
                 size: 25,
@@ -248,11 +286,11 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             if (index == 0) {
               return onlineTestTimeLineItem(patientScreeningResponse);
             } else if (index == 1) {
-              return visitRequestTimeLineItem(patientScreeningResponse);
-            } else if (index == 2) {
-              return doctorPanelTimeLineItem(patientScreeningResponse);
-            } else if (index == 3) {
               return icaTestTimeLineItem(patientScreeningResponse);
+            } else if (index == 2) {
+              return visitRequestTimeLineItem(patientScreeningResponse);
+            } else if (index == 3) {
+              return doctorPanelTimeLineItem(patientScreeningResponse);
             }
             return Container();
           },
@@ -278,28 +316,31 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             Assets.noronioServiceBrainTest,
             element.imageURL,
             NoronioClinicServiceType.MultipleChoiceTest, () {
-          if (element.isGoogleDocTest) {
-            ScreeningRepository repo = ScreeningRepository();
-            repo
-                .doScreeningTestLifeQ(
-                    element.testId, patientScreeningResponse.statusSteps.id)
-                .then((value) {
-              _initialApiCall();
-            });
-            launchURL(element.testLink);
-          } else if (element.isInAppTest) {
-            MedicalTestPageData medicalTestPageData = MedicalTestPageData(
-                MedicalPageDataType.Screening,
-                patientEntity: null, onDone: () {
-              _initialApiCall();
-            },
-                medicalTestItem: MedicalTestItem(element.testId, element.name),
-                editableFlag: true,
-                sendableFlag: true,
-                screeningId: patientScreeningResponse.statusSteps.id);
+          if (BlocProvider.of<EntityBloc>(context).state.entity.isPatient) {
+            if (element.isGoogleDocTest) {
+              ScreeningRepository repo = ScreeningRepository();
+              repo
+                  .doScreeningTestLifeQ(
+                      element.testId, patientScreeningResponse.statusSteps.id)
+                  .then((value) {
+                _initialApiCall();
+              });
+              launchURL(element.testLink);
+            } else if (element.isInAppTest) {
+              MedicalTestPageData medicalTestPageData = MedicalTestPageData(
+                  MedicalPageDataType.Screening,
+                  patientEntity: null, onDone: () {
+                _initialApiCall();
+              },
+                  medicalTestItem:
+                      MedicalTestItem(element.testId, element.name),
+                  editableFlag: true,
+                  sendableFlag: true,
+                  screeningId: patientScreeningResponse.statusSteps.id);
 
-            widget.globalOnPush(
-                NavigatorRoutes.cognitiveTest, medicalTestPageData);
+              widget.globalOnPush(
+                  NavigatorRoutes.cognitiveTest, medicalTestPageData);
+            }
           }
         }, !element.done);
         services.add(cognitiveTest);
@@ -417,20 +458,33 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
               ),
             ],
           ),
-
-          /// TODO
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                alignment: Alignment.center,
-                child: AutoText(
-                  "با شما تماس گرفته می شود.",
-                ),
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: 50,
-              ),
-            ],
+          ActionButton(
+            title: BlocProvider.of<EntityBloc>(context).state.entity.isPatient
+                ? "صفحه درخواست ویزیت ICA"
+                : "صفحه نمره دهی ICA",
+            color:
+                patientScreeningResponse.statusSteps.remainingTestsToBeDone == 0
+                    ? IColors.themeColor
+                    : IColors.disabledButton,
+            height: 50,
+            callBack: () {
+              if (BlocProvider.of<EntityBloc>(context).state.entity.isPatient) {
+                if (patientScreeningResponse
+                        .statusSteps.remainingTestsToBeDone ==
+                    0) {
+                  widget.onPush(
+                      NavigatorRoutes.doctorDialogue,
+                      patientScreeningResponse.statusSteps.clinicDoctor,
+                      null,
+                      VisitSource.ICA);
+                } else {
+                  toast(context, "شما هنوز تست‌های اولیه را کامل نکردید.");
+                }
+              } else {
+                widget.onPush(NavigatorRoutes.icaTestScoring, widget.partner,
+                    patientScreeningResponse.statusSteps.id, VisitSource.ICA);
+              }
+            },
           )
         ],
       ),
@@ -463,23 +517,33 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
             width: MediaQuery.of(context).size.width * 0.5,
             child: ActionButton(
               title: "صفحه درخواست ویزیت",
-              color: patientScreeningResponse.statusSteps.remainingTestsToBeDone==0
+              color: patientScreeningResponse.statusSteps.icaStatus
                   ? IColors.themeColor
                   : IColors.disabledButton,
               height: 50,
               callBack: () {
-                if (patientScreeningResponse.statusSteps.remainingTestsToBeDone==0) {
-                  if(patientScreeningResponse.statusSteps.doctor == null){
-                    widget.onPush(NavigatorRoutes.selectDoctorForScreening, null,
-                        patientScreeningResponse.statusSteps.id);
-                  }else{
-                    widget.onPush(NavigatorRoutes.doctorDialogue, patientScreeningResponse.statusSteps.doctor,
-                        patientScreeningResponse.statusSteps.id);
+                if (BlocProvider.of<EntityBloc>(context)
+                    .state
+                    .entity
+                    .isPatient) {
+                  if (patientScreeningResponse.statusSteps.icaStatus) {
+                    if (patientScreeningResponse.statusSteps.doctor == null) {
+                      widget.onPush(
+                          NavigatorRoutes.selectDoctorForScreening,
+                          null,
+                          patientScreeningResponse.statusSteps.id,
+                          VisitSource.SCREENING);
+                    } else {
+                      widget.onPush(
+                          NavigatorRoutes.doctorDialogue,
+                          patientScreeningResponse.statusSteps.doctor,
+                          patientScreeningResponse.statusSteps.id,
+                          VisitSource.SCREENING);
+                    }
+                  } else {
+                    toast(
+                        context, "شما هنوز تست‌های اولیه ICA را کامل نکردید.");
                   }
-
-                } else {
-                  toast(context,
-                      "شما هنوز تست‌های اولیه را کامل نکردید.");
                 }
               },
             ),
@@ -520,12 +584,20 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
                   : IColors.disabledButton,
               height: 50,
               callBack: () {
-                if (patientScreeningResponse.statusSteps.visitStatus) {
-                  widget.onPush(NavigatorRoutes.myPartnerDialog,
-                      patientScreeningResponse.statusSteps.doctor, null);
-                } else {
-                  toast(context,
-                      "شما هنوز درخواست ویزیتی را برای پزشک ارسال نکردید");
+                if (BlocProvider.of<EntityBloc>(context)
+                    .state
+                    .entity
+                    .isPatient) {
+                  if (patientScreeningResponse.statusSteps.visitStatus) {
+                    widget.onPush(
+                        NavigatorRoutes.myPartnerDialog,
+                        patientScreeningResponse.statusSteps.doctor,
+                        null,
+                        VisitSource.SCREENING);
+                  } else {
+                    toast(context,
+                        "شما هنوز درخواست ویزیتی را برای پزشک ارسال نکردید");
+                  }
                 }
               },
             ),

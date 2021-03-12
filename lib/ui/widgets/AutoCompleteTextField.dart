@@ -97,7 +97,7 @@ class AutoCompleteTextField extends StatelessWidget {
       validator: (value) {
         if (value.isEmpty && forced) {
           return emptyFieldError;
-        } else if (value.isNotEmpty && !items.contains(value)) {
+        } else if (value.isNotEmpty && !(items?.contains(value)??false)) {
           return notFoundError;
         }
         return null;

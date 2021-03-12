@@ -12,6 +12,7 @@ import 'package:Neuronio/ui/home/SearchBox.dart';
 import 'package:Neuronio/ui/home/iPartner/IPartner.dart';
 import 'package:Neuronio/ui/home/notification/Notification.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/panel/myPartners/MyPartners.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/utils/Utils.dart';
@@ -22,7 +23,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'TrackingList.dart';
 
 class Home extends StatefulWidget {
-  final Function(String, dynamic) onPush;
+  final Function(String, dynamic, dynamic, dynamic, Function) onPush;
   final Function(int) selectPage;
   final Function(String, UserEntity) globalOnPush;
 
@@ -99,7 +100,9 @@ class _HomeState extends State<Home> {
             cured: state.patientTracker.cured,
             curing: state.patientTracker.curing,
             visitPending: state.patientTracker.visitPending,
-            onPush: widget.onPush,
+            onPush: (string, entity) {
+              widget.onPush(string, entity, null, null, null);
+            },
           ),
         ],
       );
@@ -167,6 +170,7 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
   /// REMOVED: CHANGING CUSTOMER JOURNEY
   // Widget _occasion() {
   //   return Padding(
@@ -282,7 +286,7 @@ class _HomeState extends State<Home> {
   Widget _iPartner() {
     return BlocBuilder<EntityBloc, EntityState>(
       builder: (context, state) {
-        if (state is EntityLoading || state is EntityPartnerLoading) {
+        if (state.partnerEntityStatus == BlocState.Loading) {
           if (state.entity.partnerEntity != null) {
             return IPartner(
               selectPage: widget.selectPage,
@@ -303,10 +307,10 @@ class _HomeState extends State<Home> {
               label: (state.entity.isPatient
                   ? Strings.iDoctorLabel
                   : Strings.iPatientLabel),
-              partnerState: EntityPartnerState.Loading,
+              partnerState: BlocState.Loading,
             );
           }
-        } else if (state is EntityLoaded) {
+        } else if (state.partnerEntityStatus == BlocState.Loaded) {
           if (state.entity.partnerEntity != null) {
             return IPartner(
               selectPage: widget.selectPage,
@@ -327,7 +331,7 @@ class _HomeState extends State<Home> {
               ? Strings.iDoctorLabel
               : Strings.iPatientLabel),
           onPush: widget.onPush,
-          partnerState: EntityPartnerState.Empty,
+          partnerState: BlocState.Empty,
         );
       },
     );
@@ -347,9 +351,11 @@ class _HomeState extends State<Home> {
             BlocBuilder<NotificationBloc, NotificationState>(
                 builder: (context, state) {
               return HomeNotification(
-                  onPush: widget.onPush,
+                  onPush: (string, entity) {
+                    widget.onPush(string, entity, null, null, null);
+                  },
                   newNotificationCount:
-                      state.notifications?.newestNotifsCounts ?? 0);
+                      state.notifications?.newestNotifsNotReadCounts ?? 0);
             }),
             BlocProvider.of<EntityBloc>(context).state.entity.isDoctor
                 ? Expanded(
@@ -358,7 +364,9 @@ class _HomeState extends State<Home> {
                         padding:
                             const EdgeInsets.only(left: 10, right: 10, top: 15),
                         child: SearchBox(
-                          onPush: widget.onPush,
+                          onPush: (string, entity) {
+                            widget.onPush(string, entity, null, null, null);
+                          },
                           isPatient: BlocProvider.of<EntityBloc>(context)
                               .state
                               .entity
@@ -368,8 +376,8 @@ class _HomeState extends State<Home> {
                             FocusScope.of(context).unfocus();
                             // SystemChrome.setEnabledSystemUIOverlays(
                             //     [SystemUiOverlay.bottom]);
-                            widget.onPush(
-                                NavigatorRoutes.partnerSearchView, null);
+                            widget.onPush(NavigatorRoutes.partnerSearchView,
+                                null, null, null, null);
                           },
                         ),
                       ),
@@ -380,7 +388,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        DocUpHeader(
+                        NeuronioHeader(
                           docUpLogo: true,
                           width: 60,
                         ),
@@ -393,7 +401,12 @@ class _HomeState extends State<Home> {
           SizedBox(
             height: 15,
           ),
-          _iPartner()
+          _iPartner(),
+          BlocProvider.of<EntityBloc>(context).state.entity.isPatient
+              ? MyPartners(onPush: (string, entity) {
+                  widget.onPush(string, entity, null, null, null);
+                })
+              : SizedBox()
         ],
       )),
     );

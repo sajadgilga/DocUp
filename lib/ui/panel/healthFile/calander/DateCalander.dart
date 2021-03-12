@@ -123,7 +123,7 @@ class _DateCalenderState extends State<DateCalender> {
                     type: "date",
                     initial: DateTimeService.getTomorrowInJalali(),
                     min: DateTimeService.getTodayInJalaliString(),
-                    disable: <int, String>{},
+                    availableDates: null,
                     onSelect: (date) {},
                   ),
                 )

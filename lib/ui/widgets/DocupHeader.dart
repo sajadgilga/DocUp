@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 import 'AutoText.dart';
 
-class DocUpHeader extends StatelessWidget {
+class NeuronioHeader extends StatelessWidget {
   final String title;
   final bool docUpLogo;
   final Color color;
   final double width;
 
-  DocUpHeader({Key key, this.title, this.docUpLogo = false, this.color,this.width=40})
+  NeuronioHeader({Key key, this.title, this.docUpLogo = false, this.color,this.width=40})
       : super(key: key);
 
   @override

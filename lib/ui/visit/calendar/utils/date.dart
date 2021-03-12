@@ -3,14 +3,14 @@ import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 class DateUtils {
-  dynamic disable;
+  dynamic availableDates;
   String min;
   String max;
   String type;
   List<String> dayNames;
 
   DateUtils() {
-    disable = Global.disable;
+    availableDates = Global.availableDates;
     min = Global.min;
     max = Global.max;
     type = Global.pickerType;
@@ -130,118 +130,128 @@ class DateUtils {
     return isDisable;
   }
 
-  bool _inDisableDateList(date) {
-    String disableTypeData = disable.runtimeType.toString();
+  bool _inDisableDateList(dateString) {
     bool inDisable = false;
+    if (availableDates != null) {
+      String availableDatesTypeData = availableDates.runtimeType.toString();
 
-    switch (disableTypeData) {
-      case 'String':
-        inDisable = isValidDate(date) ? _isDisableDate(date, disable) : false;
-        break;
-      case 'List<String>':
-        for (var i = 0; i < disable.length; i++) {
+      switch (availableDatesTypeData) {
+        case 'String':
           inDisable =
-              isValidDate(date) ? _isDisableDate(date, disable[i]) : false;
-          if (inDisable) break;
-        }
-        break;
-      case '_InternalLinkedHashMap<int, String>':
-        List<int> keys = (disable as Map).keys.toList();
-        for (var i = 0; i < keys.length; i++) {
-          int key = keys[i];
-          String value = (disable as Map)[key];
-          inDisable =
-          isValidDate(date) ? _isDisableDate(date, value) : false;
-          if (inDisable) break;
-        }
-        break;
-      case '_GrowableList<String>':
-        for (var i = 0; i < disable.length; i++) {
-          inDisable =
-              isValidDate(date) ? _isDisableDate(date, disable[i]) : false;
-          if (inDisable) break;
-        }
-        break;
-      default:
+              isValidDate(dateString) ? (dateString != availableDates) : false;
+          break;
+        case 'List<String>':
+        case '_GrowableList<String>':
+          inDisable = !availableDates.contains(dateString);
+          break;
+        case '_InternalLinkedHashMap<int, String>':
+          List<int> keys = (availableDates as Map).keys.toList();
+          for (var i = 0; i < keys.length; i++) {
+            int key = keys[i];
+            String value = (availableDates as Map)[key];
+            inDisable = isValidDate(dateString)
+                ? _isDisableDate(dateString, value)
+                : false;
+            if (inDisable) break;
+          }
+          break;
+        default:
+      }
     }
-    if (min != '' && date != '' && !inDisable) {
-      inDisable = isValidDate(date) ? _isInRangeDate(date) : false;
+
+    if (min != '' && dateString != '' && !inDisable) {
+      inDisable = isValidDate(dateString) ? _isInRangeDate(dateString) : false;
     }
-    if (max != '' && date != '' && !inDisable) {
-      inDisable = isValidDate(date) ? _isInRangeDate(date) : false;
+    if (max != '' && dateString != '' && !inDisable) {
+      inDisable = isValidDate(dateString) ? _isInRangeDate(dateString) : false;
     }
     return inDisable;
   }
 
   bool _inDisableMonthList(month) {
-    String disableTypeData = disable.runtimeType.toString();
     bool inDisable = false;
-    List monthNums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    switch (disableTypeData) {
-      case 'String':
-        inDisable = monthNums.indexOf(int.parse(month)) != -1
-            ? (int.parse(month) == int.parse(disable))
-            : false;
-        break;
-      case 'List<String>':
-        for (var i = 0; i < disable.length; i++) {
+
+    if (availableDates != null) {
+      String disableTypeData = availableDates.runtimeType.toString();
+      List monthNums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+      switch (disableTypeData) {
+        case 'String':
           inDisable = monthNums.indexOf(int.parse(month)) != -1
-              ? (int.parse(month) == int.parse(disable[i]))
+              ? (int.parse(month) == int.parse(availableDates))
               : false;
-          if (inDisable) break;
-        }
-        break;
-      default:
+          break;
+        case 'List<String>':
+          for (var i = 0; i < availableDates.length; i++) {
+            inDisable = monthNums.indexOf(int.parse(month)) != -1
+                ? (int.parse(month) == int.parse(availableDates[i]))
+                : false;
+            if (inDisable) break;
+          }
+          break;
+        default:
+      }
     }
+
     return inDisable;
   }
 
   bool _inDisableYearList(year) {
-    String disableTypeData = disable.runtimeType.toString();
     bool inDisable = false;
-    switch (disableTypeData) {
-      case 'String':
-        inDisable = (0 < int.parse(year) && int.parse(year) < 2000)
-            ? (int.parse(year) == int.parse(disable))
-            : false;
-        break;
-      case 'List<String>':
-        for (var i = 0; i < disable.length; i++) {
+    if (availableDates != null) {
+      String disableTypeData = availableDates.runtimeType.toString();
+      switch (disableTypeData) {
+        case 'String':
           inDisable = (0 < int.parse(year) && int.parse(year) < 2000)
-              ? (int.parse(year) == int.parse(disable[i]))
+              ? (int.parse(year) == int.parse(availableDates))
               : false;
-          if (inDisable) break;
-        }
-        break;
-      default:
+          break;
+        case 'List<String>':
+          for (var i = 0; i < availableDates.length; i++) {
+            inDisable = (0 < int.parse(year) && int.parse(year) < 2000)
+                ? (int.parse(year) == int.parse(availableDates[i]))
+                : false;
+            if (inDisable) break;
+          }
+          break;
+        default:
+      }
     }
+
     return inDisable;
   }
 
   bool _inDisableTimeList(time) {
-    String disableTypeData = disable.runtimeType.toString();
     bool inDisable = false;
-    switch (disableTypeData) {
-      case 'String':
-        inDisable =
-            isValidTime(time) && isValidTime(disable) ? (comparTime(time, disable) == 0) : false;
-        break;
-      case 'List<String>':
-        for (var i = 0; i < disable.length; i++) {
-          inDisable =
-              isValidTime(time) && isValidTime(disable[i]) ? (comparTime(time, disable[i]) == 0) : false;
-          if (inDisable) break;
-        }
-        break;
-      case '_GrowableList<String>':
-        for (var i = 0; i < disable.length; i++) {
-          inDisable =
-              isValidTime(time) && isValidTime(disable[i]) ? (comparTime(time, disable[i]) == 0) : false;
-          if (inDisable) break;
-        }
-        break;
-      default:
+
+    if (availableDates != null) {
+      String disableTypeData = availableDates.runtimeType.toString();
+
+      switch (disableTypeData) {
+        case 'String':
+          inDisable = isValidTime(time) && isValidTime(availableDates)
+              ? (comparTime(time, availableDates) == 0)
+              : false;
+          break;
+        case 'List<String>':
+          for (var i = 0; i < availableDates.length; i++) {
+            inDisable = isValidTime(time) && isValidTime(availableDates[i])
+                ? (comparTime(time, availableDates[i]) == 0)
+                : false;
+            if (inDisable) break;
+          }
+          break;
+        case '_GrowableList<String>':
+          for (var i = 0; i < availableDates.length; i++) {
+            inDisable = isValidTime(time) && isValidTime(availableDates[i])
+                ? (comparTime(time, availableDates[i]) == 0)
+                : false;
+            if (inDisable) break;
+          }
+          break;
+        default:
+      }
     }
+
     return inDisable;
   }
 }

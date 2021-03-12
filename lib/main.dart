@@ -26,10 +26,15 @@ void main() async {
   runApp(Phoenix(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   static GlobalKey<NavigatorState> globalNavigator =
       GlobalKey<NavigatorState>();
 
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   Widget _startPage = SplashPage();
 
   @override

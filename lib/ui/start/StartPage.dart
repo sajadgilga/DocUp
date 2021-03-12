@@ -25,6 +25,7 @@ import 'package:Neuronio/ui/widgets/OptionButton.dart';
 import 'package:Neuronio/ui/widgets/SnackBar.dart';
 import 'package:Neuronio/ui/widgets/Timer.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
+import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -32,6 +33,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_autofill/sms_autofill.dart' as sms;
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../blocs/timer/TimerBloc.dart';
@@ -53,7 +55,7 @@ class StartPage extends StatefulWidget {
   _StartPageState createState() => _StartPageState();
 }
 
-class _StartPageState extends State<StartPage> {
+class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
   TimerBloc _timerBloc = TimerBloc(ticker: Ticker());
   final AuthBloc _authBloc = AuthBloc();
   final PatientBloc _patientBloc = PatientBloc();
@@ -87,6 +89,78 @@ class _StartPageState extends State<StartPage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void codeUpdated() {
+    _verificationController.text = code;
+  }
+
+  @override
+  void dispose() {
+    try {
+      _controller.close();
+      _usernameController.dispose();
+      _doctorIdController.dispose();
+      _verificationController.dispose();
+      _firstNameController.dispose();
+      _authBloc.dispose();
+      _patientBloc.dispose();
+      _doctorBloc.dispose();
+    } catch (e) {}
+
+    cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    if (!CrossPlatformDeviceDetection.isWeb) {
+      listenForCode();
+    }
+    switchRole(currentRoleType);
+    checkToken();
+    listenToTime();
+    _authBloc.loginStream.listen((data) {
+      if (handle(data)) {
+        setState(() {
+          startType = StartType.LOGIN;
+        });
+        _timerBloc.add(Start(duration: 60));
+      }
+    });
+
+    _authBloc.verifyStream.listen((data) {
+      if (handle(data)) {
+        if (_firstNameController.text +
+                _lastNameController.text +
+                _nationalCodeController.text !=
+            "") {
+          /// user has been registered before
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => BasePage()));
+        } else {
+          setState(() {
+            startType = StartType.USER_PROFILE_REGISTER_DATA;
+          });
+        }
+      }
+    });
+
+    _patientBloc.dataStream.listen((data) {
+      if (handle(data)) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => BasePage()));
+      }
+    });
+
+    _doctorBloc.doctorStream.listen((data) {
+      if (handle(data)) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => BasePage()));
+      }
+    });
+    super.initState();
+  }
 
   handle(Response response) {
     switch (response.status) {
@@ -194,53 +268,6 @@ class _StartPageState extends State<StartPage> {
     _timerBloc = TimerBloc(ticker: Ticker());
     _timerBloc.add(Start(duration: 60));
     listenToTime();
-  }
-
-  @override
-  void initState() {
-    switchRole(currentRoleType);
-    checkToken();
-    listenToTime();
-    _authBloc.loginStream.listen((data) {
-      if (handle(data)) {
-        setState(() {
-          startType = StartType.LOGIN;
-        });
-        _timerBloc.add(Start(duration: 60));
-      }
-    });
-
-    _authBloc.verifyStream.listen((data) {
-      if (handle(data)) {
-        if (_firstNameController.text +
-                _lastNameController.text +
-                _nationalCodeController.text !=
-            "") {
-          /// user has been registered before
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => BasePage()));
-        } else {
-          setState(() {
-            startType = StartType.USER_PROFILE_REGISTER_DATA;
-          });
-        }
-      }
-    });
-
-    _patientBloc.dataStream.listen((data) {
-      if (handle(data)) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => BasePage()));
-      }
-    });
-
-    _doctorBloc.doctorStream.listen((data) {
-      if (handle(data)) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => BasePage()));
-      }
-    });
-    super.initState();
   }
 
   void listenToTime() {
@@ -378,21 +405,6 @@ class _StartPageState extends State<StartPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    try {
-      _controller.close();
-      _usernameController.dispose();
-      _doctorIdController.dispose();
-      _verificationController.dispose();
-      _firstNameController.dispose();
-      _authBloc.dispose();
-      _patientBloc.dispose();
-      _doctorBloc.dispose();
-    } catch (e) {}
-    super.dispose();
   }
 
   _timerWidget() => startType == StartType.LOGIN
@@ -598,8 +610,9 @@ class _StartPageState extends State<StartPage> {
             inputHint: Strings.verificationHint,
             controller: _verificationController,
             textInputType: TextInputType.number,
+            maxChars: 6,
             validationCallback: (text) =>
-                _isVerificationCodeValid(text) || resendCodeEnabled,
+                _isVerificationCodeValid(text),
             errorMessage: "کدفعال‌سازی ۶رقمی است",
             onChanged: (text) {
               setState(() {

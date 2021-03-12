@@ -1,6 +1,12 @@
 import 'package:Neuronio/models/ChatMessage.dart';
+import 'package:Neuronio/services/VibrateAndSoundService.dart';
+import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/CrossPlatformSvg.dart';
+import 'package:Neuronio/utils/Utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../constants/colors.dart';
@@ -23,6 +29,10 @@ class ChatBubble extends StatefulWidget {
 }
 
 class _ChatBubbleState extends State<ChatBubble> {
+  /// image
+  CachedNetworkImage cachedImage;
+  ImageProvider imageProvider;
+
   List<BoxShadow> _shadow() => (widget.isHomePageChat
       ? [
           BoxShadow(
@@ -49,6 +59,118 @@ class _ChatBubbleState extends State<ChatBubble> {
       ? EdgeInsets.only(top: 5, bottom: 5, right: 25, left: 5)
       : EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 25));
 
+  Widget textBody() {
+    return AutoText(
+      widget.message.message,
+      textAlign: TextAlign.right,
+      textDirection: TextDirection.rtl,
+      style: TextStyle(
+          fontSize: 12,
+          color: (widget.isMe ? IColors.selfChatText : IColors.doctorChatText)),
+    );
+  }
+
+  Widget imageBody() {
+    double xSize = MediaQuery.of(context).size.width;
+    Widget getDownloadImageIcon() {
+      return GestureDetector(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Icon(Icons.cloud_download, size: 30),
+        ),
+        onTap: () {
+          setState(() {
+            cachedImage = CachedNetworkImage(
+              errorWidget: (context, url, error) {
+                return Text("خظا در دانلود فایل");
+              },
+              imageBuilder: (context, imageProvider) {
+                this.imageProvider = imageProvider;
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+              progressIndicatorBuilder: (context, url, downloadProgress) {
+                return getButtonLoadingProgress(
+                    value: downloadProgress.progress, r: 30, stroke: 2);
+              },
+              fadeInDuration: Duration(milliseconds: 500),
+              imageUrl: CrossPlatformDeviceDetection.isWeb
+                  ? ""
+                  : widget.message.fileLink,
+            );
+          });
+        },
+      );
+    }
+
+    if (CrossPlatformDeviceDetection.isWeb) {
+      imageProvider = NetworkImage(widget.message.fileLink);
+    }
+
+    return GestureDetector(
+      onTap: () {
+        if (cachedImage != null) {
+          launchURL(widget.message.fileLink);
+        }
+      },
+      onLongPress: () {
+        Clipboard.setData(new ClipboardData(text: widget.message.fileLink));
+        toast(context, "لینک فایل کپی شد.");
+        VibrateAndRingtoneService.vibrate(miliSecDuration: 200);
+      },
+      child: Container(
+        constraints: BoxConstraints(
+            minWidth: 200,
+            maxWidth: 200 + xSize * (12 / 100),
+            maxHeight: 300,
+            minHeight: 150),
+//        height: MediaQuery.of(context).size.width * (45 / 100),
+        decoration: new BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: cachedImage == null
+            ? getDownloadImageIcon()
+            : CrossPlatformDeviceDetection.isWeb
+                ? Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.fill,
+                            alignment: Alignment.center)),
+                  )
+                : cachedImage,
+      ),
+    );
+  }
+
+  Widget chatBody() {
+    if (widget.message.messageType == MessageType.Text) {
+      return textBody();
+    } else if (widget.message.messageType == MessageType.Image) {
+      return imageBody();
+    } else {
+      return GestureDetector(
+          onTap: () {
+            launchURL(widget.message.fileLink);
+          },
+          onLongPress: () {
+            Clipboard.setData(new ClipboardData(text: widget.message.fileLink));
+            VibrateAndRingtoneService.vibrate(miliSecDuration: 200);
+            toast(context, "لینک فایل کپی شد.");
+          },
+          child: widget.message.fileIcon);
+    }
+  }
+
   Widget _chatBubble(width) => Container(
         constraints: BoxConstraints(maxWidth: width * .7, minWidth: 40),
         padding: EdgeInsets.all(10),
@@ -59,16 +181,7 @@ class _ChatBubbleState extends State<ChatBubble> {
             borderRadius: _borderRadius(),
             shape: BoxShape.rectangle,
             boxShadow: _shadow()),
-        child: AutoText(
-          widget.message.message,
-          textAlign: TextAlign.right,
-          textDirection: TextDirection.rtl,
-          style: TextStyle(
-              fontSize: 12,
-              color: (widget.isMe
-                  ? IColors.selfChatText
-                  : IColors.doctorChatText)),
-        ),
+        child: chatBody(),
       );
 
   @override
@@ -126,7 +239,6 @@ class _ChatBubbleState extends State<ChatBubble> {
               width: 10,
               height: 10,
             )));
-
     }
 
     return Container(

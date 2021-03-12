@@ -27,8 +27,7 @@ class MedicalTestRepository {
 
     final response = await _provider.get(
         "medical-test/cognitive-tests-response?${ApiProvider.getURLParametersString(args)}",
-        utf8Support: true,
-        body: {'test_id': id, "patient_id": patientId});
+        utf8Support: true);
     return MedicalTest.fromJson(response);
   }
 

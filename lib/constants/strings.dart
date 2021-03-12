@@ -113,8 +113,10 @@ class Strings {
       "نتیجه ارزیابی شما ثبت شد. ابتدا باید توسط پزشک خود ویزیت شوید تا نتایج ارزیابی شما به صورت دقیق‌تر تحلیل شود.";
 
   // screening
-  static final String noActiveScreeningPlan =
+  static final String noActiveScreeningPlanForPatient =
       "شما پلن فعالی را ندارید. سلامتی مغز اصلی ترین رکن بدن هست و باید به آن اهمیت داده شود.";
+  static final String noActiveScreeningPlanForDoctor =
+      "بیمار پلن غربالگری فعالی ندارد.";
 
   static final String neuronioClinicScreeningPlanDescription =
       "خوشحالیم که در مسیر مراقبت از سلامتی  شما همراهتون هستیم." +
@@ -133,7 +135,7 @@ class Strings {
     "  ۳- بعد از انجام ارزیابی های شناختی نتایج این ارزیابی ها توسط پزشکان متخصص حوزه مغز و شناخت بررسی میشه و شما زمانی رو با پزشک هماهنگ می کنید.",
     "  ۴- شما با پزشک یک ویزیت ۱۵ تا ۳۰  دقیقه ای خواهید داشت. سابقه پزشکی شما بررسی میشه و پزشک نتایج تست های شما که تحلیل و بررسی شدند رو به شما انتقال میده.",
     "  ۵- بر اساس جلسه ای که با پزشک داشتید پروفایلی از سلامت شما بر محور سلامت مغز و شناخت به شما نشون داده میشه.",
-    "  ۶- برای حفظ و ارتقای سلامت شما و پیشگیری از بیماری های مغز و شناخت مانند آلزایمر یه سری پیشنهاد مشخص مانند پایش توانمندی های شناختی٬ ویزیت پزشک متخصص در صورت نیاز٬ برنامه بهسازی و توانمندی شناختی شامل بازی های فیزیکی و کاغذی٬ بازی های شناختی بر بستر واقعیت مجازی و . به شما پیشنهاد میشه.",
+    "  ۶- برای حفظ و ارتقای سلامت شما و پیشگیری از بیماری های مغز و شناخت مانند آلزایمر یه سری پیشنهاد مشخص مانند پایش توانمندی های شناختی٬ ویزیت پزشک متخصص در صورت نیاز٬ برنامه بهسازی و توانمندی شناختی شامل بازی های فیزیکی و کاغذی٬ بازی های شناختی بر بستر واقعیت مجازی و ... به شما پیشنهاد میشه.",
     "  ۷- از اونجا که مغز سالم در بدن سالمه توی برنامه تون پیشنهادهایی توسط متخصصین برای بهسازی و ارتقای توانمدی های فیزیکی هم داده میشه. که همه این موارد شما رو در ادامه مسیر کمک میکنه.",
     "  ۸- حالا شما از پیشنهادهایی که بتون داده شده اونی رو که به شرایطتون می خوره و براتون مناسبه انتخاب می کنید و بعد ادامه مسیر رو در کنار هم در نورونیو هستیم.",
   ];
@@ -157,9 +159,10 @@ class Strings {
   static final String panelVideoCallLabel = 'تماس';
 
 //
-  static final String physicalReservationLabel = 'رزرو ویزیت حضوری';
-  static final String virtualReservationLabel = 'رزرو ویزیت مجازی';
-  static final String trafficPlanReservationLabel = "خرید پلن متنی";
+  static final String physicalReservationLabel = 'رزرو مشاوره حضوری';
+  static final String ICAReservationLabel = "رزرو مشاوره ica";
+  static final String virtualReservationLabel = 'رزرو مشاوره مجازی';
+  static final String trafficPlanReservationLabel = "خرید مشاوره متنی";
 
 //
   static final String patientTrackingVisitFaceToFaceLabel = 'ویزیت حضوری';
@@ -209,7 +212,7 @@ class Strings {
 //
   static final String emptyDoctorLabel = 'شما به پزشکی متصل نیستید '
       '\n'
-      ' لطفا از صفحه جست‌و‌جو متخصصان به پزشک مورد نظر وصل شوید';
+      'بعد از فعال سازی پلن مورد نظر خود دکتر شما تعیین می شود.';
   static final String emptyPatientLabel = 'شما به بیماری متصل نیستید '
       '\n'
       ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
@@ -226,6 +229,8 @@ class Strings {
 //      ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
 
   static final String emptyChatPage = 'پیامی تاکنون ارسال نشده است';
+  static final String chatFileMessageSent = "فایل با موفقیت ارسال شد.";
+  static final String chatFileMessageFailed = "ارسال فایل با مشکل مواجه شد.";
 
 //
   static final String emptyDoctorSearch =
@@ -256,7 +261,7 @@ class Strings {
   static final String emptyStartVisitTimeMessage =
       "لطفا زمان ویزیت مناسبی را وارد کنید";
   static final String pastStartVisitTimeMessage =
-      "شما نمی توانید ساعتی که گذشته است را به عنوان زمان شروع ویزیت انتخاب کنید.";
+      "نمی توان ویزیتی رو دیرتر از ۶ ساعت مانده به زمان آن درخواست دهید.";
   static final String invalidDurationPlan_EmptyDurationPlan =
       "پزشک زمانی را برای ویزیت تایید نمی کند.";
   static final List<String> invalidDurationPlan_Plans = [
@@ -295,14 +300,18 @@ class Strings {
     "",
     " " + "مطمین هستید؟"
   ];
+  static final String textPlanDescription =
+      "توضیحات سنیپبنسید سدلسد یبتد ستیدب ...";
   static final String planSuccessfullyActivated =
       "پلن متنی با موفقیت خریداری شد.";
   static final String noCreditErrorCode_602 =
       "اعتبار شما برای خرید پلن کافی نمی باشد.";
   static final String oldPlanExistedErrorCode_603 =
       "پلن قبلی شما هنوز تمام نشده است.";
-  static final String noRemainedWordForYouPlanInChatRoom =
-      "برای چت با پزشک در ساعت های غیر ویزیت، باید پلن متنی تهیه کنید.هنوز پلنی نخریده اید یا پلن قبلی شما تمام شده است.";
+  static final String noActivePatientTextPlanForChatRoom =
+      "برای چت با پزشک، باید پلن متنی تهیه کنید. هنوز پلنی نخریده اید یا پلن قبلی شما توسط مشاور بسته شده است.";
+  static final String activatePatientTextPlan = "فعال کردن چت برای بیمار";
+  static final String deactivatePatientTextPlan = "بستن چت برای بیمار";
   static final String goToTextPlanListPage = "خرید پلن متنی";
 
   /// Errors
@@ -426,7 +435,22 @@ class Strings {
     '639607': 'بانک سرمایه',
     '991975': 'بانک ملت'
   };
-  static final persianDaysSigns = [
+
+  static final List<String> jalaliMonths = [
+    "فروردین",
+    "اردیبهشت",
+    "خرداد",
+    "تیر",
+    "مرداد",
+    "شهریور",
+    "مهر",
+    "آبان",
+    "آذر",
+    "دی",
+    "بهمن",
+    "اسفند"
+  ];
+  static final List<String> persianDaysSigns = [
     "شنبه",
     "یکشنبه",
     "دوشنبه",
@@ -434,6 +458,15 @@ class Strings {
     "‌چهارشنبه",
     "‌پنج‌شنبه",
     "جمعه"
+  ];
+  static final List<String> shortEnglishDaysJalaliOrder = [
+    "S",
+    "S",
+    "M",
+    "T",
+    "W",
+    "T",
+    "F"
   ];
   static final genders = ["آقا", "خانم"];
   static final Map<String, int> cities = {

@@ -30,7 +30,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
       AddToSeenResponse addToSeenResponse = await _repository.addNotifToSeen(event.newestNotifId);
       if(addToSeenResponse.success){
-        state.notifications.deleteNotificationWithId(event.newestNotifId);
+        state.notifications.updateNotifIsRead(event.newestNotifId);
         NewestNotificationResponse newestNotificationResponse =
         state.notifications.getCopy();
         yield NotificationsLoaded(notifications: newestNotificationResponse);

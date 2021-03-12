@@ -1,7 +1,11 @@
+import 'dart:ffi';
+
+import 'package:Neuronio/models/ChatMessage.dart';
 import 'package:Neuronio/models/VisitResponseEntity.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'SocketRequestModel.dart';
 import 'UserEntity.dart';
 
 class Owner {
@@ -26,22 +30,43 @@ class Owner {
 class NewestNotificationResponse {
   List<NewestNotif> newestNotifs;
 
-  int get newestNotifsCounts {
+  int get newestNotifsNotReadCounts {
+    int count = 0;
+    newestNotifs?.forEach((n) {
+      if (!(n.isRead ?? false)) {
+        count++;
+      }
+    });
+    return count;
+  }
+
+  int get newestNotifsTotalCounts {
     return newestNotifs?.length ?? 0;
   }
 
-  void deleteNotificationWithId(int notifId) {
-    int index = -1;
+  void updateNotifIsRead(int notifId) {
     for (int i = 0; i < newestNotifs.length; i++) {
       NewestNotif notif = newestNotifs[i];
       if (notif.notifId == notifId) {
-        index = i;
+        notif.isRead = true;
         break;
       }
     }
-    if (index != -1) {
-      newestNotifs.removeAt(index);
+    reorderNotifications();
+  }
+
+  void reorderNotifications() {
+    List<NewestNotif> seen = [];
+    List<NewestNotif> notSeen = [];
+    for (int i = 0; i < newestNotifs.length; i++) {
+      NewestNotif notif = newestNotifs[i];
+      if (notif.isRead) {
+        seen.add(notif);
+      } else {
+        notSeen.add(notif);
+      }
     }
+    newestNotifs = notSeen + seen;
   }
 
   NewestNotificationResponse getCopy() {
@@ -66,19 +91,20 @@ class NewestNotificationResponse {
         String description = v['body'];
         String notifDate = v['time'].split("T")[0];
         String notifTime = v['time'].split("T")[1].split("+")[0];
+        bool isRead = v['is_read'];
         Map<String, dynamic> jsonData = {};
         if (v['data']['payload'] is Map<String, dynamic>) {
           jsonData = v['data']['payload'];
         }
-        newestNotifs.add(NewestNotif.getChildFromJsonAndData(
-            notifId, title, description, notifTime, notifDate, jsonData, type));
+        newestNotifs.add(NewestNotif.getChildFromJsonAndData(notifId, title,
+            description, notifTime, notifDate, jsonData, type, isRead));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['newest_visits_counts'] = this.newestNotifsCounts;
+    data['newest_visits_counts'] = this.newestNotifsNotReadCounts;
     if (this.newestNotifs != null) {
       data['newest_visits'] = this.newestNotifs.map((v) => v.toJson()).toList();
     }
@@ -111,6 +137,7 @@ abstract class NewestNotif {
   String notifTime;
   String notifDate;
   int notifType;
+  bool isRead;
 
   NewestNotif(
       {this.notifId,
@@ -118,7 +145,8 @@ abstract class NewestNotif {
       this.description,
       this.notifTime,
       this.notifDate,
-      this.notifType});
+      this.notifType,
+      this.isRead});
 
   static NewestNotif getChildFromJsonAndData(
       int notifId,
@@ -127,30 +155,34 @@ abstract class NewestNotif {
       String time,
       String date,
       Map<String, dynamic> payload,
-      int type) {
+      int type,
+      bool isRead) {
     if (type == 1) {
       /// voice or video call
       return NewestVideoVoiceCallNotif.fromJson(
-          notifId, title, description, time, date, type, payload);
+          notifId, title, description, time, date, type, isRead, payload);
     } else if ([2, 3].contains(type)) {
       /// test send and response
       return NewestMedicalTestNotif.fromJson(
-          notifId, title, description, time, date, type, payload);
+          notifId, title, description, time, date, type, isRead, payload);
     } else if ([5, 6].contains(type)) {
       /// visit
       return NewestVisitNotif.fromJson(
-          notifId, title, description, time, date, type, payload);
+          notifId, title, description, time, date, type, isRead, payload);
     } else if (type == 7) {
       /// visit request reminder
       return NewestVisitNotif.fromJson(
-          notifId, title, description, time, date, type, payload);
+          notifId, title, description, time, date, type, isRead, payload);
     } else if (type == 8) {
       /// visit reminder
       return NewestVisitNotif.fromJson(
-          notifId, title, description, time, date, type, payload);
+          notifId, title, description, time, date, type, isRead, payload);
     } else if (type == 9) {
       return NewestPatientRegister.fromJson(
-          notifId, title, description, time, date, type, payload);
+          notifId, title, description, time, date, type, isRead, payload);
+    } else if (type == 10) {
+      return NewestChatMessage.fromJson(
+          notifId, title, description, time, date, type, isRead, payload);
     }
   }
 
@@ -318,6 +350,7 @@ class NewestVisitNotif extends NewestNotif {
       String notifTime,
       String notifDate,
       int notifType,
+      bool isRead,
       Map<String, dynamic> json)
       : super(
             notifId: notifId,
@@ -325,7 +358,8 @@ class NewestVisitNotif extends NewestNotif {
             description: description,
             notifTime: notifTime,
             notifDate: notifDate,
-            notifType: notifType) {
+            notifType: notifType,
+            isRead: isRead) {
     visitId = json['id'];
     createdDate = json['created_date'];
     modifiedDate = json['modified_date'];
@@ -397,6 +431,7 @@ class NewestMedicalTestNotif extends NewestNotif {
       String notifTime,
       String notifDate,
       int notifType,
+      bool isRead,
       Map<String, dynamic> json)
       : super(
             notifId: notifId,
@@ -404,7 +439,8 @@ class NewestMedicalTestNotif extends NewestNotif {
             description: description,
             notifTime: notifTime,
             notifDate: notifDate,
-            notifType: notifType) {
+            notifType: notifType,
+            isRead: isRead) {
     panelCognitiveTestId = intPossible(json['panel_cognitive_test_id']);
     testTitle = utf8IfPossible(json['title']) ?? "";
     doctorId = intPossible(json['doctor_id']);
@@ -450,6 +486,7 @@ class NewestVideoVoiceCallNotif extends NewestNotif {
       String notifTime,
       String notifDate,
       int notifType,
+      bool isRead,
       Map<String, dynamic> json)
       : super(
             notifId: notifId,
@@ -457,10 +494,10 @@ class NewestVideoVoiceCallNotif extends NewestNotif {
             description: description,
             notifTime: notifTime,
             notifDate: notifDate,
-            notifType: notifType) {
-    if(json['partner_info'] != null){
+            notifType: notifType,
+            isRead: isRead) {
+    if (json['partner_info'] != null) {
       user = User.fromJson(json['partner_info']);
-
     }
     channelName = json['channel_name'];
     if (json.containsKey('visit')) visit = VisitEntity.fromJson(json['visit']);
@@ -495,6 +532,7 @@ class NewestPatientRegister extends NewestNotif {
       String notifTime,
       String notifDate,
       int notifType,
+      bool isRead,
       Map<String, dynamic> json)
       : super(
             notifId: notifId,
@@ -502,8 +540,9 @@ class NewestPatientRegister extends NewestNotif {
             description: description,
             notifTime: notifTime,
             notifDate: notifDate,
-            notifType: notifType) {
-    if(json['patient_info']!=null){
+            notifType: notifType,
+            isRead: isRead) {
+    if (json['patient_info'] != null) {
       patient = User.fromJson(json['patient_info']);
     }
   }
@@ -511,6 +550,56 @@ class NewestPatientRegister extends NewestNotif {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['patient_info'] = patient?.toJson();
+    return data;
+  }
+}
+
+class NewestChatMessage extends NewestNotif {
+  String file;
+  bool isMe;
+  int type;
+  String message;
+  int panelId;
+  int message_id;
+
+  /// TODO
+  NewestChatMessage(int notifId, String title, String description,
+      String notifTime, String notifDate, int notifType)
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType);
+
+  NewestChatMessage.fromJson(
+      int notifId,
+      String title,
+      String description,
+      String notifTime,
+      String notifDate,
+      int notifType,
+      bool isRead,
+      Map<String, dynamic> json)
+      : super(
+            notifId: notifId,
+            title: title,
+            description: description,
+            notifTime: notifTime,
+            notifDate: notifDate,
+            notifType: notifType,
+            isRead: isRead) {
+    file = json['file'];
+    isMe = [true, false].contains(json['isMe']) ? json['isMe'] : false;
+    type = intPossible(json['type']);
+    message = json['message'];
+    panelId = intPossible(json['panel_id']);
+    message_id = intPossible(json['message_id']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     return data;
   }
 }

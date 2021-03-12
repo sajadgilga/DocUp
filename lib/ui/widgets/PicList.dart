@@ -116,7 +116,7 @@ class _PicListState extends State<PicList> {
                 title: fileEntity.title,
               );
             }));
-          } else if (fileEntity.fileType == AllowedFileType.doc) {
+          } else if (fileEntity.fileType == AllowedFileType.pdf) {
             launch(fileEntity.fileURL);
           }
         }

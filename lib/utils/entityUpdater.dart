@@ -34,9 +34,11 @@ class EntityAndPanelUpdater {
       updateScreening();
     });
   }
+
   static void getEntity() {
     _entityBloc.add(EntityGet());
   }
+
   static void updateEntity() {
     _entityBloc.add(EntityUpdate());
   }
@@ -48,6 +50,7 @@ class EntityAndPanelUpdater {
       }
     });
   }
+
   static void updatePanel() {
     _panelBloc.add(GetMyPanels());
   }
@@ -63,12 +66,13 @@ class EntityAndPanelUpdater {
 
   static void processOnEntityLoad(Function(Entity) function) {
     /// call a function after entity is loaded completely
-    if (_entityBloc.state is EntityLoaded || _entityBloc.state.entity != null) {
+    if (_entityBloc.state?.entity?.mEntity != null) {
       function(_entityBloc.state.entity);
     } else {
       StreamSubscription streamSubscription;
       streamSubscription = _entityBloc.listen((data) {
-        if (data is EntityLoaded) {
+        if (data.mEntityStatus == BlocState.Loaded &&
+            _entityBloc.state?.entity?.mEntity != null) {
           function(_entityBloc.state.entity);
           streamSubscription.cancel();
         }

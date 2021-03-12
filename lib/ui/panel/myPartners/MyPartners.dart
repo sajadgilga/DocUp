@@ -1,4 +1,5 @@
 import 'package:Neuronio/blocs/EntityBloc.dart';
+import 'package:Neuronio/blocs/PanelBloc.dart';
 import 'package:Neuronio/blocs/SearchBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
@@ -9,37 +10,50 @@ import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
+import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'MyPartnersResultList.dart';
 
-class MyPartners extends StatelessWidget {
+class MyPartners extends StatefulWidget {
   final Function(String, UserEntity) onPush;
-
-//  SearchBloc searchBloc = SearchBloc();
 
   MyPartners({@required this.onPush});
 
-  void _initialSearch(context) {
-    var _state = BlocProvider.of<EntityBloc>(context).state;
-    var searchBloc = BlocProvider.of<SearchBloc>(context);
-    if (_state.entity.isDoctor)
-      searchBloc.add(SearchPatient(
-        text: "",
-      ));
-    else if (_state.entity.isPatient) if (_state.entity.mEntity != null) {
-      searchBloc.add(SearchDoctor(
-          isMyDoctors: true));
-    } else {
-      BlocProvider.of<EntityBloc>(context).add(EntityGet());
-      searchBloc.add(ErrorEvent());
-    }
+  @override
+  _MyPartnersState createState() => _MyPartnersState();
+}
+
+class _MyPartnersState extends State<MyPartners> {
+  void _initialSearch() {
+    EntityAndPanelUpdater.processOnEntityLoad((entity) {
+      if (mounted) {
+        var panelBloc = BlocProvider.of<PanelBloc>(context);
+        if (entity.isDoctor)
+          panelBloc.add(PatientPanel(
+            text: "",
+          ));
+        else if (entity.isPatient) if (entity.mEntity != null) {
+          panelBloc.add(DoctorPanel(isMyDoctors: true));
+        } else {
+          throw Exception("empty mEntity in my partners");
+        }
+      }
+    });
   }
 
   @override
-  void dispose() {}
+  void initState() {
+    _initialSearch();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   Widget _header(context) {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
@@ -72,18 +86,19 @@ class MyPartners extends StatelessWidget {
   }
 
   Widget _resultList() {
-    return BlocBuilder <SearchBloc, SearchState>(
+    return BlocBuilder<PanelBloc, PanelState>(
       builder: (context, state) {
-        if (state is SearchLoaded) {
+        if (state is PanelLoaded ||
+            (state is PanelLoading && state.panels != null)) {
           return MyPartnersResultList(
-            onPush: onPush,
-            isDoctor: state.result.isDoctor,
-            results: (state.result.isDoctor
-                ? state.result.doctorResults
-                : state.result.patientResults),
+            onPush: widget.onPush,
+            isDoctor: state.panels.isDoctor,
+            results: (state.panels.isDoctor
+                ? state.panels.doctorResults
+                : state.panels.patientResults),
             isRequestsOnly: false,
           );
-        } else if (state is SearchError) {
+        } else if (state is PanelError) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
@@ -93,25 +108,16 @@ class MyPartners extends StatelessWidget {
               ),
               APICallError(
                 () {
-                  _initialSearch(context);
+                  _initialSearch();
                 },
                 tightenPage: true,
               ),
             ],
           );
-        } else if (state is SearchLoading) {
-          if (state.result == null)
+        } else if (state is PanelLoading) {
+          if (state.panels == null)
             return Container(
               child: Waiting(),
-            );
-          else
-            return MyPartnersResultList(
-              onPush: onPush,
-              isDoctor: state.result.isDoctor,
-              results: (state.result.isDoctor
-                  ? state.result.doctorResults
-                  : state.result.patientResults),
-              isRequestsOnly: false,
             );
         }
         return Container(
@@ -124,28 +130,23 @@ class MyPartners extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-    _initialSearch(context);
-//    _search(context);
-//    _controller.addListener((){print(_controller.text); });
     return Container(
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
       child: Column(
         children: <Widget>[
-          PageTopLeftIcon(
-            topLeft: Icon(
-              Icons.arrow_back,
-              color: IColors.themeColor,
-              size: 20,
-            ),
-            topLeftFlag: false,
-            topRight: Padding(
-              padding: EdgeInsets.only(right: 25),
-              child: menuLabel("پنل کاربری"),
-            ),
-            topRightFlag: true,
-            onTap: () {},
-          ),
+          // PageTopLeftIcon(
+          //   topLeft: Icon(
+          //     Icons.arrow_back,
+          //     color: IColors.themeColor,
+          //     size: 20,
+          //   ),
+          //   topLeftFlag: false,
+          //   topRight: Padding(
+          //     padding: EdgeInsets.only(right: 25),
+          //     child: menuLabel("پنل کاربری"),
+          //   ),
+          //   topRightFlag: true,
+          //   onTap: () {},
+          // ),
           Padding(
             padding: EdgeInsets.only(right: 25, top: 10),
             child: _header(context),

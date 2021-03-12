@@ -9,14 +9,22 @@ class ScreeningRepository {
     return Screening.fromJson(response);
   }
 
-  Future<PatientScreeningResponse> getPatientScreeningPlanIfExist() async {
-    final response = await _provider.get('api/screening');
+  Future<PatientScreeningResponse> getPatientScreeningPlanIfExist(
+      {int panelId}) async {
+    String args = "";
+    if (panelId != null) {
+      args = "?panel_id=$panelId";
+    }
+    final response = await _provider.get('api/screening' + args);
     return PatientScreeningResponse.fromJson(response);
   }
 
-  Future<ActivateScreeningPlanResponse> activateScreeningPlan(
+  Future<ActivateScreeningPlanResponse> buyScreeningPlan(
       int screeningId, String discountString) async {
-    final response = await _provider.post('api/activate-screening-plan/',
+    // final response = await _provider.post('api/activate-screening-plan/',
+    // body: {"screening_id": screeningId, "code": discountString});
+
+    final response = await _provider.post('api/buy-screening-plan/',
         body: {"screening_id": screeningId, "code": discountString});
     return ActivateScreeningPlanResponse.fromJson(response);
   }

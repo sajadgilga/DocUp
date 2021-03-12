@@ -25,7 +25,7 @@ import '../../constants/colors.dart';
 import 'NavigatorView.dart';
 
 class MainPage extends StatefulWidget {
-  final Function(String, dynamic) pushOnBase;
+  final Function(String, dynamic, dynamic, dynamic, Function) pushOnBase;
 
   MainPage({Key key, this.pushOnBase}) : super(key: key);
 
@@ -205,7 +205,7 @@ class _MainPageState extends State<MainPage> {
 
   void _chatPage(int section) {
     _selectPage(1);
-    _children[1].currentState.push(null, NavigatorRoutes.panel, detail: 'chat');
+    _children[1].currentState.push(null, NavigatorRoutes.panel, param1: 'chat');
   }
 
   Widget _buildOffstageNavigator(int index) {

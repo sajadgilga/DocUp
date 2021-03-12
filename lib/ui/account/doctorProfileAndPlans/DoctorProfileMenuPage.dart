@@ -26,6 +26,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DoctorProfileMenuPage extends StatefulWidget {
@@ -40,6 +41,20 @@ class DoctorProfileMenuPage extends StatefulWidget {
 }
 
 class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _appVersionController = TextEditingController();
+
+  @override
+  void initState() {
+    _phoneNumberController.text = widget.doctorEntity.user.phoneNumber;
+    PackageInfo.fromPlatform().then((value) {
+      setState(() {
+        _appVersionController.text = value.version;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -62,7 +77,7 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
               topRightFlag: false,
               topLeftFlag: CrossPlatformDeviceDetection.isIOS,
             ),
-            DocUpHeader(
+            NeuronioHeader(
               title: "پروفایل من",
               docUpLogo: false,
             ),
@@ -72,6 +87,8 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
           height: 20,
         ),
         _userCreditCards(),
+        ALittleVerticalSpace(),
+        _accountSetting(),
         ALittleVerticalSpace(),
         aboutUsButton(context),
         ALittleVerticalSpace(),
@@ -90,6 +107,86 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
         ALittleVerticalSpace()
       ],
     ));
+  }
+
+  Widget _accountSetting() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 20),
+            child: AutoText(
+              "اطلاعات",
+              softWrap: true,
+              overflow: TextOverflow.fade,
+              textAlign: TextAlign.end,
+              textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 17, color: IColors.black),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 60,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            color: Colors.white,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: TextField(
+                        style: TextStyle(fontSize: 18, color: IColors.darkGrey),
+                        textAlign: TextAlign.left,
+                        controller: _phoneNumberController,
+                        enabled: false,
+                        decoration: InputDecoration(border: InputBorder.none),
+                      ),
+                    ),
+                  ),
+                  AutoText(
+                    "شماره تلفن",
+                    softWrap: true,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(fontSize: 15, color: IColors.darkGrey),
+                  )
+                ]),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 60,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            color: Colors.white,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: TextField(
+                        style: TextStyle(fontSize: 18, color: IColors.darkGrey),
+                        textAlign: TextAlign.left,
+                        controller: _appVersionController,
+                        enabled: false,
+                        decoration: InputDecoration(border: InputBorder.none),
+                      ),
+                    ),
+                  ),
+                  AutoText(
+                    "ورژن کنونی اپلیکیشن",
+                    softWrap: true,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(fontSize: 15, color: IColors.darkGrey),
+                  )
+                ]),
+          )
+        ],
+      ),
+    );
   }
 
   Widget _userCreditCards() {

@@ -21,12 +21,20 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'VisitUtils.dart';
+
 class PhysicalVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
   final int screeningId;
+  final VisitSource type;
   final Function(String, dynamic) onPush;
 
-  PhysicalVisitPage({Key key, this.doctorEntity, this.onPush, this.screeningId})
+  PhysicalVisitPage(
+      {Key key,
+      this.doctorEntity,
+      this.onPush,
+      this.screeningId,
+      @required this.type})
       : super(key: key);
 
   @override
@@ -237,6 +245,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
               AutoText("مدت زمان ویزیت", style: TextStyle(fontSize: 16))
             ],
           ),
+
           /// TODO
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -443,7 +452,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
       /// empty time
       showOneButtonDialog(
           context, Strings.emptyStartVisitTimeMessage, Strings.okAction, () {});
-    } else if (DateTimeService.getTimeMinute(timeTextController.text) <
+    } else if (DateTimeService.getTimeMinute(timeTextController.text) - 6 * 60 <
             DateTimeService.getTimeMinute(currentTime) &&
         DateTimeService.getTodayInJalaliString() == dateTextController.text) {
       /// invalid time
@@ -504,7 +513,8 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
         convertToGeorgianDate(dateTextController.text) +
             "T" +
             startTime +
-            timeZone);
+            timeZone,
+        widget.type);
     setState(() {
       submitLoadingToggle = true;
     });

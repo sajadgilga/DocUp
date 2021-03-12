@@ -2,7 +2,6 @@ import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/utils/Utils.dart';
 
 import 'MedicalTest.dart';
-
 class PatientScreening {
   int id;
   bool paymentStatus;
@@ -10,6 +9,8 @@ class PatientScreening {
   bool icaStatus;
   bool visitStatus;
   DoctorEntity doctor;
+  DoctorEntity clinicDoctor;
+  ClinicEntity clinic;
 
   List<MedicalTestItem> get medicalTestItems {
     return testsResponseStatus.values.toList();
@@ -43,6 +44,12 @@ class PatientScreening {
     visitStatus = json['visit_status'] ?? false;
     if (json['doctor_info']!=null) {
       doctor = DoctorEntity.fromJson(json['doctor_info']);
+    }
+    if (json['clinic_doctor_info']!=null) {
+      clinicDoctor = DoctorEntity.fromJson(json['clinic_doctor_info']);
+    }
+    if(json['clinic_info'] != null){
+      clinic = ClinicEntity.fromJson(json['clinic_info']);
     }
   }
 }

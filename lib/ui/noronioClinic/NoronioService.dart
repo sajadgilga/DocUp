@@ -1,5 +1,6 @@
 import 'package:Neuronio/blocs/MedicalTestListBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
+import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/MedicalTest.dart';
 import 'package:Neuronio/models/NoronioService.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
@@ -33,16 +34,15 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
   List<NoronioServiceItem> convertToNoronioServiceList(
       List<MedicalTestItem> tests) {
     List<NoronioServiceItem> services = [];
-    // NoronioServiceItem doctorList = NoronioServiceItem(
-    //     "مشاهده متخصصان",
-    //     Assets.noronioServiceDoctorList,
-    //     null,
-    //     NoronioClinicServiceType.DoctorsList, () {
-    //   // TODO
-    //
-    //   widget.onPush(NavigatorRoutes.partnerSearchView, NoronioClinic.ClinicId);
-    // }, true);
-    // services.insert(0, doctorList);
+
+    NoronioServiceItem doctorList = NoronioServiceItem(
+        "مشاهده متخصصان",
+        Assets.noronioServiceDoctorList,
+        null,
+        NoronioClinicServiceType.DoctorsList, () {
+      widget.onPush(NavigatorRoutes.partnerSearchView, NeuronioClinic.ClinicId);
+    }, true);
+    services.insert(0, doctorList);
 
     tests.forEach((element) {
       NoronioServiceItem cognitiveTest = NoronioServiceItem(
@@ -118,7 +118,7 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        DocUpHeader(
+        NeuronioHeader(
           title: "نورونیو",
           docUpLogo: false,
         ),

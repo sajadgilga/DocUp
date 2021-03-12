@@ -62,14 +62,6 @@ String normalizeCredit(String credit) {
     return credit;
 }
 
-String getJalaliDateStringFromJalali(Jalali jalali) {
-  return "${jalali.year}/${jalali.month}/${jalali.day}";
-}
-
-String getTimeStringFromDateTime(DateTime dateTime, {bool withSeconds = true}) {
-  return "${dateTime.hour}:${dateTime.minute}" +
-      (withSeconds ? ":${dateTime.second}" : "");
-}
 
 String convertToGeorgianDate(String jalaliDate) {
   var array = jalaliDate.split("/");
@@ -190,6 +182,13 @@ void showOneButtonDialog(
       callback();
     }
   });
+}
+
+String addExtraZeroOnLeftSideIfNeeded(String t,{int z=2}){
+  for(int i =0;i<z-t.length;i++){
+    t = "0"+t;
+  }
+  return t;
 }
 
 void showTwoButtonDialog(context, String message, String applyTitle,
@@ -432,4 +431,19 @@ String priceWithCommaSeparator(int price) {
   }
   String normPrice = pricePart.join(",");
   return normPrice.split("").reversed.join("");
+}
+
+Widget getButtonLoadingProgress({double r = 30, double stroke = 3,double value}) {
+  return SizedBox(
+    height: r,
+    width: r,
+    child: CircleAvatar(
+      radius: r,
+      backgroundColor: Color.fromARGB(0, 0, 0, 0),
+      child: CircularProgressIndicator(
+        strokeWidth: stroke,
+        value: value,
+      ),
+    ),
+  );
 }

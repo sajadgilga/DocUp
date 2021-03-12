@@ -17,7 +17,7 @@ class InfoPage extends StatefulWidget {
   final String emptyFilesLabel;
   final String pageName;
   bool uploadAvailable;
-  final TextPlanRemainedTraffic textPlanRemainedTraffic;
+  final PatientTextPlan textPlanRemainedTraffic;
 
   InfoPage(
       {Key key,

@@ -10,6 +10,7 @@ import 'package:Neuronio/repository/VideoCallRepository.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
 import 'package:Neuronio/ui/panel/PanelAlert.dart';
 import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
+import 'package:Neuronio/ui/visit/VisitUtils.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
@@ -28,7 +29,7 @@ import 'call.dart';
 
 class VideoOrVoiceCallPage extends StatefulWidget {
   final Entity entity;
-  final Function(String, UserEntity) onPush;
+  final Function(String, UserEntity, int, VisitSource) onPush;
   final bool videoCall;
 
   VideoOrVoiceCallPage(
@@ -46,6 +47,8 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
 
   @override
   void initState() {
+    BlocProvider.of<VisitTimeBloc>(context)
+        .add(VisitTimeGet(partnerId: widget.entity.pId));
     super.initState();
   }
 
@@ -61,7 +64,9 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
         children: <Widget>[
           PartnerInfo(
             entity: widget.entity.partnerEntity,
-            onPush: widget.onPush,
+            onPush: (string, userEntity) {
+              return widget.onPush(string, userEntity, null, VisitSource.USUAL);
+            },
           ),
           _videoCallPane(visitEntity: visitEntity)
         ],
@@ -88,8 +93,8 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
             label: Strings.requestSentLabelDoctorSide,
             buttonLabel: Strings.waitingForApprovalDoctorSide,
             callback: () {
-              widget.onPush(
-                  NavigatorRoutes.patientDialogue, widget.entity.partnerEntity);
+              widget.onPush(NavigatorRoutes.patientDialogue,
+                  widget.entity.partnerEntity, null, VisitSource.USUAL);
             },
           )
         ]);
@@ -100,7 +105,8 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
           String _visitTime;
           if (_visitTimeState is VisitTimeLoadedState) {
             _visitTime = replaceFarsiNumber(
-                DateTimeService.normalizeDateAndTime(_visitTimeState.visit.visitTime));
+                DateTimeService.normalizeDateAndTime(
+                    _visitTimeState.visit.visitTime));
 
             return Stack(children: <Widget>[
               _VideoOrVoiceCallPage(),
@@ -133,8 +139,8 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
             label: Strings.noAvailableVirtualVisit,
             buttonLabel: Strings.reserveVirtualVisit,
             callback: () {
-              widget.onPush(
-                  NavigatorRoutes.doctorDialogue, widget.entity.partnerEntity);
+              widget.onPush(NavigatorRoutes.doctorDialogue,
+                  widget.entity.partnerEntity, null, VisitSource.USUAL);
             },
           )
         ]);
@@ -272,9 +278,9 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
   }
 
   Future<void> _handleCameraAndMic() async {
-    if(CrossPlatformDeviceDetection.isWeb){
+    if (CrossPlatformDeviceDetection.isWeb) {
       /// TODO web
-    }else{
+    } else {
       await PermissionHandler().requestPermissions(
         [PermissionGroup.camera, PermissionGroup.microphone],
       );

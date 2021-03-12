@@ -118,12 +118,12 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
               ? _widget()
               : BlocBuilder<EntityBloc, EntityState>(
                   builder: (context, state) {
-                    if (state is EntityLoaded) {
+                    if (state.mEntityStatus == BlocState.Loaded) {
                       if (!firstInitialized) {
                         _initialApiCall();
                       }
                       return _widget();
-                    } else if (state is EntityError) {
+                    } else if (state.mEntityStatus == BlocState.Error) {
                       return APICallError(() {
                         BlocProvider.of<EntityBloc>(context).add(EntityGet());
                       });
@@ -160,7 +160,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
 
   _medicalTestWidget(MedicalTest test) {
     return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
-      if (state is EntityLoaded) {
+      if (state.mEntityStatus == BlocState.Loaded) {
         if (state.entity.mEntity != null) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -182,7 +182,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
                     topRightFlag: false,
                     topLeftFlag: CrossPlatformDeviceDetection.isIOS,
                   ),
-                  DocUpHeader(
+                  NeuronioHeader(
                     title: widget.testPageInitData.medicalTestItem.name,
                     docUpLogo: false,
                     color: IColors.black,
@@ -424,39 +424,48 @@ class _QuestionAnswersWidgetState extends State<QuestionAnswersWidget> {
     return state.entity.isPatient && widget.editable;
   }
 
-  Widget _multipleChoiceQuestion() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      reverse: true,
-      child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            for (var index = 0; index < widget.question.answers.length; index++)
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: ActionButton(
-                    height: 40,
-                    title: widget.question.answers[index].text,
-                    color: getButtonColor(widget.question.answers[index].id),
-                    textColor: Colors.black,
-                    borderRadius: 10,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    boxShadowFlag: true,
-                    callBack: () {
-                      if (_editable) {
-                        QuestionAnswer questionAnswer = QuestionAnswer(
-                            QuestionType.MultipleChoice,
-                            widget.question.answers[index],
-                            null);
-                        answerChanged(questionAnswer);
-                      }
-                    }),
-              )
-          ]),
+  Widget singleActionButtonAnswer(Answer answer) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: answer != null
+          ? ActionButton(
+              height: 40,
+              title: answer.text,
+              color: getButtonColor(answer.id),
+              textColor: Colors.black,
+              borderRadius: 10,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              boxShadowFlag: true,
+              callBack: () {
+                if (_editable) {
+                  QuestionAnswer questionAnswer =
+                      QuestionAnswer(QuestionType.MultipleChoice, answer, null);
+                  answerChanged(questionAnswer);
+                }
+              })
+          : SizedBox(
+              width: 20,
+            ),
     );
+  }
+
+  Widget _multipleChoiceQuestion() {
+    List<Widget> rows = [];
+    for (var index = 0; index < widget.question.answers.length; index += 2) {
+      Widget ch1 = singleActionButtonAnswer(widget.question.answers[index]);
+      Widget ch2 = (index == widget.question.answers.length - 1)
+          ? singleActionButtonAnswer(null)
+          : singleActionButtonAnswer(widget.question.answers[index + 1]);
+      rows.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [Expanded(child: ch1), Expanded(child: ch2)],
+      ));
+    }
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: rows);
   }
 
   Widget _descriptiveQuestion() {

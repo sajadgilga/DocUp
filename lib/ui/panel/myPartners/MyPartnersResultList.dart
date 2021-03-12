@@ -27,46 +27,41 @@ class _MyPartnersResultListState extends State<MyPartnersResultList> {
   Widget _list(List<Widget> results) {
     if (results.length == 0) {
       return Expanded(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
-                child: AutoText(
-                  Strings.noVirtualAppointment,
-                  style: TextStyle(fontSize: 14, color: IColors.darkGrey),
-                  textAlign: TextAlign.center,
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
+              child: AutoText(
+                Strings.noVirtualAppointment,
+                style: TextStyle(fontSize: 14, color: IColors.darkGrey),
+                textAlign: TextAlign.center,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
-                child: ActionButton(
-                  width: 185,
-                  height: 60,
-                  color: IColors.themeColor,
-                  textColor: IColors.whiteTransparent,
-                  borderRadius: 10,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  title: widget.isDoctor
-                      ? "جست‌و‌جو متخصصان"
-                      : "جست‌و‌جوی بیماران",
-                  callBack: () {
-                    widget.onPush(NavigatorRoutes.partnerSearchView, null);
-                  },
-                ),
-              )
-            ],
-          ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
+              child: ActionButton(
+                width: 185,
+                height: 60,
+                color: IColors.themeColor,
+                textColor: IColors.whiteTransparent,
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                title:
+                    widget.isDoctor ? "جست‌و‌جو متخصصان" : "جست‌و‌جوی بیماران",
+                callBack: () {
+                  widget.onPush(NavigatorRoutes.partnerSearchView, null);
+                },
+              ),
+            )
+          ],
         ),
       );
     } else {
-      return Expanded(
-        flex: 2,
-        child: ListView(
-          children: results,
-        ),
+      return ListView(
+        shrinkWrap: true,
+        children: results,
       );
     }
   }
@@ -86,13 +81,11 @@ class _MyPartnersResultListState extends State<MyPartnersResultList> {
           entity: result,
         ));
     }
-    return Expanded(
-      child: Container(
-        margin: EdgeInsets.only(top: 16, right: 15, left: 15),
+    return Container(
+      margin: EdgeInsets.only(top: 16, right: 15, left: 15),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[_list(results)],
-        ),
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[_list(results)],
       ),
     );
   }
@@ -122,7 +115,7 @@ class _MyPartnerItem extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(left: 0),
               child: AutoText(
-                "نورونیو",
+                (entity as DoctorEntity)?.clinic?.clinicName ?? "",
                 style: TextStyle(fontSize: 10, color: Colors.black26),
               ),
             ),
@@ -176,7 +169,7 @@ class _MyPartnerItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _location(),
+              entity is DoctorEntity ? _location() : SizedBox(),
               Expanded(
                 child: AutoText(
                   utfName,

@@ -1,3 +1,4 @@
+import 'package:Neuronio/utils/Utils.dart';
 import 'package:bloc/bloc.dart';
 import 'package:Neuronio/models/ChatMessage.dart';
 import 'package:Neuronio/repository/ChatMessageRepository.dart';
@@ -34,34 +35,31 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
     if (state is ChatMessageLoading) {
       var msgs = (state as ChatMessageLoading).chatMessages;
       msgs.add(event.msg);
-      yield ChatMessageLoading(
-          chatMessages: msgs);
+      yield ChatMessageLoading(chatMessages: msgs);
     }
     if (state is ChatMessageLoaded) {
       var msgs = (state as ChatMessageLoaded).chatMessages;
       msgs.add(event.msg);
-      yield ChatMessageLoaded(
-          chatMessages: msgs);
+      yield ChatMessageLoaded(chatMessages: msgs);
     }
     try {
-      await _chatMessageRepository.send(
+      var response = await _chatMessageRepository.uploadFileMessage(
           panel: event.panelId, message: event.msg);
     } catch (e) {
       print(e);
     }
   }
+
   Stream<ChatMessageState> _addToList(ChatMessageAddToList event) async* {
     if (state is ChatMessageLoading) {
       var msgs = (state as ChatMessageLoading).chatMessages;
       msgs.add(event.msg);
-      yield ChatMessageLoading(
-          chatMessages: msgs);
+      yield ChatMessageLoading(chatMessages: msgs);
     }
     if (state is ChatMessageLoaded) {
       var msgs = (state as ChatMessageLoaded).chatMessages;
       msgs.add(event.msg);
-      yield ChatMessageLoaded(
-          chatMessages: msgs);
+      yield ChatMessageLoaded(chatMessages: msgs);
     }
   }
 
@@ -72,7 +70,7 @@ class ChatMessageBloc extends Bloc<ChatMessageEvent, ChatMessageState> {
     } else if (event is ChatMessageUpdate) {
     } else if (event is ChatMessageSend) {
       yield* _send(event);
-    }else if (event is ChatMessageAddToList) {
+    } else if (event is ChatMessageAddToList) {
       yield* _addToList(event);
     }
   }
@@ -155,4 +153,20 @@ class ChatMessageError extends ChatMessageState {
 
   @override
   List<Object> get props => [error];
+}
+
+/// repsonse
+class ChatFileMessageResponse {
+  ChatMessage message;
+
+  ChatFileMessageResponse.fromJson(Map<String, dynamic> json) {
+    message = ChatMessage();
+    message.id = intPossible(json['id']);
+    message.panelId = intPossible(json['panel']);
+    message.message = utf8IfPossible(json['message']);
+    message.direction = intPossible(json['dir']);
+    message.type = intPossible(json['type']);
+    message.fileLink = json['file'];
+    message.isRead = json['is_read'];
+  }
 }

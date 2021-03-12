@@ -25,9 +25,15 @@ import 'VisitUtils.dart';
 class VirtualVisitPage extends StatefulWidget {
   final DoctorEntity doctorEntity;
   final int screeningId;
+  final VisitSource type;
   final Function(String, dynamic) onPush;
 
-  VirtualVisitPage({Key key, this.doctorEntity, this.onPush, this.screeningId})
+  VirtualVisitPage(
+      {Key key,
+      this.doctorEntity,
+      this.onPush,
+      this.screeningId,
+      @required this.type})
       : super(key: key);
 
   @override
@@ -503,7 +509,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         /// empty time
         showOneButtonDialog(context, Strings.emptyStartVisitTimeMessage,
             Strings.okAction, () {});
-      } else if (DateTimeService.getTimeMinute(timeTextController.text) <
+      } else if (DateTimeService.getTimeMinute(timeTextController.text) -
+                  6 * 60 <
               DateTimeService.getTimeMinute(currentTime) &&
           DateTimeService.getTodayInJalaliString() == dateTextController.text) {
         /// invalid time
@@ -558,7 +565,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         convertToGeorgianDate(DateTimeService.getTodayInJalaliString()) +
             "T" +
             "${now.hour}:${now.minute}" +
-            "+04:30");
+            "+04:30",
+        widget.type);
     setState(() {
       submitLoadingToggle = true;
     });
@@ -588,7 +596,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         convertToGeorgianDate(dateTextController.text) +
             "T" +
             startTime +
-            timeZone);
+            timeZone,
+        widget.type);
     setState(() {
       submitLoadingToggle = true;
     });

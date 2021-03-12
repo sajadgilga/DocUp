@@ -70,13 +70,13 @@ class UploadFileSliderState extends State<UploadFileSlider> {
 
   Future _getFile() async {
     CustomFile customFile = await CrossPlatformFilePicker.pickCustomFile(
-        AllowedFile.docs + AllowedFile.imageFormats);
+        AllowedFile.pdf + AllowedFile.images);
     if (customFile != null) {
       var newPicture = FileEntity(
           customFile: customFile,
           description: '',
           title: file.description,
-          base64: base64Encode(customFile.fileBits),
+          base64: customFile.convertToBase64,
           filePath: customFile.path ?? customFile.name);
       setState(() {
         file = newPicture;

@@ -165,7 +165,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   }
 
   bool _visitStatusEditable(VisitEntity visitEntity) {
-    if (visitEntity.visitStartTimeDiffFromNow > 24 * 60 * 60) {
+    if (visitEntity.visitStartTimeDiffFromNow > 5 * 60 * 60) {
       return true;
     }
     return false;

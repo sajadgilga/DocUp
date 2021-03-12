@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:Neuronio/blocs/NotificationBloc.dart';
+import 'package:Neuronio/main.dart';
 import 'package:Neuronio/models/NewestNotificationResponse.dart';
+import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/CustomException.dart';
 import 'package:Neuronio/repository/NotificationRepository.dart';
 import 'package:Neuronio/ui/mainPage/NotifNavigationRepo.dart';
@@ -21,11 +23,13 @@ class NotificationAndFirebaseService {
   static BuildContext context;
   static bool _isFCMConfigured = false;
   static NotificationNavigationRepo notifNavRepo;
+  static MapEntry<String, Map> currentPageAndData;
 
   static Future initFCM(context, Function onPush) async {
     NotificationAndFirebaseService.context = context;
     NotificationAndFirebaseService.notifNavRepo =
         NotificationNavigationRepo(onPush);
+
     /// TODO web
     if (!_isFCMConfigured && !kIsWeb) {
       try {
@@ -113,9 +117,21 @@ class NotificationAndFirebaseService {
       String body = message['notification']['body'];
       String dataJson = json.encode(message['data']);
       int notifId = intPossible(message['data']['notif_id']);
-      await _showNotificationWithDefaultSound(notifId, title, body, dataJson);
-      BlocProvider.of<NotificationBloc>(context).add(GetNewestNotifications());
+      int type = intPossible(message['data']['type']);
+      Map payloadMap = json.decode(message['data']['payload'].isEmpty
+          ? "{}"
+          : message['data']['payload']);
 
+      /// TODO filter notification to be shown; prevent from showing message if current page is chat page
+      if (type == 10 && currentPageAndData?.key == "_ChatPageState") {
+        if ((currentPageAndData.value['entity'] as Entity).iPanelId !=
+            intPossible(payloadMap['panel_id'])) {
+          await _showNotificationWithDefaultSound(
+              notifId, title, body, dataJson);
+        }
+      } else {
+        await _showNotificationWithDefaultSound(notifId, title, body, dataJson);
+      }
     } catch (e) {
       print(e.toString());
     } finally {
@@ -140,7 +156,14 @@ class NotificationAndFirebaseService {
   static void handleNotifNavigation(int notifId, String payload, int type,
       {String title, String description, String time, String date}) {
     NewestNotif notif = NewestNotif.getChildFromJsonAndData(
-        notifId, "", "", "00:00:00", "2020/01/01", json.decode(payload.isEmpty?"{}":payload), type);
+        notifId,
+        "",
+        "",
+        "00:00:00",
+        "2020/01/01",
+        json.decode(payload.isEmpty ? "{}" : payload),
+        type,
+        false);
 
     NotificationAndFirebaseService.notifNavRepo.navigate(context, notif);
 

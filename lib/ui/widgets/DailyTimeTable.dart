@@ -433,6 +433,7 @@ class DailyAvailableVisitTime extends StatefulWidget {
   final TextEditingController selectedDateController;
   final TextEditingController selectedTimeController;
   final Function onBlocTap;
+  final int minutesGapBetweenNow;
 
   /// 0 for allowing selecting just one part,1 for two and 2 for three part
 
@@ -447,7 +448,8 @@ class DailyAvailableVisitTime extends StatefulWidget {
       this.planDurationInMinute,
       this.selectedDateController,
       this.selectedTimeController,
-      this.onBlocTap})
+      this.onBlocTap,
+      this.minutesGapBetweenNow = 0})
       : super(key: key);
 
   @override
@@ -461,8 +463,7 @@ class _DailyAvailableVisitTimeTableState
   final LegendItem unavailableLegendItem =
       LegendItem("غیر فعال", Color.fromARGB(255, 180, 180, 180));
   final LegendItem reservedLegendItem = LegendItem("رزرو شده", Colors.black54);
-  final LegendItem selectedLegendItem =
-      LegendItem("انتخاب شده", Color.fromARGB(255, 44, 62, 80));
+  final LegendItem selectedLegendItem = LegendItem("انتخاب شده", IColors.green);
   List<int> selectedPartNumbers = [];
   List<int> errorSelectedPartNumber = [];
 
@@ -610,7 +611,7 @@ class _DailyAvailableVisitTimeTableState
                   height: 20,
                   color: Color.fromARGB(0, 0, 0, 0),
                   child: Icon(
-                    Icons.check_circle,
+                    Icons.circle,
                     color: selectedLegendItem.color,
                   ),
                 ),
@@ -681,8 +682,10 @@ class _DailyAvailableVisitTimeTableState
     } else if (selectedPartNumbers.length >= 2) {
       /// TODO max bloc per visit exceeded
       /// show snack bar
-      showSnackBar(null, "حداکثر زمان برای هر ویزیت ۳۰ دقیقه است",
-          context: context);
+      selectedPartNumbers = [];
+      // showSnackBar(null, "حداکثر زمان برای هر ویزیت ۳۰ دقیقه است",
+      //     context: context);
+      handleOnCellTap(r, c);
     }
     // else if (selectedPartNumbers.length == 0 ||
     //     selectedPartNumbers.last + 1 == currentBloc ||
@@ -711,12 +714,15 @@ class _DailyAvailableVisitTimeTableState
     // }
     else {
       if (c % 2 == 0) {
-        if (((widget.dayReservedTimeTable != null &&
-                    widget.dayReservedTimeTable[r][c] == 1) ||
-                widget.dailyDoctorWorkTime[r][c] == 0) ||
-            ((widget.dayReservedTimeTable != null &&
-                    widget.dayReservedTimeTable[r][c + 1] == 1) ||
-                widget.dailyDoctorWorkTime[r][c + 1] == 0)) {
+        bool firstIsReserved = ((widget.dayReservedTimeTable != null &&
+                widget.dayReservedTimeTable[r][c] == 1) ||
+            widget.dailyDoctorWorkTime[r][c] == 0);
+        bool secondIsReserved = ((widget.dayReservedTimeTable != null &&
+                widget.dayReservedTimeTable[r][c + 1] == 1) ||
+            widget.dailyDoctorWorkTime[r][c + 1] == 0);
+        bool firstInGap = checkCellGapLimit(r, c);
+        bool secondInGap = checkCellGapLimit(r, c + 1);
+        if (firstIsReserved || secondIsReserved || firstInGap || secondInGap) {
           showErrorOnCells(r, c, 1);
           showSnackBar(null, "زمان انتخاب شده در بازه های مناسب نیست.",
               context: context);
@@ -726,12 +732,15 @@ class _DailyAvailableVisitTimeTableState
           });
         }
       } else {
-        if (((widget.dayReservedTimeTable != null &&
-                    widget.dayReservedTimeTable[r][c] == 1) ||
-                widget.dailyDoctorWorkTime[r][c] == 0) ||
-            ((widget.dayReservedTimeTable != null &&
-                    widget.dayReservedTimeTable[r][c - 1] == 1) ||
-                widget.dailyDoctorWorkTime[r][c - 1] == 0)) {
+        bool firstIsReserved = ((widget.dayReservedTimeTable != null &&
+                widget.dayReservedTimeTable[r][c] == 1) ||
+            widget.dailyDoctorWorkTime[r][c] == 0);
+        bool secondIsReserved = ((widget.dayReservedTimeTable != null &&
+                widget.dayReservedTimeTable[r][c - 1] == 1) ||
+            widget.dailyDoctorWorkTime[r][c - 1] == 0);
+        bool firstInGap = checkCellGapLimit(r, c);
+        bool secondInGap = checkCellGapLimit(r, c - 1);
+        if (firstIsReserved || secondIsReserved || firstInGap || secondInGap) {
           showErrorOnCells(r, c, 1);
           showSnackBar(null, "زمان انتخاب شده در بازه های مناسب نیست.",
               context: context);
@@ -774,8 +783,25 @@ class _DailyAvailableVisitTimeTableState
     });
   }
 
-  void setCellValue(int rowIndex, int columnIndex, cellValue) async {
-    //TODO amir
+  bool checkCellGapLimit(
+    int rowNumber,
+    int columnNumber,
+  ) {
+    DateTime now = DateTimeService.getCurrentDateTime();
+
+    int partNumber = DoctorPlan.getPartNumberWithIndex(rowNumber, columnNumber);
+
+    int startCellMinute = partNumber * DoctorPlan.hourMinutePart;
+    DateTime cellDateTime = DateTimeService.getDateAndTimeFromJalali(
+        widget.selectedDateController.text);
+    cellDateTime = DateTime(cellDateTime.year, cellDateTime.month,
+        cellDateTime.day, startCellMinute ~/ 60, startCellMinute % 60);
+
+    if (cellDateTime
+        .isAfter(now.add(Duration(minutes: widget.minutesGapBetweenNow)))) {
+      return false;
+    }
+    return true;
   }
 
   Widget getOneCell(int rowNumber, int columnNumber, int key) {
@@ -800,18 +826,23 @@ class _DailyAvailableVisitTimeTableState
     }
 
     /// part number
+
     int partNumber = DoctorPlan.getPartNumberWithIndex(rowNumber, columnNumber);
 
     ///  TODO amir: color
     Color lessonColor;
     if (errorSelectedPartNumber.contains(partNumber)) {
       lessonColor = IColors.red;
-    } else if (key == 1) {
+    } else if (key == 1 && !checkCellGapLimit(rowNumber, columnNumber)) {
       if (widget.dayReservedTimeTable != null &&
           widget.dayReservedTimeTable[rowNumber][columnNumber] == 1) {
         lessonColor = reservedLegendItem.color;
       } else {
-        lessonColor = availableLegendItem.color;
+        if (selectedPartNumbers.contains(partNumber)) {
+          lessonColor = selectedLegendItem.color;
+        } else {
+          lessonColor = availableLegendItem.color;
+        }
       }
     } else {
       lessonColor = unavailableLegendItem.color;
@@ -824,12 +855,6 @@ class _DailyAvailableVisitTimeTableState
           left: (columnNumber % 2) * 1.0),
       width: widget.cellWidth,
       height: widget.cellHeight,
-      child: selectedPartNumbers.contains(partNumber)
-          ? Icon(
-              Icons.check_circle,
-              color: IColors.darkBlue,
-            )
-          : SizedBox(),
       decoration: BoxDecoration(
         borderRadius: res,
         color: lessonColor,

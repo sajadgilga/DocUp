@@ -57,15 +57,6 @@ class FileEntity {
       this.fileURL,
       this.extension});
 
-  // FormData toFormData() {
-  //   FormData data = FormData.fromMap({
-  //     "title": title,
-  //     "description": description,
-  //     "file": MultipartFile.fromFile(filePath)
-  //   });
-  //   return data;
-  // }
-
   Map<String, dynamic> toJson() {
     Map json = Map<String, dynamic>();
     json['title'] = title;
@@ -145,7 +136,7 @@ class FileEntity {
       }
     } else if (fileType == AllowedFileType.image) {
       return Image.memory(customFile.fileBits);
-    } else if (customFile.fileType == AllowedFileType.doc) {
+    } else if (customFile.fileType == AllowedFileType.pdf) {
       return Container(
         color: Colors.white,
         child: Padding(

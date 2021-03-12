@@ -195,7 +195,7 @@ class _VisitConfPageState extends State<VisitConfPage>
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-          DocUpHeader(
+          NeuronioHeader(
             docUpLogo: false,
           ),
           ALittleVerticalSpace(),
@@ -466,7 +466,7 @@ class _VisitConfPageState extends State<VisitConfPage>
         baseVoicePrice:
             intPossible(voiceBasePriceController.text, defaultValues: 0),
         basePhysicalVisitPrice: 0,
-        daysWorkTimes: plan.virtualVisitType?.daysWorkTimes??[]);
+        daysWorkTimes: plan.virtualVisitType?.daysWorkTimes ?? []);
   }
 
   VisitType getPhysicalVisitTypeDetail() {
@@ -480,7 +480,7 @@ class _VisitConfPageState extends State<VisitConfPage>
         baseTextPrice: 0,
         baseVideoPrice: 0,
         baseVoicePrice: 0,
-        daysWorkTimes: plan.physicalVisitType?.daysWorkTimes??[]);
+        daysWorkTimes: plan.physicalVisitType?.daysWorkTimes ?? []);
   }
 
   @override

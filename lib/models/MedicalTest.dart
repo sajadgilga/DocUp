@@ -118,10 +118,10 @@ class MedicalTestItem {
     done = json['done'] ?? false;
 
     /// TODO this may change for general google doc tests
-    if (description == "#lifeQ") {
+    if(json['type'] == 0){
       testType = TestType.GoogleDoc;
-      testLink = Strings.lifeQuestionerTestLink;
-    } else {
+      testLink = json['url']??"";
+    }else{
       testType = TestType.InApplication;
     }
   }

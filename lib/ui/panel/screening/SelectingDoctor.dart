@@ -7,6 +7,7 @@ import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/repository/DoctorRepository.dart';
 import 'package:Neuronio/repository/SearchRepository.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
+import 'package:Neuronio/ui/visit/VisitUtils.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoCompleteTextField.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
@@ -20,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScreeningDoctorSelectionPage extends StatefulWidget {
-  final Function(String, UserEntity) onPush;
+  final Function(String, UserEntity, int, VisitSource) onPush;
   final int screeningId;
 
   ScreeningDoctorSelectionPage({Key key, this.onPush, this.screeningId})
@@ -29,14 +30,13 @@ class ScreeningDoctorSelectionPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return ScreeningDoctorSelectionPageState(onPush: onPush);
+    return ScreeningDoctorSelectionPageState();
   }
 }
 
 class ScreeningDoctorSelectionPageState
     extends State<ScreeningDoctorSelectionPage> {
   ScreeningBloc _screeningBloc = ScreeningBloc();
-  final Function(String, UserEntity) onPush;
   TextEditingController _controller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -46,7 +46,7 @@ class ScreeningDoctorSelectionPageState
   AlertDialog _loadingDialog = getLoadingDialog();
   BuildContext _loadingContext;
 
-  ScreeningDoctorSelectionPageState({@required this.onPush});
+  ScreeningDoctorSelectionPageState();
 
   @override
   void initState() {
@@ -69,13 +69,15 @@ class ScreeningDoctorSelectionPageState
           Navigator.pop(context);
           BlocProvider.of<ScreeningBloc>(context)
               .add(GetPatientScreening(withLoading: true));
+
           /// fetching doctor date and got push to doctor dialog for requesting for visit
           LoadingAlertDialog loadingAlertDialog = LoadingAlertDialog(context);
           loadingAlertDialog.showLoading();
           int doctorId = _findDoctorIdByNameFormFetchedDoctors();
           UserEntity doctor = await DoctorRepository().getDoctor(doctorId);
           loadingAlertDialog.disposeDialog();
-          widget.onPush(NavigatorRoutes.doctorDialogue, doctor);
+          widget.onPush(NavigatorRoutes.doctorDialogue, doctor,
+              widget.screeningId, VisitSource.SCREENING);
         });
       } else if (event.status == Status.ERROR) {
         if (_loadingContext != null) {
@@ -128,6 +130,7 @@ class ScreeningDoctorSelectionPageState
             hintText: "نام دکتر را وارد کنید",
             forced: false,
             notFoundError: "دکتری با این نام وجود ندارد.",
+            items: allFetchedDoctors.map((e) => e.fullName).toList(),
             suggestionsCallback: (pattern) async {
               if (pattern == null || pattern.length <= 1) {
                 return null;
@@ -185,7 +188,7 @@ class ScreeningDoctorSelectionPageState
                 Navigator.pop(context);
               },
               topRightFlag: true,
-              topRight: DocUpHeader(
+              topRight: NeuronioHeader(
                 title: "ویزیت با پزشک",
                 docUpLogo: false,
               ),

@@ -35,14 +35,21 @@ class DiscountTextField extends StatefulWidget {
 class _DiscountTextFieldState extends State<DiscountTextField> {
   Widget disCountPrefixIcon() {
     return GestureDetector(
-      onTap: widget.onDiscountIconTap,
+      onTap: () {
+        if (widget.onDiscountIconTap != null) {
+          widget.onDiscountIconTap();
+        }
+        FocusScope.of(context).unfocus();
+      },
       child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 3),
+          width: 70,
+          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(15))),
           child: widget.discountStatus == DiscountStats.Null
-              ? Icon(Icons.add)
+              ? AutoText("ثبت کد")
               : (widget.discountStatus == DiscountStats.Loading
                   ? CircleAvatar(
                       backgroundColor: Color.fromARGB(0, 0, 0, 0),
