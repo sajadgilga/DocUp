@@ -2,7 +2,6 @@ import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/da
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-
 /// Signature for a function that builds a generated day separator.
 typedef Positioned GeneratedDaySeparatorBuilder(
   BuildContext context,

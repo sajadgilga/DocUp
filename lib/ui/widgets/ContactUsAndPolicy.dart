@@ -23,7 +23,7 @@ suggestionsAndCriticism() {
       mainAxisSize: MainAxisSize.min,
       children: [
         GestureDetector(
-          onTap: () => launch(Strings.supportTelegramLLink),
+          onTap: () => launch(InAppStrings.supportTelegramLLink),
           child: Container(
               padding: EdgeInsets.all(5),
               width: iconsSize * telegramIconScale,
@@ -33,7 +33,7 @@ suggestionsAndCriticism() {
               )),
         ),
         GestureDetector(
-          onTap: () => launch(Strings.supportWhatsAppLink),
+          onTap: () => launch(InAppStrings.supportWhatsAppLink),
           child: Container(
               padding: EdgeInsets.all(5),
               width: iconsSize,
@@ -43,7 +43,7 @@ suggestionsAndCriticism() {
               )),
         ),
         GestureDetector(
-          onTap: () => launch(Strings.supportInstagramLink),
+          onTap: () => launch(InAppStrings.supportInstagramLink),
           child: Container(
               margin: EdgeInsets.all(5),
               padding: EdgeInsets.all(6),
@@ -68,7 +68,7 @@ Widget aboutUsButton(BuildContext context) {
     color: IColors.themeColor,
     fontWeight: FontWeight.bold,
     callBack: () {
-      launchURL(Strings.appSiteLink);
+      launchURL(InAppStrings.appSiteLink);
     },
   );
   // return GestureDetector(
@@ -96,21 +96,21 @@ Widget aboutUsButton(BuildContext context) {
 
 Widget paymentDescription(BuildContext context) {
   return ActionButton(
-    title: Strings.paymentDescriptionTitle,
+    title: InAppStrings.paymentDescriptionTitle,
     color: IColors.themeColor,
     fontWeight: FontWeight.bold,
     callBack: () {
       var _state = BlocProvider.of<EntityBloc>(context).state;
       if (_state.entity?.isDoctor == true) {
         showDescriptionAlertDialog(context,
-            title: Strings.paymentDescriptionTitle,
-            description: Strings.paymentDescriptionDoctor,
+            title: InAppStrings.paymentDescriptionTitle,
+            description: InAppStrings.paymentDescriptionDoctor,
             buttonTitle: "باشه",
             action: () {});
       } else {
         showDescriptionAlertDialog(context,
-            title: Strings.paymentDescriptionTitle,
-            description: Strings.paymentDescriptionPatient,
+            title: InAppStrings.paymentDescriptionTitle,
+            description: InAppStrings.paymentDescriptionPatient,
             buttonTitle: "باشه",
             action: () {});
       }
@@ -125,8 +125,8 @@ Widget policyAndConditions(BuildContext context) {
     fontWeight: FontWeight.bold,
     callBack: () {
       showDescriptionAlertDialog(context,
-          title: Strings.privacyAndPolicy,
-          description: Strings.policyDescription,
+          title: InAppStrings.privacyAndPolicy,
+          description: InAppStrings.policyDescription,
           buttonTitle: "باشه",
           action: () {});
     },

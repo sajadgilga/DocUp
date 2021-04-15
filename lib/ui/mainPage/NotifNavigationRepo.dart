@@ -85,7 +85,6 @@ class NotificationNavigationRepo {
 
   Future<void> joinVideoOrVoiceCall(context,
       NewestVideoVoiceCallNotif videoVoiceCallNotif, Entity entity) async {
-    /// TODO need to provide visit to call page later
     // if (isCallStarted) return;
     isCallStarted = true;
     await _handleCameraAndMic();
@@ -117,7 +116,7 @@ class NotificationNavigationRepo {
   //       });
   // }
 
-  Future<void> navigateToPanelByVisitNotification(
+  navigateToPanelByVisitNotification(
       NewestVisitNotif visit, BuildContext context) {
     bool isDoctor =
         BlocProvider.of<EntityBloc>(context).state?.entity?.isDoctor;
@@ -143,7 +142,7 @@ class NotificationNavigationRepo {
       return patientTextPlan;
     }
 
-    /// TODO maybe it is better to delete true
+    /// TODO: maybe it is better to delete true boolean from condition
     if (isDoctor != null && lastVisitIdPage != visit.visitId || true) {
       LoadingAlertDialog loadingAlertDialog = LoadingAlertDialog(context);
       loadingAlertDialog.showLoading();
@@ -152,13 +151,13 @@ class NotificationNavigationRepo {
           loadingAlertDialog.disposeDialog();
           partner.vid = visit.visitId;
           lastVisitIdPage = visit.visitId;
-          onPush(NavigatorRoutes.panel, partner, textPlan, null , null);
+          onPush(NavigatorRoutes.panel, partner, textPlan, null, null);
         });
       });
     }
   }
 
-  Future<void> navigateToPanelByChatMessage(
+  navigateToPanelByChatMessage(
       NewestChatMessage chatMessageNotif, BuildContext context) {
     Entity entity = BlocProvider.of<EntityBloc>(context).state?.entity;
     bool isDoctor = entity?.isDoctor;
@@ -196,8 +195,7 @@ class NotificationNavigationRepo {
     });
   }
 
-  Future<void> navigateToPatientRequestPage(
-      NewestVisitNotif visit, BuildContext context) {
+  navigateToPatientRequestPage(NewestVisitNotif visit, BuildContext context) {
     bool isDoctor =
         BlocProvider.of<EntityBloc>(context).state?.entity?.isDoctor;
     Future<UserEntity> getPartnerEntity() async {
@@ -246,8 +244,8 @@ class NotificationNavigationRepo {
       }
 
       if (medicalTestItem.isGoogleDocTest) {
+        /// TODO: it depend on test implementation
         if (isDoctor) {
-          /// TODO
         } else {
           launchURL(medicalTestItem.testLink);
         }

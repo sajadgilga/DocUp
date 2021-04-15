@@ -2,7 +2,6 @@ import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/da
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-
 /// Class that builds events of a day displayed by [EventViewComponent].
 @immutable
 class DayBuilder {

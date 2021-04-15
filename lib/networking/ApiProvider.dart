@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:Neuronio/networking/CustomException.dart';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiProvider {
-  static const String URL_IP = "185.252.30.163:8001";
+  static const String URL_IP = "185.252.30.163";
   static const String Host = "http://$URL_IP";
-  final String _BASE_URL = "http://$URL_IP/";
+  final String _baseURL = "http://$URL_IP/";
 
   static String getURLParametersString(Map<String, dynamic> params) {
     List<String> paramList = [];
@@ -23,8 +23,8 @@ class ApiProvider {
     var responseJson;
     try {
       final headers = await getHeaders();
-      print(_BASE_URL + url);
-      final response = await http.get(_BASE_URL + url, headers: headers);
+      print(_baseURL + url);
+      final response = await http.get(_baseURL + url, headers: headers);
       responseJson =
           _response(httpResponse: response, utf8Support: utf8Support);
     } on SocketException {
@@ -33,7 +33,8 @@ class ApiProvider {
     return responseJson;
   }
 
-  Future<dynamic> getWithBaseUrl(String url, {Map body, bool utf8Support = false}) async {
+  Future<dynamic> getWithBaseUrl(String url,
+      {Map body, bool utf8Support = false}) async {
     var responseJson;
     try {
       final headers = await getHeaders();
@@ -56,9 +57,9 @@ class ApiProvider {
       if (token != null && token.isNotEmpty) {
         headers.addAll({HttpHeaders.authorizationHeader: "JWT " + token});
       }
-      print(_BASE_URL + url);
-      final response = await Dio().post(_BASE_URL + url,
-          data: data, options: Options(headers: headers));
+      print(_baseURL + url);
+      final response = await Dio()
+          .post(_baseURL + url, data: data, options: Options(headers: headers));
       responseJson = _response(dioResponse: response);
     } on SocketException {
       throw FetchDataException('اتصال به اینترنت را بررسی کنید');
@@ -71,7 +72,7 @@ class ApiProvider {
     var responseJson;
     try {
       final headers = await getHeaders(withToken: withToken);
-      print(_BASE_URL + url);
+      print(_baseURL + url);
       final response = await http.post(baseUrl + url,
           body: jsonEncode(body), headers: headers);
       responseJson =
@@ -84,7 +85,7 @@ class ApiProvider {
 
   Future<dynamic> post(String url,
       {Map body, bool withToken = true, bool utf8Support = false}) async {
-    return postWithBaseUrl(_BASE_URL, url,
+    return postWithBaseUrl(_baseURL, url,
         body: body, withToken: withToken, utf8Support: utf8Support);
   }
 
@@ -107,8 +108,8 @@ class ApiProvider {
     var responseJson;
     try {
       final headers = await getHeaders();
-      print(_BASE_URL + url);
-      final response = await http.patch(_BASE_URL + url,
+      print(_baseURL + url);
+      final response = await http.patch(_baseURL + url,
           body: jsonEncode(body), headers: headers);
       responseJson = _response(httpResponse: response);
     } on SocketException {
@@ -121,8 +122,8 @@ class ApiProvider {
     var responseJson;
     try {
       final headers = await getHeaders();
-      print(_BASE_URL + url);
-      final response = await http.delete(_BASE_URL + url, headers: headers);
+      print(_baseURL + url);
+      final response = await http.delete(_baseURL + url, headers: headers);
       responseJson = _response(httpResponse: response);
     } on SocketException {
       throw FetchDataException('اتصال به اینترنت را بررسی کنید');
@@ -158,7 +159,7 @@ class ApiProvider {
 
         /// some changes happened in backend and error_code became code and detail became msg
         throw ApiException(
-            responseJson['error_code'] ?? responseJson['code']??404,
+            responseJson['error_code'] ?? responseJson['code'] ?? 404,
             responseJson['detail'] ??
                 responseJson['msg'] ??
                 (responseJson['non_field_errors'] != null

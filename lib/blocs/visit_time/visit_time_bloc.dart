@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+
 import 'package:Neuronio/models/VisitResponseEntity.dart';
-import 'package:meta/meta.dart';
 import 'package:Neuronio/repository/VisitRepository.dart';
+import 'package:bloc/bloc.dart';
+import 'package:meta/meta.dart';
 
 part 'visit_time_event.dart';
-
 part 'visit_time_state.dart';
 
 class VisitTimeBloc extends Bloc<VisitTimeEvent, VisitTimeState> {

@@ -11,7 +11,7 @@ class DoctorCreditWidget extends StatefulWidget {
   final DoctorEntity doctorEntity;
   final Function onTakeMoney;
 
-  DoctorCreditWidget({this.credit,this.doctorEntity,this.onTakeMoney});
+  DoctorCreditWidget({this.credit, this.doctorEntity, this.onTakeMoney});
 
   @override
   _DoctorCreditWidgetState createState() => _DoctorCreditWidgetState();

@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/ui/start/RoleType.dart';
-import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'AutoText.dart';
 
@@ -33,8 +31,7 @@ class _OptionButtonState extends State<OptionButton> {
 
   Color getCurrentColor() => _isSelected ? IColors.themeColor : Colors.grey;
 
-  Widget radioButton() =>
-      Container(
+  Widget radioButton() => Container(
         width: 16,
         height: 16,
         padding: EdgeInsets.all(2.0),
@@ -43,11 +40,11 @@ class _OptionButtonState extends State<OptionButton> {
             border: Border.all(color: getCurrentColor(), width: 2.0)),
         child: _isSelected
             ? Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle, color: getCurrentColor()),
-        )
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: getCurrentColor()),
+              )
             : Container(),
       );
 

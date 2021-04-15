@@ -1,4 +1,4 @@
-class Strings {
+class InAppStrings {
   static const String appTitle = 'Neuronio';
   static const String appSiteLink = "https://neuronio.ir";
   static const String bottomNavigationHomeTitle = 'خانه';
@@ -47,14 +47,14 @@ class Strings {
   static const String enterAction = "ورود";
   static const String accountQuestion = "حساب کاربری دارید؟";
   static final String searchBoxHint = 'جست‌و‌جو';
-  static final String PatientSearchBoxHint = 'جست‌وجوی متخصص';
-  static final String PatientSearchBoxTooltip =
+  static final String patientSearchBoxHint = 'جست‌وجوی متخصص';
+  static final String patientSearchBoxTooltip =
       'برای جست‌و‌جو و اتصال به پزشک، کلیک کنید';
-  static final String DoctorSearchBoxHint = 'جست‌و‌جوی بیماران شما';
-  static final String docupIntroHomePart1 = 'نورونیو';
+  static final String doctorSearchBoxHint = 'جست‌و‌جوی بیماران شما';
+  static final String neuronioIntroHomePart1 = 'نورونیو';
 
 //
-  static final String docupIntroHomePart2 = 'پل ارتباطی بین پزشک و بیمار';
+  static final String neuronioIntroHomePart2 = 'پل ارتباطی بین پزشک و بیمار';
   static final String medicineReminder = 'یادآوری داروها';
   static final String doctorTrackingLabel = 'مراجعین من';
   static final String patientPanelMenuLabel = 'پنل کاربری';
@@ -144,7 +144,6 @@ class Strings {
       "اگر دکتری را از قبل می شناسید وارد کنید تا ما ارتباط شما را فراهم کنیم.";
   static final String requestFailed = "درخواست با خطا مواجه شد.";
 
-  /// TODO link should become dynamic
   static final String lifeQuestionerTestLink =
       "https://docs.google.com/forms/d/e/1FAIpQLScCXP2RlG1TYTgeu8gCdOV1Adpaxh1Ae8-7YflIPyTpB6BjJg/viewform";
 
@@ -160,7 +159,7 @@ class Strings {
 
 //
   static final String physicalReservationLabel = 'رزرو مشاوره حضوری';
-  static final String ICAReservationLabel = "رزرو مشاوره ica";
+  static final String icaReservationLabel = "رزرو مشاوره ica";
   static final String virtualReservationLabel = 'رزرو مشاوره مجازی';
   static final String trafficPlanReservationLabel = "خرید مشاوره متنی";
 
@@ -217,7 +216,6 @@ class Strings {
       '\n'
       ' در قسمت درخواست ها میتوانید به بیماری متصل شوید';
 
-  /// TODO
   static final String learningVideosLink =
       "https://www.aparat.com/Neuronio.Clinic";
 
@@ -262,9 +260,9 @@ class Strings {
       "لطفا زمان ویزیت مناسبی را وارد کنید";
   static final String pastStartVisitTimeMessage =
       "نمی توان ویزیتی رو دیرتر از ۶ ساعت مانده به زمان آن درخواست دهید.";
-  static final String invalidDurationPlan_EmptyDurationPlan =
+  static final String emptyDurationPlan =
       "پزشک زمانی را برای ویزیت تایید نمی کند.";
-  static final List<String> invalidDurationPlan_Plans = [
+  static final List<String> invalidDurationPlan = [
     "مدت زمان ویزیت انتخاب شده مورد تایید پزشک نیست." +
         "\n" +
         " زمان های مورد تایید، ویزیت های",
@@ -1758,4 +1756,23 @@ class Strings {
     "یولاگلدی": 1517,
     "یونسی": 1518
   };
+}
+
+class ReportStrings {
+  static final String yourHealthCognitiveLevelGuid =
+      "شکل روبرو عملکرد شما را در تست سنجش یکپارچه شناختی که بر روی تبلت انجام دادید نشان میدهد.‫" +
+          " " +
+          "همانطور که میبینید در این تست سرعت، دقت و توجه که همگی از اجزای شناخت مغز هستند بررسی شده است." +
+          " " +
+          "عملکرد شما خط آبی میباشد. محیط این شش ضلعی بهترین عملکردی است که یک فرد میتواند داشته باشد. هر چه خط آبی به محیط شش ضلعی نزدیکتر باشد عملکرد شناختی شما بهتر بوده است." +
+          " " +
+          "اجزای شناختی شما که در بالا ذکر شد همگی در محدوده نرمال میباشند.";
+  static final String compareIcaScoreGuid =
+      "در این نمودار میتوانید عملکردتان را با همسالان خود مقایسه کنید. نمره شما با توجه به افراد هم سن، در محدوده سبز یعنی نرمال واقع شده است.‫" +
+          " " +
+          "خط وسط در محدوده سبز میانگین نمره را در افراد نرمال نشان میدهد. امتیاز شما زیر خط میانگین واقع شده است که جای نگرانی وجود ندارد و همینکه به توصیه های داده شده عمل کنید برای شما کافی خواهد بود." +
+          " " +
+          "همچنین میتوانید هر 6 ماه برای تحت نظر قرار دادن خود این تست را انجام بدهید.";
+  static final String comeBack6MonthLater =
+      "برنامه‌های پیشنهادی فوق را طبق زمان‌بندی ذکر شده پیش برده و بعد از 6 ماه، مجددا توصیه می‌شود ارزیابی جامع شناختی انجام شود تا پیشرفت و تغییرات حاصل شده اندازه‌گیری شود.";
 }

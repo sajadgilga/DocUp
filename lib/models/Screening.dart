@@ -2,6 +2,7 @@ import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/utils/Utils.dart';
 
 import 'MedicalTest.dart';
+
 class PatientScreening {
   int id;
   bool paymentStatus;
@@ -42,13 +43,13 @@ class PatientScreening {
     }
     icaStatus = json['ica_status'] ?? false;
     visitStatus = json['visit_status'] ?? false;
-    if (json['doctor_info']!=null) {
+    if (json['doctor_info'] != null) {
       doctor = DoctorEntity.fromJson(json['doctor_info']);
     }
-    if (json['clinic_doctor_info']!=null) {
+    if (json['clinic_doctor_info'] != null) {
       clinicDoctor = DoctorEntity.fromJson(json['clinic_doctor_info']);
     }
-    if(json['clinic_info'] != null){
+    if (json['clinic_info'] != null) {
       clinic = ClinicEntity.fromJson(json['clinic_info']);
     }
   }
@@ -106,7 +107,71 @@ class ActivateScreeningPlanResponse {
 
   ActivateScreeningPlanResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'] ?? false;
-    msg = utf8IfPossible(json['msg']??"");
+    msg = utf8IfPossible(json['msg'] ?? "");
     code = intPossible(json['code']);
+  }
+}
+
+/// model
+class ICATestScores {
+  int icaIndex;
+  int accuracy;
+  int accuracyMaintenance;
+  int speed;
+  int speedMaintenance;
+  int attention;
+
+  List<String> get featuresTitle {
+    return [
+      "   امتیاز ICA",
+      "دقت",
+      "تداوم " + "\n" + "دقت",
+      "سرعت",
+      "تداوم سرعت",
+      "توجه"
+    ];
+  }
+
+  static List<int> healthyPatientFeaturesValue() {
+    return [84, 98, 98, 98, 98, 98];
+  }
+
+  List<int> get featuresValues {
+    return [
+      icaIndex,
+      accuracy,
+      accuracyMaintenance,
+      speed,
+      speedMaintenance,
+      attention
+    ];
+  }
+
+  ICATestScores(
+      {this.icaIndex,
+      this.accuracy,
+      this.accuracyMaintenance,
+      this.speed,
+      this.speedMaintenance,
+      this.attention});
+
+  ICATestScores.fromJson(Map<String, dynamic> json) {
+    icaIndex = intPossible(json['ica_index']);
+    accuracy = intPossible(json['accuracy']);
+    accuracyMaintenance = intPossible(json['accuracy_maintenance']);
+    speed = intPossible(json['speed']);
+    speedMaintenance = intPossible(json['speed_maintenance']);
+    attention = intPossible(json['attention']);
+  }
+
+  toJson() {
+    Map<String, dynamic> data = {};
+    data['ica_index'] = icaIndex;
+    data['accuracy'] = accuracy;
+    data['accuracy_maintenance'] = accuracyMaintenance;
+    data['speed'] = speed;
+    data['speed_maintenance'] = speedMaintenance;
+    data['attention'] = attention;
+    return data;
   }
 }

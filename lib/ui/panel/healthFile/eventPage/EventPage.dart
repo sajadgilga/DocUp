@@ -1,14 +1,11 @@
-import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/models/Event.dart';
 import 'package:Neuronio/models/UserEntity.dart';
-import 'package:Neuronio/ui/home/notification/NotificationPage.dart';
 import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/FloatingButton.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 //enum _MedicinePage { MAIN, CREATION }
 
@@ -58,17 +55,18 @@ class _EventPageState extends State<EventPage> {
 
   Widget _eventList() {
     return Container(
-      /// TODO
-      // child: ListView.builder(
-      //     shrinkWrap: true,
-      //     scrollDirection: Axis.vertical,
-      //     itemCount: _events.length,
-      //     itemBuilder: (BuildContext context, int index) => NotificationItem(
-      //           title: _events[index].title,
-      //           description: _events[index].description,
-      //           time: _events[index].time,
-      //         )),
-    );
+
+        /// TODO
+        // child: ListView.builder(
+        //     shrinkWrap: true,
+        //     scrollDirection: Axis.vertical,
+        //     itemCount: _events.length,
+        //     itemBuilder: (BuildContext context, int index) => NotificationItem(
+        //           title: _events[index].title,
+        //           description: _events[index].description,
+        //           time: _events[index].time,
+        //         )),
+        );
   }
 
   Widget _emptyList() {

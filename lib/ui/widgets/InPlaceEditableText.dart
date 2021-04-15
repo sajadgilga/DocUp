@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'AutoText.dart';
 
+// ignore: must_be_immutable
 class InPlaceEditableText extends StatefulWidget {
   final String title;
   String text;

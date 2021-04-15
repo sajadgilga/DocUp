@@ -1,5 +1,4 @@
 import 'package:Neuronio/blocs/TextPlanBloc.dart';
-import 'package:Neuronio/models/AuthResponseEntity.dart';
 import 'package:Neuronio/models/TextPlan.dart';
 import 'package:Neuronio/networking/ApiProvider.dart';
 

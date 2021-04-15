@@ -18,7 +18,6 @@ import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'TrackingList.dart';
 
@@ -61,23 +60,23 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
-  Widget _intro(double width) => IgnorePointer(
-          child: ListView(
-        padding: EdgeInsets.only(right: width * .075),
-        shrinkWrap: true,
-        children: <Widget>[
-          AutoText(
-            Strings.docupIntroHomePart1,
-            textDirection: TextDirection.rtl,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          AutoText(
-            Strings.docupIntroHomePart2,
-            textDirection: TextDirection.rtl,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
-          ),
-        ],
-      ));
+  // Widget _intro(double width) => IgnorePointer(
+  //         child: ListView(
+  //       padding: EdgeInsets.only(right: width * .075),
+  //       shrinkWrap: true,
+  //       children: <Widget>[
+  //         AutoText(
+  //           InAppStrings.neuronioIntroHomePart1,
+  //           textDirection: TextDirection.rtl,
+  //           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  //         ),
+  //         AutoText(
+  //           InAppStrings.neuronioIntroHomePart2,
+  //           textDirection: TextDirection.rtl,
+  //           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+  //         ),
+  //       ],
+  //     ));
 
   // Widget _reminderList() {
   //   return BlocBuilder <MedicineBloc, MedicineState>(
@@ -139,7 +138,6 @@ class _HomeState extends State<Home> {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       child: GestureDetector(
         onTap: () {
-          /// TODO
           widget.selectPage(2);
         },
         child: Stack(
@@ -231,7 +229,7 @@ class _HomeState extends State<Home> {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       child: GestureDetector(
         onTap: () async {
-          await launchURL(Strings.learningVideosLink);
+          await launchURL(InAppStrings.learningVideosLink);
         },
         child: Stack(
           alignment: Alignment.centerRight,
@@ -266,22 +264,22 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _homeListLabel() {
-    var entity = BlocProvider.of<EntityBloc>(context).state.entity;
-    if (entity.isPatient) {
-      return AutoText(
-        Strings.medicineReminder,
-        textAlign: TextAlign.center,
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-      );
-    } else if (entity.isDoctor) {
-      return AutoText(
-        Strings.doctorTrackingLabel,
-        textAlign: TextAlign.center,
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-      );
-    }
-  }
+  // Widget _homeListLabel() {
+  //   var entity = BlocProvider.of<EntityBloc>(context).state.entity;
+  //   if (entity.isPatient) {
+  //     return AutoText(
+  //       InAppStrings.medicineReminder,
+  //       textAlign: TextAlign.center,
+  //       style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+  //     );
+  //   } else if (entity.isDoctor) {
+  //     return AutoText(
+  //       InAppStrings.doctorTrackingLabel,
+  //       textAlign: TextAlign.center,
+  //       style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+  //     );
+  //   }
+  // }
 
   Widget _iPartner() {
     return BlocBuilder<EntityBloc, EntityState>(
@@ -295,8 +293,8 @@ class _HomeState extends State<Home> {
               globalOnPush: widget.globalOnPush,
               color: IColors.themeColor,
               label: (state.entity.isPatient
-                  ? Strings.iDoctorLabel
-                  : Strings.iPatientLabel),
+                  ? InAppStrings.iDoctorLabel
+                  : InAppStrings.iPatientLabel),
             );
           } else {
             return IPartner(
@@ -305,8 +303,8 @@ class _HomeState extends State<Home> {
               globalOnPush: widget.globalOnPush,
               color: IColors.themeColor,
               label: (state.entity.isPatient
-                  ? Strings.iDoctorLabel
-                  : Strings.iPatientLabel),
+                  ? InAppStrings.iDoctorLabel
+                  : InAppStrings.iPatientLabel),
               partnerState: BlocState.Loading,
             );
           }
@@ -319,8 +317,8 @@ class _HomeState extends State<Home> {
               globalOnPush: widget.globalOnPush,
               color: IColors.themeColor,
               label: (state.entity.isPatient
-                  ? Strings.iDoctorLabel
-                  : Strings.iPatientLabel),
+                  ? InAppStrings.iDoctorLabel
+                  : InAppStrings.iPatientLabel),
             );
           }
         }
@@ -328,8 +326,8 @@ class _HomeState extends State<Home> {
         return IPartner(
           color: IColors.themeColor,
           label: (state.entity.isPatient
-              ? Strings.iDoctorLabel
-              : Strings.iPatientLabel),
+              ? InAppStrings.iDoctorLabel
+              : InAppStrings.iPatientLabel),
           onPush: widget.onPush,
           partnerState: BlocState.Empty,
         );

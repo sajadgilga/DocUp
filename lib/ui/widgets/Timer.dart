@@ -24,11 +24,12 @@ class Timer extends StatelessWidget {
             (state.duration % 60).floor().toString().padLeft(2, '0');
         return AutoText(
           replaceFarsiNumber(' $minutesStr:$secondsStr '),
-          style: style??TextStyle(
-            fontSize: 14,
-            color: IColors.themeColor,
-            fontFamily: 'iransans',
-          ),
+          style: style ??
+              TextStyle(
+                fontSize: 14,
+                color: IColors.themeColor,
+                fontFamily: 'iransans',
+              ),
         );
       },
     );

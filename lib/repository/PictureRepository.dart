@@ -6,10 +6,11 @@ import 'package:Neuronio/networking/ApiProvider.dart';
 class FileRepository {
   ApiProvider _provider = ApiProvider();
 
-  Future<FileEntity> uploadFile(FileEntity file, int listId,int partnerId) async {
+  Future<FileEntity> uploadFile(
+      FileEntity file, int listId, int partnerId) async {
     var data = file.toJson();
-    final response =
-        await _provider.post('api/create-file/$listId/?partner_id=$partnerId', body: data);
+    final response = await _provider
+        .post('api/create-file/$listId/?partner_id=$partnerId', body: data);
     return FileEntity.fromJson(response);
   }
 

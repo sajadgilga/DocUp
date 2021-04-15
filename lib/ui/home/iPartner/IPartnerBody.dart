@@ -3,8 +3,6 @@ import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/Panel.dart';
 import 'package:Neuronio/models/TextPlan.dart';
 import 'package:Neuronio/models/UserEntity.dart';
-import 'package:Neuronio/repository/DoctorRepository.dart';
-import 'package:Neuronio/repository/PatientRepository.dart';
 import 'package:Neuronio/repository/TextPlanRepository.dart';
 import 'package:Neuronio/ui/home/iPartner/ChatBox.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
@@ -35,7 +33,8 @@ class IPartnerBody extends StatelessWidget {
     if (entity.isPatient)
       return (entity.partnerEntity as DoctorEntity).expert;
     else
-      return entity.panel.statusDescription; //TODO
+      return entity.panel
+          .statusDescription; //TODO: check if it is working properly and change to customer journey changing
   }
 
   String _getLocation(context) {
@@ -48,7 +47,7 @@ class IPartnerBody extends StatelessWidget {
       else
         return '';
     } else {
-      return ""; //TODO
+      return "";
     }
   }
 

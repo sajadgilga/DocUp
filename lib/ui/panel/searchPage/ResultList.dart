@@ -42,10 +42,10 @@ class _PartnerResultListState extends State<PartnerResultList> {
         child: Center(
           child: AutoText(
             (widget.isDoctor
-                ? Strings.emptyDoctorSearch
+                ? InAppStrings.emptyDoctorSearch
                 : (widget.isRequestsOnly
-                    ? Strings.emptyRequestsDoctorSide
-                    : Strings.emptySearchDoctorSide)),
+                    ? InAppStrings.emptyRequestsDoctorSide
+                    : InAppStrings.emptySearchDoctorSide)),
             style: TextStyle(fontSize: 10),
             textAlign: TextAlign.center,
           ),
@@ -91,8 +91,8 @@ class _PartnerResultListState extends State<PartnerResultList> {
             alignment: Alignment.centerRight,
             child: AutoText(
               (widget.isRequestsOnly
-                  ? Strings.requestsSearchLabel
-                  : Strings.resultSearchLabel),
+                  ? InAppStrings.requestsSearchLabel
+                  : InAppStrings.resultSearchLabel),
               style: TextStyle(
                   color: Colors.black54,
                   fontSize: 12,

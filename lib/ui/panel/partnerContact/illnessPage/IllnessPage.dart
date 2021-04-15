@@ -7,21 +7,18 @@ import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/MedicalTest.dart';
 import 'package:Neuronio/models/TextPlan.dart';
 import 'package:Neuronio/models/UserEntity.dart';
-import 'package:Neuronio/models/VisitTime.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
 import 'package:Neuronio/ui/panel/PanelAlert.dart';
 import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
+import 'package:Neuronio/ui/panel/partnerContact/illnessPage/PanelTestList.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:Neuronio/ui/panel/partnerContact/illnessPage/PanelTestList.dart';
-import 'package:Neuronio/ui/widgets/VisitBox.dart';
 import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 
 import 'SendTestPage.dart';
 
@@ -35,7 +32,7 @@ class IllnessPage extends StatefulWidget {
   IllnessPage(
       {Key key,
       this.entity,
-        this.textPlanRemainedTraffic,
+      this.textPlanRemainedTraffic,
       @required this.onPush,
       @required this.selectPage,
       @required this.globalOnPush})
@@ -120,12 +117,12 @@ class _IllnessPageState extends State<IllnessPage> {
                 globalOnPush: widget.globalOnPush,
                 previousTest: getTestsWithDone(state.result, true),
                 waitingTest: getTestsWithDone(state.result, false),
-                listId: widget.entity.sectionId(Strings.cognitiveTests),
+                listId: widget.entity.sectionId(InAppStrings.cognitiveTests),
                 uploadAvailable: widget.entity.isPatient,
                 picLabel: widget.entity.isPatient
                     ? "تست های دریافتی"
                     : "تست های ارسالی",
-                recentLabel: Strings.illnessInfoLastPicsLabel,
+                recentLabel: InAppStrings.illnessInfoLastPicsLabel,
                 uploadLabel: "شما ۱ تست از سوی پزشک دارید",
                 asset: CrossPlatformSvg.asset(
                   "assets/cloud.svg",
@@ -210,8 +207,8 @@ class _IllnessPageState extends State<IllnessPage> {
         return Stack(children: <Widget>[
           _IllnessPage(),
           PanelAlert(
-            label: Strings.requestSentLabel,
-            buttonLabel: Strings.waitingForApproval,
+            label: InAppStrings.requestSentLabel,
+            buttonLabel: InAppStrings.waitingForApproval,
             btnColor: IColors.disabledButton,
           )
         ]);
@@ -219,8 +216,8 @@ class _IllnessPageState extends State<IllnessPage> {
         return Stack(children: <Widget>[
           _IllnessPage(),
           PanelAlert(
-            label: Strings.requestSentLabelDoctorSide,
-            buttonLabel: Strings.waitingForApprovalDoctorSide,
+            label: InAppStrings.requestSentLabelDoctorSide,
+            buttonLabel: InAppStrings.waitingForApprovalDoctorSide,
             callback: () {
               widget.onPush(
                   NavigatorRoutes.patientDialogue, widget.entity.partnerEntity);

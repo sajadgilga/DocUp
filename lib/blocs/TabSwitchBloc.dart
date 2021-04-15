@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/constants/strings.dart';
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 
 //
@@ -103,10 +103,10 @@ class ThirdTab extends PanelTabState {
 }
 
 Map<String, PanelTabState> tabs = {
-  "info": FirstTab(text: Strings.panelIllnessInfoLabel),
-  "chat": SecondTab(text: Strings.panelChatLabel),
+  "info": FirstTab(text: InAppStrings.panelIllnessInfoLabel),
+  "chat": SecondTab(text: InAppStrings.panelChatLabel),
   "call": ThirdTab(
-      text: Strings.panelVideoCallLabel,
+      text: InAppStrings.panelVideoCallLabel,
       subtabs: [
         SubTab(id: 'video', text: 'تصویری', widget: Icons.video_call),
         SubTab(id: 'voice', text: 'صوتی', widget: Icons.record_voice_over)
@@ -117,10 +117,10 @@ Map<String, PanelTabState> tabs = {
     SubTab(id: 'calendar', text: 'تقویم', widget: Icons.calendar_today),
     SubTab(id: 'time', text: 'ساعت', widget: Icons.access_time)
   ], index: 0),
-  'events': SecondTab(text: Strings.panelEventPageLabel),
-  'reminders': ThirdTab(text: Strings.panelReminderPageLabel),
+  'events': SecondTab(text: InAppStrings.panelEventPageLabel),
+  'reminders': ThirdTab(text: InAppStrings.panelReminderPageLabel),
   //
-  'documents': FirstTab(text: Strings.panelDoctorAdvicePicLabel),
-  'medicines': SecondTab(text: Strings.panelPrescriptionsPicLabel),
-  'results': ThirdTab(text: Strings.panelTestResultsPicLabel)
+  'documents': FirstTab(text: InAppStrings.panelDoctorAdvicePicLabel),
+  'medicines': SecondTab(text: InAppStrings.panelPrescriptionsPicLabel),
+  'results': ThirdTab(text: InAppStrings.panelTestResultsPicLabel)
 };

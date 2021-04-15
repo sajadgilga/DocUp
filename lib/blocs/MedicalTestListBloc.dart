@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/models/MedicalTest.dart';
 import 'package:Neuronio/repository/MedicalTestRepository.dart';
+import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 
 class MedicalTestListBloc
@@ -14,7 +14,6 @@ class MedicalTestListBloc
 
   Stream<MedicalTestListState> _getAllTests(
       GetClinicMedicalTest getClinicMedicalTest) async* {
-    /// TODO amir
     yield TestsListLoading();
     try {
       final List<MedicalTestItem> result = await _repository.getAllTests();
@@ -37,7 +36,6 @@ class MedicalTestListBloc
 
   Stream<MedicalTestListState> _getAllPanelTests(
       GetPanelMedicalTest getPanelMedicalTest) async* {
-    /// TODO amir
     yield TestsListLoading(result: null);
     try {
       final List<PanelMedicalTestItem> result =
@@ -66,7 +64,7 @@ class MedicalTestListBloc
 abstract class MedicalTestListEvent {}
 
 class GetClinicMedicalTest extends MedicalTestListEvent {
-  /// TODO amir: hardcode id; it depends on future plans
+  /// TODO amir: hardcode id; it depends on future customer journey
   final int clinicId;
 
   GetClinicMedicalTest({this.clinicId = 4});

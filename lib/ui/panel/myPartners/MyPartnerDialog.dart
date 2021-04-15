@@ -1,12 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/PanelSectionBloc.dart';
 import 'package:Neuronio/blocs/TextPlanBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
-import 'package:Neuronio/constants/settings.dart';
 import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/models/TextPlan.dart';
@@ -20,7 +18,6 @@ import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyPartnerDialog extends StatefulWidget {
@@ -276,22 +273,22 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
         }, Assets.panelDoctorDialogPatientIcon, "پرونده سلامت",
             "پرونده سلامت اتان را بررسی کنید", IColors.green),
 
-        /// TODO amir: incomplete widget tree for bazaar
-        Settings.bazaarBuild
-            ? SizedBox()
-            : _myPartnerItem(() {
-                /// navigation
+        /// TODO amir: incomplete widget tree
+        // Settings.bazaarBuild
+        //     ? SizedBox()
+        //     :
+        _myPartnerItem(() {
+          /// navigation
 
-                var _panelSectionBloc =
-                    BlocProvider.of<PanelSectionBloc>(context);
-                _panelSectionBloc.add(PanelSectionSelect(
-                    patientSection: PatientPanelSection.HEALTH_CALENDAR));
-                widget.onPush(NavigatorRoutes.panel, widget.partner,
-                    textPlanRemainedTraffic, null, () => initialApiCall());
+          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
+          _panelSectionBloc.add(PanelSectionSelect(
+              patientSection: PatientPanelSection.HEALTH_CALENDAR));
+          widget.onPush(NavigatorRoutes.panel, widget.partner,
+              textPlanRemainedTraffic, null, () => initialApiCall());
 
-                /// #
-              }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
-                "رویداد های سلامت اتان را پیگیری کنید", IColors.black),
+          /// #
+        }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
+            "رویداد های سلامت اتان را پیگیری کنید", IColors.black),
       ],
     );
   }
@@ -326,21 +323,21 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
 
         /// TODO amir: incomplete widget tree for bazaar
 
-        Settings.bazaarBuild
-            ? SizedBox()
-            : _myPartnerItem(() {
-                /// navigation
+        // Settings.bazaarBuild
+        //     ? SizedBox()
+        //     :
+        _myPartnerItem(() {
+          /// navigation
 
-                var _panelSectionBloc =
-                    BlocProvider.of<PanelSectionBloc>(context);
-                _panelSectionBloc.add(PanelSectionSelect(
-                    patientSection: PatientPanelSection.HEALTH_CALENDAR));
-                widget.onPush(NavigatorRoutes.panel, widget.partner,
-                    textPlanRemainedTraffic, null, () => initialApiCall());
+          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
+          _panelSectionBloc.add(PanelSectionSelect(
+              patientSection: PatientPanelSection.HEALTH_CALENDAR));
+          widget.onPush(NavigatorRoutes.panel, widget.partner,
+              textPlanRemainedTraffic, null, () => initialApiCall());
 
-                /// #
-              }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
-                "رویداد های سلامت اتان را پیگیری کنید", IColors.red),
+          /// #
+        }, Assets.panelDoctorDialogAppointmentIcon, "رویداد های سلامت",
+            "رویداد های سلامت اتان را پیگیری کنید", IColors.red),
 
         _myPartnerItem(() {
           /// navigation

@@ -74,9 +74,9 @@ class _MonthPickerDialogState extends State<MonthPickerDialog> {
       items: _years
           .map(
             (year) => new DropdownMenuItem<int>(
-                  value: year,
-                  child: new Text("$year"),
-                ),
+              value: year,
+              child: new Text("$year"),
+            ),
           )
           .toList(),
       onChanged: (year) {
@@ -93,9 +93,9 @@ class _MonthPickerDialogState extends State<MonthPickerDialog> {
       items: _months
           .map(
             (month) => new DropdownMenuItem<int>(
-                  value: month,
-                  child: new Text("$month"),
-                ),
+              value: month,
+              child: new Text("$month"),
+            ),
           )
           .toList(),
       onChanged: (month) {

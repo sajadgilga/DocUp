@@ -22,6 +22,8 @@ class SnackbarHelper {
       content: AutoText('$body'),
       backgroundColor: bgColor,
     );
-    Scaffold.of(context).showSnackBar(snackBar);
+    /// flutter upgrade
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // Scaffold.of(context).showSnackBar(snackBar);
   }
 }

@@ -212,10 +212,10 @@ class SendNoronioTestDialog {
           : SquareBoxNoronioClinicService(
               serviceList[i + 1],
               boxSize: 110,
-              defaultBgColor:
-                  selectedTest != null && selectedTest.testId == testsList[i + 1].testId
-                      ? IColors.darkGrey
-                      : Colors.white,
+              defaultBgColor: selectedTest != null &&
+                      selectedTest.testId == testsList[i + 1].testId
+                  ? IColors.darkGrey
+                  : Colors.white,
               bFontSize: 9,
               lFontSize: 7,
             );

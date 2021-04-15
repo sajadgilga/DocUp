@@ -26,24 +26,28 @@ class Destination {
   }
 }
 
-List<Destination> navigator_destinations = <Destination>[
+List<Destination> navigatorDestinations = <Destination>[
   Destination(
-      title: Strings.bottomNavigationHomeTitle,
+      title: InAppStrings.bottomNavigationHomeTitle,
       icon: Icons.home,
-      color: Colors.grey, index: 0),
+      color: Colors.grey,
+      index: 0),
   Destination(
-      title: Strings.bottomNavigationPanelTitle,
+      title: InAppStrings.bottomNavigationPanelTitle,
       icon: Icons.view_quilt,
       color: Colors.grey,
-      image: Assets.panelIcon, index: 1),
+      image: Assets.panelIcon,
+      index: 1),
   Destination(
-      title: Strings.bottomNavigationServicesTitle,
+      title: InAppStrings.bottomNavigationServicesTitle,
       icon: Icons.settings,
       color: Colors.grey,
-      image: Assets.servicesIcon, index: 2),
+      image: Assets.servicesIcon,
+      index: 2),
   Destination(
-      title: Strings.bottomNavigationProfileTitle,
+      title: InAppStrings.bottomNavigationProfileTitle,
       icon: Icons.account_box,
       color: Colors.grey,
-      image: Assets.profileIcon, index: 3),
+      image: Assets.profileIcon,
+      index: 3),
 ];

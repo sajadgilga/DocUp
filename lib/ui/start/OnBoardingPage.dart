@@ -23,7 +23,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     const bodyStyle = TextStyle(fontSize: 19.0);

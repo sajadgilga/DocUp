@@ -38,8 +38,9 @@ class DoctorEntity extends UserEntity {
       }
       if (json.containsKey('expert')) expert = utf8IfPossible(json['expert']);
       if (json.containsKey('clinic'))
-        clinic =
-            json['clinic'] != null ? new ClinicEntity.fromJson(json['clinic']) : null;
+        clinic = json['clinic'] != null
+            ? new ClinicEntity.fromJson(json['clinic'])
+            : null;
       fee = json['fee'];
       if (json.containsKey('clinic_address'))
         clinicAddress = json['clinic_address'];
@@ -64,7 +65,6 @@ class DoctorEntity extends UserEntity {
         plan = DoctorPlan();
       }
     } catch (_) {
-      // TODO
     }
   }
 
@@ -122,11 +122,6 @@ class ClinicTrafficTextPlan {
     price = intPossible(json['price']);
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    /// TODO
-    return data;
-  }
 }
 
 class ClinicEntity {

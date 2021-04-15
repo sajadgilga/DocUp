@@ -1,10 +1,8 @@
 import 'package:Neuronio/constants/assets.dart';
+import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
-
-import 'package:Neuronio/constants/colors.dart';
-import 'package:flutter_svg/svg.dart';
 
 class OnCallMedicalHeaderIcon extends StatefulWidget {
   OnCallMedicalHeaderIcon({Key key}) : super(key: key);
@@ -23,7 +21,10 @@ class _OnCallMedicalHeaderIconState extends State<OnCallMedicalHeaderIcon> {
         alignment: Alignment.bottomCenter,
         child: Material(
           child: InkWell(
-            child: CrossPlatformSvg.asset(Assets.onCallMedicalIcon, width: 35,),
+            child: CrossPlatformSvg.asset(
+              Assets.onCallMedicalIcon,
+              width: 35,
+            ),
             hoverColor: Colors.white,
           ),
           color: Colors.transparent,
@@ -57,10 +58,7 @@ class _OnCallMedicalHeaderIconState extends State<OnCallMedicalHeaderIcon> {
         width: 50,
         height: 50,
         child: Stack(
-          children: <Widget>[
-            _notificationIcon(),
-            _notificationCountCircle()
-          ],
+          children: <Widget>[_notificationIcon(), _notificationCountCircle()],
         ));
   }
 }

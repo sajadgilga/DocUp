@@ -43,7 +43,7 @@ class PatientRequestPage extends StatefulWidget {
 class _PatientRequestPageState extends State<PatientRequestPage> {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
 
-  //TODO amir: make it and enum, here and now 0 means physical visit
+  //TODO amir: make it enum, here and now 0 means physical visit
   int patientVisitStatus = 0;
   int sectionId;
   bool submitLoadingToggle = false;
@@ -66,9 +66,11 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
   void initState() {
     _bloc.getVisit(widget.patientEntity.vid);
 
-    var _state = BlocProvider.of<EntityBloc>(context).state;
+    var _state = BlocProvider
+        .of<EntityBloc>(context)
+        .state;
     this.sectionId = _state.entity.sectionIdByNameAndPatientEntityId(
-        Strings.testResults, widget.patientEntity.id);
+        InAppStrings.testResults, widget.patientEntity.id);
     // if (sectionId != null)
     //   BlocProvider.of<FileBloc>(context)
     //       .add(FileListGet(listId: this.sectionId));
@@ -93,13 +95,13 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                 "بله",
                 "خیر", () {
               GoogleCalenderService.addVisitEvent(
-                      visitEntity, widget.patientEntity)
+                  visitEntity, widget.patientEntity)
                   .then((result) {
                 if (result) {
-                  toast(context, Strings.visitEventAddedToGoogleCalendar,
+                  toast(context, InAppStrings.visitEventAddedToGoogleCalendar,
                       secs: 13);
                 } else {
-                  toast(context, Strings.visitEventFailedForGoogleCalendar,
+                  toast(context, InAppStrings.visitEventFailedForGoogleCalendar,
                       secs: 13);
                 }
                 _doneAndClosePage();
@@ -109,9 +111,9 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
             });
           } else {
             showOneButtonDialog(context, 'درخواست بیمار تایید  شد', "تایید",
-                () {
-              _doneAndClosePage();
-            });
+                    () {
+                  _doneAndClosePage();
+                });
           }
         } else {
           showOneButtonDialog(context, 'درخواست بیمار رد شد.', "تایید", () {
@@ -149,10 +151,10 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                   break;
                 case Status.ERROR:
                   return APICallError(
-                    () {
+                        () {
                       _bloc.getVisit(widget.patientEntity.vid);
                     },
-                    errorMessage: Strings.notFoundRequest,
+                    errorMessage: InAppStrings.notFoundRequest,
                   );
                   break;
               }
@@ -171,7 +173,8 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
     return false;
   }
 
-  _mainWidget(VisitEntity visitEntity) => SingleChildScrollView(
+  _mainWidget(VisitEntity visitEntity) =>
+      SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
@@ -238,7 +241,10 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                           ),
                         ],
                       ),
-                      _picListBox(MediaQuery.of(context).size.width),
+                      _picListBox(MediaQuery
+                          .of(context)
+                          .size
+                          .width),
                     ],
                   )),
               SizedBox(
@@ -246,53 +252,56 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
               ),
               _visitStatusEditable(visitEntity)
                   ? (visitEntity.status == 0
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            ActionButton(
-                              width: 150,
-                              title: "رد",
-                              icon: Icon(Icons.close),
-                              color: IColors.red,
-                              callBack: () {
-                                if (!submitLoadingToggle) {
-                                  submitLoadingToggle = true;
-                                  _bloc.responseVisit(visitEntity, false);
-                                }
-                              },
-                            ),
-                            ActionButton(
-                              width: 150,
-                              title: "تایید",
-                              icon: Icon(Icons.check),
-                              color: IColors.green,
-                              callBack: () {
-                                if (!submitLoadingToggle) {
-                                  submitLoadingToggle = true;
-                                  _bloc.responseVisit(visitEntity, true);
-                                }
-                              },
-                            ),
-                          ],
-                        )
-                      : ActionButton(
-                          width: MediaQuery.of(context).size.width * (65 / 100),
-                          height: 50,
-                          title: "لغو کردن ویزیت " +
-                              (visitEntity.visitType == 0
-                                  ? "حضوری"
-                                  : (visitEntity.visitType == 1
-                                      ? "مجازی"
-                                      : " - ")),
-                          icon: Icon(Icons.close),
-                          color: IColors.red,
-                          callBack: () {
-                            if (!submitLoadingToggle) {
-                              submitLoadingToggle = true;
-                              _bloc.responseVisit(visitEntity, false);
-                            }
-                          },
-                        ))
+                  ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  ActionButton(
+                    width: 150,
+                    title: "رد",
+                    icon: Icon(Icons.close),
+                    color: IColors.red,
+                    callBack: () {
+                      if (!submitLoadingToggle) {
+                        submitLoadingToggle = true;
+                        _bloc.responseVisit(visitEntity, false);
+                      }
+                    },
+                  ),
+                  ActionButton(
+                    width: 150,
+                    title: "تایید",
+                    icon: Icon(Icons.check),
+                    color: IColors.green,
+                    callBack: () {
+                      if (!submitLoadingToggle) {
+                        submitLoadingToggle = true;
+                        _bloc.responseVisit(visitEntity, true);
+                      }
+                    },
+                  ),
+                ],
+              )
+                  : ActionButton(
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width * (65 / 100),
+                height: 50,
+                title: "لغو کردن ویزیت " +
+                    (visitEntity.visitType == 0
+                        ? "حضوری"
+                        : (visitEntity.visitType == 1
+                        ? "مجازی"
+                        : " - ")),
+                icon: Icon(Icons.close),
+                color: IColors.red,
+                callBack: () {
+                  if (!submitLoadingToggle) {
+                    submitLoadingToggle = true;
+                    _bloc.responseVisit(visitEntity, false);
+                  }
+                },
+              ))
                   : SizedBox(),
               ALittleVerticalSpace(),
             ],
@@ -306,7 +315,10 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
 
   Widget descriptionBox(String title, Widget titleIcon, {Widget child}) {
     double minHeight =
-        min(MediaQuery.of(context).size.height * (15 / 100), 250);
+    min(MediaQuery
+        .of(context)
+        .size
+        .height * (15 / 100), 250);
     // double maxHeight =
     //     max(MediaQuery.of(context).size.height * (15 / 100), 250);
     return Container(
@@ -349,9 +361,9 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
     return PicList(
       listId: this.sectionId,
       uploadAvailable: false,
-      picLabel: Strings.panelTestResultsPicLabel,
-      recentLabel: Strings.panelTestResultsPicListLabel,
-      emptyListLabel: Strings.emptyTestFiles,
+      picLabel: InAppStrings.panelTestResultsPicLabel,
+      recentLabel: InAppStrings.panelTestResultsPicListLabel,
+      emptyListLabel: InAppStrings.emptyTestFiles,
       uploadLabel: "",
       asset: CrossPlatformSvg.asset(
         "assets/cloud.svg",
@@ -411,7 +423,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                       overflow: TextOverflow.fade,
                       textDirection: TextDirection.rtl,
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Row(
                     children: [
                       AutoText(

@@ -11,8 +11,6 @@ import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Avatar.dart';
 import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polygon_clipper/polygon_clipper.dart';
 
 class VisitResultList extends StatefulWidget {
   final Function(String, UserEntity) onPush;
@@ -149,8 +147,8 @@ class _SearchResultPatientItem extends StatelessWidget {
   Widget _status(context) {
     return Container(
       height: 30,
-      constraints:
-          BoxConstraints.tightFor(width: MediaQuery.of(context).size.width / 2,height: 30),
+      constraints: BoxConstraints.tightFor(
+          width: MediaQuery.of(context).size.width / 2, height: 30),
       alignment: Alignment.bottomLeft,
       margin: EdgeInsets.only(left: 10),
       child: Row(
@@ -264,19 +262,19 @@ extension PatientStatusExtension on PatientStatus {
   String get text {
     switch (this) {
       case PatientStatus.VISIT_REQUEST:
-        return Strings.visitRequestLabel;
+        return InAppStrings.visitRequestLabel;
       case PatientStatus.VIRTUAL_VISIT_REQUEST:
-        return Strings.virtualVisitRequestLabel;
+        return InAppStrings.virtualVisitRequestLabel;
       case PatientStatus.VIRTUAL_VISIT_IN_CONTACT:
-        return Strings.inContactLabel;
+        return InAppStrings.inContactLabel;
       case PatientStatus.VISIT_IN_CONTACT:
-        return Strings.inContactLabel;
+        return InAppStrings.inContactLabel;
       case PatientStatus.VISIT_REQUEST_VERIFIED:
-        return Strings.inContactLabel;
+        return InAppStrings.inContactLabel;
       case PatientStatus.VIRTUAL_VISIT_REQUEST_VERIFIED:
-        return Strings.inContactLabel;
+        return InAppStrings.inContactLabel;
       case PatientStatus.CURED:
-        return Strings.curedLabel;
+        return InAppStrings.curedLabel;
       default:
         return '';
     }

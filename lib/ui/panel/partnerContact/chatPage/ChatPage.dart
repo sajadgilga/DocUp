@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:Neuronio/blocs/TextPlanBloc.dart';
 import 'package:Neuronio/blocs/visit_time/visit_time_bloc.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
-import 'package:Neuronio/main.dart';
 import 'package:Neuronio/models/ChatMessage.dart';
 import 'package:Neuronio/models/SocketRequestModel.dart';
 import 'package:Neuronio/models/TextPlan.dart';
 import 'package:Neuronio/models/UserEntity.dart';
-import 'package:Neuronio/networking/CustomException.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/repository/ChatMessageRepository.dart';
 import 'package:Neuronio/services/FirebaseService.dart';
@@ -206,8 +203,8 @@ class _ChatPageState extends State<ChatPage> {
           Navigator.of(_fileLoadingContext).maybePop();
           _fileLoadingContext = null;
         }
-        showOneButtonDialog(
-            context, Strings.chatFileMessageFailed, Strings.okAction, () {});
+        showOneButtonDialog(context, InAppStrings.chatFileMessageFailed,
+            InAppStrings.okAction, () {});
       }
     } else {
       String text = _controller.text.trim();
@@ -356,7 +353,7 @@ class _ChatPageState extends State<ChatPage> {
                           // height: 20,
                           padding: EdgeInsets.symmetric(horizontal: 8.0),
                           child: AutoText(
-                              Strings.noActivePatientTextPlanForChatRoom),
+                              InAppStrings.noActivePatientTextPlanForChatRoom),
                         ),
                       )
                     : SizedBox())
@@ -377,8 +374,8 @@ class _ChatPageState extends State<ChatPage> {
                               ? Icons.close_rounded
                               : Icons.check),
                           AutoText(widget.patientTextPlan.enabled
-                              ? Strings.deactivatePatientTextPlan
-                              : Strings.activatePatientTextPlan),
+                              ? InAppStrings.deactivatePatientTextPlan
+                              : InAppStrings.activatePatientTextPlan),
                         ],
                       ),
                     ),
@@ -560,7 +557,6 @@ class _ChatBoxState extends State<_ChatBox> with WidgetsBindingObserver {
                       }
                       if (!_isFetchingLoading &&
                           info.metrics.pixels == info.metrics.maxScrollExtent) {
-                        /// TODO amir: incomplete api
                         _loadData(down: 0);
                       }
                     }
@@ -570,7 +566,7 @@ class _ChatBoxState extends State<_ChatBox> with WidgetsBindingObserver {
                   child: (_messages == null || _messages.length == 0)
                       ? Center(
                           child: AutoText(
-                            Strings.emptyChatPage,
+                            InAppStrings.emptyChatPage,
                             textAlign: TextAlign.center,
                             style: TextStyle(color: IColors.darkGrey),
                           ),

@@ -8,7 +8,8 @@ class HomeNotification extends StatelessWidget {
   int newNotificationCount;
   final Function(String, dynamic) onPush;
 
-  HomeNotification({Key key, this.newNotificationCount=0, @required this.onPush})
+  HomeNotification(
+      {Key key, this.newNotificationCount = 0, @required this.onPush})
       : super(key: key);
 
   Widget _notificationIcon() {

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'page_view_model.dart';
 
-
 class IntroContent2 extends StatelessWidget {
   final PageViewModel2 page;
 

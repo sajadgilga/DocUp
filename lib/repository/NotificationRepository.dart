@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:Neuronio/blocs/NotificationBloc.dart';
 import 'package:Neuronio/models/FCMEntity.dart';
 import 'package:Neuronio/models/NewestNotificationResponse.dart';
 import 'package:Neuronio/networking/ApiProvider.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Device.dart';
-import 'package:flutter/foundation.dart';
 
 class NotificationRepository {
   ApiProvider _provider = ApiProvider();
@@ -16,7 +13,9 @@ class NotificationRepository {
       final deviceId = await getDeviceId();
       final response = await _provider.post("devices/", body: {
         "registration_id": fcmToken,
-        "type": CrossPlatformDeviceDetection.isWeb ? 'web' : (CrossPlatformDeviceDetection.isAndroid ? "android" : "ios"),
+        "type": CrossPlatformDeviceDetection.isWeb
+            ? 'web'
+            : (CrossPlatformDeviceDetection.isAndroid ? "android" : "ios"),
         "device_id": deviceId
       });
       return RegisterDeviceResponse.fromJson(response);

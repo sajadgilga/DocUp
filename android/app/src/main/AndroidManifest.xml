@@ -46,7 +46,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="com.nilva.docup"
+                    android:host="app.neuronio.ir"
                     android:scheme="neuronio" />
             </intent-filter>
             <intent-filter>

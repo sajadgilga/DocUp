@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/models/PatientTracker.dart';
 import 'package:Neuronio/repository/DoctorRepository.dart';
+import 'package:bloc/bloc.dart';
 
 class PatientTrackerBloc extends Bloc<TrackerEvent, TrackerState> {
   DoctorRepository _repository = DoctorRepository();

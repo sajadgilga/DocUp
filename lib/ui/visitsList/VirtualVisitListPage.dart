@@ -10,7 +10,6 @@ import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VirtualVisitList extends StatelessWidget {
@@ -24,8 +23,7 @@ class VirtualVisitList extends StatelessWidget {
   VirtualVisitList({@required this.onPush});
 
   void _search(context) {
-    var searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchBloc.add(SearchVisit(
+    BlocProvider.of<SearchBloc>(context).add(SearchVisit(
         text: _controller.text,
         acceptStatus: 1,
         visitType: patientVisitStatus));
@@ -35,15 +33,13 @@ class VirtualVisitList extends StatelessWidget {
   }
 
   void _initialSearch(context) {
-    var searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchBloc.add(SearchLoadingEvent());
-    searchBloc.add(SearchVisit(
+    BlocProvider.of<SearchBloc>(context).add(SearchLoadingEvent());
+    BlocProvider.of<SearchBloc>(context).add(SearchVisit(
         text: _controller.text,
         acceptStatus: 1,
         visitType: patientVisitStatus));
   }
 
-  @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     _controller?.dispose();
@@ -77,7 +73,8 @@ class VirtualVisitList extends StatelessWidget {
   Widget _todayItems(List<VisitEntity> results) {
     List<VisitEntity> todayVisits = [];
     results.forEach((element) {
-      DateTime visitTime = DateTimeService.getDateTimeFromStandardString(element.visitTime);
+      DateTime visitTime =
+          DateTimeService.getDateTimeFromStandardString(element.visitTime);
       var now = DateTimeService.getCurrentDateTime();
       DateTime _today = DateTime(now.year, now.month, now.day, 23, 59, 59);
       if (visitTime.isBefore(_today)) todayVisits.add(element);
@@ -87,7 +84,7 @@ class VirtualVisitList extends StatelessWidget {
       isDoctor: false,
       text: 'امروز',
       visitResults: todayVisits.reversed.toList(),
-      emptyText: Strings.emptyVisitSearch,
+      emptyText: InAppStrings.emptyVisitSearch,
       isRequestsOnly: true,
     );
   }
@@ -95,7 +92,8 @@ class VirtualVisitList extends StatelessWidget {
   Widget _nextDayItems(List<VisitEntity> results) {
     List<VisitEntity> nextDayVisits = [];
     results.forEach((element) {
-      DateTime visitTime = DateTimeService.getDateTimeFromStandardString(element.visitTime);
+      DateTime visitTime =
+          DateTimeService.getDateTimeFromStandardString(element.visitTime);
       var now = DateTimeService.getCurrentDateTime();
       DateTime _today = DateTime(now.year, now.month, now.day, 23, 59, 59);
       if (visitTime.isAfter(_today)) nextDayVisits.add(element);
@@ -105,7 +103,7 @@ class VirtualVisitList extends StatelessWidget {
       isDoctor: false,
       text: 'روزهای بعد',
       visitResults: nextDayVisits.reversed.toList(),
-      emptyText: Strings.emptyVisitSearch,
+      emptyText: InAppStrings.emptyVisitSearch,
       isRequestsOnly: true,
     );
   }

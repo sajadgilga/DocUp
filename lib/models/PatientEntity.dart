@@ -18,6 +18,13 @@ class PatientEntity extends UserEntity {
   int clinicId;
   List<VisitItem> visits;
 
+  int get age {
+    try {
+      return DateTimeService.getCurrentDateTime().year -
+          DateTimeService.getDateTimeFromDateString(birthDate).year;
+    } finally {}
+  }
+
   PatientEntity(
       {this.documents,
       this.height,
@@ -84,7 +91,6 @@ class PatientEntity extends UserEntity {
       birthDate = json['date_of_birth'];
       clinicId = intPossible(json['clinic']);
     } catch (e) {
-      /// TODO
       print(e);
     }
   }

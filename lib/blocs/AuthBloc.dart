@@ -33,7 +33,8 @@ class AuthBloc {
   AuthBloc() {
     _loginController = StreamController<Response<LoginResponseEntity>>();
     _verifyController = StreamController<Response<VerifyResponseEntity>>();
-    _uploadAvatarController = StreamController<Response<UploadAvatarResponseEntity>>();
+    _uploadAvatarController =
+        StreamController<Response<UploadAvatarResponseEntity>>();
 
     _repository = AuthRepository();
   }
@@ -72,8 +73,8 @@ class AuthBloc {
       print(e);
     }
   }
-  
-  uploadAvatar(String base64ImageString,int userId)async {
+
+  uploadAvatar(String base64ImageString, int userId) async {
     uploadAvatarSink.add(Response.loading());
     try {
       UploadAvatarResponseEntity response =
@@ -84,11 +85,12 @@ class AuthBloc {
       print(e);
     }
   }
-  deleteAvatar(int userId)async {
+
+  deleteAvatar(int userId) async {
     uploadAvatarSink.add(Response.loading());
     try {
       UploadAvatarResponseEntity response =
-      await _repository.deleteUserProfile(userId);
+          await _repository.deleteUserProfile(userId);
       uploadAvatarSink.add(Response.completed(response));
     } catch (e) {
       uploadAvatarSink.add(Response.error(e));

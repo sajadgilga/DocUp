@@ -122,7 +122,7 @@ class _ActionButtonState extends State<ActionButton> {
             padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
             child: widget.icon),
         onPressed: () {
-          if (!widget.loading && widget.callBack!= null) {
+          if (!widget.loading && widget.callBack != null) {
             widget.callBack();
           }
         },

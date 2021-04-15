@@ -3,7 +3,7 @@ const VISIT_DURATION_PLAN = "مدت زمان مشاوره";
 const String TIME_SELECTION = "انتخاب ساعت";
 
 enum VisitTypes { PHYSICAL, VIRTUAL }
-enum VisitSource{USUAL, ICA, GAME, SCREENING}
+enum VisitSource { USUAL, ICA, GAME, SCREENING }
 
 extension VisitTypeExtension on VisitTypes {
   String get title {

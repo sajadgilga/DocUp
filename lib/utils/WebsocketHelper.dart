@@ -7,7 +7,6 @@ import 'package:Neuronio/models/SocketRequestModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 // import 'package:web_socket_channel/html.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -46,8 +45,9 @@ class SocketHelper {
         return true;
       }
     } on SocketException catch (_) {
-      return false;
     }
+    return false;
+
   }
 
   factory SocketHelper() {

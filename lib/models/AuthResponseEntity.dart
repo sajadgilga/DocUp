@@ -33,7 +33,7 @@ class VerifyResponseEntity {
       this.expertise});
 
   factory VerifyResponseEntity.fromJson(Map<String, dynamic> json) {
-    /// TODO amir: first name and full name
+    /// TODO amir: first name and full name, check api response
     return VerifyResponseEntity(
         token: json['token'],
         firstName: utf8IfPossible(json['firstname']) ??

@@ -2,14 +2,14 @@ class PatientTextPlan {
   int id;
   String _createdDate;
   String _modifiedDate;
-  bool enabled=false;
+  bool enabled = false;
   String _requestVisitPlanTime;
   int _doctorId;
   int _patientId;
   int panelId;
   int _planId;
 
-  PatientTextPlan({this.enabled=false});
+  PatientTextPlan({this.enabled = false});
 
   PatientTextPlan.fromJson(var json) {
     for (Map<String, dynamic> planJson in (json as List)) {

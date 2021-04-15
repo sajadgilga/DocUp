@@ -23,20 +23,17 @@ class VisitRequestsPage extends StatelessWidget {
   VisitRequestsPage({@required this.onPush});
 
   void _search(context) {
-    var searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchBloc.add(SearchVisit(text: _controller.text, acceptStatus: 0));
+    BlocProvider.of<SearchBloc>(context).add(SearchVisit(text: _controller.text, acceptStatus: 0));
 
 //    FocusScope.of(context).unfocus();
 //     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   }
 
   void _initialSearch(context) {
-    var searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchBloc.add(SearchLoadingEvent());
-    searchBloc.add(SearchVisit(text: _controller.text, acceptStatus: 0));
+    BlocProvider.of<SearchBloc>(context).add(SearchLoadingEvent());
+    BlocProvider.of<SearchBloc>(context).add(SearchVisit(text: _controller.text, acceptStatus: 0));
   }
 
-  @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     _controller?.dispose();
@@ -123,7 +120,7 @@ class VisitRequestsPage extends StatelessWidget {
       isDoctor: false,
       text: 'امروز',
       visitResults: todayVisits.reversed.toList(),
-      emptyText: Strings.emptyRequestsDoctorSide,
+      emptyText: InAppStrings.emptyRequestsDoctorSide,
       isRequestsOnly: true,
     );
   }
@@ -142,7 +139,7 @@ class VisitRequestsPage extends StatelessWidget {
       isDoctor: false,
       text: 'روزهای بعد',
       visitResults: nextDayVisits.reversed.toList(),
-      emptyText: Strings.emptyRequestsDoctorSide,
+      emptyText: InAppStrings.emptyRequestsDoctorSide,
       isRequestsOnly: true,
     );
   }

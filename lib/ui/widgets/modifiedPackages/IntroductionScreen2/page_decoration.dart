@@ -67,5 +67,5 @@ class PageDecoration2 {
     this.descriptionPadding = EdgeInsets.zero,
     this.footerPadding = const EdgeInsets.symmetric(vertical: 24.0),
   }) : assert(pageColor == null || boxDecoration == null,
-  'Cannot provide both a Color and a BoxDecoration\n');
+            'Cannot provide both a Color and a BoxDecoration\n');
 }

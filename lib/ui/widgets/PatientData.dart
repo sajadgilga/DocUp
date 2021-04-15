@@ -1,4 +1,3 @@
-import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +7,7 @@ import 'AutoText.dart';
 class PatientData extends StatelessWidget {
   final PatientEntity patientEntity;
 
-  const PatientData({
-    Key key, this.patientEntity
-  }) : super(key: key);
+  const PatientData({Key key, this.patientEntity}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +24,8 @@ class PatientData extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(width: 5),
-              AutoText("${patientEntity.user.firstName} ${patientEntity.user.lastName}",
+              AutoText(
+                  "${patientEntity.user.firstName} ${patientEntity.user.lastName}",
                   style: TextStyle(
                     fontSize: 14,
                   )),

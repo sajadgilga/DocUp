@@ -28,9 +28,12 @@ class DoctorData extends StatelessWidget {
             children: [
               clinicMarkLocation == 1 ? _clinicLocationMark() : SizedBox(),
               AutoText(
-                  "دکتر ${doctorEntity.user.firstName} ${doctorEntity.user.lastName != null ? doctorEntity.user.lastName : ""}",
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,softWrap: true,overflow: TextOverflow.fade,),
+                "دکتر ${doctorEntity.user.firstName} ${doctorEntity.user.lastName != null ? doctorEntity.user.lastName : ""}",
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+                softWrap: true,
+                overflow: TextOverflow.fade,
+              ),
             ],
           ),
           SizedBox(height: 5),

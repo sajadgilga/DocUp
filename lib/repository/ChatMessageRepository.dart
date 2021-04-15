@@ -17,7 +17,7 @@ class ChatMessageRepository {
     if (messageId == null)
       response = await _provider.get(
           'api/chat/'
-              'messages/$panel/?message_id=&up=$up&down=$down&size=$size',
+          'messages/$panel/?message_id=&up=$up&down=$down&size=$size',
           utf8Support: true);
     else
       response = await _provider.get(
@@ -26,7 +26,8 @@ class ChatMessageRepository {
     return _getList(response, isPatient);
   }
 
-  Future<ChatFileMessageResponse> uploadFileMessage({panel, ChatMessage message}) async {
+  Future<ChatFileMessageResponse> uploadFileMessage(
+      {panel, ChatMessage message}) async {
     final response = await _provider.post('api/chat/messages/$panel/',
         body: message.toJson(), withToken: true);
     return ChatFileMessageResponse.fromJson(response);

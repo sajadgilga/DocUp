@@ -29,7 +29,6 @@ class ScreeningDoctorSelectionPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return ScreeningDoctorSelectionPageState();
   }
 }
@@ -84,7 +83,7 @@ class ScreeningDoctorSelectionPageState
           Navigator.of(_loadingContext).pop();
         }
         showOneButtonDialog(
-            context, Strings.requestFailed, Strings.okAction, () {});
+            context, InAppStrings.requestFailed, InAppStrings.okAction, () {});
       }
     });
     super.initState();
@@ -110,7 +109,7 @@ class ScreeningDoctorSelectionPageState
         children: [
           ALittleVerticalSpace(),
           AutoText(
-            Strings.screeningDoctorSelection,
+            InAppStrings.screeningDoctorSelection,
             style: TextStyle(fontSize: 15),
           ),
         ],

@@ -1,8 +1,7 @@
+import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
 import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/src/_internal_date_time/all.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-
-import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
 
 /// Signature for a function that builds a generated time indicator.
 typedef Positioned GeneratedTimeIndicatorBuilder(

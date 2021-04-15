@@ -33,8 +33,8 @@ class DotsIndicator2 extends StatelessWidget {
         assert(position != null && position >= 0),
         assert(decorator != null),
         assert(
-        position < dotsCount,
-        "Position must be inferior than dotsCount",
+          position < dotsCount,
+          "Position must be inferior than dotsCount",
         ),
         super(key: key);
 
@@ -61,10 +61,10 @@ class DotsIndicator2 extends StatelessWidget {
     return onTap == null
         ? dot
         : InkWell(
-      customBorder: const CircleBorder(),
-      onTap: () => onTap(index.toDouble()),
-      child: dot,
-    );
+            customBorder: const CircleBorder(),
+            onTap: () => onTap(index.toDouble()),
+            child: dot,
+          );
   }
 
   @override
@@ -74,14 +74,14 @@ class DotsIndicator2 extends StatelessWidget {
 
     return axis == Axis.vertical
         ? Column(
-      mainAxisAlignment: mainAxisAlignment,
-      mainAxisSize: mainAxisSize,
-      children: dots,
-    )
+            mainAxisAlignment: mainAxisAlignment,
+            mainAxisSize: mainAxisSize,
+            children: dots,
+          )
         : Row(
-      mainAxisAlignment: mainAxisAlignment,
-      mainAxisSize: mainAxisSize,
-      children: dots,
-    );
+            mainAxisAlignment: mainAxisAlignment,
+            mainAxisSize: mainAxisSize,
+            children: dots,
+          );
   }
 }

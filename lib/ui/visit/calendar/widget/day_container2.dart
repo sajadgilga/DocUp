@@ -19,6 +19,7 @@ class DayContainer2 extends StatefulWidget {
       this.onSelect,
       this.height,
       this.width});
+
   @override
   _DayContainer2State createState() => _DayContainer2State();
 }
@@ -30,8 +31,8 @@ class _DayContainer2State extends State<DayContainer2> {
   @override
   void initState() {
     date = widget.date;
-    var dateUtiles = new DateUtils();
-    isDisable = date != '' ? dateUtiles.isDisable(outPutFormat(date)) : false;
+    var dateUtils = new CalendarDateUtils();
+    isDisable = date != '' ? dateUtils.isDisable(outPutFormat(date)) : false;
 
     // TODO: implement initState
     super.initState();
@@ -47,8 +48,8 @@ class _DayContainer2State extends State<DayContainer2> {
   void didUpdateWidget(DayContainer2 oldWidget) {
     if (oldWidget != widget) {
       date = widget.date;
-      var dateUtiles = new DateUtils();
-      isDisable = date != '' ? dateUtiles.isDisable(outPutFormat(date)) : false;
+      var dateUtils = new CalendarDateUtils();
+      isDisable = date != '' ? dateUtils.isDisable(outPutFormat(date)) : false;
     }
     super.didUpdateWidget(oldWidget);
   }

@@ -1,18 +1,13 @@
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/PanelBloc.dart';
-import 'package:Neuronio/blocs/SearchBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
-import 'package:Neuronio/models/SearchResult.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:Neuronio/ui/widgets/DocupHeader.dart';
-import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
 import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'MyPartnersResultList.dart';

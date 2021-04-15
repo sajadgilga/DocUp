@@ -1,4 +1,3 @@
-import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/utils/Utils.dart';
 
@@ -113,15 +112,14 @@ class MedicalTestItem {
     name = utf8IfPossible(json['name']);
     description = utf8IfPossible(json['description']);
 
-    /// TODO amir: incomplete api
+    /// TODO amir: incomplete api, image urls are without host
     imageURL = json['logo'];
     done = json['done'] ?? false;
 
-    /// TODO this may change for general google doc tests
-    if(json['type'] == 0){
+    if (json['type'] == 0) {
       testType = TestType.GoogleDoc;
-      testLink = json['url']??"";
-    }else{
+      testLink = json['url'] ?? "";
+    } else {
       testType = TestType.InApplication;
     }
   }
@@ -151,7 +149,7 @@ class PanelMedicalTestItem extends MedicalTestItem {
     panelMedicalTestItem.name = json['name'];
     panelMedicalTestItem.description = json['description'];
 
-    /// TODO amir: incomplete api
+    /// TODO amir: incomplete api, image urls are without host
     panelMedicalTestItem.imageURL = json['logo'];
     panelMedicalTestItem.done = json['done'] ?? false;
     panelMedicalTestItem.panelId = intPossible(json['panel_id']);

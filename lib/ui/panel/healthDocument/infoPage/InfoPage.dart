@@ -6,7 +6,6 @@ import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:Neuronio/ui/widgets/PicList.dart';
 import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class InfoPage extends StatefulWidget {
   final Entity entity;

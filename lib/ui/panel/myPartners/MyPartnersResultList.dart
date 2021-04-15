@@ -33,7 +33,7 @@ class _MyPartnersResultListState extends State<MyPartnersResultList> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
               child: AutoText(
-                Strings.noVirtualAppointment,
+                InAppStrings.noVirtualAppointment,
                 style: TextStyle(fontSize: 14, color: IColors.darkGrey),
                 textAlign: TextAlign.center,
               ),

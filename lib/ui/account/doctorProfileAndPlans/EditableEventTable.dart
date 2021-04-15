@@ -18,20 +18,16 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 class EditableDoctorPlanEventTable extends StatefulWidget {
-  bool smallPreviewFlag;
-  DoctorPlan plan;
-  bool showEventTitle;
-  int daysPerPage;
-  List<int> availableVisitTypes;
+  final bool smallPreviewFlag;
+  final DoctorPlan plan;
+  final bool showEventTitle;
+  final int daysPerPage;
+  final List<int> availableVisitTypes;
 
   EditableDoctorPlanEventTable(this.plan, this.availableVisitTypes,
       {this.showEventTitle = true,
       this.daysPerPage = 7,
       this.smallPreviewFlag = false});
-
-  /// state managing
-  /// this parameter should be here cause we need updating state with dirty every time prent calls setstate
-  bool isDirty = true;
 
   @override
   State createState() => new _EditableDoctorPlanEventTableState();
@@ -42,17 +38,21 @@ class _EditableDoctorPlanEventTableState
   DataSourceWorkTime selectedObject;
   Map<DateTime, DataSourceDailyWorkTimes> _daysWorkTimes;
 
+  /// state managing
+  /// this parameter should be here cause we need updating _daysWorkTimes map every time we add edit or delete an event
+  bool isDirty = true;
+
   void updateStateWithDirtyDaysWorkTime() {
     setState(() {
-      widget.isDirty = true;
+      isDirty = true;
     });
   }
 
   Map<DateTime, DataSourceDailyWorkTimes> get daysWorkTimes {
-    if (widget.isDirty) {
+    if (isDirty) {
       _daysWorkTimes =
           widget.plan?.totalWorkTimes ?? <DateTime, DataSourceDailyWorkTimes>{};
-      widget.isDirty = false;
+      isDirty = false;
     }
     return _daysWorkTimes;
   }
@@ -147,7 +147,7 @@ class _EditableDoctorPlanEventTableState
                         backgroundColor: IColors.blue,
                         onTap: () {
                           AddWorkTimeDataSourceDialog ad =
-                              AddWorkTimeDataSourceDialog.AddDialog(
+                              AddWorkTimeDataSourceDialog.showAddDialog(
                                   context,
                                   0,
                                   widget.plan,
@@ -174,7 +174,7 @@ class _EditableDoctorPlanEventTableState
                         backgroundColor: IColors.green,
                         onTap: () {
                           AddWorkTimeDataSourceDialog ad =
-                              AddWorkTimeDataSourceDialog.AddDialog(
+                              AddWorkTimeDataSourceDialog.showAddDialog(
                                   context,
                                   1,
                                   widget.plan,
@@ -210,7 +210,7 @@ class _EditableDoctorPlanEventTableState
       child: new DayViewEssentials(
         properties: new DayViewProperties(
             days: daysWorkTimesPartition.keys
-                .map((e) => DateTimeService.getDateTimeFormDateString(e))
+                .map((e) => DateTimeService.getDateTimeFromDateString(e))
                 .toList()),
         widths: DayViewWidths(
           daySeparationAreaWidth: 2,
@@ -220,7 +220,7 @@ class _EditableDoctorPlanEventTableState
         ),
         child: new Column(
           children: <Widget>[
-            AutoText(Strings.jalaliMonths[
+            AutoText(InAppStrings.jalaliMonths[
                 DateTimeService.getJalaliformDateTime(days[0]).month - 1]),
             new Container(
               color: Colors.grey[200],
@@ -272,7 +272,7 @@ class _EditableDoctorPlanEventTableState
       child: new Column(
         children: <Widget>[
           new Text(
-            "${Strings.shortEnglishDaysJalaliOrder[jalali.weekDay - 1]}",
+            "${InAppStrings.shortEnglishDaysJalaliOrder[jalali.weekDay - 1]}",
             style: new TextStyle(fontWeight: FontWeight.bold),
             maxLines: 1,
           ),
@@ -358,7 +358,7 @@ class _EditableDoctorPlanEventTableState
             ? null
             : () {
                 AddWorkTimeDataSourceDialog dialog =
-                    AddWorkTimeDataSourceDialog.DetailDialog(context, event,
+                    AddWorkTimeDataSourceDialog.showDetailDialog(context, event,
                         widget.plan, updateStateWithDirtyDaysWorkTime);
                 dialog.showWorkTimeDialog();
                 setState(() {
@@ -368,7 +368,7 @@ class _EditableDoctorPlanEventTableState
         child: new Container(
           decoration: BoxDecoration(
               border: selectedObject?.isEqual(event) ?? false
-                  ? Border.all(width: 4, color: IColors.yelllow)
+                  ? Border.all(width: 4, color: IColors.yellow)
                   : null,
               color: event.color ?? IColors.themeColor),
           margin: new EdgeInsets.only(left: 1.0, right: 1.0, bottom: 1.0),
@@ -450,10 +450,10 @@ class AddWorkTimeDataSourceDialog {
 
   final _formKey = GlobalKey<FormState>();
 
-  AddWorkTimeDataSourceDialog.AddDialog(
+  AddWorkTimeDataSourceDialog.showAddDialog(
       this.context, this.visitTypeNumber, this.plan, this.onApplyChange);
 
-  AddWorkTimeDataSourceDialog.DetailDialog(
+  AddWorkTimeDataSourceDialog.showDetailDialog(
       this.context, DataSourceWorkTime event, this.plan, this.onApplyChange) {
     detailMode = true;
 
@@ -631,12 +631,12 @@ class AddWorkTimeDataSourceDialog {
       mainAxisSize: MainAxisSize.max,
       children: [
         ActionButton(
-          title: Strings.cancelAction,
+          title: InAppStrings.cancelAction,
           callBack: _closeDialog,
           color: IColors.themeColor,
         ),
         ActionButton(
-          title: Strings.okAction,
+          title: InAppStrings.okAction,
           callBack: _submit,
           color: IColors.themeColor,
         ),
@@ -650,12 +650,12 @@ class AddWorkTimeDataSourceDialog {
       mainAxisSize: MainAxisSize.max,
       children: [
         ActionButton(
-          title: Strings.cancelAction,
+          title: InAppStrings.cancelAction,
           callBack: _closeDialog,
           color: IColors.themeColor,
         ),
         ActionButton(
-          title: Strings.deleteAction,
+          title: InAppStrings.deleteAction,
           callBack: _submit,
           color: IColors.red,
         ),
@@ -704,7 +704,7 @@ class AddWorkTimeDataSourceDialog {
           String conflictTimes = "";
           conflictWorkTimes.forEach((date, workTime) {
             conflictTimes += DateTimeService.getJalaliStringFromJalali(
-                DateTimeService.getJalaliformDateTime(date)) +
+                    DateTimeService.getJalaliformDateTime(date)) +
                 ": " +
                 workTime.toString();
             conflictTimes += "\n";
@@ -714,8 +714,8 @@ class AddWorkTimeDataSourceDialog {
               "بازه های زیر با زمان تعیین شده منافات دارند و در نتیجه اضافه نشدند:" +
                   "\n" +
                   conflictTimes,
-              Strings.okAction,
-                  () {});
+              InAppStrings.okAction,
+              () {});
         }
       }
     }

@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/models/Medicine.dart';
 import 'package:Neuronio/repository/PatientRepository.dart';
+import 'package:bloc/bloc.dart';
 
 class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
   PatientRepository _repository = PatientRepository();
@@ -56,7 +56,7 @@ enum MedicineCreationStates { IDLE, SENDING, SENT, ERROR }
 
 abstract class MedicineCreationEvent {}
 
-class MedicineCreate extends MedicineCreationEvent{
+class MedicineCreate extends MedicineCreationEvent {
   Medicine medicine;
 
   MedicineCreate({this.medicine});

@@ -9,7 +9,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   get initialState => SearchUnloaded();
 
   Stream<SearchState> _searchDoctor(SearchDoctor event) async* {
-    if (state?.result?.isDoctor  == true) {
+    if (state?.result?.isDoctor == true) {
       yield SearchLoading(result: state.result);
     } else {
       yield SearchLoading();
@@ -30,7 +30,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   Stream<SearchState> _searchPatient(SearchPatient event) async* {
-    if (state?.result?.isPatient  == true) {
+    if (state?.result?.isPatient == true) {
       yield SearchLoading(result: state.result);
     } else {
       yield SearchLoading();

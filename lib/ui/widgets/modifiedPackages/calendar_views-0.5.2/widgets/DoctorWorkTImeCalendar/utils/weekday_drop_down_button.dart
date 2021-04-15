@@ -29,9 +29,9 @@ class WeekdayDropDownButton extends StatelessWidget {
       ]
           .map(
             (weekday) => new DropdownMenuItem<int>(
-                  value: weekday,
-                  child: new Text(weekdayToString(weekday)),
-                ),
+              value: weekday,
+              child: new Text(weekdayToString(weekday)),
+            ),
           )
           .toList(),
       onChanged: onChanged,

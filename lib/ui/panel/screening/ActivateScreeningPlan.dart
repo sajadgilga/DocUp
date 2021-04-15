@@ -24,7 +24,6 @@ import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:simple_tooltip/simple_tooltip.dart';
 import 'package:uni_links/uni_links.dart';
 
 class ActivateScreeningPage extends StatefulWidget {
@@ -119,6 +118,7 @@ class _ActivateScreeningPageState extends State<ActivateScreeningPage> {
         if (_loadingContext != null) {
           Navigator.of(_loadingContext).pop();
         }
+
         showOneButtonDialog(context, "پلن شما با موفقیت فعال شد.", "تایید", () {
           EntityAndPanelUpdater.updateEntity();
           Navigator.pop(context);
@@ -152,8 +152,8 @@ class _ActivateScreeningPageState extends State<ActivateScreeningPage> {
                 }));
           });
         } else {
-          showOneButtonDialog(
-              context, Strings.requestFailed, Strings.okAction, () {});
+          showOneButtonDialog(context, InAppStrings.requestFailed,
+              InAppStrings.okAction, () {});
         }
       }
       setState(() {});
@@ -164,14 +164,49 @@ class _ActivateScreeningPageState extends State<ActivateScreeningPage> {
       FocusScope.of(context).unfocus();
       if (event.status == Status.LOADING) {
         discountStatus = DiscountStats.Loading;
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              _loadingContext = context;
+              return _loadingDialog;
+            });
       } else if (event.status == Status.COMPLETED) {
+        if (_loadingContext != null) {
+          Navigator.of(_loadingContext).pop();
+        }
         discountStatus = DiscountStats.Valid;
         discountPercent = event.data.percent;
+        showBuyPopup();
       } else if (event.status == Status.ERROR) {
+        if (_loadingContext != null) {
+          Navigator.of(_loadingContext).pop();
+        }
         toast(context, "کد تخفیف نامعتبر است");
         discountStatus = DiscountStats.Null;
       }
       setState(() {});
+    });
+  }
+
+  void showBuyPopup() {
+    showTwoButtonDialog(
+        context,
+        "قیمت نهایی برای شما" +
+            " ${discountStatus == DiscountStats.Valid ? replaceFarsiNumber(priceWithCommaSeparator((screening.price * (1 - discountPercent)).toInt())) : replaceFarsiNumber(screening.price.toString())} " +
+            "تومان" +
+            " است." +
+            "\n" +
+            "آیا از خرید خود مطمین هستید؟",
+        InAppStrings.okAction,
+        InAppStrings.cancelAction, () {
+      /// apply
+      _screeningBloc.requestActivateScreening(
+          screening.id,
+          discountStatus == DiscountStats.Valid
+              ? _discountController.text
+              : null);
+    }, () {
+      /// reject
     });
   }
 
@@ -211,10 +246,10 @@ class _ActivateScreeningPageState extends State<ActivateScreeningPage> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           AutoText(
-            Strings.neuronioClinicScreeningPlanDescription,
+            InAppStrings.neuronioClinicScreeningPlanDescription,
             style: TextStyle(fontSize: 13),
           ),
-          for (String str in Strings.neuronioClinicScreeningSteps)
+          for (String str in InAppStrings.neuronioClinicScreeningSteps)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: AutoText(
@@ -292,29 +327,38 @@ class _ActivateScreeningPageState extends State<ActivateScreeningPage> {
             ),
             DiscountTextField(
               textEditingController: _discountController,
-              simpleToolTipString: Strings.guidToSiteForMothersDays,
+              simpleToolTipString: InAppStrings.guidToSiteForMothersDays,
               discountStatus: discountStatus,
+              discountButtonFlag: false,
               onTooltipTap: () {
-                launchURL(Strings.appSiteLink);
+                launchURL(InAppStrings.appSiteLink);
               },
               onDiscountIconTap: () {
-                _screeningBloc
-                    .validateScreeningDiscount(_discountController.text);
+                // _screeningBloc
+                //     .validateScreeningDiscount(_discountController.text);
               },
               simpleToolTipFlag: false,
             ),
             ALittleVerticalSpace(),
             priceWidget(screening),
-            ALittleVerticalSpace(height: 40),
+            ALittleVerticalSpace(height: 35),
             ActionButton(
               title: "فعال‌سازی پلن سنجش",
               color: IColors.themeColor,
               callBack: () {
-                _screeningBloc.requestActivateScreening(
-                    screening.id,
-                    discountStatus == DiscountStats.Valid
-                        ? _discountController.text
-                        : null);
+                if ([null, ""].contains(_discountController.text)) {
+                  showBuyPopup();
+                } else {
+                  _screeningBloc
+                      .validateScreeningDiscount(_discountController.text);
+                }
+
+                /// REMOVED TO THE CHANGE OF UX
+                // _screeningBloc.requestActivateScreening(
+                //     screening.id,
+                //     discountStatus == DiscountStats.Valid
+                //         ? _discountController.text
+                //         : null);
               },
             ),
             ALittleVerticalSpace()

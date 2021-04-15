@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:crypto/crypto.dart';
-
 class CryptoService {
   static String generateRandomString({int length = 10}) {
     const _chars =

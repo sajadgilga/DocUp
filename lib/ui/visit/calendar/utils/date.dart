@@ -2,14 +2,14 @@ import 'package:Neuronio/ui/visit/calendar/utils/consts.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
-class DateUtils {
+class CalendarDateUtils {
   dynamic availableDates;
   String min;
   String max;
   String type;
   List<String> dayNames;
 
-  DateUtils() {
+  CalendarDateUtils() {
     availableDates = Global.availableDates;
     min = Global.min;
     max = Global.max;

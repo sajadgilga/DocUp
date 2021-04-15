@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:Neuronio/models/NewestNotificationResponse.dart';
 import 'package:Neuronio/repository/NotificationRepository.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
@@ -26,15 +26,14 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
   Stream<NotificationState> _addNotifToSeen(AddNotifToSeen event) async* {
     try {
-
-
-      AddToSeenResponse addToSeenResponse = await _repository.addNotifToSeen(event.newestNotifId);
-      if(addToSeenResponse.success){
+      AddToSeenResponse addToSeenResponse =
+          await _repository.addNotifToSeen(event.newestNotifId);
+      if (addToSeenResponse.success) {
         state.notifications.updateNotifIsRead(event.newestNotifId);
         NewestNotificationResponse newestNotificationResponse =
-        state.notifications.getCopy();
+            state.notifications.getCopy();
         yield NotificationsLoaded(notifications: newestNotificationResponse);
-      }else{
+      } else {
         throw Exception("Add_To_Seen method were not successful");
       }
     } catch (e) {

@@ -266,7 +266,7 @@ class _DatePicker2State extends State<DatePicker2>
                                 0),
                             child: Opacity(
                               opacity: 1 - animation.value,
-                              child: FlatButton(
+                              child: TextButton(
                                 onPressed: () {
                                   widget.onChangePicker('year');
                                 },
@@ -315,7 +315,7 @@ class _DatePicker2State extends State<DatePicker2>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: AutoText(
                       'تایید',
                       style: TextStyle(fontSize: 16, color: Global.color),
@@ -324,7 +324,7 @@ class _DatePicker2State extends State<DatePicker2>
                       _okDate();
                     },
                   ),
-                  FlatButton(
+                  TextButton(
                     child: AutoText(
                       'انصراف',
                       style: TextStyle(fontSize: 16, color: Global.color),
@@ -333,7 +333,7 @@ class _DatePicker2State extends State<DatePicker2>
                       Navigator.pop(context);
                     },
                   ),
-                  FlatButton(
+                  TextButton(
                     child: AutoText(
                       'اکنون',
                       style: TextStyle(fontSize: 16, color: Global.color),

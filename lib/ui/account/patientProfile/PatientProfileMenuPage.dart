@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
@@ -60,7 +58,6 @@ class _PatientProfileMenuPageState extends State<PatientProfileMenuPage> {
                 size: 25,
               ),
               onTap: () {
-                /// TODO
                 widget.onPush(NavigatorRoutes.root, null);
               },
               topRightFlag: false,

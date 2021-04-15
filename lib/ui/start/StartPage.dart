@@ -92,7 +92,10 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
 
   @override
   void codeUpdated() {
+    print("code updated......");
+    print(code);
     _verificationController.text = code;
+    submit();
   }
 
   @override
@@ -115,6 +118,7 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
   @override
   void initState() {
     if (!CrossPlatformDeviceDetection.isWeb) {
+      sms.SmsAutoFill().getAppSignature.then((value) {});
       listenForCode();
     }
     switchRole(currentRoleType);
@@ -178,10 +182,10 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
         }
         if (((response.error.runtimeType) == ApiException)) {
           if ((response.error as ApiException).getCode() == 615) {
-            showSnackBar(_scaffoldKey, Strings.errorCode_615, secs: 10);
+            showSnackBar(_scaffoldKey, InAppStrings.errorCode_615, secs: 10);
           } else if ((response.error as ApiException).getCode() == 616) {
             /// TODO amir:
-            showSnackBar(_scaffoldKey, Strings.errorCode_616, secs: 10);
+            showSnackBar(_scaffoldKey, InAppStrings.errorCode_616, secs: 10);
           } else {
             showSnackBar(
               _scaffoldKey,
@@ -213,8 +217,8 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
             _nationalCodeController.text = nationalCode;
             if (firstName + lastName + nationalCode == "") {
               showDescriptionAlertDialog(context,
-                  title: Strings.privacyAndPolicy,
-                  description: Strings.policyDescription);
+                  title: InAppStrings.privacyAndPolicy,
+                  description: InAppStrings.policyDescription);
             }
             if (response.data is PatientEntity) {
               _currentCity.text = (response.data as PatientEntity).city;
@@ -256,8 +260,8 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
     }
     if (!hasShown) {
       showDescriptionAlertDialog(context,
-          title: Strings.privacyAndPolicy,
-          description: Strings.policyDescription);
+          title: InAppStrings.privacyAndPolicy,
+          description: InAppStrings.policyDescription);
     }
     prefs.setBool("privacyAndPolicy", true);
   }
@@ -386,8 +390,8 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
                   child: _titleWidget(),
                   onTap: () {
                     showDescriptionAlertDialog(context,
-                        title: Strings.privacyAndPolicy,
-                        description: Strings.policyDescription);
+                        title: InAppStrings.privacyAndPolicy,
+                        description: InAppStrings.policyDescription);
                   },
                 ),
                 SizedBox(height: 5),
@@ -469,7 +473,7 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
           ),
           ActionButton(
             color: isContinueEnable ? IColors.themeColor : Colors.grey,
-            title: Strings.continueAction,
+            title: InAppStrings.continueAction,
             callBack: submit,
           ),
         ],
@@ -477,7 +481,7 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
 
   _signUpActionWidget() => ActionButton(
         color: IColors.themeColor,
-        title: Strings.verifyAction,
+        title: InAppStrings.verifyAction,
         width: 130,
         rightIcon: Icon(
           Icons.arrow_forward_ios,
@@ -489,7 +493,7 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
 
   _registerActionWidget() => ActionButton(
         color: validationFormError ? IColors.red : IColors.themeColor,
-        title: Strings.registerAction,
+        title: InAppStrings.registerAction,
         // icon: Icon(
         //   Icons.arrow_back_ios,
         //   size: 18,
@@ -500,7 +504,7 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
 
   _nextActionWidget() => ActionButton(
         color: validationFormError ? IColors.red : IColors.themeColor,
-        title: Strings.nextStepAction,
+        title: InAppStrings.nextStepAction,
         // icon: Icon(
         //   Icons.arrow_back_ios,
         //   size: 18,
@@ -513,12 +517,12 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
     String header = "";
     if (startType == StartType.LOGIN) {
       if (currentRoleType == RoleType.DOCTOR) {
-        header = Strings.registerAsDoctorMessage;
+        header = InAppStrings.registerAsDoctorMessage;
       } else {
-        header = Strings.registerAsPatientMessage;
+        header = InAppStrings.registerAsPatientMessage;
       }
     } else {
-      header = Strings.registerHeaderMessage;
+      header = InAppStrings.registerHeaderMessage;
     }
     return AutoText(
       header,
@@ -599,7 +603,7 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
     switch (startType) {
       case StartType.SIGN_UP:
         return InputField(
-          inputHint: Strings.usernameInputHint,
+          inputHint: InAppStrings.usernameInputHint,
           controller: _usernameController,
           textInputType: TextInputType.phone,
           validationCallback: (text) => validatePhoneNumber(text),
@@ -607,12 +611,11 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
         );
       case StartType.LOGIN:
         return InputField(
-            inputHint: Strings.verificationHint,
+            inputHint: InAppStrings.verificationHint,
             controller: _verificationController,
             textInputType: TextInputType.number,
             maxChars: 6,
-            validationCallback: (text) =>
-                _isVerificationCodeValid(text),
+            validationCallback: (text) => _isVerificationCodeValid(text),
             errorMessage: "کدفعال‌سازی ۶رقمی است",
             onChanged: (text) {
               setState(() {
@@ -623,7 +626,7 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
         return Column(
           children: <Widget>[
             InputField(
-              inputHint: Strings.firstNameInputHint,
+              inputHint: InAppStrings.firstNameInputHint,
               controller: _firstNameController,
               validationCallback: (text) => text.isNotEmpty,
               errorMessage: 'نام خود را وارد کنید',
@@ -631,7 +634,7 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
             ),
             ALittleVerticalSpace(),
             InputField(
-              inputHint: Strings.lastNameInputHint,
+              inputHint: InAppStrings.lastNameInputHint,
               controller: _lastNameController,
               validationCallback: (text) => text.isNotEmpty,
               errorMessage: 'نام خانوادگی خود را وارد کنید',
@@ -639,7 +642,7 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
             ),
             ALittleVerticalSpace(),
             InputField(
-              inputHint: Strings.nationalCodeInputHint,
+              inputHint: InAppStrings.nationalCodeInputHint,
               controller: _nationalCodeController,
               validationCallback: (text) =>
                   (text.isNotEmpty && text.length == 10),
@@ -650,7 +653,7 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
             ALittleVerticalSpace(),
             currentRoleType == RoleType.DOCTOR
                 ? InputField(
-                    inputHint: Strings.expertiseInputHint,
+                    inputHint: InAppStrings.expertiseInputHint,
                     controller: _expertiseCodeController,
                     validationCallback: (text) => text.isNotEmpty,
                     errorMessage: 'تخصص خود را وارد کنید',
@@ -666,14 +669,14 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
                         controller: _birthCity,
                         emptyFieldError: 'لظفا شهری را وارد کنید',
                         notFoundError: "شهر موردنظر یافت نشد",
-                        items: Strings.cities.keys.toList(),
+                        items: InAppStrings.cities.keys.toList(),
                         forced: false,
                       ),
                       ALittleVerticalSpace(),
                       AutoCompleteTextField(
                           emptyFieldError: 'لظفا شهری را وارد کنید',
                           notFoundError: "شهر موردنظر یافت نشد",
-                          items: Strings.cities.keys.toList(),
+                          items: InAppStrings.cities.keys.toList(),
                           forced: false,
                           hintText: 'شهر زندگی',
                           controller: _currentCity),
@@ -686,9 +689,9 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
                         activeFgColor: Colors.white,
                         inactiveBgColor: Colors.grey,
                         inactiveFgColor: Colors.white,
-                        labels: Strings.genders,
+                        labels: InAppStrings.genders,
                         activeBgColors: [
-                          for (var i in Strings.genders) IColors.themeColor
+                          for (var i in InAppStrings.genders) IColors.themeColor
                         ],
                         onToggle: (index) {
                           _genderController.text = index.toString();
@@ -710,16 +713,16 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
     switch (startType) {
       case StartType.SIGN_UP:
         return currentRoleType == RoleType.PATIENT
-            ? Strings.yourDoctorMessage
-            : Strings.yourPatientMessage;
+            ? InAppStrings.yourDoctorMessage
+            : InAppStrings.yourPatientMessage;
       case StartType.LOGIN:
         return "";
       case StartType.USER_PROFILE_REGISTER_DATA:
         return currentRoleType == RoleType.PATIENT
-            ? Strings.requiredPatientInfo
-            : Strings.welcome;
+            ? InAppStrings.requiredPatientInfo
+            : InAppStrings.welcome;
       case StartType.PATIENT_SELECT_CLINIC:
-        return Strings.welcome;
+        return InAppStrings.welcome;
     }
   }
 
@@ -727,16 +730,16 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
     switch (startType) {
       case StartType.SIGN_UP:
         return currentRoleType == RoleType.PATIENT
-            ? Strings.patientRegisterMessage
-            : Strings.doctorRegisterMessage;
+            ? InAppStrings.patientRegisterMessage
+            : InAppStrings.doctorRegisterMessage;
       case StartType.LOGIN:
-        return Strings.verificationCodeMessage;
+        return InAppStrings.verificationCodeMessage;
       case StartType.USER_PROFILE_REGISTER_DATA:
         return currentRoleType == RoleType.PATIENT
-            ? Strings.requiredPatientInfoMessage
-            : Strings.oneStepToOfficeMessage;
+            ? InAppStrings.requiredPatientInfoMessage
+            : InAppStrings.oneStepToOfficeMessage;
       case StartType.PATIENT_SELECT_CLINIC:
-        return Strings.oneStepToDoctorMessage;
+        return InAppStrings.oneStepToDoctorMessage;
     }
   }
 }

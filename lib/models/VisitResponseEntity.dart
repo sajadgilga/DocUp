@@ -43,6 +43,7 @@ class VisitEntity {
     } else if (visitType == 1) {
       return "ویزیت" + " " + visitTypeName + " " + visitMethodName;
     }
+    return "ویزیت";
   }
 
   String get visitTypeName {
@@ -51,6 +52,7 @@ class VisitEntity {
     } else if (visitType == 1) {
       return "مجازی";
     }
+    return "";
   }
 
   String get visitMethodName {
@@ -99,7 +101,7 @@ class VisitEntity {
   int get visitStartTimeDiffFromNow {
     DateTime now = DateTimeService.getCurrentDateTime();
     DateTime visitStartTime =
-    DateTimeService.getDateTimeFromStandardString(visitTime);
+        DateTimeService.getDateTimeFromStandardString(visitTime);
     Duration diff = visitStartTime.difference(now);
     return diff.inSeconds;
   }

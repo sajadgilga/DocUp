@@ -4,7 +4,6 @@ import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/sr
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-
 import 'days_page_controller.dart';
 import 'days_page_view.dart';
 

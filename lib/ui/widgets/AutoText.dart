@@ -1,7 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 
-class FontSizeService{}
+class FontSizeService {}
+
 class AutoText extends StatelessWidget {
   final String text;
   final bool softWrap;

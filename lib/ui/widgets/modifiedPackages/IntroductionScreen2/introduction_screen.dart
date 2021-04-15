@@ -118,8 +118,8 @@ class IntroductionScreen2 extends StatefulWidget {
     this.curve = Curves.easeIn,
   })  : assert(pages != null),
         assert(
-        pages.length > 0,
-        "You provide at least one page on introduction screen !",
+          pages.length > 0,
+          "You provide at least one page on introduction screen !",
         ),
         assert(onDone != null),
         assert(done != null),
@@ -238,13 +238,13 @@ class IntroductionScreenState2 extends State<IntroductionScreen2> {
                     child: Center(
                       child: widget.isProgress
                           ? DotsIndicator2(
-                        dotsCount: widget.pages.length,
-                        position: _currentPage,
-                        decorator: widget.dotsDecorator,
-                        onTap: widget.isProgressTap && !widget.freeze
-                            ? (pos) => animateScroll(pos.toInt())
-                            : null,
-                      )
+                              dotsCount: widget.pages.length,
+                              position: _currentPage,
+                              decorator: widget.dotsDecorator,
+                              onTap: widget.isProgressTap && !widget.freeze
+                                  ? (pos) => animateScroll(pos.toInt())
+                                  : null,
+                            )
                           : const SizedBox(),
                     ),
                   ),
@@ -253,8 +253,8 @@ class IntroductionScreenState2 extends State<IntroductionScreen2> {
                     child: isLastPage
                         ? doneBtn
                         : widget.showNextButton
-                        ? nextBtn
-                        : Opacity(opacity: 0.0, child: nextBtn),
+                            ? nextBtn
+                            : Opacity(opacity: 0.0, child: nextBtn),
                   ),
                 ],
               ),

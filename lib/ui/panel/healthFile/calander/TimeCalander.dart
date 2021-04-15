@@ -54,7 +54,7 @@ class _TimeCalenderState extends State<TimeCalender> {
         textDirection: TextDirection.ltr,
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
-          hintText: Strings.drugNameTextFieldHint,
+          hintText: InAppStrings.drugNameTextFieldHint,
         ),
       );
 
@@ -68,7 +68,7 @@ class _TimeCalenderState extends State<TimeCalender> {
         textDirection: TextDirection.ltr,
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
-          hintText: Strings.countTextFieldHint,
+          hintText: InAppStrings.countTextFieldHint,
         ),
       );
 
@@ -78,7 +78,7 @@ class _TimeCalenderState extends State<TimeCalender> {
         textAlign: TextAlign.end,
         textDirection: TextDirection.ltr,
         decoration: InputDecoration(
-          hintText: Strings.periodTextFieldHint,
+          hintText: InAppStrings.periodTextFieldHint,
         ),
       );
 
@@ -128,7 +128,7 @@ class _TimeCalenderState extends State<TimeCalender> {
             padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
             margin: EdgeInsets.only(top: 60, bottom: 30),
             child: AutoText(
-              Strings.submitDrugLabel,
+              InAppStrings.submitDrugLabel,
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 14,

@@ -16,6 +16,7 @@ class PatientTracker {
     if (all == 0) all = 1;
     if (json.containsKey('visit_pending')) visitPending = json['visit_pending'];
     if (json.containsKey('virtual_accepted')) curing = json['virtual_accepted'];
-    if (json.containsKey('physical_accepted')) cured = json['physical_accepted'];
+    if (json.containsKey('physical_accepted'))
+      cured = json['physical_accepted'];
   }
 }

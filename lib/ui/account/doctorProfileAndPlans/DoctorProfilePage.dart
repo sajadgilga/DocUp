@@ -65,8 +65,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
           return _widget(state);
         } else if (state.mEntityStatus == BlocState.Error) {
           return APICallError(() {
-            EntityBloc entityBloc = BlocProvider.of<EntityBloc>(context);
-            entityBloc.add(EntityGet());
+            BlocProvider.of<EntityBloc>(context).add(EntityGet());
           });
         } else
           return Waiting();
@@ -86,7 +85,6 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
             size: 25,
           ),
           onTap: () {
-            /// TODO
             widget.onPush(NavigatorRoutes.doctorProfileMenuPage, doctorEntity);
           },
           topRightFlag: false,
@@ -101,7 +99,6 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
               _tooltip = true;
             });
 
-            /// TODO
             Timer(Duration(seconds: 10), () {
               _tooltip = false;
             });
@@ -117,7 +114,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
               checkDoctorBillingDescription();
             },
             content: AutoText(
-              Strings.doctorBillingDescription,
+              InAppStrings.doctorBillingDescription,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black87,
@@ -158,7 +155,6 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
         ),
         MediumVerticalSpace(),
 
-        /// TODO
         !CrossPlatformDeviceDetection.isWeb
             ? MapWidget(
                 clinic: doctorEntity.clinic,

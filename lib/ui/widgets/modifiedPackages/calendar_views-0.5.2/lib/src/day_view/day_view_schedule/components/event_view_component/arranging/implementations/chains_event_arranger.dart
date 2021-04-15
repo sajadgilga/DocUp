@@ -1,7 +1,6 @@
 import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/day_view.dart';
 import 'package:meta/meta.dart';
 
-
 /// [EventViewArranger] that tries to equally separate overlapping events.
 @immutable
 class ChainsEventArranger implements EventViewArranger {
@@ -45,12 +44,12 @@ class ChainsEventArranger implements EventViewArranger {
     return items
         .map(
           (item) => new ArrangedEvent(
-                top: constraints.minuteOfDayFromTop(item.start),
-                left: item.leftPercentage * constraints.areaWidth,
-                width: item.widthPercentage * constraints.areaWidth,
-                height: constraints.heightOfDuration(item.duration),
-                event: item.event,
-              ),
+            top: constraints.minuteOfDayFromTop(item.start),
+            left: item.leftPercentage * constraints.areaWidth,
+            width: item.widthPercentage * constraints.areaWidth,
+            height: constraints.heightOfDuration(item.duration),
+            event: item.event,
+          ),
         )
         .toList();
   }

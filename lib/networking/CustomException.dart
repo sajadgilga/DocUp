@@ -10,8 +10,7 @@ class CustomException implements Exception {
 }
 
 class FetchDataException extends CustomException {
-  FetchDataException([String message])
-      : super(message, "");
+  FetchDataException([String message]) : super(message, "");
 }
 
 class BadRequestException extends CustomException {
@@ -32,13 +31,14 @@ class ApiException implements Exception {
 
   ApiException([this._code, this.message]);
 
-  getCode(){
-    try{
+  getCode() {
+    try {
       return int.parse(this._code);
-    }catch(e){
+    } catch (e) {
       return _code;
     }
   }
+
   String toString() {
     return message;
   }

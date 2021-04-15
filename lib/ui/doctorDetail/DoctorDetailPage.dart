@@ -88,7 +88,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
         ),
         SizedBox(height: 30),
 
-        /// TODO
+        /// TODO: using different package for map in web
         !CrossPlatformDeviceDetection.isWeb
             ? MapWidget(
                 clinic: doctorEntity.clinic,
@@ -113,7 +113,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   color: doctorEntity.plan.visitTypesNumber.contains(0)
                       ? IColors.themeColor
                       : IColors.darkGrey,
-                  title: Strings.ICAReservationLabel,
+                  title: InAppStrings.icaReservationLabel,
                   callBack: () {
                     if (doctorEntity.plan.visitTypesNumber.contains(0)) {
                       return widget.onPush(
@@ -132,7 +132,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   color: doctorEntity.plan.visitTypesNumber.contains(0)
                       ? IColors.themeColor
                       : IColors.darkGrey,
-                  title: Strings.physicalReservationLabel,
+                  title: InAppStrings.physicalReservationLabel,
                   callBack: () {
                     if (doctorEntity.plan.visitTypesNumber.contains(0)) {
                       return widget.onPush(
@@ -152,7 +152,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   color: doctorEntity.plan.visitTypesNumber.contains(1)
                       ? IColors.darkBlue
                       : IColors.darkGrey,
-                  title: Strings.virtualReservationLabel,
+                  title: InAppStrings.virtualReservationLabel,
                   callBack: () {
                     if (doctorEntity.plan.visitTypesNumber.contains(1)) {
                       return widget.onPush(
@@ -170,7 +170,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                   height: 60,
                   borderRadius: 15,
                   color: IColors.themeColor,
-                  title: Strings.trafficPlanReservationLabel,
+                  title: InAppStrings.trafficPlanReservationLabel,
                   callBack: () => widget
                       .onPush(NavigatorRoutes.textPlanPage, doctorEntity, () {
                     _bloc.getDoctor(widget.doctorEntity.id, false);

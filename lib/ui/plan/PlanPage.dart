@@ -53,18 +53,19 @@ class _TextPlanPagePageState extends State<TextPlanPage>
         /// update remained traffic
         var panel = entityBloc.state.entity.mEntity
             .getPanelByDoctorId(widget.doctorEntity.id);
-        textPlanBloc.add(GetPatientTextPlanEvent(partnerId: widget.doctorEntity.id));
+        textPlanBloc
+            .add(GetPatientTextPlanEvent(partnerId: widget.doctorEntity.id));
 
         /// pop to prev page
-        showOneButtonDialog(context, Strings.planSuccessfullyActivated,
-            Strings.okAction, () => Navigator.pop(context));
+        showOneButtonDialog(context, InAppStrings.planSuccessfullyActivated,
+            InAppStrings.okAction, () => Navigator.pop(context));
       } else if (data.status == Status.ERROR) {
         if (data.error is ApiException) {
           ApiException apiException = data.error;
           if (apiException.getCode() == 602) {
-            toast(context, Strings.noCreditErrorCode_602);
+            toast(context, InAppStrings.noCreditErrorCode_602);
           } else if (apiException.getCode() == 603) {
-            toast(context, Strings.oldPlanExistedErrorCode_603);
+            toast(context, InAppStrings.oldPlanExistedErrorCode_603);
           } else {
             toast(context, data.error.toString());
           }
@@ -236,7 +237,7 @@ class _TextPlanPagePageState extends State<TextPlanPage>
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               AutoText(
-                Strings.textPlanDescription,
+                InAppStrings.textPlanDescription,
                 style: TextStyle(fontSize: 15),
               ),
             ],
@@ -250,7 +251,7 @@ class _TextPlanPagePageState extends State<TextPlanPage>
     Widget noPlanDefinedForDoctorClinic() {
       return Container(
         margin: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        child: AutoText(Strings.noPlanDefinedForDoctorClinic),
+        child: AutoText(InAppStrings.noPlanDefinedForDoctorClinic),
       );
     }
 
@@ -268,8 +269,8 @@ class _TextPlanPagePageState extends State<TextPlanPage>
                       color: IColors.themeColor,
                       callBack: () {
                         /// trying to buy a text plan
-                        textPlanBloc.textPlanActivation(
-                            widget.doctorEntity.id, widget.doctorEntity?.clinic?.pClinic[0].id);
+                        textPlanBloc.textPlanActivation(widget.doctorEntity.id,
+                            widget.doctorEntity?.clinic?.pClinic[0].id);
                       },
                     ),
                     ALittleVerticalSpace()

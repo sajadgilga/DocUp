@@ -2,8 +2,7 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:vibration/vibration.dart';
 
 class VibrateAndRingtoneService {
-
-  static void playSoundAndVibrate({int miliSecDuration = 500}){
+  static void playSoundAndVibrate({int miliSecDuration = 500}) {
     VibrateAndRingtoneService.vibrate(miliSecDuration: miliSecDuration);
     VibrateAndRingtoneService.playNotifSound();
   }
@@ -19,7 +18,7 @@ class VibrateAndRingtoneService {
     }
   }
 
-  static void playNotifSound(){
+  static void playNotifSound() {
     FlutterRingtonePlayer.playNotification();
   }
 }

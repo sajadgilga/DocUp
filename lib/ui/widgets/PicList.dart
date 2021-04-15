@@ -1,15 +1,14 @@
 import 'dart:ui';
 
-import 'package:Neuronio/utils/CrossPlatformFilePicker.dart';
-import 'package:dashed_container/dashed_container.dart';
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/FileBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/models/Picture.dart';
 import 'package:Neuronio/models/UserEntity.dart';
-import 'package:Neuronio/ui/widgets/UploadSlider.dart';
+import 'package:Neuronio/utils/CrossPlatformFilePicker.dart';
 import 'package:Neuronio/utils/Utils.dart';
+import 'package:dashed_container/dashed_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
@@ -246,9 +245,9 @@ class _PicListState extends State<PicList> {
     );
   }
 
-  int _calculatePossiblePicCount(width) {
-    return ((width - 50) / 160).toInt();
-  }
+  // int _calculatePossiblePicCount(width) {
+  //   return ((width - 50) / 160).toInt();
+  // }
 
   Widget _picListHeader() => Container(
         margin: EdgeInsets.only(right: 15),

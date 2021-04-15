@@ -8,13 +8,11 @@ import 'package:Neuronio/repository/UtilRepository.dart';
 import 'package:Neuronio/services/FirebaseService.dart';
 import 'package:Neuronio/ui/mainPage/navigator_destination.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/WebsocketHelper.dart';
 import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info/package_info.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -86,7 +84,7 @@ class _MainPageState extends State<MainPage> {
               context,
               "نسخه اپلیکیشن کنونی شما قدیمی است. با زدن بر روی دکمه زیر برای اپدیت اپ اقدام کنید و اطلاعات بیشتری را از سایت نورونیو دریافت کنید.",
               "تایید", () {
-            launchURL(Strings.appSiteLink);
+            launchURL(InAppStrings.appSiteLink);
           }, barrierDismissible: false);
         }
       });
@@ -134,7 +132,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   List<BottomNavigationBarItem> _bottomNavigationItems(Entity entity) {
-    return navigator_destinations
+    return navigatorDestinations
         .map<BottomNavigationBarItem>((Destination destination) {
       try {
         return BottomNavigationBarItem(
@@ -196,17 +194,17 @@ class _MainPageState extends State<MainPage> {
             _selectPage(index);
           },
           backgroundColor: Colors.white,
-          unselectedItemColor: navigator_destinations[0].color,
+          unselectedItemColor: navigatorDestinations[0].color,
           selectedItemColor: IColors.themeColor,
         );
       },
     );
   }
 
-  void _chatPage(int section) {
-    _selectPage(1);
-    _children[1].currentState.push(null, NavigatorRoutes.panel, param1: 'chat');
-  }
+  // void _chatPage(int section) {
+  //   _selectPage(1);
+  //   _children[1].currentState.push(null, NavigatorRoutes.panel, param1: 'chat');
+  // }
 
   Widget _buildOffstageNavigator(int index) {
     return Offstage(
@@ -256,7 +254,7 @@ class _MainPageState extends State<MainPage> {
             _navigationBarDescriptionTooltipToggle = false;
           },
           content: AutoText(
-            Strings.navigationBarDescription,
+            InAppStrings.navigationBarDescription,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black87,

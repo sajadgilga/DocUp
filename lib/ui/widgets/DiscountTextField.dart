@@ -7,12 +7,14 @@ import 'AutoText.dart';
 
 enum DiscountStats { Null, Loading, Valid, Invalid }
 
+// ignore: must_be_immutable
 class DiscountTextField extends StatefulWidget {
   /// simpletooltip
   final String simpleToolTipString;
   final bool simpleToolTipFlag;
   final Function() onTooltipTap;
   DiscountStats discountStatus;
+  final bool discountButtonFlag;
 
   /// discount string
   final TextEditingController textEditingController;
@@ -25,7 +27,8 @@ class DiscountTextField extends StatefulWidget {
       this.onTooltipTap,
       this.textEditingController,
       this.discountStatus = DiscountStats.Null,
-      this.onDiscountIconTap})
+      this.onDiscountIconTap,
+      this.discountButtonFlag})
       : super(key: key);
 
   @override
@@ -102,7 +105,8 @@ class _DiscountTextFieldState extends State<DiscountTextField> {
                   borderRadius: BorderRadius.circular(15),
                   borderSide:
                       new BorderSide(color: IColors.darkGrey, width: 1)),
-              prefixIcon: disCountPrefixIcon()),
+              prefixIcon:
+                  widget.discountButtonFlag ? disCountPrefixIcon() : null),
         ),
       ),
     );

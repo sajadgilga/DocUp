@@ -3,8 +3,10 @@
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+// ignore: must_be_immutable
 class InputField extends StatefulWidget {
   String inputHint;
   TextEditingController controller;
@@ -50,7 +52,7 @@ class _InputFieldState extends State<InputField> {
       textAlign: TextAlign.right,
       keyboardType: widget.textInputType,
       maxLength: widget.maxChars,
-      maxLengthEnforced: widget.maxChars == null ? false : true,
+      maxLengthEnforcement: widget.maxChars == null ? MaxLengthEnforcement.none : MaxLengthEnforcement.enforced,
       validator: (value) {
         if (widget.validationCallback(value)) {
           return null;

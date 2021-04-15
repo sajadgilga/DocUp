@@ -343,7 +343,7 @@ class _VisitConfPageState extends State<VisitConfPage>
                     hideOnTooltipTap: true,
                     borderColor: IColors.themeColor,
                     tooltipDirection: TooltipDirection.down,
-                    content: AutoText(Strings.doctorPlanVisitTimeHelp),
+                    content: AutoText(InAppStrings.doctorPlanVisitTimeHelp),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -394,9 +394,7 @@ class _VisitConfPageState extends State<VisitConfPage>
   }
 
   String correctTimeFormat(String text) {
-    if (text.split(":").length == 3) {
-      /// TODO amir: we don't user second so maybe later
-    } else if (text.split(":").length == 2) {
+    if ([2, 3].contains(text.split(":").length)) {
       String hour = text.split(":")[0];
       String minute = text.split(":")[1];
       if (hour.length == 1) {
@@ -407,6 +405,7 @@ class _VisitConfPageState extends State<VisitConfPage>
       }
       return hour + ":" + minute;
     }
+
     return text;
   }
 

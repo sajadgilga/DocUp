@@ -52,8 +52,7 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
           NoronioClinicServiceType.MultipleChoiceTest, () {
         if (element.isGoogleDocTest) {
           launch(element.testLink);
-        } else if(element.isInAppTest) {
-          /// TODO
+        } else if (element.isInAppTest) {
           MedicalTestPageData medicalTestPageData = MedicalTestPageData(
               MedicalPageDataType.Usual,
               patientEntity: null, onDone: () {

@@ -1,8 +1,6 @@
 import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
-import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/ui/BasePage.dart';
-import 'package:Neuronio/ui/mainPage/MainPage.dart';
 import 'package:Neuronio/ui/start/OnBoardingPage.dart';
 import 'package:Neuronio/ui/start/StartPage.dart';
 import 'package:flutter/cupertino.dart';

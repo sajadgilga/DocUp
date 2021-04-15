@@ -25,6 +25,7 @@ import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
+import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,7 +49,6 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   Map<int, QuestionAnswer> patientAnswers = HashMap();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  /// TODO dirty code
   bool firstInitialized = false;
   bool firstAnswersLoaded = false;
 
@@ -63,52 +63,55 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   }
 
   void _initialApiCall() {
-    var _state = BlocProvider.of<EntityBloc>(context).state;
-    try {
-      MedicalTestItem mdi = widget.testPageInitData.medicalTestItem;
-      if (widget.testPageInitData.type == MedicalPageDataType.Usual) {
-        /// neuronio service
-        if (_state.entity.isDoctor) {
-          _bloc.add(GetTest(id: mdi.testId));
-        } else {
-          _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
-              testId: mdi.testId, patientId: _state.entity.mEntity.id));
+    EntityAndPanelUpdater.processOnEntityLoad((Entity entity) {
+      try {
+        MedicalTestItem mdi = widget.testPageInitData.medicalTestItem;
+        if (widget.testPageInitData.type == MedicalPageDataType.Usual) {
+          /// neuronio service
+          if (entity.isDoctor) {
+            _bloc.add(GetTest(id: mdi.testId));
+          } else {
+            _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
+                testId: mdi.testId, patientId: entity.mEntity.id));
+          }
+        } else if (widget.testPageInitData.type == MedicalPageDataType.Panel) {
+          /// panel
+          if (entity.isDoctor) {
+            _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
+                testId: mdi.testId,
+                patientId: widget.testPageInitData.patientEntity.id,
+                panelTestId: (mdi as PanelMedicalTestItem).id));
+          } else {
+            _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
+                testId: mdi.testId,
+                patientId: entity.mEntity.id,
+                panelTestId: mdi is PanelMedicalTestItem ? mdi.id : null));
+          }
+        } else if (widget.testPageInitData.type ==
+            MedicalPageDataType.Screening) {
+          /// screening
+          if (entity.isDoctor) {
+            _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
+                testId: mdi.testId,
+                patientId: widget.testPageInitData.patientEntity.id,
+                screeningId: widget.testPageInitData.screeningId));
+          } else {
+            _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
+                testId: mdi.testId,
+                patientId: entity.mEntity.id,
+                screeningId: widget.testPageInitData.screeningId));
+          }
         }
-      } else if (widget.testPageInitData.type == MedicalPageDataType.Panel) {
-        /// panel
-        if (_state.entity.isDoctor) {
-          _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
-              testId: mdi.testId,
-              patientId: widget.testPageInitData.patientEntity.id,
-              panelTestId: (mdi as PanelMedicalTestItem).id));
-        } else {
-          _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
-              testId: mdi.testId,
-              patientId: _state.entity.mEntity.id,
-              panelTestId: mdi is PanelMedicalTestItem ? mdi.id : null));
-        }
-      } else if (widget.testPageInitData.type ==
-          MedicalPageDataType.Screening) {
-        /// panel
-        if (_state.entity.isDoctor) {
-          _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
-              testId: mdi.testId,
-              patientId: widget.testPageInitData.patientEntity.id,
-              screeningId: widget.testPageInitData.screeningId));
-        } else {
-          _bloc.add(GetPatientTestAndResponse(widget.testPageInitData.type,
-              testId: mdi.testId,
-              patientId: _state.entity.mEntity.id,
-              screeningId: widget.testPageInitData.screeningId));
-        }
-      }
 
-      this.firstInitialized = true;
-    } catch (e) {}
+        this.firstInitialized = true;
+      } catch (e) {}
+    });
+
   }
 
   @override
   Widget build(BuildContext context) {
+    /// TODO: dirty code, remove extra block providers; there are three, and it can be reduced to 1
     return MaterialApp(
       home: Scaffold(
         key: _scaffoldKey,
@@ -176,7 +179,6 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
                       size: 20,
                     ),
                     onTap: () {
-                      /// TODO
                       widget.onPush(NavigatorRoutes.root, null);
                     },
                     topRightFlag: false,
@@ -299,7 +301,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
                 context,
                 widget.testPageInitData.panelId != null
                     ? medicalTestResponseEntity.msg
-                    : Strings.seeTestResultsUseScreeningPlan,
+                    : InAppStrings.seeTestResultsUseScreeningPlan,
                 "باشه", () {
               Navigator.pop(context);
 
@@ -489,7 +491,7 @@ class _QuestionAnswersWidgetState extends State<QuestionAnswersWidget> {
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: new BorderSide(color: IColors.darkGrey, width: 1)),
-            labelText: Strings.uploadPicTextFieldDescriptionHint,
+            labelText: InAppStrings.uploadPicTextFieldDescriptionHint,
           ),
         ),
       ),

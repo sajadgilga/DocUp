@@ -32,7 +32,6 @@ class DateTimeService {
     return now;
   }
 
-
   static String getCurrentTime() {
     DateTime now;
     if (_currentMobileDateTime == null || _currentNTPDateTime == null) {
@@ -83,7 +82,7 @@ class DateTimeService {
   static String getDateStringFormDateTime(DateTime date,
       {String dateSeparator = "-"}) {
     try {
-      return "${date.year}${dateSeparator}${date.month}${dateSeparator}${date.day}";
+      return "${date.year}$dateSeparator${date.month}$dateSeparator${date.day}";
     } catch (e) {
       return null;
     }
@@ -134,7 +133,7 @@ class DateTimeService {
     return timeString;
   }
 
-  static DateTime getDateTimeFormDateString(String date) {
+  static DateTime getDateTimeFromDateString(String date) {
     return DateTime(
         int.parse(date.split(new RegExp(r"/|-|\\"))[0]),
         int.parse(date.split(new RegExp(r"/|-|\\"))[1]),
@@ -146,7 +145,7 @@ class DateTimeService {
       if (date.split("T").length > 1) {
         date = date.split("T")[0];
       }
-      final jalaliDate = Jalali.fromDateTime(getDateTimeFormDateString(date));
+      final jalaliDate = Jalali.fromDateTime(getDateTimeFromDateString(date));
       return "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}";
     } catch (e) {
       return null;

@@ -11,9 +11,7 @@ import 'package:Neuronio/ui/widgets/Header.dart';
 import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 
 class Panel extends StatefulWidget {
   DoctorEntity doctor;
@@ -345,36 +343,36 @@ class TabsState extends State<Tabs> {
     BlocProvider.of<TabSwitchBloc>(context).add(state);
   }
 
-  Widget _button({PanelTabState tabState, state, text, context}) {
-    return RaisedButton(
-      onPressed: () {
-        _switchTab(tabState, context);
-      },
-      color: _buttonBackground(state == tabState),
-      child: Container(
-          constraints:
-              BoxConstraints(minWidth: MediaQuery.of(context).size.width * .15),
-          padding: EdgeInsets.only(top: 10, bottom: 10),
-          alignment: Alignment.center,
-          child: Row(
-            children: <Widget>[
-              (tabState.subtabs.length > 0
-                  ? Icon(Icons.arrow_drop_down)
-                  : Container()),
-              AutoText(
-                tabState.text,
-//            text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: _buttonTextColor(state == tabState), fontSize: 10),
-              )
-            ],
-          )),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      elevation: 5,
-    );
-  }
+//   Widget _button({PanelTabState tabState, state, text, context}) {
+//     return RaisedButton(
+//       onPressed: () {
+//         _switchTab(tabState, context);
+//       },
+//       color: _buttonBackground(state == tabState),
+//       child: Container(
+//           constraints:
+//               BoxConstraints(minWidth: MediaQuery.of(context).size.width * .15),
+//           padding: EdgeInsets.only(top: 10, bottom: 10),
+//           alignment: Alignment.center,
+//           child: Row(
+//             children: <Widget>[
+//               (tabState.subtabs.length > 0
+//                   ? Icon(Icons.arrow_drop_down)
+//                   : Container()),
+//               AutoText(
+//                 tabState.text,
+// //            text,
+//                 textAlign: TextAlign.center,
+//                 style: TextStyle(
+//                     color: _buttonTextColor(state == tabState), fontSize: 10),
+//               )
+//             ],
+//           )),
+//       shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.all(Radius.circular(10))),
+//       elevation: 5,
+//     );
+//   }
 
   @override
   Widget build(BuildContext context) {

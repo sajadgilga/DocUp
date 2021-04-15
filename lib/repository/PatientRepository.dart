@@ -39,7 +39,8 @@ class PatientRepository {
   }
 
   Future<dynamic> addDrug(Medicine medicine) async {
-    final response = await _provider.post('api/drugs/', body: medicine.toJson());
+    final response =
+        await _provider.post('api/drugs/', body: medicine.toJson());
     return Medicine.fromJson(response);
   }
 }

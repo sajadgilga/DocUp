@@ -6,23 +6,24 @@ import 'package:Neuronio/ui/widgets/PopupMenues/PopUpMenus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
-import '../../constants/strings.dart';
+
 import '../../constants/colors.dart';
+import '../../constants/strings.dart';
 
 class SearchBox extends StatefulWidget {
-  Function(String, UserEntity) onPush;
-  bool isPatient;
+  final Function(String, UserEntity) onPush;
+  final bool isPatient;
   final Function() onTap;
   final bool enableFlag;
   final Function(String c) onSubmit;
   final Function(String c) onChange;
-  TextEditingController controller;
   final Rect popMenuRect;
   final List<String> popUpMenuItems;
-  int selectedIndex;
   final Function(MenuItemProvider) onMenuClick;
   final bool filterPopup;
   final String hintText;
+  final TextEditingController controller;
+  int selectedIndex;
 
   SearchBox(
       {this.onPush,
@@ -33,19 +34,14 @@ class SearchBox extends StatefulWidget {
       this.controller,
       this.popMenuRect,
       this.popUpMenuItems,
-      this.selectedIndex,
+      this.selectedIndex = 0,
       this.onMenuClick,
       this.hintText,
       this.filterPopup = true,
-      this.enableFlag = true}) {
-    if (controller == null) {
-      controller = TextEditingController();
-    }
-  }
+      this.enableFlag = true});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _SearchBoxState();
   }
 }
@@ -57,9 +53,9 @@ class _SearchBoxState extends State<SearchBox> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    try{
+    try {
       widget.controller?.dispose();
-    }catch(e){}
+    } catch (e) {}
     super.dispose();
   }
 
@@ -83,23 +79,23 @@ class _SearchBoxState extends State<SearchBox> {
     }
   }
 
-  double _getSearchBoxWidth(width) {
-    return (width > 550
-        ? width * .60
-        : (width > 400 ? width * .60 : width * .55));
-  }
-
-  void _changeTag() {}
-
-  void _showTags() {}
-
-  Widget _filterText() {
-    return AutoText(searchTag,
-        style: TextStyle(
-            fontSize: 9,
-            fontWeight: FontWeight.bold,
-            color: IColors.themeColor));
-  }
+  // double _getSearchBoxWidth(width) {
+  //   return (width > 550
+  //       ? width * .60
+  //       : (width > 400 ? width * .60 : width * .55));
+  // }
+  //
+  // void _changeTag() {}
+  //
+  // void _showTags() {}
+  //
+  // Widget _filterText() {
+  //   return AutoText(searchTag,
+  //       style: TextStyle(
+  //           fontSize: 9,
+  //           fontWeight: FontWeight.bold,
+  //           color: IColors.themeColor));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +105,6 @@ class _SearchBoxState extends State<SearchBox> {
         : GestureDetector(onTap: widget.onTap, child: _simpleTooltip());
   }
 
-  /// TODO amir: cleaning hintText for all pages
 
   Widget _simpleTooltip() {
     return SimpleTooltip(
@@ -118,8 +113,8 @@ class _SearchBoxState extends State<SearchBox> {
       tooltipDirection: TooltipDirection.down,
       backgroundColor: IColors.whiteTransparent,
       borderColor: IColors.themeColor,
-      content:AutoText(
-        Strings.PatientSearchBoxTooltip,
+      content: AutoText(
+        InAppStrings.patientSearchBoxTooltip,
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.black87,
@@ -152,24 +147,24 @@ class _SearchBoxState extends State<SearchBox> {
                   // alignment: Alignment.centerRight,
                   // padding: EdgeInsets.only(left: 5, right: 15),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 5,right: 5),
-                    child: TextField(
-                      controller: widget.controller,
-                      textAlign: TextAlign.end,
-                      enabled: widget.enableFlag,
-                      textDirection: TextDirection.ltr,
-                      onSubmitted: widget.onSubmit,
-                      onChanged: widget.onChange,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: widget.hintText ??
-                              (widget.isPatient
-                                  ? Strings.PatientSearchBoxHint
-                                  : Strings.DoctorSearchBoxHint),
-                          focusColor: IColors.themeColor,
-                          fillColor: IColors.themeColor),
-                    ),
-                  )),
+                padding: const EdgeInsets.only(top: 5, right: 5),
+                child: TextField(
+                  controller: widget.controller ?? TextEditingController(),
+                  textAlign: TextAlign.end,
+                  enabled: widget.enableFlag,
+                  textDirection: TextDirection.ltr,
+                  onSubmitted: widget.onSubmit,
+                  onChanged: widget.onChange,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: widget.hintText ??
+                          (widget.isPatient
+                              ? InAppStrings.patientSearchBoxHint
+                              : InAppStrings.doctorSearchBoxHint),
+                      focusColor: IColors.themeColor,
+                      fillColor: IColors.themeColor),
+                ),
+              )),
               widget.filterPopup
                   ? GestureDetector(
                       onTap: widget.enableFlag ? _showPopUpMenu : widget.onTap,
@@ -217,7 +212,7 @@ class _SearchBoxState extends State<SearchBox> {
               borderRadius: BorderRadius.all(Radius.circular(5)),
               color:
                   selected ? IColors.themeColor : Color.fromARGB(0, 0, 0, 0)),
-          child:AutoText(
+          child: AutoText(
             title,
             softWrap: true,
             overflow: TextOverflow.fade,

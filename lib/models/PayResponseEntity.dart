@@ -24,13 +24,13 @@ class HamtaResponseEntity {
   String paymentUrl;
   String error;
 
-  HamtaResponseEntity({this.ok, this.paymentUrl,this.error});
+  HamtaResponseEntity({this.ok, this.paymentUrl, this.error});
 
   HamtaResponseEntity.fromJson(Map<String, dynamic> json) {
     ok = json['ok'];
-    if(ok){
+    if (ok) {
       paymentUrl = json['result']['payment_url'];
-    }else{
+    } else {
       error = json['error'];
     }
   }

@@ -1,25 +1,23 @@
 import 'package:Neuronio/constants/assets.dart';
 
-enum RoleType {
-  PATIENT, DOCTOR, CLINIC
-}
+enum RoleType { PATIENT, DOCTOR, CLINIC }
 
 extension RoleTypeExtension on RoleType {
-    String get name {
-      switch(this){
-        case RoleType.PATIENT:
-          return "سلامت‌جو";
-        case RoleType.DOCTOR:
-          return "پزشک";
-        case RoleType.DOCTOR:
-          return "کلینیک";
-        default:
-          return null;
-      }
+  String get name {
+    switch (this) {
+      case RoleType.PATIENT:
+        return "سلامت‌جو";
+      case RoleType.DOCTOR:
+        return "پزشک";
+      case RoleType.DOCTOR:
+        return "کلینیک";
+      default:
+        return null;
     }
+  }
 
-    String get asset {
-      return Assets.patientLoginIcon;
+  String get asset {
+    return Assets.patientLoginIcon;
 //      switch(this){
 //        case RoleType.PATIENT:
 //          return Assets.patientLoginIcon;
@@ -30,6 +28,5 @@ extension RoleTypeExtension on RoleType {
 //        default:
 //          return null;
 //      }
-    }
-
+  }
 }

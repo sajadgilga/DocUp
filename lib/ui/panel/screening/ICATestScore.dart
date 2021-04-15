@@ -1,32 +1,18 @@
-import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/blocs/ICATestBloc.dart';
-import 'package:Neuronio/blocs/ScreenginBloc.dart';
-import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
-import 'package:Neuronio/models/MedicalTest.dart';
-import 'package:Neuronio/models/NoronioService.dart';
 import 'package:Neuronio/models/Screening.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/Response.dart';
-import 'package:Neuronio/repository/ScreeningRepository.dart';
-import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
-import 'package:Neuronio/ui/panel/PanelAlert.dart';
-import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
-import 'package:Neuronio/ui/visit/VisitUtils.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
-import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
-import 'package:Neuronio/ui/widgets/SquareBoxNoronioClinic.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/utils/Utils.dart';
-import 'package:Neuronio/utils/entityUpdater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:timelines/timelines.dart';
 
 class ICATestScoring extends StatefulWidget {
   final int screeningStepId;
@@ -47,7 +33,6 @@ class _ICATestScoringState extends State<ICATestScoring> {
   TextEditingController _attentionController = TextEditingController();
   bool initialDataLoaded = false;
   ICATestBloc _icaTestBloc = ICATestBloc();
-
 
   AlertDialog _loadingDialog = getLoadingDialog();
   BuildContext _loadingContext;
@@ -79,15 +64,15 @@ class _ICATestScoringState extends State<ICATestScoring> {
             Navigator.of(_loadingContext).pop();
           }
           showOneButtonDialog(
-              context, "عملیات با خطا مواجه شد.", Strings.okAction, () {});
+              context, "عملیات با خطا مواجه شد.", InAppStrings.okAction, () {});
           break;
         case Status.COMPLETED:
           if (_loadingContext != null) {
             Navigator.of(_loadingContext).pop();
           }
           showOneButtonDialog(
-              context, "عملیات با موفقیت انجام شد.", Strings.okAction, () {
-                Navigator.pop(context);
+              context, "عملیات با موفقیت انجام شد.", InAppStrings.okAction, () {
+            Navigator.pop(context);
           });
           break;
         default:
@@ -165,7 +150,7 @@ class _ICATestScoringState extends State<ICATestScoring> {
 
   Widget _submitButton() {
     return ActionButton(
-      title: Strings.okAction,
+      title: InAppStrings.okAction,
       color: IColors.themeColor,
       callBack: () {
         if (_formKey.currentState.validate())
@@ -201,7 +186,6 @@ class _ICATestScoringState extends State<ICATestScoring> {
             maxLines: 1,
             style: TextStyle(fontSize: 16),
             validator: (value) {
-              /// TODO
               int score = intPossible(value, defaultValues: null);
               if (score != null && (score > 100 || score < 0)) {
                 return "نمره خارج از بازه صفر تا صد است.";

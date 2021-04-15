@@ -2,7 +2,6 @@ import 'package:Neuronio/ui/widgets/modifiedPackages/calendar_views-0.5.2/lib/da
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-
 /// Signature for a function that returns height that some item with the given [durationInMinutes] should have inside a [DayViewSchedule].
 typedef double HeightOfDurationCallback(
   int durationInMinutes,

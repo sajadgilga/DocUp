@@ -1,4 +1,3 @@
-import 'package:Neuronio/constants/assets.dart';
 import 'package:flutter/cupertino.dart';
 
 class PageTopLeftIcon extends StatelessWidget {
@@ -37,9 +36,7 @@ class PageTopLeftIcon extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(5.0),
-            child: topRightFlag
-                ? topRight
-                : SizedBox(),
+            child: topRightFlag ? topRight : SizedBox(),
           ),
         ],
       ),

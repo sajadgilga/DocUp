@@ -9,7 +9,6 @@ import 'package:bloc/bloc.dart';
 class ScreeningBloc extends Bloc<ScreeningEvent, ScreeningState> {
   ScreeningRepository _repository = ScreeningRepository();
 
-
   /// buy and load clinic screening plan
   StreamController _screeningController =
       StreamController<Response<Screening>>();

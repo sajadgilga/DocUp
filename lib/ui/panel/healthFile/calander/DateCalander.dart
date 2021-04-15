@@ -5,7 +5,6 @@ import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:Neuronio/ui/visit/calendar/persian_datetime_picker2.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/medicines/ReminderList.dart';
-import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -64,28 +63,28 @@ class _DateCalenderState extends State<DateCalender> {
     );
   }
 
-  Widget _nextWeek() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        AutoText(
-          'تا هفته آینده',
-          textAlign: TextAlign.right,
-          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
-        ),
-        ReminderList(
-          medicines: [],
-        )
-      ],
-    );
-  }
+  // Widget _nextWeek() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.end,
+  //     children: <Widget>[
+  //       AutoText(
+  //         'تا هفته آینده',
+  //         textAlign: TextAlign.right,
+  //         style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+  //       ),
+  //       ReminderList(
+  //         medicines: [],
+  //       )
+  //     ],
+  //   );
+  // }
 
-  Widget _mainPage() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[_today(), _nextWeek()],
-    );
-  }
+  // Widget _mainPage() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.end,
+  //     children: <Widget>[_today(), _nextWeek()],
+  //   );
+  // }
 
   // Widget _getCurrentPage() {
   //   if (_currentPage == _MedicinePage.MAIN)
@@ -101,7 +100,6 @@ class _DateCalenderState extends State<DateCalender> {
 
   @override
   Widget build(BuildContext context) {
-    /// TODO amir:
     return WillPopScope(
       onWillPop: () async {
         return false;

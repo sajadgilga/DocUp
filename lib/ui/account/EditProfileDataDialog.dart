@@ -343,7 +343,8 @@ class EditProfileDataDialog {
                                                       'لظفا شهری را وارد کنید',
                                                   notFoundError:
                                                       "شهر موردنظر یافت نشد",
-                                                  items: Strings.cities.keys
+                                                  items: InAppStrings
+                                                      .cities.keys
                                                       .toList(),
                                                   forced: false,
                                                   border: OutlineInputBorder(
@@ -368,7 +369,8 @@ class EditProfileDataDialog {
                                                       'لظفا شهری را وارد کنید',
                                                   notFoundError:
                                                       "شهر موردنظر یافت نشد",
-                                                  items: Strings.cities.keys
+                                                  items: InAppStrings
+                                                      .cities.keys
                                                       .toList(),
                                                   forced: false,
                                                   hintText: 'شهر زندگی',
@@ -394,9 +396,10 @@ class EditProfileDataDialog {
                                               activeFgColor: Colors.white,
                                               inactiveBgColor: Colors.grey,
                                               inactiveFgColor: Colors.white,
-                                              labels: Strings.genders,
+                                              labels: InAppStrings.genders,
                                               activeBgColors: [
-                                                for (var i in Strings.genders)
+                                                for (var i
+                                                    in InAppStrings.genders)
                                                   IColors.themeColor
                                               ],
                                               onToggle: (index) {

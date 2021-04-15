@@ -320,7 +320,7 @@ class CAlertDialog extends StatelessWidget {
         child: DefaultTextStyle(
           style: titleTextStyle ??
               dialogTheme.titleTextStyle ??
-              theme.textTheme.title,
+              theme.textTheme.headline6,
           child: Semantics(
             child: title,
             namesRoute: true,
@@ -350,7 +350,7 @@ class CAlertDialog extends StatelessWidget {
           child: DefaultTextStyle(
             style: contentTextStyle ??
                 dialogTheme.contentTextStyle ??
-                theme.textTheme.subhead,
+                theme.textTheme.subtitle1,
             child: content,
           ),
         ),
@@ -358,11 +358,18 @@ class CAlertDialog extends StatelessWidget {
     }
 
     if (actions != null) {
-      children.add(ButtonTheme.bar(
+      /// flutter upgrade
+      /// TODO: Data is required
+      children.add(ButtonBarTheme(
         child: ButtonBar(
           children: actions,
         ),
       ));
+      // children.add(ButtonTheme.bar(
+      //   child: ButtonBar(
+      //     children: actions,
+      //   ),
+      // ));
     }
 
     Widget dialogChild = Container(
@@ -419,7 +426,7 @@ class CAlertDialog extends StatelessWidget {
 ///
 ///  * [SimpleDialog], for a dialog in which to use this widget.
 ///  * [showDialog], which actually displays the dialog and returns its result.
-///  * [FlatButton], which are commonly used as actions in other kinds of
+///  * [TextButton], which are commonly used as actions in other kinds of
 ///    dialogs, such as [AlertDialog]s.
 ///  * <https://material.io/design/components/dialogs.html#simple-dialog>
 class SimpleDialogOption extends StatelessWidget {
@@ -612,7 +619,7 @@ class SimpleDialog extends StatelessWidget {
       body.add(Padding(
         padding: titlePadding,
         child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline6,
           child: Semantics(namesRoute: true, child: title),
         ),
       ));

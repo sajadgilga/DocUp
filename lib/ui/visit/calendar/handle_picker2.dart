@@ -1,4 +1,3 @@
-
 import 'package:Neuronio/ui/visit/calendar/date_picker2.dart';
 import 'package:Neuronio/ui/visit/calendar/utils/date.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
@@ -12,7 +11,8 @@ class HandlePicker2 extends StatefulWidget {
   final type;
   final Function(String) onSelect;
 
-  HandlePicker2({this.isRangeDate, this.initDateTime, this.type, this.onSelect});
+  HandlePicker2(
+      {this.isRangeDate, this.initDateTime, this.type, this.onSelect});
 
   @override
   _HandlePicker2State createState() => _HandlePicker2State();
@@ -49,13 +49,14 @@ class _HandlePicker2State extends State<HandlePicker2>
     if (initDateTime == null) {
       switch (widget.type) {
         case 'rangedate':
-          initDateTime = '${DateUtils.jalaliToString(jalaliNow)} # ${DateUtils.jalaliToString(jalaliNow)}';
+          initDateTime =
+              '${CalendarDateUtils.jalaliToString(jalaliNow)} # ${CalendarDateUtils.jalaliToString(jalaliNow)}';
           break;
         case 'datetime':
-          initDateTime = '${DateUtils.jalaliToString(jalaliNow)} 00:00';
+          initDateTime = '${CalendarDateUtils.jalaliToString(jalaliNow)} 00:00';
           break;
         case 'date':
-          initDateTime = '${DateUtils.jalaliToString(jalaliNow)}';
+          initDateTime = '${CalendarDateUtils.jalaliToString(jalaliNow)}';
           break;
         case 'time':
           initDateTime = '00:00';
@@ -86,10 +87,9 @@ class _HandlePicker2State extends State<HandlePicker2>
         endSelectedInitTime =
             splitEndDateTime.length > 1 ? splitEndDateTime[1] : null;
       } else {
-        startSelectedInitDate = '${jalaliNow}';
-        endSelectedInitDate = '${jalaliNow}';
-        startSelectedInitTime =
-            "${nowGeorgian.hour}:${nowGeorgian.minute}";
+        startSelectedInitDate = '$jalaliNow';
+        endSelectedInitDate = '$jalaliNow';
+        startSelectedInitTime = "${nowGeorgian.hour}:${nowGeorgian.minute}";
         endSelectedInitTime = "${nowGeorgian.hour}:${nowGeorgian.minute}";
       }
     } else {
@@ -102,10 +102,9 @@ class _HandlePicker2State extends State<HandlePicker2>
         endSelectedInitTime =
             splitDateTime.length > 1 ? splitDateTime[1] : null;
       } else {
-        startSelectedInitDate = '${jalaliNow}';
-        endSelectedInitDate = '${jalaliNow}';
-        startSelectedInitTime =
-            "${nowGeorgian.hour}:${nowGeorgian.minute}";
+        startSelectedInitDate = '$jalaliNow';
+        endSelectedInitDate = '$jalaliNow';
+        startSelectedInitTime = "${nowGeorgian.hour}:${nowGeorgian.minute}";
         endSelectedInitTime = "${nowGeorgian.hour}:${nowGeorgian.minute}";
       }
     }

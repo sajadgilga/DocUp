@@ -1,11 +1,8 @@
-import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/networking/ApiProvider.dart';
 import 'package:Neuronio/utils/CrossPlatformFilePicker.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'PatientEntity.dart';
 
 enum MessageState { unsent, sent, delivered, failed }
 enum MessageType { Text, Image, File, Voice }
@@ -132,10 +129,10 @@ class ChatMessage {
     /// TODO host should be added from back end
     if (json.containsKey('file') && json['file'] != null) {
       String url = json['file'];
-      if(url.startsWith("http")){
+      if (url.startsWith("http")) {
         /// it contain host
         fileLink = json['file'];
-      }else{
+      } else {
         fileLink = ApiProvider.Host + json['file'];
       }
     }

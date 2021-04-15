@@ -23,12 +23,11 @@ class SearchRepository {
   }
 
   Future<SearchResult> searchPatient(searchParam, patientFilter) async {
-    /// TODO
-    String urlParams = "?query=${searchParam}";
+    String urlParams = "?query=$searchParam";
     if (patientFilter != null &&
         patientFilter != "" &&
         patientFilter != "همه") {
-      urlParams += "&filter=${patientFilter}";
+      urlParams += "&filter=$patientFilter";
     }
     final response =
         await _provider.get('api/search/patients-list/' + urlParams);
@@ -44,7 +43,7 @@ class SearchRepository {
     if (visitType != null) {
       urlParams += "&visit_type=$visitType";
     }
-    final response = await _provider.get('api/visits/${urlParams}');
+    final response = await _provider.get('api/visits/$urlParams');
     return SearchResult.fromJson(response, EntityType.VisitEntity);
   }
 
@@ -53,7 +52,6 @@ class SearchRepository {
         .get('api/search/patients-list?query=$param&status=0,1&page=0');
     return SearchResult.fromJson(response, EntityType.PatientEntity);
   }
-
 
   Future<SearchResult> searchClinics() async {
     var response = await _provider.get('api/search/clinics', utf8Support: true);

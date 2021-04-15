@@ -1,4 +1,4 @@
-enum SocketMessageType { NEW_MESSAGE,TOGGLE_VISIT_TEXT_PLAN }
+enum SocketMessageType { NEW_MESSAGE, TOGGLE_VISIT_TEXT_PLAN }
 
 extension SocketMessageTypeTitle on SocketMessageType {
   get name {
@@ -13,7 +13,9 @@ extension SocketMessageTypeTitle on SocketMessageType {
 
 abstract class SocketRequest {
   final SocketMessageType requestType;
+
   toJson();
+
   SocketRequest(this.requestType);
 }
 
@@ -24,7 +26,6 @@ class NewMessageSocketRequest extends SocketRequest {
   final String fileLink;
   final String isMe;
   final int messageId;
-
 
   NewMessageSocketRequest(SocketMessageType requestType, this.panelId,
       this.messageType, this.message, this.fileLink, this.isMe, this.messageId)
@@ -49,7 +50,8 @@ class ActivateOrDeactivatePatientTextPlan extends SocketRequest {
   final bool enabled;
   final String time;
 
-  ActivateOrDeactivatePatientTextPlan(SocketMessageType requestType, this.panelId, this.patientVisitTextPlanId, this.enabled, this.time)
+  ActivateOrDeactivatePatientTextPlan(SocketMessageType requestType,
+      this.panelId, this.patientVisitTextPlanId, this.enabled, this.time)
       : super(requestType);
 
   toJson() {

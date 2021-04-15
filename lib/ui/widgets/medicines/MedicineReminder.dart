@@ -1,6 +1,5 @@
 import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../../constants/colors.dart';
 import '../AutoText.dart';
@@ -83,7 +82,7 @@ class MedicineReminder extends StatefulWidget {
 //  Color color;
 
   MedicineReminder(this.time, this.title, this.type, this.count,
-      {this.state = null, this.textSize = 12.0});
+      {this.state, this.textSize = 12.0});
 
   @override
   _MedicineReminderState createState() {

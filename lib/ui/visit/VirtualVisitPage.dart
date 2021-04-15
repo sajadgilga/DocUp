@@ -79,23 +79,23 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         /// update doctor plan if needed
 
         /// pop to prev page
-        showOneButtonDialog(context, Strings.visitRequestedMessage,
-            Strings.understandAction, () => Navigator.pop(context));
+        showOneButtonDialog(context, InAppStrings.visitRequestedMessage,
+            InAppStrings.understandAction, () => Navigator.pop(context));
       } else if (data.status == Status.ERROR) {
         if (data.error is ApiException) {
           ApiException apiException = data.error;
           if (apiException.getCode() == 602) {
             showOneButtonDialog(
                 context,
-                Strings.notEnoughCreditMessage,
-                Strings.addCreditAction,
+                InAppStrings.notEnoughCreditMessage,
+                InAppStrings.addCreditAction,
                 () => widget.onPush(
                     NavigatorRoutes.account, _calculateVisitCost()));
           } else if (apiException.getCode() == 601) {
             showOneButtonDialog(
                 context,
                 getEnabledTimeString(widget.doctorEntity.plan),
-                Strings.understandAction,
+                InAppStrings.understandAction,
                 () => {});
           } else {
             toast(context, data.error.toString());
@@ -442,8 +442,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   _acceptPolicyWidget() => GestureDetector(
         onTap: () {
           showDescriptionAlertDialog(context,
-              title: Strings.privacyAndPolicy,
-              description: Strings.policyDescription, action: () {
+              title: InAppStrings.privacyAndPolicy,
+              description: InAppStrings.policyDescription, action: () {
             setState(() {
               policyChecked = !policyChecked;
             });
@@ -458,7 +458,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
               Container(
                 width: MediaQuery.of(context).size.width - 80,
                 child: AutoText(
-                  Strings.virtualVisitPrivacyPolicyMessage,
+                  InAppStrings.virtualVisitPrivacyPolicyMessage,
                   textAlign: TextAlign.right,
                   style: TextStyle(fontSize: 10),
                   maxLines: 3,
@@ -469,8 +469,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
                 value: policyChecked,
                 onChanged: (d) {
                   showDescriptionAlertDialog(context,
-                      title: Strings.privacyAndPolicy,
-                      description: Strings.policyDescription, action: () {
+                      title: InAppStrings.privacyAndPolicy,
+                      description: InAppStrings.policyDescription, action: () {
                     setState(() {
                       policyChecked = !policyChecked;
                     });
@@ -502,41 +502,38 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
       String currentTime = now.hour.toString() + ":" + now.minute.toString();
       if (dateTextController.text.isEmpty) {
         /// empty date
-        showOneButtonDialog(
-            context, Strings.enterVisitDateMessage, Strings.okAction, () {});
+        showOneButtonDialog(context, InAppStrings.enterVisitDateMessage,
+            InAppStrings.okAction, () {});
       } else if (timeTextController.text.isEmpty ||
           timeTextController.text == "") {
         /// empty time
-        showOneButtonDialog(context, Strings.emptyStartVisitTimeMessage,
-            Strings.okAction, () {});
+        showOneButtonDialog(context, InAppStrings.emptyStartVisitTimeMessage,
+            InAppStrings.okAction, () {});
       } else if (DateTimeService.getTimeMinute(timeTextController.text) -
                   6 * 60 <
               DateTimeService.getTimeMinute(currentTime) &&
           DateTimeService.getTodayInJalaliString() == dateTextController.text) {
         /// invalid time
-        showOneButtonDialog(context, Strings.pastStartVisitTimeMessage,
-            Strings.okAction, () {});
+        showOneButtonDialog(context, InAppStrings.pastStartVisitTimeMessage,
+            InAppStrings.okAction, () {});
       } else if (!widget.doctorEntity.plan.virtualVisitDurationPlan
           .contains(getVisitDurationPlanFromVisitSelectedMinutes())) {
         /// invalid duration plan
         if (widget.doctorEntity.plan.virtualVisitDurationPlan.length == 0) {
-          showOneButtonDialog(
-              context,
-              Strings.invalidDurationPlan_EmptyDurationPlan,
-              Strings.okAction,
-              () {});
+          showOneButtonDialog(context, InAppStrings.emptyDurationPlan,
+              InAppStrings.okAction, () {});
         } else {
           showOneButtonDialog(
               context,
-              Strings.invalidDurationPlan_Plans[0] +
+              InAppStrings.invalidDurationPlan[0] +
                   " " +
                   widget.doctorEntity.plan.virtualVisitDurationPlan
                       .map((e) =>
                           ((e + 1) * DoctorPlan.hourMinutePart).toString())
                       .join("و ") +
                   " " +
-                  Strings.invalidDurationPlan_Plans[2],
-              Strings.okAction,
+                  InAppStrings.invalidDurationPlan[2],
+              InAppStrings.okAction,
               () {});
         }
       } else {
@@ -547,8 +544,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
       if (_isDoctorOnline()) {
         sendNowVisitRequest();
       } else {
-        showOneButtonDialog(
-            context, Strings.offlineDoctorMessage, Strings.okAction, () {});
+        showOneButtonDialog(context, InAppStrings.offlineDoctorMessage,
+            InAppStrings.okAction, () {});
       }
     }
   }

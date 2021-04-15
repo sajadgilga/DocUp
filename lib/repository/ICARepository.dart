@@ -1,5 +1,4 @@
-import 'package:Neuronio/blocs/ICATestBloc.dart';
-import 'package:Neuronio/models/MedicalTest.dart';
+import 'package:Neuronio/models/Screening.dart';
 import 'package:Neuronio/networking/ApiProvider.dart';
 
 class IcaTestRepository {

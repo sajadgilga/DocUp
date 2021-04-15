@@ -4,7 +4,6 @@ import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/utils/CrossPlatformSvg.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import 'AutoText.dart';
 
@@ -35,7 +34,9 @@ class APICallError extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: withImage?MainAxisAlignment.spaceBetween:MainAxisAlignment.center,
+          mainAxisAlignment: withImage
+              ? MainAxisAlignment.spaceBetween
+              : MainAxisAlignment.center,
           children: <Widget>[
             withImage
                 ? Container(

@@ -5,14 +5,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CrossPlatformSvg {
   static Widget network(
-      String assetPath, {
-        double width,
-        double height,
-        BoxFit fit = BoxFit.contain,
-        Color color,
-        alignment = Alignment.center,
-        String semanticsLabel,
-      }) {
+    String assetPath, {
+    double width,
+    double height,
+    BoxFit fit = BoxFit.contain,
+    Color color,
+    alignment = Alignment.center,
+    String semanticsLabel,
+  }) {
     // `kIsWeb` is a special Flutter variable that just exists
     // Returns true if we're on web, false for mobile
     if (kIsWeb) {
@@ -41,15 +41,16 @@ class CrossPlatformSvg {
       );
     }
   }
+
   static Widget asset(
-      String assetPath, {
-        double width,
-        double height,
-        BoxFit fit = BoxFit.contain,
-        Color color,
-        alignment = Alignment.center,
-        String semanticsLabel,
-      }) {
+    String assetPath, {
+    double width,
+    double height,
+    BoxFit fit = BoxFit.contain,
+    Color color,
+    alignment = Alignment.center,
+    String semanticsLabel,
+  }) {
     if (kIsWeb) {
       return Image.network(
         assetPath,

@@ -1,4 +1,3 @@
-
 import 'package:Neuronio/networking/ApiProvider.dart';
 
 class NotificationRepository {
@@ -8,6 +7,5 @@ class NotificationRepository {
 //    final response = await _provider.get('api/events/?time__gte=${date}', utf8Support: true);
 //    return NewestNotificationResponse.fromJson(response);
 //  }
-
 
 }

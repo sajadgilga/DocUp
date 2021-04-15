@@ -62,7 +62,6 @@ String normalizeCredit(String credit) {
     return credit;
 }
 
-
 String convertToGeorgianDate(String jalaliDate) {
   var array = jalaliDate.split("/");
   var georgianDate =
@@ -184,9 +183,9 @@ void showOneButtonDialog(
   });
 }
 
-String addExtraZeroOnLeftSideIfNeeded(String t,{int z=2}){
-  for(int i =0;i<z-t.length;i++){
-    t = "0"+t;
+String addExtraZeroOnLeftSideIfNeeded(String t, {int z = 2}) {
+  for (int i = 0; i < z - t.length; i++) {
+    t = "0" + t;
   }
   return t;
 }
@@ -433,7 +432,8 @@ String priceWithCommaSeparator(int price) {
   return normPrice.split("").reversed.join("");
 }
 
-Widget getButtonLoadingProgress({double r = 30, double stroke = 3,double value}) {
+Widget getButtonLoadingProgress(
+    {double r = 30, double stroke = 3, double value}) {
   return SizedBox(
     height: r,
     width: r,

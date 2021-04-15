@@ -11,16 +11,15 @@ class TimeSelectionWidget extends StatelessWidget {
   Function(DateTime) extraValidator;
   final TextEditingController timeTextController;
 
-
   TimeSelectionWidget(
       {Key key,
       this.title,
       @required this.timeTextController,
       this.enable = true,
       this.border,
-      this.forced,this.extraValidator})
+      this.forced,
+      this.extraValidator})
       : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {

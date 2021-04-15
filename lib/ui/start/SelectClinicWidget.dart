@@ -27,6 +27,7 @@ class _SelectClinicWidgetState extends State<SelectClinicWidget> {
   void _initialSearch() {
     searchBloc.add(SearchClinic());
   }
+
   @override
   void initState() {
     _initialSearch();
@@ -157,7 +158,7 @@ class _SelectClinicWidgetState extends State<SelectClinicWidget> {
 
   Widget descriptionMessage() {
     return AutoText(
-      Strings.patientClinicSuggestionMessage,
+      InAppStrings.patientClinicSuggestionMessage,
       textDirection: TextDirection.rtl,
     );
   }

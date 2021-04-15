@@ -1,12 +1,9 @@
-import 'package:Neuronio/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'AutoText.dart';
 
 class InputDoneView extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,14 +18,13 @@ class InputDoneView extends StatelessWidget {
             onPressed: () {
               FocusScope.of(context).requestFocus(new FocusNode());
             },
-            child: AutoText(
-                "Done",
-                style: TextStyle(color: Color.fromARGB(255, 47, 124, 246),fontWeight: FontWeight.bold)
-            ),
+            child: AutoText("Done",
+                style: TextStyle(
+                    color: Color.fromARGB(255, 47, 124, 246),
+                    fontWeight: FontWeight.bold)),
           ),
         ),
       ),
     );
   }
-
 }

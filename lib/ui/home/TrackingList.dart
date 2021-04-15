@@ -1,14 +1,10 @@
-import 'package:Neuronio/blocs/EntityBloc.dart';
 import 'package:Neuronio/constants/assets.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:Neuronio/utils/Utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 class TrackingList extends StatelessWidget {
   final int all;
@@ -42,7 +38,7 @@ class TrackingList extends StatelessWidget {
                     onPush(NavigatorRoutes.visitRequestList, null);
                   },
                   child: TrackingBlock(
-                    label: Strings.patientTrackingRequestVisitLabel,
+                    label: InAppStrings.patientTrackingRequestVisitLabel,
                     value: visitPending,
                     color: IColors.trackingVisitPending,
                     backgroundColor: Colors.white,
@@ -54,7 +50,7 @@ class TrackingList extends StatelessWidget {
                   onPush(NavigatorRoutes.virtualVisitList, null);
                 },
                 child: TrackingBlock(
-                  label: Strings.patientTrackingVirtualVisitLabel,
+                  label: InAppStrings.patientTrackingVirtualVisitLabel,
                   value: curing,
                   color: IColors.virtualVisit,
                   backgroundColor: Colors.white,
@@ -67,7 +63,7 @@ class TrackingList extends StatelessWidget {
                   onPush(NavigatorRoutes.physicalVisitList, null);
                 },
                 child: TrackingBlock(
-                  label: Strings.patientTrackingVisitFaceToFaceLabel,
+                  label: InAppStrings.patientTrackingVisitFaceToFaceLabel,
                   value: cured,
                   color: IColors.physicalVisit,
                   backgroundColor: Colors.white,
@@ -133,7 +129,7 @@ class TrackingBlock extends StatelessWidget {
 
   Widget _label() => Container(
         margin: EdgeInsets.only(top: 5),
-        child:AutoText(
+        child: AutoText(
           label,
           textAlign: TextAlign.center,
           maxLines: 2,

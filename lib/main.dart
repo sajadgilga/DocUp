@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
           BlocProvider<ScreeningBloc>.value(value: ScreeningBloc()),
         ],
         child: MaterialApp(
-          title: Strings.appTitle,
+          title: InAppStrings.appTitle,
           theme: ThemeData(
             fontFamily: 'iransans',
             primarySwatch: MaterialColor(IColors.themeColor.value, swatch),

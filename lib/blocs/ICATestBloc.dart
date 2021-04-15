@@ -1,11 +1,8 @@
 import 'dart:async';
 
 import 'package:Neuronio/models/Screening.dart';
-import 'package:Neuronio/networking/CustomException.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/repository/ICARepository.dart';
-import 'package:Neuronio/repository/ScreeningRepository.dart';
-import 'package:Neuronio/utils/Utils.dart';
 import 'package:bloc/bloc.dart';
 
 class ICATestBloc extends Bloc<ICATestScoreEvent, ICAScoresState> {
@@ -96,43 +93,4 @@ class ICATestScoreLoaded extends ICAScoresState {
 
 class IcaTestScoreLoading extends ICAScoresState {
   IcaTestScoreLoading({result}) : super(result: result);
-}
-
-/// model
-class ICATestScores {
-  int icaIndex;
-  int accuracy;
-  int accuracyMaintenance;
-  int speed;
-  int speedMaintenance;
-  int attention;
-
-  ICATestScores(
-      {this.icaIndex,
-      this.accuracy,
-      this.accuracyMaintenance,
-      this.speed,
-      this.speedMaintenance,
-      this.attention});
-
-  ICATestScores.fromJson(Map<String, dynamic> json) {
-    /// TODO
-    icaIndex = intPossible(json['ica_index']);
-    accuracy = intPossible(json['accuracy']);
-    accuracyMaintenance = intPossible(json['accuracy_maintenance']);
-    speed = intPossible(json['speed']);
-    speedMaintenance = intPossible(json['speed_maintenance']);
-    attention = intPossible(json['attention']);
-  }
-
-  toJson() {
-    Map<String, dynamic> data = {};
-    data['ica_index'] = icaIndex;
-    data['accuracy'] = accuracy;
-    data['accuracy_maintenance'] = accuracyMaintenance;
-    data['speed'] = speed;
-    data['speed_maintenance'] = speedMaintenance;
-    data['attention'] = attention;
-    return data;
-  }
 }

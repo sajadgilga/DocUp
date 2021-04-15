@@ -9,7 +9,6 @@ import 'package:Neuronio/repository/PatientRepository.dart';
 import 'package:Neuronio/repository/ScreeningRepository.dart';
 import 'package:Neuronio/ui/start/RoleType.dart';
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class EntityBloc extends Bloc<EntityEvent, EntityState> {
@@ -125,7 +124,7 @@ class EntityBloc extends Bloc<EntityEvent, EntityState> {
         mEntityStatus: state.mEntityStatus,
         partnerEntityStatus: BlocState.Loading);
     try {
-      if(id != null){
+      if (id != null) {
         UserEntity uEntity;
         if (state.entity.type == RoleType.PATIENT)
           uEntity = await _doctorRepository.getDoctor(id);

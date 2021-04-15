@@ -7,7 +7,6 @@ import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
 class WholeIntoChild1 extends StatelessWidget {
   final String header = "نورونیو، پل ارتباطی پزشک و بیمار";
   final String subHeader =

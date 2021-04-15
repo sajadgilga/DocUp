@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import 'AutoText.dart';
-
+//ignore: must_be_immutable
 class AutoCompleteTextField extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
@@ -97,7 +97,7 @@ class AutoCompleteTextField extends StatelessWidget {
       validator: (value) {
         if (value.isEmpty && forced) {
           return emptyFieldError;
-        } else if (value.isNotEmpty && !(items?.contains(value)??false)) {
+        } else if (value.isNotEmpty && !(items?.contains(value) ?? false)) {
           return notFoundError;
         }
         return null;

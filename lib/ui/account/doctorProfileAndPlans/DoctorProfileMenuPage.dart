@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:Neuronio/blocs/DoctorBloc.dart';
 import 'package:Neuronio/blocs/UtilBloc.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
-import 'package:Neuronio/main.dart';
 import 'package:Neuronio/models/BankData.dart';
 import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/networking/Response.dart';
@@ -71,7 +69,6 @@ class _DoctorProfileMenuPageState extends State<DoctorProfileMenuPage> {
                 size: 25,
               ),
               onTap: () {
-                /// TODO
                 widget.onPush(NavigatorRoutes.root, null);
               },
               topRightFlag: false,
@@ -537,8 +534,9 @@ class _CreditCardState extends State<CreditCard> {
                                   String sixDigits = value.replaceAll(" ", "");
                                   if (sixDigits.length == 6) {
                                     dialogStateSetter(() {
-                                      bankName = Strings.bankCodes[sixDigits] ??
-                                          'بانک -';
+                                      bankName =
+                                          InAppStrings.bankCodes[sixDigits] ??
+                                              'بانک -';
                                     });
                                   }
                                 },

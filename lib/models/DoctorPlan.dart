@@ -144,7 +144,7 @@ class DoctorPlan {
       res[dateString] = d;
     });
     return res.map((key, value) =>
-        MapEntry(DateTimeService.getDateTimeFormDateString(key), value));
+        MapEntry(DateTimeService.getDateTimeFromDateString(key), value));
   }
 
   static int getPartNumberWithIndex(int r, int c) {
@@ -152,7 +152,6 @@ class DoctorPlan {
   }
 
   List<List<int>> getTakenVisitDailyTimeTable(String dateString) {
-    /// TODO amir: heavy process
     /// initial empty table
     List<List<int>> takenTimes = [];
     for (int i = 0; i < DoctorPlan.dayHours; i++) {
@@ -301,7 +300,6 @@ class VisitType {
 
   WorkTime addWorkTimeOrReturnConflict(
       DateTime date, String startTime, String endTime) {
-    /// TODO manage conflicts
     String newDate = DateTimeService.getDateStringFormDateTime(date);
     WorkTime newWorkTime = WorkTime(endTime: endTime, startTime: startTime);
     DailyWorkTimes dailyWorkTimes = getDailyWorkTimesByDateString(newDate);
@@ -310,7 +308,7 @@ class VisitType {
       int ws1 = DateTimeService.getTimeMinute(newWorkTime.startTime);
       int we1 = DateTimeService.getTimeMinute(newWorkTime.endTime);
 
-      for(WorkTime workTime in dailyWorkTimes.workTimes){
+      for (WorkTime workTime in dailyWorkTimes.workTimes) {
         int ws2 = DateTimeService.getTimeMinute(workTime.startTime);
         int we2 = DateTimeService.getTimeMinute(workTime.endTime);
         if ((ws2 < we1 && we1 < we2) || (ws1 < we2 && we2 < we1)) {
@@ -366,7 +364,6 @@ class VisitType {
   }
 
   List<List<int>> getDailyWorkTimeTable(String dateString) {
-    /// TODO amir: heavy process
     /// initial empty table
     List<List<int>> workTimeTable = VisitType.getEmptyTablePlan();
 
@@ -412,7 +409,7 @@ class VisitType {
           dayWorkTimes.add(new WorkTime.fromJson(w));
         });
         DateTime date =
-            DateTimeService.getDateTimeFormDateString(dateWorkTime['date']);
+            DateTimeService.getDateTimeFromDateString(dateWorkTime['date']);
         DailyWorkTimes dailyWorkTimes = DailyWorkTimes(date, dayWorkTimes);
         daysWorkTimes.add(dailyWorkTimes);
       });
@@ -613,7 +610,6 @@ class DataSourceWorkTime implements Event {
   @override
   Color get color => background;
 
-  @override
   bool isEqual(DataSourceWorkTime event) {
     bool c1 = this.visitType == event.visitType;
     bool c2 = this.eventName == event.eventName;

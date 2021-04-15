@@ -14,11 +14,13 @@ class Start extends TimerEvent {
   @override
   String toString() => "Start { duration: $duration }";
 }
-class ExtendTime extends TimerEvent{
+
+class ExtendTime extends TimerEvent {
   final int duration;
 
   ExtendTime({@required this.duration}) : super([duration]);
 }
+
 class Pause extends TimerEvent {
   @override
   String toString() => "Pause";

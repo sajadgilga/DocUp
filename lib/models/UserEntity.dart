@@ -11,23 +11,23 @@ abstract class UserEntity {
   int vid; //TODO: have to be removed later
   List<Panel> panels;
   Map<int, Panel> panelMap = {};
-  
-  Panel getPanelByPatientId(int patientId){
-    for(var panel in panels){
-      if(panel.patientId == patientId){
+
+  Panel getPanelByPatientId(int patientId) {
+    for (var panel in panels) {
+      if (panel.patientId == patientId) {
         return panel;
       }
     }
     return null;
   }
-  Panel getPanelByDoctorId(int doctorId){
-    for(var panel in panels){
-      if(panel.doctorId == doctorId){
+
+  Panel getPanelByDoctorId(int doctorId) {
+    for (var panel in panels) {
+      if (panel.doctorId == doctorId) {
         return panel;
       }
     }
     return null;
-
   }
 
   UserEntity({this.user, this.id, this.panels, this.vid});
@@ -72,11 +72,13 @@ class Entity {
   DoctorEntity get doctor {
     if (isPatient) return partnerEntity;
     if (isDoctor) return mEntity;
+    return null;
   }
 
   PatientEntity get patient {
     if (isPatient) return mEntity;
     if (isDoctor) return partnerEntity;
+    return null;
   }
 
   bool get isPatient {
@@ -91,18 +93,20 @@ class Entity {
     if (isPatient) {
       return (mEntity as PatientEntity).user.avatar;
     } else if (isDoctor) return (mEntity as DoctorEntity).user.avatar;
+    return null;
   }
 
   String get pClinicName {
     if (isPatient)
-//      return (partnerEntity as DoctorEntity).clinic.clinicName;
-      return "";
+      return (partnerEntity as DoctorEntity)?.clinic?.clinicName ?? "";
     if (isDoctor) return "";
+    return null;
   }
 
   String get pExpert {
     if (isPatient) return (partnerEntity as DoctorEntity).expert;
     if (isDoctor) return "";
+    return null;
   }
 
   Panel get panel {

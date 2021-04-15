@@ -1,11 +1,7 @@
-import 'dart:ffi';
-
-import 'package:Neuronio/models/ChatMessage.dart';
 import 'package:Neuronio/models/VisitResponseEntity.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'SocketRequestModel.dart';
 import 'UserEntity.dart';
 
 class Owner {
@@ -111,23 +107,23 @@ class NewestNotificationResponse {
     return data;
   }
 
-  static Future<NewestNotificationResponse> removeSeenNotifications(
-      NewestNotificationResponse notifs) async {
-    /// TODO for other kind of notifications later
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> seenNotif =
-        prefs.getStringList("seenNotificationIds") ?? <String>[];
-    List<NewestVisitNotif> filteredNotifs = [];
-    notifs.newestNotifs.forEach((element) {
-      if (!seenNotif.contains(element.notifId)) {
-        filteredNotifs.add(element);
-      }
-    });
-    notifs.newestNotifs = filteredNotifs;
-    return notifs;
-  }
+  // static Future<NewestNotificationResponse> removeSeenNotifications(
+  //     NewestNotificationResponse notifs) async {
+  //   /// TODO for other kind of notifications later
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   List<String> seenNotif =
+  //       prefs.getStringList("seenNotificationIds") ?? <String>[];
+  //   List<NewestVisitNotif> filteredNotifs = [];
+  //   notifs.newestNotifs.forEach((element) {
+  //     if (!seenNotif.contains(element.notifId)) {
+  //       filteredNotifs.add(element);
+  //     }
+  //   });
+  //   notifs.newestNotifs = filteredNotifs;
+  //   return notifs;
+  // }
 
-  static void addNotifToSeen(NewestVisitNotif visit) async {}
+  // static void addNotifToSeen(NewestVisitNotif visit) async {}
 }
 
 abstract class NewestNotif {
@@ -399,7 +395,6 @@ class NewestVisitNotif extends NewestNotif {
 }
 
 class NewestMedicalTestNotif extends NewestNotif {
-  /// TODO amir: check data json of notification to build it's model
   int panelCognitiveTestId;
   int testId;
   String testTitle;
@@ -462,7 +457,6 @@ class NewestMedicalTestNotif extends NewestNotif {
 }
 
 class NewestVideoVoiceCallNotif extends NewestNotif {
-  /// TODO amir: check data json of notification to build it's model
 
   User user;
   String channelName;
@@ -560,9 +554,8 @@ class NewestChatMessage extends NewestNotif {
   int type;
   String message;
   int panelId;
-  int message_id;
+  int messageId;
 
-  /// TODO
   NewestChatMessage(int notifId, String title, String description,
       String notifTime, String notifDate, int notifType)
       : super(
@@ -595,7 +588,7 @@ class NewestChatMessage extends NewestNotif {
     type = intPossible(json['type']);
     message = json['message'];
     panelId = intPossible(json['panel_id']);
-    message_id = intPossible(json['message_id']);
+    messageId = intPossible(json['message_id']);
   }
 
   Map<String, dynamic> toJson() {

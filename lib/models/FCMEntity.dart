@@ -9,12 +9,12 @@ class RegisterDeviceResponse {
 
   RegisterDeviceResponse(
       {this.id,
-        this.name,
-        this.registrationId,
-        this.deviceId,
-        this.active,
-        this.dateCreated,
-        this.type});
+      this.name,
+      this.registrationId,
+      this.deviceId,
+      this.active,
+      this.dateCreated,
+      this.type});
 
   RegisterDeviceResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -196,12 +196,10 @@ class NotificationItem extends StatelessWidget {
 
   void onItemTap(NewestNotif notif, BuildContext context) {
     /// Set message to seen
-
-    /// update notif counts in home page
-    /// TODO
     BlocProvider.of<NotificationBloc>(context)
         .add(AddNotifToSeen(notif.notifId));
 
+    /// update notif counts in home page
     NotificationNavigationRepo notifNavRepo =
         NotificationNavigationRepo(onPush);
     notifNavRepo.navigate(context, notif);

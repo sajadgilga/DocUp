@@ -20,7 +20,7 @@ class PanelBloc extends Bloc<PanelEvent, PanelState> {
   //   }
   // }
   Stream<PanelState> _searchDoctor(DoctorPanel event) async* {
-    if (state?.panels?.isDoctor  == true) {
+    if (state?.panels?.isDoctor == true) {
       yield PanelLoading(panels: state.panels);
     } else {
       yield PanelLoading();
@@ -39,8 +39,9 @@ class PanelBloc extends Bloc<PanelEvent, PanelState> {
       yield PanelError();
     }
   }
+
   Stream<PanelState> _searchPatient(PatientPanel event) async* {
-    if (state?.panels?.isPatient  == true) {
+    if (state?.panels?.isPatient == true) {
       yield PanelLoading(panels: state.panels);
     } else {
       yield PanelLoading();
@@ -48,17 +49,18 @@ class PanelBloc extends Bloc<PanelEvent, PanelState> {
     try {
       SearchResult searchResult;
       searchResult =
-      await _repository.searchPatient(event.text, event.patientFilter);
+          await _repository.searchPatient(event.text, event.patientFilter);
       yield PanelLoaded(panels: searchResult);
     } catch (e) {
       yield PanelError();
     }
   }
+
   @override
   Stream<PanelState> mapEventToState(event) async* {
     if (event is DoctorPanel) {
       yield* _searchDoctor(event);
-    }else if(event is PatientPanel){
+    } else if (event is PatientPanel) {
       yield* _searchPatient(event);
     }
   }
@@ -86,13 +88,13 @@ class DoctorPanel extends PanelEvent {
 
   DoctorPanel(
       {this.paramSearch,
-        this.clinicId,
-        this.expertise,
-        this.isMyDoctors = false});
+      this.clinicId,
+      this.expertise,
+      this.isMyDoctors = false});
 }
 
 // states
-abstract class PanelState{
+abstract class PanelState {
   SearchResult panels;
 
   PanelState({this.panels});

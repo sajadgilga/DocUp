@@ -25,10 +25,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 import 'package:uni_links/uni_links.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../EditProfileAvatarDialog.dart';
 
@@ -161,8 +161,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
         } else if (state.mEntityStatus == BlocState.Error) {
           print(state);
           return APICallError(() {
-            EntityBloc entityBloc = BlocProvider.of<EntityBloc>(context);
-            entityBloc.add(EntityGet());
+            BlocProvider.of<EntityBloc>(context).add(EntityGet());
           });
         } else {
           return Waiting();
@@ -184,7 +183,6 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                   size: 25,
                 ),
                 onTap: () {
-                  /// TODO
                   widget.onPush(
                       NavigatorRoutes.patientProfileMenuPage, patientEntity);
                 },
@@ -210,8 +208,6 @@ class _PatientProfilePageState extends State<PatientProfilePage>
               setState(() {
                 _creditDescriptionTooltipToggle = true;
               });
-
-              /// TODO
               Timer(Duration(seconds: 10), () {
                 _creditDescriptionTooltipToggle = false;
               });
@@ -227,7 +223,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                   checkPatientBillingDescription();
                 },
                 content: AutoText(
-                  Strings.patientBillingDescription,
+                  InAppStrings.patientBillingDescription,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black87,
@@ -338,7 +334,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
                   });
                 },
                 content: AutoText(
-                  Strings.minimumRequestedCredit,
+                  InAppStrings.minimumRequestedCredit,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black87,
@@ -416,8 +412,7 @@ class _PatientProfilePageState extends State<PatientProfilePage>
               callBack: () {
                 EditProfileDataDialog editProfileData =
                     EditProfileDataDialog(context, entity, () {
-                  EntityBloc entityBloc = BlocProvider.of<EntityBloc>(context);
-                  entityBloc.add(EntityGet());
+                  BlocProvider.of<EntityBloc>(context).add(EntityGet());
                 });
                 editProfileData.showEditableDataDialog();
               },

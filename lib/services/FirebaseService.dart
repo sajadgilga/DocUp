@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:Neuronio/blocs/NotificationBloc.dart';
-import 'package:Neuronio/main.dart';
 import 'package:Neuronio/models/NewestNotificationResponse.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/CustomException.dart';

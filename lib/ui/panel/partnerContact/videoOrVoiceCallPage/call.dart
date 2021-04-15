@@ -1,5 +1,3 @@
-
-
 import 'package:Neuronio/blocs/timer/TimerBloc.dart';
 import 'package:Neuronio/blocs/timer/TimerEvent.dart';
 import 'package:Neuronio/blocs/timer/Tricker.dart';
@@ -100,13 +98,13 @@ class _CallPageState extends State<CallPage> {
             ? 0
             : widget.visit.visitEndTimeDiffFromNow);
 
-    /// TODO set duration later just for test i set it to 60 secs
     if (visitTimerFlag) {
       Future.delayed(Duration(seconds: 6), () {
         int remainingTime = widget.visit.visitEndTimeDiffFromNow;
         if (remainingTime <= 0) {
           showOneButtonDialog(
-              context, Strings.endedVisitCallAlertToCloseCall, "تایید", () {
+              context, InAppStrings.endedVisitCallAlertToCloseCall, "تایید",
+              () {
             _onCallEnd(context);
           }, barrierDismissible: false, callCallBackAfterDialogDispose: true);
         } else {
@@ -121,9 +119,8 @@ class _CallPageState extends State<CallPage> {
               postponed = false;
               VibrateAndRingtoneService.playSoundAndVibrate(
                   miliSecDuration: 400);
-              showTwoButtonDialog(
-                  context, Strings.doctorWarningVisitEnding, "تایید", "ادامه",
-                  () {
+              showTwoButtonDialog(context,
+                  InAppStrings.doctorWarningVisitEnding, "تایید", "ادامه", () {
                 _timerBloc.add(ExtendTime(duration: 120));
                 postponed = true;
               }, () {
@@ -192,10 +189,10 @@ class _CallPageState extends State<CallPage> {
         });
       },
       leaveChannel: (stat) {
-        /// TODO check it later
         setState(() {
           _infoStrings.add('onLeaveChannel');
           _users.clear();
+          VibrateAndRingtoneService.playSoundAndVibrate(miliSecDuration: 200);
         });
       },
       userJoined: (int uid, int elapsed) {

@@ -7,11 +7,9 @@ import 'package:Neuronio/ui/widgets/Waiting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-
 class IPartner extends StatelessWidget {
   final UserEntity partner;
-  final Function(String, dynamic,dynamic,dynamic,Function) onPush;
+  final Function(String, dynamic, dynamic, dynamic, Function) onPush;
   final Function(int) selectPage;
   final Function(String, UserEntity) globalOnPush;
   final Color color;
@@ -29,7 +27,7 @@ class IPartner extends StatelessWidget {
       this.partnerState = BlocState.Loaded})
       : super(key: key);
 
-  Widget _IDoctorLabel() => Container(
+  Widget _iDoctorLabel() => Container(
         constraints: BoxConstraints(maxHeight: 35),
         child: Align(
           alignment: Alignment.topRight,
@@ -52,13 +50,13 @@ class IPartner extends StatelessWidget {
         ),
       );
 
-  BoxDecoration _IDoctorDecoration() => BoxDecoration(
+  BoxDecoration _iDoctorDecoration() => BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(10)),
       color: Color.fromRGBO(255, 255, 255, .8));
 
-  void _chatPage() {
-    selectPage(0);
-  }
+  // void _chatPage() {
+  //   selectPage(0);
+  // }
 
   Widget _body(context) {
     var entity = BlocProvider.of<EntityBloc>(context).state.entity;
@@ -67,8 +65,8 @@ class IPartner extends StatelessWidget {
         child: Center(
           child: AutoText(
             (entity.isPatient
-                ? Strings.emptyDoctorLabel
-                : Strings.emptyPatientLabel),
+                ? InAppStrings.emptyDoctorLabel
+                : InAppStrings.emptyPatientLabel),
             style: TextStyle(fontSize: 10),
             textAlign: TextAlign.center,
           ),
@@ -82,7 +80,8 @@ class IPartner extends StatelessWidget {
               onPush: onPush,
               globalOnPush: globalOnPush,
               color: color));
-    } else if (partnerState == BlocState.Loading) {
+    } else {
+      // (partnerState == BlocState.Loading)
       return Expanded(
         child: Center(
           child: Waiting(),
@@ -96,11 +95,11 @@ class IPartner extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
       padding: EdgeInsets.only(left: 5, right: 5, bottom: 10),
-      decoration: _IDoctorDecoration(),
+      decoration: _iDoctorDecoration(),
       constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width, maxHeight: 160),
       child: Column(
-        children: <Widget>[_IDoctorLabel(), _body(context)],
+        children: <Widget>[_iDoctorLabel(), _body(context)],
       ),
     );
   }

@@ -61,7 +61,8 @@ class _LabelAndListWidgetState extends State<LabelAndListWidget> {
                       width: widget.smallSize != null && widget.smallSize
                           ? 120
                           : 160,
-                      color: widget.selectedIndex != null && widget.selectedIndex.contains(index)
+                      color: widget.selectedIndex != null &&
+                              widget.selectedIndex.contains(index)
                           ? IColors.themeColor
                           : Colors.grey,
                       title: widget.items[index],

@@ -15,6 +15,7 @@ class RenderTable2 extends StatefulWidget {
     this.endSelectedDate,
     this.onSelect,
   });
+
   @override
   _RenderTable2State createState() => _RenderTable2State();
 }
@@ -25,8 +26,6 @@ class _RenderTable2State extends State<RenderTable2> {
   int currentDayOfMonth;
   int numberOfFirstDayOfMonthInWeek;
   List allDaysOfTable; //valid and invalid days
-
-
 
   @override
   void didUpdateWidget(RenderTable2 oldWidget) {
@@ -72,12 +71,10 @@ class _RenderTable2State extends State<RenderTable2> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final cellWidth = 42.0;
     final cellHeight = 35.0;
-
 
     List<Widget> allDaysWidget = allDaysOfTable.map((dayNumber) {
       var date = dayNumber != '' ? initDate.copy(day: dayNumber) : '';

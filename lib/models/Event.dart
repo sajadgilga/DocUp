@@ -1,4 +1,3 @@
-
 import 'Notification.dart';
 
 class Event {

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:Neuronio/blocs/FileBloc.dart';
 import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
@@ -151,7 +149,7 @@ class UploadFileSliderState extends State<UploadFileSlider> {
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: new BorderSide(color: IColors.darkGrey, width: 1)),
-            labelText: Strings.uploadPicTextFieldDescriptionHint,
+            labelText: InAppStrings.uploadPicTextFieldDescriptionHint,
           ),
         ),
       );
@@ -167,7 +165,7 @@ class UploadFileSliderState extends State<UploadFileSlider> {
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: new BorderSide(color: IColors.darkGrey, width: 1)),
-            labelText: Strings.uploadPicTextFieldTitleHint,
+            labelText: InAppStrings.uploadPicTextFieldTitleHint,
           ),
         ),
       );
@@ -196,8 +194,7 @@ class UploadFileSliderState extends State<UploadFileSlider> {
     }
 
     if (BlocProvider.of<FileBloc>(context).state is FileUploading) {
-      showAlertDialog(
-          context, 'در حال آپلود فایل', () {});
+      showAlertDialog(context, 'در حال آپلود فایل', () {});
       return;
     }
     if (_titleController.text != '') {
@@ -288,7 +285,6 @@ class UploadFileSliderState extends State<UploadFileSlider> {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
       body: SingleChildScrollView(
         reverse: true,
         child: SlidingUpPanel(

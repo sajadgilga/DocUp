@@ -227,10 +227,11 @@ class _DatePickerRoute<T> extends PopupRoute<T> {
         pickerModel: pickerModel,
       ),
     );
+
     ///  TODO amir: this lines has changed because of a version conflict but it should be tested if needed
     // ThemeData inheritTheme = InheritedTheme.captureAll(context, shadowThemeOnly: true);
     // if (inheritTheme != null) {
-      bottomSheet = InheritedTheme.captureAll(context,bottomSheet);
+    bottomSheet = InheritedTheme.captureAll(context, bottomSheet);
     // }
     return bottomSheet;
   }
@@ -238,8 +239,7 @@ class _DatePickerRoute<T> extends PopupRoute<T> {
 
 class _DatePickerComponent extends StatefulWidget {
   _DatePickerComponent(
-      {Key key,
-      @required this.route,
+      {@required this.route,
       this.onChanged,
       this.locale,
       this.pickerModel});

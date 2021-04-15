@@ -14,6 +14,7 @@ class LegendItem {
   LegendItem(this.name, this.color);
 }
 
+// ignore: must_be_immutable
 class WeeklyTimeTable extends StatefulWidget {
   final List<List<List<int>>> daysPlanTable;
   final int startTableHour;
@@ -78,7 +79,7 @@ class _WeeklyTimeTableState extends State<WeeklyTimeTable>
           alignment: Alignment.center,
           padding: EdgeInsets.symmetric(vertical: 10),
           child: AutoText(
-            Strings.persianDaysSigns[i],
+            InAppStrings.persianDaysSigns[i],
             style: TextStyle(fontSize: 18, color: IColors.themeColor),
             maxLines: 1,
           ),
@@ -422,6 +423,7 @@ class _DailyWorkTimesTableState extends State<DailyWorkTimesTable> {
   }
 }
 
+// ignore: must_be_immutable
 class DailyAvailableVisitTime extends StatefulWidget {
   final List<List<int>> dayReservedTimeTable;
   final List<List<int>> dailyDoctorWorkTime;

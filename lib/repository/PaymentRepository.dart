@@ -8,17 +8,17 @@ import 'package:Neuronio/utils/Crypto.dart';
 class PaymentRepository {
   ApiProvider _provider = ApiProvider();
 
-  Future<PayirResponseEntity> sendDataToPay(String mobile, int amount) async {
-    /// TODO remove this api
-    final response =
-        await _provider.postWithBaseUrl("https://pay.ir/", "pg/send", body: {
-      "api": PAY_IR_API_KEY,
-      "amount": amount,
-      "redirect": "https://service.docup.ir/payment/transaction-call-back",
-      "mobile": mobile
-    });
-    return PayirResponseEntity.fromJson(response);
-  }
+  /// deprecated payment method
+  // Future<PayirResponseEntity> sendDataToPay(String mobile, int amount) async {
+  //   final response =
+  //       await _provider.postWithBaseUrl("https://pay.ir/", "pg/send", body: {
+  //     "api": PAY_IR_API_KEY,
+  //     "amount": amount,
+  //     "redirect": "https://service.docup.ir/payment/transaction-call-back",
+  //     "mobile": mobile
+  //   });
+  //   return PayirResponseEntity.fromJson(response);
+  // }
 
   Future<HamtaResponseEntity> sendDataToHamta(
       int type, String mobile, int amount,

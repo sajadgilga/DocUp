@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:Neuronio/models/DoctorEntity.dart';
 import 'package:Neuronio/models/DoctorPlan.dart';
-import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/models/VisitResponseEntity.dart';
 import 'package:Neuronio/networking/Response.dart';
 import 'package:Neuronio/repository/DoctorRepository.dart';
-import 'package:Neuronio/repository/PatientRepository.dart';
 import 'package:Neuronio/ui/visit/VisitUtils.dart';
 
 class DoctorInfoBloc {
@@ -56,12 +54,12 @@ class DoctorInfoBloc {
     _repository = DoctorRepository();
   }
 
-  getDoctor(int doctorId, bool isDoctor) async {
+  getDoctor(int doctorId, bool currentUserInfo) async {
     /// TODO clean this method
     doctorInfoSink.add(Response.loading());
     try {
       DoctorEntity doctorEntity = await _repository.getDoctor(doctorId);
-      if (isDoctor) {
+      if (currentUserInfo) {
         doctorEntity.plan = await _repository.getDoctorPlan();
       } else {
         doctorEntity.plan = await _repository.getDoctorPlanById(doctorId);

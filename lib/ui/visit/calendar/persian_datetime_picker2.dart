@@ -8,7 +8,9 @@ import 'handle_picker2.dart';
 class PersianDateTimePicker2 extends StatefulWidget {
   final initial;
   final type;
-  final List<String> availableDates; /// null means all days are available
+  final List<String> availableDates;
+
+  /// null means all days are available
   final min;
   final max;
   final Color color;
@@ -16,8 +18,8 @@ class PersianDateTimePicker2 extends StatefulWidget {
 
   PersianDateTimePicker2(
       {this.type = 'date',
-      this.initial = null,
-      this.availableDates = null,
+      this.initial,
+      this.availableDates,
       this.min = '',
       this.max = '',
       this.color = Colors.blueAccent,

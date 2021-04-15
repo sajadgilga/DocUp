@@ -11,7 +11,12 @@ class NeuronioHeader extends StatelessWidget {
   final Color color;
   final double width;
 
-  NeuronioHeader({Key key, this.title, this.docUpLogo = false, this.color,this.width=40})
+  NeuronioHeader(
+      {Key key,
+      this.title,
+      this.docUpLogo = false,
+      this.color,
+      this.width = 40})
       : super(key: key);
 
   @override
@@ -21,7 +26,8 @@ class NeuronioHeader extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(top: 10, right: 20),
           child: docUpLogo
-              ? Container(width: width, child: Image.asset(Assets.logoTransparent))
+              ? Container(
+                  width: width, child: Image.asset(Assets.logoTransparent))
               : SizedBox(),
           alignment: Alignment.centerRight,
         ),

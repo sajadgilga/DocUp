@@ -78,16 +78,16 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
         /// update doctor plan if needed
 
         /// pop to prev page
-        showOneButtonDialog(context, Strings.physicalVisitRequestedMessage,
-            Strings.waitingForApproval, () => Navigator.pop(context));
+        showOneButtonDialog(context, InAppStrings.physicalVisitRequestedMessage,
+            InAppStrings.waitingForApproval, () => Navigator.pop(context));
       } else if (data.status == Status.ERROR) {
         if (data.error is ApiException) {
           ApiException apiException = data.error;
           if (apiException.getCode() == 602) {
             showOneButtonDialog(
                 context,
-                Strings.notEnoughCreditMessage,
-                Strings.addCreditAction,
+                InAppStrings.notEnoughCreditMessage,
+                InAppStrings.addCreditAction,
                 () => widget.onPush(NavigatorRoutes.account, "10000"));
           } else {
             toast(context, data.error.toString());
@@ -354,8 +354,8 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
   _acceptPolicyWidget() => GestureDetector(
         onTap: () {
           showDescriptionAlertDialog(context,
-              title: Strings.privacyAndPolicy,
-              description: Strings.policyDescription, action: () {
+              title: InAppStrings.privacyAndPolicy,
+              description: InAppStrings.policyDescription, action: () {
             setState(() {
               policyChecked = !policyChecked;
             });
@@ -367,7 +367,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
             Container(
               width: MediaQuery.of(context).size.width - 80,
               child: AutoText(
-                Strings.physicalVisitPrivacyPolicyMessage,
+                InAppStrings.physicalVisitPrivacyPolicyMessage,
                 textAlign: TextAlign.right,
                 style: TextStyle(fontSize: 10),
                 maxLines: 2,
@@ -378,8 +378,8 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
               value: policyChecked,
               onChanged: (d) {
                 showDescriptionAlertDialog(context,
-                    title: Strings.privacyAndPolicy,
-                    description: Strings.policyDescription, action: () {
+                    title: InAppStrings.privacyAndPolicy,
+                    description: InAppStrings.policyDescription, action: () {
                   setState(() {
                     policyChecked = !policyChecked;
                   });
@@ -445,40 +445,37 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
     String currentTime = now.hour.toString() + ":" + now.minute.toString();
     if (dateTextController.text.isEmpty) {
       /// empty date
-      showOneButtonDialog(
-          context, Strings.enterVisitDateMessage, Strings.okAction, () {});
+      showOneButtonDialog(context, InAppStrings.enterVisitDateMessage,
+          InAppStrings.okAction, () {});
     } else if (timeTextController.text.isEmpty ||
         timeTextController.text == "") {
       /// empty time
-      showOneButtonDialog(
-          context, Strings.emptyStartVisitTimeMessage, Strings.okAction, () {});
+      showOneButtonDialog(context, InAppStrings.emptyStartVisitTimeMessage,
+          InAppStrings.okAction, () {});
     } else if (DateTimeService.getTimeMinute(timeTextController.text) - 6 * 60 <
             DateTimeService.getTimeMinute(currentTime) &&
         DateTimeService.getTodayInJalaliString() == dateTextController.text) {
       /// invalid time
-      showOneButtonDialog(
-          context, Strings.pastStartVisitTimeMessage, Strings.okAction, () {});
+      showOneButtonDialog(context, InAppStrings.pastStartVisitTimeMessage,
+          InAppStrings.okAction, () {});
     } else if (!widget.doctorEntity.plan.physicalVisitDurationPlan
         .contains(getVisitDurationPlanFromVisitSelectedMinutes())) {
       /// invalid duration plan
       if (widget.doctorEntity.plan.physicalVisitDurationPlan.length == 0) {
-        showOneButtonDialog(
-            context,
-            Strings.invalidDurationPlan_EmptyDurationPlan,
-            Strings.okAction,
-            () {});
+        showOneButtonDialog(context, InAppStrings.emptyDurationPlan,
+            InAppStrings.okAction, () {});
       } else {
         showOneButtonDialog(
             context,
-            Strings.invalidDurationPlan_Plans[0] +
+            InAppStrings.invalidDurationPlan[0] +
                 " " +
                 widget.doctorEntity.plan.physicalVisitDurationPlan
                     .map(
                         (e) => ((e + 1) * DoctorPlan.hourMinutePart).toString())
                     .join("و ") +
                 " " +
-                Strings.invalidDurationPlan_Plans[2],
-            Strings.okAction,
+                InAppStrings.invalidDurationPlan[2],
+            InAppStrings.okAction,
             () {});
       }
     } else {

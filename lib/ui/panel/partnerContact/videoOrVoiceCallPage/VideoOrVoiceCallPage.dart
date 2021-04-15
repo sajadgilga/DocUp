@@ -81,8 +81,8 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
         return Stack(children: <Widget>[
           _VideoOrVoiceCallPage(),
           PanelAlert(
-            label: Strings.requestSentLabel,
-            buttonLabel: Strings.waitingForApproval,
+            label: InAppStrings.requestSentLabel,
+            buttonLabel: InAppStrings.waitingForApproval,
             btnColor: IColors.disabledButton,
           )
         ]);
@@ -90,8 +90,8 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
         return Stack(children: <Widget>[
           _VideoOrVoiceCallPage(),
           PanelAlert(
-            label: Strings.requestSentLabelDoctorSide,
-            buttonLabel: Strings.waitingForApprovalDoctorSide,
+            label: InAppStrings.requestSentLabelDoctorSide,
+            buttonLabel: InAppStrings.waitingForApprovalDoctorSide,
             callback: () {
               widget.onPush(NavigatorRoutes.patientDialogue,
                   widget.entity.partnerEntity, null, VisitSource.USUAL);
@@ -116,7 +116,7 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
                     '${_visitTime != null ? _visitTime : "هنوز فرا نرسیده"}'
                     '\n'
                     'است' /* Strings.notRequestTimeDoctorSide*/,
-                buttonLabel: Strings.waitLabel,
+                buttonLabel: InAppStrings.waitLabel,
                 btnColor: IColors.disabledButton,
                 size: AlertSize.LG,
               ) //TODO: change to timer
@@ -136,8 +136,8 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
         return Stack(children: <Widget>[
           _VideoOrVoiceCallPage(),
           PanelAlert(
-            label: Strings.noAvailableVirtualVisit,
-            buttonLabel: Strings.reserveVirtualVisit,
+            label: InAppStrings.noAvailableVirtualVisit,
+            buttonLabel: InAppStrings.reserveVirtualVisit,
             callback: () {
               widget.onPush(NavigatorRoutes.doctorDialogue,
                   widget.entity.partnerEntity, null, VisitSource.USUAL);
@@ -148,8 +148,8 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
         return Stack(children: <Widget>[
           _VideoOrVoiceCallPage(),
           PanelAlert(
-            label: Strings.noAvailableVirtualVisit,
-            buttonLabel: Strings.reserveVirtualVisitDoctorSide,
+            label: InAppStrings.noAvailableVirtualVisit,
+            buttonLabel: InAppStrings.reserveVirtualVisitDoctorSide,
             btnColor: IColors.disabledButton,
           )
         ]);
@@ -186,11 +186,11 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
           child: AutoText(
             widget.entity.isPatient
                 ? (widget.videoCall
-                    ? Strings.videoCallPatientPanelDescription
-                    : Strings.voiceCallPatientPanelDescription)
+                    ? InAppStrings.videoCallPatientPanelDescription
+                    : InAppStrings.voiceCallPatientPanelDescription)
                 : (widget.videoCall
-                    ? Strings.videoCallDoctorPanelDescription
-                    : Strings.voiceCallDoctorPanelDescription),
+                    ? InAppStrings.videoCallDoctorPanelDescription
+                    : InAppStrings.voiceCallDoctorPanelDescription),
             style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
@@ -208,8 +208,8 @@ class _VideoOrVoiceCallPageState extends State<VideoOrVoiceCallPage> {
               padding: const EdgeInsets.all(8.0),
               child: AutoText(
                 widget.videoCall
-                    ? Strings.noReservedVideoCall
-                    : Strings.noReservedVoiceCall,
+                    ? InAppStrings.noReservedVideoCall
+                    : InAppStrings.noReservedVoiceCall,
                 style: TextStyle(fontSize: 16),
                 textAlign: TextAlign.center,
               ),
