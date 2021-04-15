@@ -246,7 +246,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
             ],
           ),
 
-          /// TODO
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -438,7 +437,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
       );
 
   _sendVisitRequest() {
-    /// TODO amir: clean this part. It is so messy;
     if (this.submitLoadingToggle) return;
     if (!policyChecked) return;
     DateTime now = DateTimeService.getCurrentDateTime();
@@ -460,11 +458,12 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
           InAppStrings.okAction, () {});
     } else if (!widget.doctorEntity.plan.physicalVisitDurationPlan
         .contains(getVisitDurationPlanFromVisitSelectedMinutes())) {
-      /// invalid duration plan
+      /// empty duration plan
       if (widget.doctorEntity.plan.physicalVisitDurationPlan.length == 0) {
         showOneButtonDialog(context, InAppStrings.emptyDurationPlan,
             InAppStrings.okAction, () {});
       } else {
+        /// invalid duration plan
         showOneButtonDialog(
             context,
             InAppStrings.invalidDurationPlan[0] +
@@ -479,6 +478,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
             () {});
       }
     } else {
+      /// sending visit request
       sendVisitRequest();
     }
   }
@@ -488,17 +488,7 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
   // }
 
   void sendVisitRequest() {
-    /// TODO amir: timeTextController.text should be used here later
     String startTime = timeTextController.text.split("-")[0];
-    int startMinute = DateTimeService.getTimeMinute(startTime);
-    // String endTime = timeTextController.text.split("-")[1];
-    // int endMinute = getTimeMinute(endTime);
-    // if (endMinute < startMinute) {
-    //   endMinute += 24 * 60;
-    // }
-    // int duration = getTimeMinute(endTime) - getTimeMinute(startTime);
-    //
-    // String visitDuration = "+" + convertMinuteToTimeString(duration);
     String timeZone = "+03:30";
     _bloc.visitRequest(
         widget.screeningId,

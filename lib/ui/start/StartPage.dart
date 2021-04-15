@@ -184,7 +184,6 @@ class _StartPageState extends State<StartPage> with sms.CodeAutoFill {
           if ((response.error as ApiException).getCode() == 615) {
             showSnackBar(_scaffoldKey, InAppStrings.errorCode_615, secs: 10);
           } else if ((response.error as ApiException).getCode() == 616) {
-            /// TODO amir:
             showSnackBar(_scaffoldKey, InAppStrings.errorCode_616, secs: 10);
           } else {
             showSnackBar(

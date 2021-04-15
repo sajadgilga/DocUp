@@ -15,10 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class VirtualVisitList extends StatelessWidget {
   final Function(String, UserEntity) onPush;
   TextEditingController _controller = TextEditingController();
-  final int patientVisitStatus =
-      1; //TODO amir: make it and enum,here and now 0 means physical visit
 
-//  SearchBloc searchBloc = SearchBloc();
 
   VirtualVisitList({@required this.onPush});
 
@@ -26,7 +23,7 @@ class VirtualVisitList extends StatelessWidget {
     BlocProvider.of<SearchBloc>(context).add(SearchVisit(
         text: _controller.text,
         acceptStatus: 1,
-        visitType: patientVisitStatus));
+        visitType: 1));
 
 //    FocusScope.of(context).unfocus();
 //     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -37,7 +34,7 @@ class VirtualVisitList extends StatelessWidget {
     BlocProvider.of<SearchBloc>(context).add(SearchVisit(
         text: _controller.text,
         acceptStatus: 1,
-        visitType: patientVisitStatus));
+        visitType: 1));
   }
 
   void dispose() {

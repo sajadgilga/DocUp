@@ -135,7 +135,6 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
           // _enableVisitTimeWidget(),
           ALittleVerticalSpace(),
 
-          /// TODO
           // AnimatedSize(
           //   vsync: this,
           //   duration: Duration(milliseconds: 400),
@@ -325,7 +324,6 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
             ],
           ),
 
-          /// TODO
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -494,7 +492,6 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   _isDoctorOnline() => widget.doctorEntity.user.online == 1;
 
   void _submit() {
-    /// TODO amir: clean this part. It is so messy;'
     if (this.submitLoadingToggle) return;
     if (!policyChecked) return;
     if (visitTimeChecked) {
@@ -542,8 +539,10 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
       }
     } else {
       if (_isDoctorOnline()) {
+        /// sending now visit request
         sendNowVisitRequest();
       } else {
+        /// offline doctor for now visit request
         showOneButtonDialog(context, InAppStrings.offlineDoctorMessage,
             InAppStrings.okAction, () {});
       }
@@ -570,18 +569,8 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
   }
 
   void sendVisitRequest() {
-    /// TODO amir: timeTextController.text should be used here later
     String startTime = timeTextController.text.split("-")[0];
-    // int startMinute = getTimeMinute(startTime);
 
-    // String endTime = timeTextController.text.split("-")[1];
-    // int endMinute = getTimeMinute(endTime);
-    // if (endMinute < startMinute) {
-    //   endMinute += 24 * 60;
-    // }
-    // int duration = getTimeMinute(endTime) - getTimeMinute(startTime);
-
-    // String visitDuration = "+" + convertMinuteToTimeString(duration);
     String timeZone = "+03:30";
     _bloc.visitRequest(
         widget.screeningId,

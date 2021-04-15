@@ -15,18 +15,12 @@ import 'visitSearchResult/VisitResult.dart';
 class PhysicalVisitList extends StatelessWidget {
   final Function(String, UserEntity) onPush;
   TextEditingController _controller = TextEditingController();
-  final int patientVisitStatus =
-      0; //TODO amir: make it and enum, here and now 0 means physical visit
-
-//  SearchBloc searchBloc = SearchBloc();
 
   PhysicalVisitList({@required this.onPush});
 
   void _search(context) {
-    BlocProvider.of<SearchBloc>(context).add(SearchVisit(
-        text: _controller.text,
-        acceptStatus: 1,
-        visitType: patientVisitStatus));
+    BlocProvider.of<SearchBloc>(context).add(
+        SearchVisit(text: _controller.text, acceptStatus: 1, visitType: 0));
 
 //    FocusScope.of(context).unfocus();
 //     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -34,10 +28,8 @@ class PhysicalVisitList extends StatelessWidget {
 
   void _initialSearch(context) {
     BlocProvider.of<SearchBloc>(context).add(SearchLoadingEvent());
-    BlocProvider.of<SearchBloc>(context).add(SearchVisit(
-        text: _controller.text,
-        acceptStatus: 1,
-        visitType: patientVisitStatus));
+    BlocProvider.of<SearchBloc>(context).add(
+        SearchVisit(text: _controller.text, acceptStatus: 1, visitType: 0));
   }
 
   void dispose() {

@@ -43,47 +43,38 @@ class PatientRequestPage extends StatefulWidget {
 class _PatientRequestPageState extends State<PatientRequestPage> {
   DoctorInfoBloc _bloc = DoctorInfoBloc();
 
-  //TODO amir: make it enum, here and now 0 means physical visit
-  int patientVisitStatus = 0;
+  int visitType = 0;
   int sectionId;
   bool submitLoadingToggle = false;
 
   VisitEntity visitEntity;
 
-  void _updateSearch() {
-    var searchBloc = BlocProvider.of<SearchBloc>(context);
-    if (patientVisitStatus == 0 || patientVisitStatus == 1) {
-      searchBloc.add(SearchVisit(
-          text: '', acceptStatus: 1, visitType: patientVisitStatus));
+  void _doneAndClosePage() {
+    if (visitType == 0 || visitType == 1) {
+      BlocProvider.of<SearchBloc>(context).add(
+          SearchVisit(text: '', acceptStatus: 1, visitType: visitType));
     } else {
-      searchBloc.add(SearchVisit(text: '', acceptStatus: 0));
+      BlocProvider.of<SearchBloc>(context)
+          .add(SearchVisit(text: '', acceptStatus: 0));
     }
-    var _panelBloc = BlocProvider.of<PanelBloc>(context);
-    _panelBloc.add(GetMyPanels());
+    BlocProvider.of<PanelBloc>(context).add(GetMyPanels());
+    BlocProvider.of<EntityBloc>(context).add(EntityGet());
+    Navigator.pop(context);
   }
 
   @override
   void initState() {
     _bloc.getVisit(widget.patientEntity.vid);
 
-    var _state = BlocProvider
-        .of<EntityBloc>(context)
-        .state;
+    var _state = BlocProvider.of<EntityBloc>(context).state;
     this.sectionId = _state.entity.sectionIdByNameAndPatientEntityId(
         InAppStrings.testResults, widget.patientEntity.id);
-    // if (sectionId != null)
-    //   BlocProvider.of<FileBloc>(context)
-    //       .add(FileListGet(listId: this.sectionId));
 
     _bloc.responseVisitStream.listen((data) {
       if (data.status == Status.COMPLETED) {
         submitLoadingToggle = false;
 
-        void _doneAndClosePage() {
-          _updateSearch();
-          BlocProvider.of<EntityBloc>(context).add(EntityGet());
-          Navigator.pop(context);
-        }
+
 
         if (data.data.status == 1) {
           if (CrossPlatformDeviceDetection.isAndroid) {
@@ -95,7 +86,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                 "بله",
                 "خیر", () {
               GoogleCalenderService.addVisitEvent(
-                  visitEntity, widget.patientEntity)
+                      visitEntity, widget.patientEntity)
                   .then((result) {
                 if (result) {
                   toast(context, InAppStrings.visitEventAddedToGoogleCalendar,
@@ -111,9 +102,9 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
             });
           } else {
             showOneButtonDialog(context, 'درخواست بیمار تایید  شد', "تایید",
-                    () {
-                  _doneAndClosePage();
-                });
+                () {
+              _doneAndClosePage();
+            });
           }
         } else {
           showOneButtonDialog(context, 'درخواست بیمار رد شد.', "تایید", () {
@@ -143,15 +134,15 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                 case Status.COMPLETED:
                   visitEntity = snapshot.data.data;
                   if (visitEntity.status == 0) {
-                    patientVisitStatus = null;
+                    visitType = null;
                   } else {
-                    patientVisitStatus = visitEntity.visitType;
+                    visitType = visitEntity.visitType;
                   }
                   return _mainWidget(visitEntity);
                   break;
                 case Status.ERROR:
                   return APICallError(
-                        () {
+                    () {
                       _bloc.getVisit(widget.patientEntity.vid);
                     },
                     errorMessage: InAppStrings.notFoundRequest,
@@ -173,8 +164,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
     return false;
   }
 
-  _mainWidget(VisitEntity visitEntity) =>
-      SingleChildScrollView(
+  _mainWidget(VisitEntity visitEntity) => SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
@@ -189,7 +179,6 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                       color: IColors.themeColor,
                     ),
                     onTap: () {
-                      /// TODO
                       Navigator.pop(context, 'Nope.');
                     },
                     topRightFlag: false,
@@ -241,10 +230,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                           ),
                         ],
                       ),
-                      _picListBox(MediaQuery
-                          .of(context)
-                          .size
-                          .width),
+                      _picListBox(MediaQuery.of(context).size.width),
                     ],
                   )),
               SizedBox(
@@ -252,56 +238,53 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
               ),
               _visitStatusEditable(visitEntity)
                   ? (visitEntity.status == 0
-                  ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  ActionButton(
-                    width: 150,
-                    title: "رد",
-                    icon: Icon(Icons.close),
-                    color: IColors.red,
-                    callBack: () {
-                      if (!submitLoadingToggle) {
-                        submitLoadingToggle = true;
-                        _bloc.responseVisit(visitEntity, false);
-                      }
-                    },
-                  ),
-                  ActionButton(
-                    width: 150,
-                    title: "تایید",
-                    icon: Icon(Icons.check),
-                    color: IColors.green,
-                    callBack: () {
-                      if (!submitLoadingToggle) {
-                        submitLoadingToggle = true;
-                        _bloc.responseVisit(visitEntity, true);
-                      }
-                    },
-                  ),
-                ],
-              )
-                  : ActionButton(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * (65 / 100),
-                height: 50,
-                title: "لغو کردن ویزیت " +
-                    (visitEntity.visitType == 0
-                        ? "حضوری"
-                        : (visitEntity.visitType == 1
-                        ? "مجازی"
-                        : " - ")),
-                icon: Icon(Icons.close),
-                color: IColors.red,
-                callBack: () {
-                  if (!submitLoadingToggle) {
-                    submitLoadingToggle = true;
-                    _bloc.responseVisit(visitEntity, false);
-                  }
-                },
-              ))
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            ActionButton(
+                              width: 150,
+                              title: "رد",
+                              icon: Icon(Icons.close),
+                              color: IColors.red,
+                              callBack: () {
+                                if (!submitLoadingToggle) {
+                                  submitLoadingToggle = true;
+                                  _bloc.responseVisit(visitEntity, false);
+                                }
+                              },
+                            ),
+                            ActionButton(
+                              width: 150,
+                              title: "تایید",
+                              icon: Icon(Icons.check),
+                              color: IColors.green,
+                              callBack: () {
+                                if (!submitLoadingToggle) {
+                                  submitLoadingToggle = true;
+                                  _bloc.responseVisit(visitEntity, true);
+                                }
+                              },
+                            ),
+                          ],
+                        )
+                      : ActionButton(
+                          width: MediaQuery.of(context).size.width * (65 / 100),
+                          height: 50,
+                          title: "لغو کردن ویزیت " +
+                              (visitEntity.visitType == 0
+                                  ? "حضوری"
+                                  : (visitEntity.visitType == 1
+                                      ? "مجازی"
+                                      : " - ")),
+                          icon: Icon(Icons.close),
+                          color: IColors.red,
+                          callBack: () {
+                            if (!submitLoadingToggle) {
+                              submitLoadingToggle = true;
+                              _bloc.responseVisit(visitEntity, false);
+                            }
+                          },
+                        ))
                   : SizedBox(),
               ALittleVerticalSpace(),
             ],
@@ -315,10 +298,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
 
   Widget descriptionBox(String title, Widget titleIcon, {Widget child}) {
     double minHeight =
-    min(MediaQuery
-        .of(context)
-        .size
-        .height * (15 / 100), 250);
+        min(MediaQuery.of(context).size.height * (15 / 100), 250);
     // double maxHeight =
     //     max(MediaQuery.of(context).size.height * (15 / 100), 250);
     return Container(
@@ -423,7 +403,7 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
                       overflow: TextOverflow.fade,
                       textDirection: TextDirection.rtl,
                       style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Row(
                     children: [
                       AutoText(
