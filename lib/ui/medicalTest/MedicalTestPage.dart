@@ -117,49 +117,29 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
         key: _scaffoldKey,
         body: SingleChildScrollView(
           /// to check that mEntity is Loaded Successfully
-          child: firstInitialized
-              ? _widget()
-              : BlocBuilder<EntityBloc, EntityState>(
-                  builder: (context, state) {
-                    if (state.mEntityStatus == BlocState.Loaded) {
-                      if (!firstInitialized) {
-                        _initialApiCall();
-                      }
-                      return _widget();
-                    } else if (state.mEntityStatus == BlocState.Error) {
-                      return APICallError(() {
-                        BlocProvider.of<EntityBloc>(context).add(EntityGet());
-                      });
-                    } else {
-                      return DocUpAPICallLoading2();
-                    }
-                  },
-                ),
+          child: BlocBuilder<SingleMedicalTestBloc, MedicalTestState>(
+              bloc: _bloc,
+              builder: (context, state) {
+                if (state is GetTestLoaded) {
+                  if (!firstAnswersLoaded) {
+                    patientAnswers = state.result.oldAnswers;
+                    firstAnswersLoaded = true;
+                  }
+                  return _medicalTestWidget(state.result);
+                } else if (state is GetTestLoading)
+                  return DocUpAPICallLoading2();
+                else
+                  return APICallError(
+                        () {
+                      _initialApiCall();
+                    },
+                  );
+              }),
         ),
       ),
     );
   }
 
-  _widget() {
-    return BlocBuilder<SingleMedicalTestBloc, MedicalTestState>(
-        bloc: _bloc,
-        builder: (context, state) {
-          if (state is GetTestLoaded) {
-            if (!firstAnswersLoaded) {
-              patientAnswers = state.result.oldAnswers;
-              firstAnswersLoaded = true;
-            }
-            return _medicalTestWidget(state.result);
-          } else if (state is GetTestLoading)
-            return DocUpAPICallLoading2();
-          else
-            return APICallError(
-              () {
-                _initialApiCall();
-              },
-            );
-        });
-  }
 
   _medicalTestWidget(MedicalTest test) {
     return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
