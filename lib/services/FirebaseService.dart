@@ -6,7 +6,7 @@ import 'package:Neuronio/models/NewestNotificationResponse.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/networking/CustomException.dart';
 import 'package:Neuronio/repository/NotificationRepository.dart';
-import 'package:Neuronio/ui/mainPage/NotifNavigationRepo.dart';
+import 'package:Neuronio/services/NotificationNavigationService.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -20,13 +20,13 @@ class NotificationAndFirebaseService {
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   static BuildContext context;
   static bool _isFCMConfigured = false;
-  static NotificationNavigationRepo notifNavRepo;
+  static NotificationNavigationService notifNavRepo;
   static MapEntry<String, Map> currentPageAndData;
 
   static Future initFCM(context, Function onPush) async {
     NotificationAndFirebaseService.context = context;
     NotificationAndFirebaseService.notifNavRepo =
-        NotificationNavigationRepo(onPush);
+        NotificationNavigationService(onPush);
 
     /// TODO web
     if (!_isFCMConfigured && !kIsWeb) {

@@ -143,7 +143,7 @@ class _HomeState extends State<Home> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Container(child: Image.asset(Assets.homeNoronioClinic)),
+            Container(child: Image.asset(Assets.homeNeuronioClinic)),
             Column(
               children: [
                 Padding(
@@ -198,7 +198,7 @@ class _HomeState extends State<Home> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Container(child: Image.asset(Assets.homeNoronioClinic)),
+            Container(child: Image.asset(Assets.homeNeuronioClinic)),
             Column(
               children: [
                 Padding(

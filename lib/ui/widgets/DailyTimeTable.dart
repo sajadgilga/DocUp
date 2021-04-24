@@ -4,7 +4,7 @@ import 'package:Neuronio/models/DoctorPlan.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/SnackBar.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 import 'package:flutter/material.dart';
 
 class LegendItem {

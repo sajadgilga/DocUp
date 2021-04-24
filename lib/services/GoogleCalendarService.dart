@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/models/VisitResponseEntity.dart';
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 import 'package:googleapis/calendar/v3.dart';
 import "package:googleapis_auth/auth_io.dart";
 import 'package:url_launcher/url_launcher.dart';

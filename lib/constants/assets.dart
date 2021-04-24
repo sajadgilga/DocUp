@@ -23,14 +23,14 @@ class Assets {
   static final String servicesIcon = 'assets/servicesIcon.png';
   static final String panelIcon = 'assets/panelIcon.png';
 
-  static final String noronioServiceDoctorList =
-      "assets/noronioClinic/doctor (1)@2x.png";
-  static final String noronioServiceBrainTest =
-      "assets/noronioClinic/brain@2x.png";
-  static final String noronioServiceGame =
-      "assets/noronioClinic/mobile-game@2x.png";
+  static final String neuronioServiceDoctorList =
+      "assets/neuronioClinic/doctor (1)@2x.png";
+  static final String neuronioServiceBrainTest =
+      "assets/neuronioClinic/brain@2x.png";
+  static final String neuronioServiceGame =
+      "assets/neuronioClinic/mobile-game@2x.png";
 
-  static final String homeNoronioClinic = "assets/home/Layer 2@2x.png";
+  static final String homeNeuronioClinic = "assets/home/Layer 2@2x.png";
   static final String homeVideos = "assets/home/Layer 2_2@2x.png";
   static final String homePresentVisit =
       "assets/home/video-conference_2@3x.png";

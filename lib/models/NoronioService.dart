@@ -1,12 +1,12 @@
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 
-enum NoronioClinicServiceType { MultipleChoiceTest, DoctorsList, Game }
+enum NeuronioClinicServiceType { MultipleChoiceTest, DoctorsList, Game }
 
-class NoronioServiceItem {
+class NeuronioServiceItem {
   final String title;
   final String iconAddress;
   final String iconURL;
-  final NoronioClinicServiceType serviceType;
+  final NeuronioClinicServiceType serviceType;
   final String responseDateTime;
   final Function() onTap;
   final bool enable;
@@ -18,12 +18,12 @@ class NoronioServiceItem {
         : null;
   }
 
-  NoronioServiceItem(this.title, this.iconAddress, this.iconURL,
+  NeuronioServiceItem(this.title, this.iconAddress, this.iconURL,
       this.serviceType, this.onTap, this.enable,
       {this.responseDateTime});
 
-  factory NoronioServiceItem.empty() {
-    return NoronioServiceItem(null, null, null, null, null, false);
+  factory NeuronioServiceItem.empty() {
+    return NeuronioServiceItem(null, null, null, null, null, false);
   }
 
   bool get isEmpty {

@@ -13,13 +13,13 @@ import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/SnackBar.dart';
-import 'package:Neuronio/ui/widgets/SquareBoxNoronioClinic.dart';
+import 'package:Neuronio/ui/widgets/SquareBoxNeuronioClinic.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SendNoronioTestDialog {
+class SendNeuronioTestDialog {
   final PatientEntity patient;
   final BuildContext context;
   final GlobalKey<ScaffoldState> _scaffoldKey;
@@ -31,18 +31,18 @@ class SendNoronioTestDialog {
   int actionButtonStatus = 0;
   String errorText;
 
-  SendNoronioTestDialog(this.patient, this.context, this._scaffoldKey);
+  SendNeuronioTestDialog(this.patient, this.context, this._scaffoldKey);
 
-  List<NoronioServiceItem> convertToNoronioServiceList(
+  List<NeuronioServiceItem> convertToNeuronioServiceList(
       List<MedicalTestItem> tests) {
-    List<NoronioServiceItem> services = [];
+    List<NeuronioServiceItem> services = [];
 
     tests.forEach((element) {
-      NoronioServiceItem cognitiveTest = NoronioServiceItem(
+      NeuronioServiceItem cognitiveTest = NeuronioServiceItem(
           element.name,
-          Assets.noronioServiceBrainTest,
+          Assets.neuronioServiceBrainTest,
           element.imageURL,
-          NoronioClinicServiceType.MultipleChoiceTest, () {
+          NeuronioClinicServiceType.MultipleChoiceTest, () {
         _alertStateSetter(() {
           selectedTest = element;
         });
@@ -165,7 +165,7 @@ class SendNoronioTestDialog {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        _services(convertToNoronioServiceList(testsList), testsList),
+        _services(convertToNeuronioServiceList(testsList), testsList),
         ALittleVerticalSpace(),
         SizedBox(
           height: 20,
@@ -189,10 +189,10 @@ class SendNoronioTestDialog {
   }
 
   Widget _services(
-      List<NoronioServiceItem> serviceList, List<MedicalTestItem> testsList) {
+      List<NeuronioServiceItem> serviceList, List<MedicalTestItem> testsList) {
     List<Widget> serviceRows = [];
     for (int i = 0; i < serviceList.length; i += 2) {
-      Widget ch1 = SquareBoxNoronioClinicService(
+      Widget ch1 = SquareBoxNeuronioClinicService(
         serviceList[i],
         boxSize: 110,
         defaultBgColor:
@@ -203,13 +203,13 @@ class SendNoronioTestDialog {
         lFontSize: 7,
       );
       Widget ch2 = (i == serviceList.length - 1)
-          ? SquareBoxNoronioClinicService(
-              NoronioServiceItem.empty(),
+          ? SquareBoxNeuronioClinicService(
+              NeuronioServiceItem.empty(),
               boxSize: 110,
               bFontSize: 9,
               lFontSize: 7,
             )
-          : SquareBoxNoronioClinicService(
+          : SquareBoxNeuronioClinicService(
               serviceList[i + 1],
               boxSize: 110,
               defaultBgColor: selectedTest != null &&

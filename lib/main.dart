@@ -3,7 +3,7 @@ import 'package:Neuronio/blocs/PanelBloc.dart';
 import 'package:Neuronio/blocs/ScreenginBloc.dart';
 import 'package:Neuronio/ui/start/SplashPage.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

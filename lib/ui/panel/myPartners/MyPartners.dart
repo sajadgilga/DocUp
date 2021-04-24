@@ -6,7 +6,7 @@ import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
-import 'package:Neuronio/utils/entityUpdater.dart';
+import 'package:Neuronio/utils/EntityUpdater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

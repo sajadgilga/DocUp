@@ -5,7 +5,7 @@ import 'package:Neuronio/blocs/PanelBloc.dart';
 import 'package:Neuronio/blocs/ScreenginBloc.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 
-import 'dateTimeService.dart';
+import 'DateTimeService.dart';
 
 class EntityAndPanelUpdater {
   static EntityBloc _entityBloc;

@@ -19,7 +19,7 @@ import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/WebsocketHelper.dart';
-import 'package:Neuronio/utils/entityUpdater.dart';
+import 'package:Neuronio/utils/EntityUpdater.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';

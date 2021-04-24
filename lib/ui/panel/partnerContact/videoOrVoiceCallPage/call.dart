@@ -5,8 +5,8 @@ import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/models/VisitResponseEntity.dart';
+import 'package:Neuronio/services/NotificationNavigationService.dart';
 import 'package:Neuronio/services/VibrateAndSoundService.dart';
-import 'package:Neuronio/ui/mainPage/NotifNavigationRepo.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Avatar.dart';
 import 'package:Neuronio/ui/widgets/Timer.dart';
@@ -73,7 +73,7 @@ class _CallPageState extends State<CallPage> {
       Wakelock.disable();
     } catch (e) {}
 
-    NotificationNavigationRepo.isCallStarted = false;
+    NotificationNavigationService.isCallStarted = false;
 
     super.dispose();
   }
@@ -487,7 +487,7 @@ class _CallPageState extends State<CallPage> {
 
   void _onCallEnd(BuildContext context) {
     Navigator.pop(context);
-    NotificationNavigationRepo.isCallStarted = false;
+    NotificationNavigationService.isCallStarted = false;
   }
 
   void _onToggleMute() {

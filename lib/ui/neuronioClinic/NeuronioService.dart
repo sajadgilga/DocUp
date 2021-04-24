@@ -7,19 +7,19 @@ import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/DocupHeader.dart';
-import 'package:Neuronio/ui/widgets/SquareBoxNoronioClinic.dart';
+import 'package:Neuronio/ui/widgets/SquareBoxNeuronioClinic.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NoronioServicePage extends StatefulWidget {
+class NeuronioServicePage extends StatefulWidget {
   final Function(String, dynamic) onPush;
   final Function(int) selectPage;
   final Function(String, dynamic) globalOnPush;
 
-  NoronioServicePage(
+  NeuronioServicePage(
       {Key key,
       @required this.onPush,
       @required this.selectPage,
@@ -27,29 +27,29 @@ class NoronioServicePage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _NoronioServicePageState createState() => _NoronioServicePageState();
+  _NeuronioServicePageState createState() => _NeuronioServicePageState();
 }
 
-class _NoronioServicePageState extends State<NoronioServicePage> {
-  List<NoronioServiceItem> convertToNoronioServiceList(
+class _NeuronioServicePageState extends State<NeuronioServicePage> {
+  List<NeuronioServiceItem> convertToNeuronioServiceList(
       List<MedicalTestItem> tests) {
-    List<NoronioServiceItem> services = [];
+    List<NeuronioServiceItem> services = [];
 
-    NoronioServiceItem doctorList = NoronioServiceItem(
+    NeuronioServiceItem doctorList = NeuronioServiceItem(
         "مشاهده متخصصان",
-        Assets.noronioServiceDoctorList,
+        Assets.neuronioServiceDoctorList,
         null,
-        NoronioClinicServiceType.DoctorsList, () {
+        NeuronioClinicServiceType.DoctorsList, () {
       widget.onPush(NavigatorRoutes.partnerSearchView, NeuronioClinic.ClinicId);
     }, true);
     services.insert(0, doctorList);
 
     tests.forEach((element) {
-      NoronioServiceItem cognitiveTest = NoronioServiceItem(
+      NeuronioServiceItem cognitiveTest = NeuronioServiceItem(
           element.name,
-          Assets.noronioServiceBrainTest,
+          Assets.neuronioServiceBrainTest,
           element.imageURL,
-          NoronioClinicServiceType.MultipleChoiceTest, () {
+          NeuronioClinicServiceType.MultipleChoiceTest, () {
         if (element.isGoogleDocTest) {
           launch(element.testLink);
         } else if (element.isInAppTest) {
@@ -69,8 +69,8 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
       services.add(cognitiveTest);
     });
 
-    // NoronioServiceItem cognitiveGames = NoronioServiceItem("بازی های شناختی",
-    //     Assets.noronioServiceGame, null, NoronioClinicServiceType.Game, () {
+    // NeuronioServiceItem cognitiveGames = NeuronioServiceItem("بازی های شناختی",
+    //     Assets.neuronioServiceGame, null, NeuronioClinicServiceType.Game, () {
     //   // TODO
     //   toast(context, "در آینده آماده می شود");
     // }, false);
@@ -84,7 +84,7 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
     // if(_state.entity.isPatient){
     BlocProvider.of<MedicalTestListBloc>(context).add(GetClinicMedicalTest());
     // }else if(_state.entity.isDoctor){
-    //   if(_state.entity.doctor.clinic !=null && _state.entity.doctor.clinic.id == widget.noronioClinicId){
+    //   if(_state.entity.doctor.clinic !=null && _state.entity.doctor.clinic.id == widget.neuronioClinicId){
     //     _medicalTestListBloc.add(GetClinicMedicalTest());
     //   }else{
     //     _medicalTestListBloc.add(EmptyMedicalTestList());
@@ -126,18 +126,18 @@ class _NoronioServicePageState extends State<NoronioServicePage> {
           title: "اولین کلینیک مجازی در حوزه شناختی",
         ),
         ALittleVerticalSpace(),
-        _services(convertToNoronioServiceList(testsList))
+        _services(convertToNeuronioServiceList(testsList))
       ],
     ));
   }
 
-  Widget _services(List<NoronioServiceItem> serviceList) {
+  Widget _services(List<NeuronioServiceItem> serviceList) {
     List<Widget> serviceRows = [];
     for (int i = 0; i < serviceList.length; i += 2) {
-      Widget ch1 = SquareBoxNoronioClinicService(serviceList[i]);
+      Widget ch1 = SquareBoxNeuronioClinicService(serviceList[i]);
       Widget ch2 = (i == serviceList.length - 1)
-          ? SquareBoxNoronioClinicService(NoronioServiceItem.empty())
-          : SquareBoxNoronioClinicService(serviceList[i + 1]);
+          ? SquareBoxNeuronioClinicService(NeuronioServiceItem.empty())
+          : SquareBoxNeuronioClinicService(serviceList[i + 1]);
 
       serviceRows.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

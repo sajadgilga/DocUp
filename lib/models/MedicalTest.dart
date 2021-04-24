@@ -76,7 +76,7 @@ enum TestType { GoogleDoc, InApplication }
 
 class MedicalTestItem {
   /// this model is for loading test list from database and showing theme in
-  /// noronioClinicService or panel after sending to a patient
+  /// NeuronioClinicService or panel after sending to a patient
   int testId;
   TestType testType;
   String name;

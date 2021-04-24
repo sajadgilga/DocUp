@@ -6,7 +6,7 @@ import 'package:Neuronio/ui/home/SearchBox.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

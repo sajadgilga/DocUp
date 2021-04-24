@@ -26,7 +26,7 @@ import 'package:Neuronio/ui/account/patientProfile/PatientProfilePage.dart';
 import 'package:Neuronio/ui/doctorDetail/DoctorDetailPage.dart';
 import 'package:Neuronio/ui/home/notification/NotificationPage.dart';
 import 'package:Neuronio/ui/medicalTest/MedicalTestPage.dart';
-import 'package:Neuronio/ui/noronioClinic/NoronioService.dart';
+import 'package:Neuronio/ui/neuronioClinic/NeuronioService.dart';
 import 'package:Neuronio/ui/panel/Panel.dart';
 import 'package:Neuronio/ui/panel/healthDocument/infoPage/InfoPage.dart';
 import 'package:Neuronio/ui/panel/healthFile/calander/DateCalander.dart';
@@ -279,7 +279,7 @@ class NavigatorViewState extends State<NavigatorView> {
         };
       case 2:
         return {
-          NavigatorRoutes.root: (context) => _noronioClinic(context),
+          NavigatorRoutes.root: (context) => _neuronioClinic(context),
           NavigatorRoutes.partnerSearchView: (context) =>
               _partnerSearchPage(context, detail: param1),
           NavigatorRoutes.textPlanPage: (context) =>
@@ -438,7 +438,7 @@ class NavigatorViewState extends State<NavigatorView> {
     }
   }
 
-  Widget _noronioClinic(context) {
+  Widget _neuronioClinic(context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<SearchBloc>.value(
@@ -446,7 +446,7 @@ class NavigatorViewState extends State<NavigatorView> {
         ),
         BlocProvider<MedicalTestListBloc>.value(value: _medicalTestListBloc)
       ],
-      child: NoronioServicePage(
+      child: NeuronioServicePage(
         onPush: (direction, entity) {
           push(context, direction, param1: entity);
         },

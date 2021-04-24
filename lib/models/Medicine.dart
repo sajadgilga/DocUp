@@ -1,4 +1,4 @@
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 
 class Medicine {
   int id;

@@ -7,7 +7,7 @@ import 'package:Neuronio/models/MedicalTest.dart';
 import 'package:Neuronio/models/NoronioService.dart';
 import 'package:Neuronio/models/PatientEntity.dart';
 import 'package:Neuronio/ui/mainPage/NavigatorView.dart';
-import 'package:Neuronio/ui/widgets/SquareBoxNoronioClinic.dart';
+import 'package:Neuronio/ui/widgets/SquareBoxNeuronioClinic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,12 +61,12 @@ class _PanelTestListState extends State<PanelTestList> {
         ),
       );
 
-  List<NoronioServiceItem> getConvertTestIconToNoronioSquareBox(
+  List<NeuronioServiceItem> getConvertTestIconToNeuronioSquareBox(
       List<PanelMedicalTestItem> tests, bool editableFlag, bool sendableFlag) {
-    List<NoronioServiceItem> res = [];
+    List<NeuronioServiceItem> res = [];
     tests.forEach((element) {
-      res.add(NoronioServiceItem(element.name, Assets.noronioServiceBrainTest,
-          null, NoronioClinicServiceType.MultipleChoiceTest, () {
+      res.add(NeuronioServiceItem(element.name, Assets.neuronioServiceBrainTest,
+          null, NeuronioClinicServiceType.MultipleChoiceTest, () {
         MedicalTestPageData medicalTestPageData = MedicalTestPageData(
             MedicalPageDataType.Panel,
             editableFlag: editableFlag,
@@ -83,19 +83,19 @@ class _PanelTestListState extends State<PanelTestList> {
     return res;
   }
 
-  List<Widget> _getTestRows(List<NoronioServiceItem> serviceItems) {
+  List<Widget> _getTestRows(List<NeuronioServiceItem> serviceItems) {
     List<Widget> serviceRows = [];
     for (int i = 0; i < serviceItems.length; i += 2) {
-      Widget ch1 = SquareBoxNoronioClinicService(
+      Widget ch1 = SquareBoxNeuronioClinicService(
         serviceItems[i],
         boxSize: 130,
       );
       Widget ch2 = (i == serviceItems.length - 1)
-          ? SquareBoxNoronioClinicService(
-              NoronioServiceItem.empty(),
+          ? SquareBoxNeuronioClinicService(
+              NeuronioServiceItem.empty(),
               boxSize: 130,
             )
-          : SquareBoxNoronioClinicService(
+          : SquareBoxNeuronioClinicService(
               serviceItems[i + 1],
               boxSize: 130,
             );
@@ -126,7 +126,7 @@ class _PanelTestListState extends State<PanelTestList> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Column(
-                children: _getTestRows(getConvertTestIconToNoronioSquareBox(
+                children: _getTestRows(getConvertTestIconToNeuronioSquareBox(
                     widget.waitingTest.reversed.toList(), true, false)),
               ),
             )
@@ -154,7 +154,7 @@ class _PanelTestListState extends State<PanelTestList> {
             SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Column(
-                  children: _getTestRows(getConvertTestIconToNoronioSquareBox(
+                  children: _getTestRows(getConvertTestIconToNeuronioSquareBox(
                       widget.previousTest.reversed.toList(), false, false)),
                 ))
           ],

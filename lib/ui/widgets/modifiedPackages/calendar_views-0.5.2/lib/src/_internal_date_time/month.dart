@@ -1,4 +1,4 @@
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 import 'package:meta/meta.dart';
 
 import 'date.dart';

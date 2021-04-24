@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'AutoText.dart';
 import 'DocupHeader.dart';
 
-class SquareBoxNoronioClinicService extends StatelessWidget {
-  final NoronioServiceItem noronioService;
+class SquareBoxNeuronioClinicService extends StatelessWidget {
+  final NeuronioServiceItem neuronioService;
   double boxSize;
   double bFontSize;
   double lFontSize;
@@ -20,7 +20,7 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
   bool showDoneIcon;
   Widget doneIcon;
 
-  SquareBoxNoronioClinicService(this.noronioService,
+  SquareBoxNeuronioClinicService(this.neuronioService,
       {Key key,
       this.boxSize,
       this.defaultBgColor,
@@ -35,13 +35,13 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color bgColor;
-    if (noronioService.isEmpty) {
+    if (neuronioService.isEmpty) {
       bgColor = Color.fromARGB(0, 0, 0, 0);
     } else {
       bgColor = defaultBgColor ?? Color.fromRGBO(255, 255, 255, .8);
     }
     double opacity;
-    if (noronioService.enable) {
+    if (neuronioService.enable) {
       opacity = 1.0;
     } else {
       opacity = 0.5;
@@ -69,7 +69,7 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
                         color: bgColor),
                     width: boxSize,
                     height: boxSize,
-                    child: noronioService.iconAddress == null
+                    child: neuronioService.iconAddress == null
                         ? SizedBox()
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -100,7 +100,7 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
                                   child: imageHandler()),
                               showServiceTitle
                                   ? DocUpSubHeader(
-                                      title: noronioService.title,
+                                      title: neuronioService.title,
                                       textAlign: TextAlign.center,
                                       fontSize: this.bFontSize,
                                     )
@@ -116,11 +116,11 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
                       : SizedBox()
                 ],
               ),
-              noronioService.responseNormalTime != null
+              neuronioService.responseNormalTime != null
                   ? Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: DocUpSubHeader(
-                        title: noronioService.responseNormalTime,
+                        title: neuronioService.responseNormalTime,
                         textAlign: TextAlign.center,
                         fontSize: 12,
                       ),
@@ -130,26 +130,26 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
           ),
         ),
       ),
-      onTap: noronioService.onTap != null ? noronioService.onTap : () {},
+      onTap: neuronioService.onTap != null ? neuronioService.onTap : () {},
     );
   }
 
   Widget imageHandler() {
     Widget defaultImage() {
       return Image.asset(
-        Assets.noronioServiceBrainTest,
+        Assets.neuronioServiceBrainTest,
         width: boxSize * (40 / 100),
         height: boxSize * (40 / 100),
       );
     }
 
-    if (noronioService != null &&
-        noronioService.iconURL != null &&
-        noronioService.iconURL != "") {
+    if (neuronioService != null &&
+        neuronioService.iconURL != null &&
+        neuronioService.iconURL != "") {
       Widget image;
       try {
         image = Image.network(
-          noronioService.iconURL,
+          neuronioService.iconURL,
           width: boxSize * (40 / 100),
           height: boxSize * (40 / 100),
           errorBuilder: (context, error, stackTrace) {
@@ -161,13 +161,13 @@ class SquareBoxNoronioClinicService extends StatelessWidget {
       }
       return image;
     }
-    if (noronioService != null &&
-        noronioService.iconAddress != null &&
-        noronioService.iconAddress != "") {
+    if (neuronioService != null &&
+        neuronioService.iconAddress != null &&
+        neuronioService.iconAddress != "") {
       Widget image;
       try {
         image = Image.asset(
-          noronioService.iconAddress,
+          neuronioService.iconAddress,
           width: boxSize * (40 / 100),
           height: boxSize * (40 / 100),
           errorBuilder: (context, error, stackTrace) {

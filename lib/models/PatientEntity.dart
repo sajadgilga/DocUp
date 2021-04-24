@@ -1,5 +1,5 @@
 import 'package:Neuronio/utils/Utils.dart';
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 
 import 'DoctorPlan.dart';
 import 'Panel.dart';

@@ -14,21 +14,21 @@ import 'package:Neuronio/repository/TextPlanRepository.dart';
 import 'package:Neuronio/ui/panel/partnerContact/videoOrVoiceCallPage/call.dart';
 import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/Utils.dart';
-import 'package:Neuronio/utils/entityUpdater.dart';
+import 'package:Neuronio/utils/EntityUpdater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'NavigatorView.dart';
+import '../ui/mainPage/NavigatorView.dart';
 
-class NotificationNavigationRepo {
+class NotificationNavigationService {
   static bool isCallStarted = false;
   static int lastVisitIdPage;
   static int lastTestIdPage;
   final Function(String, dynamic, dynamic, dynamic, Function) onPush;
 
-  NotificationNavigationRepo(this.onPush);
+  NotificationNavigationService(this.onPush);
 
   void navigate(BuildContext context, NewestNotif newestNotifs) {
     EntityAndPanelUpdater.processOnEntityLoad((entity) {
@@ -224,7 +224,7 @@ class NotificationNavigationRepo {
   Future<void> navigateToTestPage(
       NewestMedicalTestNotif test, BuildContext context) async {
     /// TODO maybe it is better to delete true
-    if (NotificationNavigationRepo.lastTestIdPage != test.testId || true) {
+    if (NotificationNavigationService.lastTestIdPage != test.testId || true) {
       PanelMedicalTestItem medicalTestItem = PanelMedicalTestItem(
         id: test.panelCognitiveTestId,
         testId: test.testId,
@@ -262,7 +262,7 @@ class NotificationNavigationRepo {
         });
         onPush(NavigatorRoutes.cognitiveTest, medicalTestPageData, null, null,
             null);
-        NotificationNavigationRepo.lastTestIdPage = test.testId;
+        NotificationNavigationService.lastTestIdPage = test.testId;
       }
     }
   }

@@ -21,7 +21,7 @@ import 'package:Neuronio/ui/widgets/ChatBubble.dart';
 import 'package:Neuronio/utils/CrossPlatformFilePicker.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/WebsocketHelper.dart';
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

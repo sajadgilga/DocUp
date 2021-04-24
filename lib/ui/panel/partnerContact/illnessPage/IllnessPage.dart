@@ -46,7 +46,7 @@ class _IllnessPageState extends State<IllnessPage> {
   // List<VisitTime> times;
   SingleMedicalTestBloc _singleTestBloc = SingleMedicalTestBloc();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  bool noronioClinicTestsAvailable = true;
+  bool neuronioClinicTestsAvailable = true;
 
   @override
   void initState() {
@@ -66,10 +66,10 @@ class _IllnessPageState extends State<IllnessPage> {
     if (_state.entity.isDoctor) {
       if (_state.entity.doctor.clinic == null ||
           _state.entity.doctor.clinic.id != NeuronioClinic.ClinicId) {
-        noronioClinicTestsAvailable = false;
+        neuronioClinicTestsAvailable = false;
       }
     }
-    if (noronioClinicTestsAvailable) {
+    if (neuronioClinicTestsAvailable) {
       BlocProvider.of<MedicalTestListBloc>(context)
           .add(GetPanelMedicalTest(panelId: this.widget.entity.panel.id));
     } else {
@@ -162,8 +162,8 @@ class _IllnessPageState extends State<IllnessPage> {
   }
 
   _addTestDialog(context) {
-    SendNoronioTestDialog dialog =
-        SendNoronioTestDialog(widget.entity.patient, context, _scaffoldKey);
+    SendNeuronioTestDialog dialog =
+        SendNeuronioTestDialog(widget.entity.patient, context, _scaffoldKey);
     dialog.showSendTestDialog(() {
       BlocProvider.of<MedicalTestListBloc>(context)
           .add(GetPanelMedicalTest(panelId: this.widget.entity.panel.id));
@@ -175,7 +175,7 @@ class _IllnessPageState extends State<IllnessPage> {
     return Scaffold(
       key: _scaffoldKey,
       floatingActionButton: Visibility(
-        visible: widget.entity.isDoctor && noronioClinicTestsAvailable,
+        visible: widget.entity.isDoctor && neuronioClinicTestsAvailable,
         child: Row(
           children: <Widget>[
             Padding(

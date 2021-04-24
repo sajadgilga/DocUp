@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 
 import 'date_format.dart';
 import 'datetime_util.dart';

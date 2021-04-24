@@ -14,7 +14,7 @@ import 'package:Neuronio/ui/widgets/DoctorSummaryWidget.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/ui/widgets/VisitDateTimePicker.dart';
 import 'package:Neuronio/utils/Utils.dart';
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

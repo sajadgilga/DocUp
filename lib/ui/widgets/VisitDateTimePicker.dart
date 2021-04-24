@@ -8,7 +8,7 @@ import 'package:Neuronio/ui/widgets/DailyTimeTable.dart';
 import 'package:Neuronio/ui/widgets/modifiedPackages/FlutterDateTimePickerCustom/flutter_datetime_picker.dart';
 import 'package:Neuronio/ui/widgets/modifiedPackages/FlutterDateTimePickerCustom/src/datetime_picker_theme.dart';
 import 'package:Neuronio/ui/widgets/modifiedPackages/FlutterDateTimePickerCustom/src/i18n_model.dart';
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

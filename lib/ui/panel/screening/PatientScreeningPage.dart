@@ -18,9 +18,9 @@ import 'package:Neuronio/ui/widgets/ActionButton.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/DocupHeader.dart';
 import 'package:Neuronio/ui/widgets/PageTopLeftIcon.dart';
-import 'package:Neuronio/ui/widgets/SquareBoxNoronioClinic.dart';
+import 'package:Neuronio/ui/widgets/SquareBoxNeuronioClinic.dart';
 import 'package:Neuronio/utils/Utils.dart';
-import 'package:Neuronio/utils/entityUpdater.dart';
+import 'package:Neuronio/utils/EntityUpdater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timelines/timelines.dart';
@@ -314,16 +314,16 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
 
   Widget onlineTestTimeLineItem(
       PatientScreeningResponse patientScreeningResponse) {
-    List<NoronioServiceItem> convertToNoronioServiceList(
+    List<NeuronioServiceItem> convertToNeuronioServiceList(
         List<MedicalTestItem> tests) {
-      List<NoronioServiceItem> services = [];
+      List<NeuronioServiceItem> services = [];
 
       tests.forEach((element) {
-        NoronioServiceItem cognitiveTest = NoronioServiceItem(
+        NeuronioServiceItem cognitiveTest = NeuronioServiceItem(
             element.name,
-            Assets.noronioServiceBrainTest,
+            Assets.neuronioServiceBrainTest,
             element.imageURL,
-            NoronioClinicServiceType.MultipleChoiceTest, () {
+            NeuronioClinicServiceType.MultipleChoiceTest, () {
           if (BlocProvider.of<EntityBloc>(context).state.entity.isPatient) {
             if (element.isGoogleDocTest) {
               ScreeningRepository repo = ScreeningRepository();
@@ -357,10 +357,10 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
       return services;
     }
 
-    Widget _services(List<NoronioServiceItem> serviceList) {
+    Widget _services(List<NeuronioServiceItem> serviceList) {
       List<Widget> serviceRows = [];
       for (int i = 0; i < serviceList.length; i += 2) {
-        Widget ch1 = SquareBoxNoronioClinicService(
+        Widget ch1 = SquareBoxNeuronioClinicService(
           serviceList[i],
           showDoneIcon: !(serviceList[i].enable ?? false),
           boxSize: 110,
@@ -370,14 +370,14 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
           lFontSize: 7,
         );
         Widget ch2 = (i == serviceList.length - 1)
-            ? SquareBoxNoronioClinicService(
-                NoronioServiceItem.empty(),
+            ? SquareBoxNeuronioClinicService(
+                NeuronioServiceItem.empty(),
                 boxSize: 110,
                 bFontSize: 9,
                 showLocation: false,
                 lFontSize: 7,
               )
-            : SquareBoxNoronioClinicService(
+            : SquareBoxNeuronioClinicService(
                 serviceList[i + 1],
                 showDoneIcon: !(serviceList[i + 1].enable ?? false),
                 boxSize: 110,
@@ -437,7 +437,7 @@ class _PatientScreeningPageState extends State<PatientScreeningPage> {
                     ),
                   ],
                 )
-              : _services(convertToNoronioServiceList(
+              : _services(convertToNeuronioServiceList(
                   patientScreeningResponse.statusSteps.medicalTestItems))
         ],
       ),

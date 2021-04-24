@@ -7,14 +7,14 @@ import 'package:Neuronio/models/NewestNotificationResponse.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/repository/DoctorRepository.dart';
 import 'package:Neuronio/repository/PatientRepository.dart';
-import 'package:Neuronio/ui/mainPage/NotifNavigationRepo.dart';
+import 'package:Neuronio/services/NotificationNavigationService.dart';
 import 'package:Neuronio/ui/start/RoleType.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/APICallLoading.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/utils/Utils.dart';
 import 'package:Neuronio/utils/customPainter/DrawerPainter.dart';
-import 'package:Neuronio/utils/dateTimeService.dart';
+import 'package:Neuronio/utils/DateTimeService.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -200,8 +200,8 @@ class NotificationItem extends StatelessWidget {
         .add(AddNotifToSeen(notif.notifId));
 
     /// update notif counts in home page
-    NotificationNavigationRepo notifNavRepo =
-        NotificationNavigationRepo(onPush);
+    NotificationNavigationService notifNavRepo =
+        NotificationNavigationService(onPush);
     notifNavRepo.navigate(context, notif);
   }
 

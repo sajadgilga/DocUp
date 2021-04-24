@@ -173,9 +173,11 @@ abstract class NewestNotif {
       return NewestVisitNotif.fromJson(
           notifId, title, description, time, date, type, isRead, payload);
     } else if (type == 9) {
+      /// new patient registration
       return NewestPatientRegister.fromJson(
           notifId, title, description, time, date, type, isRead, payload);
     } else if (type == 10) {
+      /// new chat message
       return NewestChatMessage.fromJson(
           notifId, title, description, time, date, type, isRead, payload);
     }
