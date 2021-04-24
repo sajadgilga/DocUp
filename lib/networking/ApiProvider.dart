@@ -155,7 +155,7 @@ class ApiProvider {
       case 400:
       case 404:
         var responseJson = decodeResponse(utf8Support, response);
-        print("API RESPONSE -->>>> code:${response.statusCode} - ${body}");
+        print("API RESPONSE -->>>> code:${response.statusCode} - $body");
 
         /// some changes happened in backend and error_code became code and detail became msg
         throw ApiException(

@@ -3,12 +3,9 @@ import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
 import 'package:Neuronio/ui/visit/calendar/persian_datetime_picker2.dart';
-import 'package:Neuronio/ui/widgets/AutoText.dart';
-import 'package:Neuronio/ui/widgets/medicines/ReminderList.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DateCalender extends StatefulWidget {
   final Entity entity;
@@ -39,29 +36,29 @@ class _DateCalenderState extends State<DateCalender> {
     super.dispose();
   }
 
-  Widget _reminderList() {
-    return BlocBuilder<MedicineBloc, MedicineState>(
-        bloc: _medicineBloc,
-        builder: (context, state) {
-          return ReminderList(
-            medicines: state.medicines,
-          );
-        });
-  }
+  // Widget _reminderList() {
+  //   return BlocBuilder<MedicineBloc, MedicineState>(
+  //       bloc: _medicineBloc,
+  //       builder: (context, state) {
+  //         return ReminderList(
+  //           medicines: state.medicines,
+  //         );
+  //       });
+  // }
 
-  Widget _today() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        AutoText(
-          'امروز',
-          textAlign: TextAlign.right,
-          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
-        ),
-        _reminderList()
-      ],
-    );
-  }
+  // Widget _today() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.end,
+  //     children: <Widget>[
+  //       AutoText(
+  //         'امروز',
+  //         textAlign: TextAlign.right,
+  //         style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+  //       ),
+  //       _reminderList()
+  //     ],
+  //   );
+  // }
 
   // Widget _nextWeek() {
   //   return Column(

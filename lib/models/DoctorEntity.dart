@@ -64,8 +64,7 @@ class DoctorEntity extends UserEntity {
       } else {
         plan = DoctorPlan();
       }
-    } catch (_) {
-    }
+    } catch (_) {}
   }
 
   Map<String, dynamic> toJson() {
@@ -121,7 +120,6 @@ class ClinicTrafficTextPlan {
     medicalTestCount = intPossible(json['medical_test_count']);
     price = intPossible(json['price']);
   }
-
 }
 
 class ClinicEntity {

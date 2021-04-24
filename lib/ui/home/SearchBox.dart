@@ -23,18 +23,18 @@ class SearchBox extends StatefulWidget {
   final bool filterPopup;
   final String hintText;
   final TextEditingController controller;
-  int selectedIndex;
+  final int initialSelectedIndex;
 
   SearchBox(
       {this.onPush,
-      @required this.isPatient = true,
+      this.isPatient = true,
       this.onTap,
       this.onSubmit,
       this.onChange,
       this.controller,
       this.popMenuRect,
       this.popUpMenuItems,
-      this.selectedIndex = 0,
+      this.initialSelectedIndex = 0,
       this.onMenuClick,
       this.hintText,
       this.filterPopup = true,
@@ -42,13 +42,16 @@ class SearchBox extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _SearchBoxState();
+    return _SearchBoxState(initialSelectedIndex);
   }
 }
 
 class _SearchBoxState extends State<SearchBox> {
   String searchTag;
   bool _tooltip = false;
+  int selectedIndex;
+
+  _SearchBoxState(this.selectedIndex);
 
   @override
   void dispose() {
@@ -104,7 +107,6 @@ class _SearchBoxState extends State<SearchBox> {
         ? _simpleTooltip()
         : GestureDetector(onTap: widget.onTap, child: _simpleTooltip());
   }
-
 
   Widget _simpleTooltip() {
     return SimpleTooltip(
@@ -228,8 +230,8 @@ class _SearchBoxState extends State<SearchBox> {
     if (widget.popUpMenuItems != null) {
       for (int i = 0; i < widget.popUpMenuItems.length; i++) {
         items.add(MenuItem(
-            child: getText(widget.popUpMenuItems[i],
-                selected: i == widget.selectedIndex),
+            child:
+                getText(widget.popUpMenuItems[i], selected: i == selectedIndex),
             title: widget.popUpMenuItems[i]));
       }
     }
@@ -240,11 +242,11 @@ class _SearchBoxState extends State<SearchBox> {
         maxColumn: 1,
         backgroundColor: Colors.white,
         onClickMenu: (c) {
-          widget.selectedIndex = -1;
+          selectedIndex = -1;
           for (int i = 0; i < widget.popUpMenuItems.length; i++) {
             if (c.menuTitle == widget.popUpMenuItems[i]) {
               setState(() {
-                widget.selectedIndex = i;
+                selectedIndex = i;
               });
               break;
             }

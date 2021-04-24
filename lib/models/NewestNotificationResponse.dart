@@ -1,6 +1,5 @@
 import 'package:Neuronio/models/VisitResponseEntity.dart';
 import 'package:Neuronio/utils/Utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'UserEntity.dart';
 
@@ -107,23 +106,23 @@ class NewestNotificationResponse {
     return data;
   }
 
-  // static Future<NewestNotificationResponse> removeSeenNotifications(
-  //     NewestNotificationResponse notifs) async {
-  //   /// TODO for other kind of notifications later
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   List<String> seenNotif =
-  //       prefs.getStringList("seenNotificationIds") ?? <String>[];
-  //   List<NewestVisitNotif> filteredNotifs = [];
-  //   notifs.newestNotifs.forEach((element) {
-  //     if (!seenNotif.contains(element.notifId)) {
-  //       filteredNotifs.add(element);
-  //     }
-  //   });
-  //   notifs.newestNotifs = filteredNotifs;
-  //   return notifs;
-  // }
+// static Future<NewestNotificationResponse> removeSeenNotifications(
+//     NewestNotificationResponse notifs) async {
+//   /// TODO for other kind of notifications later
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   List<String> seenNotif =
+//       prefs.getStringList("seenNotificationIds") ?? <String>[];
+//   List<NewestVisitNotif> filteredNotifs = [];
+//   notifs.newestNotifs.forEach((element) {
+//     if (!seenNotif.contains(element.notifId)) {
+//       filteredNotifs.add(element);
+//     }
+//   });
+//   notifs.newestNotifs = filteredNotifs;
+//   return notifs;
+// }
 
-  // static void addNotifToSeen(NewestVisitNotif visit) async {}
+// static void addNotifToSeen(NewestVisitNotif visit) async {}
 }
 
 abstract class NewestNotif {
@@ -457,7 +456,6 @@ class NewestMedicalTestNotif extends NewestNotif {
 }
 
 class NewestVideoVoiceCallNotif extends NewestNotif {
-
   User user;
   String channelName;
   VisitEntity visit;

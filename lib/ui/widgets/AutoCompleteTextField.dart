@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import 'AutoText.dart';
+
 //ignore: must_be_immutable
 class AutoCompleteTextField extends StatelessWidget {
   final String hintText;

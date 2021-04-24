@@ -40,13 +40,13 @@ class FileEntity {
   int parent;
   String title;
   String description;
-  DateTime created_date;
   String fileURL;
   CustomFile customFile;
   String filePath;
   String base64;
   String extension;
   FileEntityUser user;
+  DateTime createdDate;
 
   FileEntity(
       {this.customFile,
@@ -74,7 +74,7 @@ class FileEntity {
       description = utf8IfPossible(json['description']);
     if (json.containsKey('file')) fileURL = json['file'];
     if (json.containsKey('created_at'))
-      created_date = (json['created_at'] != null
+      createdDate = (json['created_at'] != null
           ? DateTimeService.getDateTimeFromStandardString(json['created_at'])
           : null);
     if (json.containsKey('parent')) parent = json['parent'];

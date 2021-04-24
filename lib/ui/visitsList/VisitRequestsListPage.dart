@@ -1,6 +1,4 @@
 import 'package:Neuronio/blocs/SearchBloc.dart';
-import 'package:Neuronio/constants/assets.dart';
-import 'package:Neuronio/constants/colors.dart';
 import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/models/VisitResponseEntity.dart';
@@ -9,7 +7,6 @@ import 'package:Neuronio/ui/visitsList/visitSearchResult/VisitResult.dart';
 import 'package:Neuronio/ui/widgets/APICallError.dart';
 import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/Waiting.dart';
-import 'package:Neuronio/utils/CrossPlatformDeviceDetection.dart';
 import 'package:Neuronio/utils/dateTimeService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +20,8 @@ class VisitRequestsPage extends StatelessWidget {
   VisitRequestsPage({@required this.onPush});
 
   void _search(context) {
-    BlocProvider.of<SearchBloc>(context).add(SearchVisit(text: _controller.text, acceptStatus: 0));
+    BlocProvider.of<SearchBloc>(context)
+        .add(SearchVisit(text: _controller.text, acceptStatus: 0));
 
 //    FocusScope.of(context).unfocus();
 //     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -31,7 +29,8 @@ class VisitRequestsPage extends StatelessWidget {
 
   void _initialSearch(context) {
     BlocProvider.of<SearchBloc>(context).add(SearchLoadingEvent());
-    BlocProvider.of<SearchBloc>(context).add(SearchVisit(text: _controller.text, acceptStatus: 0));
+    BlocProvider.of<SearchBloc>(context)
+        .add(SearchVisit(text: _controller.text, acceptStatus: 0));
   }
 
   void dispose() {
@@ -39,35 +38,35 @@ class VisitRequestsPage extends StatelessWidget {
     _controller?.dispose();
   }
 
-  Widget _docupIcon() => Container(
-        padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
-        child: Image.asset(Assets.docupIcon, width: 50),
-//        child: CrossPlatformSvg.asset(Assets.docupIcon, width: 50),
-        alignment: Alignment.centerRight,
-      );
+//   Widget _docupIcon() => Container(
+//         padding: EdgeInsets.only(top: 20, right: 40, bottom: 20),
+//         child: Image.asset(Assets.docupIcon, width: 50),
+// //        child: CrossPlatformSvg.asset(Assets.docupIcon, width: 50),
+//         alignment: Alignment.centerRight,
+//       );
 
-  Widget _backArrow(context) {
-    return (CrossPlatformDeviceDetection.isIOS
-        ? GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-                margin: EdgeInsets.only(left: 40),
-                child: Icon(
-                  Icons.keyboard_backspace,
-                  color: IColors.themeColor,
-                  size: 30,
-                )))
-        : Container());
-  }
+  // Widget _backArrow(context) {
+  //   return (CrossPlatformDeviceDetection.isIOS
+  //       ? GestureDetector(
+  //           onTap: () {
+  //             Navigator.pop(context);
+  //           },
+  //           child: Container(
+  //               margin: EdgeInsets.only(left: 40),
+  //               child: Icon(
+  //                 Icons.keyboard_backspace,
+  //                 color: IColors.themeColor,
+  //                 size: 30,
+  //               )))
+  //       : Container());
+  // }
 
-  Widget _header(context) => Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[_backArrow(context), _docupIcon()],
-        ),
-      );
+  // Widget _header(context) => Container(
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: <Widget>[_backArrow(context), _docupIcon()],
+  //       ),
+  //     );
 
   Widget _searchListTitle() {
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -231,7 +230,6 @@ class VisitRequestsPage extends StatelessWidget {
                     MediaQuery.of(context).size.height * (30 / 100),
                     0,
                     0),
-                selectedIndex: 0,
                 onMenuClick: null,
                 hintText: "نام بیمار",
                 filterPopup: false,

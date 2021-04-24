@@ -339,9 +339,9 @@ class TabsState extends State<Tabs> {
     return isActive ? Colors.white : Colors.grey;
   }
 
-  void _switchTab(PanelTabState state, context) {
-    BlocProvider.of<TabSwitchBloc>(context).add(state);
-  }
+  // void _switchTab(PanelTabState state, context) {
+  //   BlocProvider.of<TabSwitchBloc>(context).add(state);
+  // }
 
 //   Widget _button({PanelTabState tabState, state, text, context}) {
 //     return RaisedButton(

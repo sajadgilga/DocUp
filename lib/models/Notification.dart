@@ -4,8 +4,8 @@ class Notification {
   String description;
   String time;
   User owner;
-  List<Guest> invited_patients;
-  List<Guest> invited_doctors;
+  List<Guest> invitedPatients;
+  List<Guest> invitedDoctors;
 
   Notification.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -13,12 +13,12 @@ class Notification {
     description = json['description'];
     time = json['time'];
     owner = User.fromJson(json['owner']);
-    invited_doctors = [];
+    invitedDoctors = [];
     json['invited_doctors']
-        .forEach((doctor) => invited_doctors.add(Guest.fromJson(doctor)));
-    invited_patients = [];
+        .forEach((doctor) => invitedDoctors.add(Guest.fromJson(doctor)));
+    invitedPatients = [];
     json['invited_patients']
-        .forEach((patient) => invited_patients.add(Guest.fromJson(patient)));
+        .forEach((patient) => invitedPatients.add(Guest.fromJson(patient)));
   }
 }
 

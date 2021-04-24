@@ -20,8 +20,8 @@ class DatePicker2 extends StatefulWidget {
       this.startSelectedDate = false,
       this.isSecondDate = false,
       this.endSelectedDate,
-      this.onChangePicker = null,
-      this.onSelectDate = null,
+      this.onChangePicker,
+      this.onSelectDate,
       this.onConfirmedDate});
 
   @override

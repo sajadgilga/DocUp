@@ -189,64 +189,64 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
     );
   }
 
-  Widget _doctorDurationPlanInfo() {
-    List<Widget> res = [];
-    widget.doctorEntity.plan.virtualVisitDurationPlan?.forEach((values) {
-      res.add(Padding(
-        padding: const EdgeInsets.only(right: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            AutoText(
-              ((values + 1) * DoctorPlan.hourMinutePart).toString() +
-                  " " +
-                  "دقیقه ای",
-              style: TextStyle(fontSize: 13),
-              textAlign: TextAlign.right,
-            ),
-          ],
-        ),
-      ));
-    });
-    if ((widget.doctorEntity?.plan?.virtualVisitDurationPlan ?? []).length ==
-        0) {
-      res.add(Padding(
-        padding: const EdgeInsets.only(right: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            AutoText(
-              "زمانی مورد تایید پزشک وجود ندارد!",
-              style: TextStyle(fontSize: 13),
-              textAlign: TextAlign.right,
-            ),
-          ],
-        ),
-      ));
-    }
-    return Container(
-      margin: EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    AutoText(
-                      "نوع زمان مورد تایید پزشک",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      textAlign: TextAlign.right,
-                    ),
-                  ],
-                ),
-              ),
-            ] +
-            res,
-      ),
-    );
-  }
+  // Widget _doctorDurationPlanInfo() {
+  //   List<Widget> res = [];
+  //   widget.doctorEntity.plan.virtualVisitDurationPlan?.forEach((values) {
+  //     res.add(Padding(
+  //       padding: const EdgeInsets.only(right: 8.0),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         children: <Widget>[
+  //           AutoText(
+  //             ((values + 1) * DoctorPlan.hourMinutePart).toString() +
+  //                 " " +
+  //                 "دقیقه ای",
+  //             style: TextStyle(fontSize: 13),
+  //             textAlign: TextAlign.right,
+  //           ),
+  //         ],
+  //       ),
+  //     ));
+  //   });
+  //   if ((widget.doctorEntity?.plan?.virtualVisitDurationPlan ?? []).length ==
+  //       0) {
+  //     res.add(Padding(
+  //       padding: const EdgeInsets.only(right: 8.0),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         children: <Widget>[
+  //           AutoText(
+  //             "زمانی مورد تایید پزشک وجود ندارد!",
+  //             style: TextStyle(fontSize: 13),
+  //             textAlign: TextAlign.right,
+  //           ),
+  //         ],
+  //       ),
+  //     ));
+  //   }
+  //   return Container(
+  //     margin: EdgeInsets.all(8.0),
+  //     child: Column(
+  //       children: <Widget>[
+  //             Padding(
+  //               padding: const EdgeInsets.only(right: 8.0),
+  //               child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.end,
+  //                 children: <Widget>[
+  //                   AutoText(
+  //                     "نوع زمان مورد تایید پزشک",
+  //                     style:
+  //                         TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+  //                     textAlign: TextAlign.right,
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ] +
+  //           res,
+  //     ),
+  //   );
+  // }
 
   // AutoText _visitDurationTimeWidget() {
   //   return AutoText(
@@ -323,7 +323,6 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
               AutoText("مدت زمان ویزیت", style: TextStyle(fontSize: 16))
             ],
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -415,27 +414,27 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
 //        ),
 //      );
 
-  Row _enableVisitTimeWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        AutoText(
-          "تعیین وقت قبلی ویزیت مجازی",
-          textAlign: TextAlign.right,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        ),
-        Switch(
-          value: visitTimeChecked,
-          activeColor: IColors.themeColor,
-          onChanged: (bool value) {
-            setState(() {
-              visitTimeChecked = !visitTimeChecked;
-            });
-          },
-        )
-      ],
-    );
-  }
+  // Row _enableVisitTimeWidget() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.end,
+  //     children: <Widget>[
+  //       AutoText(
+  //         "تعیین وقت قبلی ویزیت مجازی",
+  //         textAlign: TextAlign.right,
+  //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+  //       ),
+  //       Switch(
+  //         value: visitTimeChecked,
+  //         activeColor: IColors.themeColor,
+  //         onChanged: (bool value) {
+  //           setState(() {
+  //             visitTimeChecked = !visitTimeChecked;
+  //           });
+  //         },
+  //       )
+  //     ],
+  //   );
+  // }
 
   _acceptPolicyWidget() => GestureDetector(
         onTap: () {
@@ -487,7 +486,7 @@ class _VirtualVisitPageState extends State<VirtualVisitPage>
         loading: this.submitLoadingToggle,
       );
 
-  _nowVisitCondition() => _isDoctorOnline() && !visitTimeChecked;
+  // _nowVisitCondition() => _isDoctorOnline() && !visitTimeChecked;
 
   _isDoctorOnline() => widget.doctorEntity.user.online == 1;
 

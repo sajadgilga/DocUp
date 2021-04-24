@@ -49,8 +49,7 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
   Map<int, QuestionAnswer> patientAnswers = HashMap();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  bool firstInitialized = false;
-  bool firstAnswersLoaded = false;
+  // bool firstAnswersLoaded = false;
 
   @override
   void initState() {
@@ -102,16 +101,12 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
                 screeningId: widget.testPageInitData.screeningId));
           }
         }
-
-        this.firstInitialized = true;
       } catch (e) {}
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
-    /// TODO: dirty code, remove extra block providers; there are three, and it can be reduced to 1
     return MaterialApp(
       home: Scaffold(
         key: _scaffoldKey,
@@ -121,16 +116,12 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
               bloc: _bloc,
               builder: (context, state) {
                 if (state is GetTestLoaded) {
-                  if (!firstAnswersLoaded) {
-                    patientAnswers = state.result.oldAnswers;
-                    firstAnswersLoaded = true;
-                  }
                   return _medicalTestWidget(state.result);
                 } else if (state is GetTestLoading)
                   return DocUpAPICallLoading2();
                 else
                   return APICallError(
-                        () {
+                    () {
                       _initialApiCall();
                     },
                   );
@@ -140,8 +131,11 @@ class _MedicalTestPageState extends State<MedicalTestPage> {
     );
   }
 
-
   _medicalTestWidget(MedicalTest test) {
+    // if (!firstAnswersLoaded) {
+    patientAnswers = test.oldAnswers;
+    // firstAnswersLoaded = true;
+    // }
     return BlocBuilder<EntityBloc, EntityState>(builder: (context, state) {
       if (state.mEntityStatus == BlocState.Loaded) {
         if (state.entity.mEntity != null) {

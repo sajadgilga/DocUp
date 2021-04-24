@@ -31,8 +31,8 @@ class Panel {
   List<PanelSection> section;
   Map<String, PanelSection> sections = {};
   List<String> sectionNames;
-  String modified_date;
-  String created_date;
+  String modifiedDate;
+  String createdDate;
   PatientEntity patient;
   DoctorEntity doctor;
 
@@ -46,9 +46,9 @@ class Panel {
       if (json.containsKey('enabled')) enabled = json['enabled'];
       if (json.containsKey('doctor')) doctorId = json['doctor'];
       if (json.containsKey('patient')) patientId = json['patient'];
-      modified_date =
+      modifiedDate =
           json.containsKey('modified_date') ? json['modified_date'] : null;
-      created_date =
+      createdDate =
           json.containsKey('created_date') ? json['created_date'] : null;
       section = [];
       if (json.containsKey('panel_image_sets')) {

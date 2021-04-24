@@ -131,20 +131,20 @@ class _MyPartnerItem extends StatelessWidget {
         ),
       );
 
-  Widget _tag(text) {
-    return Container(
-      padding: EdgeInsets.only(right: 10, left: 10),
-      margin: EdgeInsets.symmetric(horizontal: 5),
-      decoration: BoxDecoration(
-          color: IColors.themeColor,
-          borderRadius: BorderRadius.all(Radius.circular(7))),
-      child: AutoText(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.white, fontSize: 10),
-      ),
-    );
-  }
+  // Widget _tag(text) {
+  //   return Container(
+  //     padding: EdgeInsets.only(right: 10, left: 10),
+  //     margin: EdgeInsets.symmetric(horizontal: 5),
+  //     decoration: BoxDecoration(
+  //         color: IColors.themeColor,
+  //         borderRadius: BorderRadius.all(Radius.circular(7))),
+  //     child: AutoText(
+  //       text,
+  //       textAlign: TextAlign.center,
+  //       style: TextStyle(color: Colors.white, fontSize: 10),
+  //     ),
+  //   );
+  // }
 
   Widget _nameAndExpertise() {
     String utfName = "";

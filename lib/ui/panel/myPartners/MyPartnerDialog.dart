@@ -252,8 +252,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
       children: [
         _myPartnerItem(() {
           /// navigation
-          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
-          _panelSectionBloc.add(PanelSectionSelect(
+          BlocProvider.of<PanelSectionBloc>(context).add(PanelSectionSelect(
               patientSection: PatientPanelSection.DOCTOR_INTERFACE));
           widget.onPush(NavigatorRoutes.panel, widget.partner,
               textPlanRemainedTraffic, null, () => initialApiCall());
@@ -263,8 +262,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
             "ویزیت مجازی با پزشک خود را دنبال کنید", IColors.blue),
         _myPartnerItem(() {
           /// navigation
-          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
-          _panelSectionBloc.add(PanelSectionSelect(
+          BlocProvider.of<PanelSectionBloc>(context).add(PanelSectionSelect(
               patientSection: PatientPanelSection.HEALTH_FILE));
           widget.onPush(NavigatorRoutes.panel, widget.partner,
               textPlanRemainedTraffic, null, () => initialApiCall());
@@ -280,8 +278,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
         _myPartnerItem(() {
           /// navigation
 
-          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
-          _panelSectionBloc.add(PanelSectionSelect(
+          BlocProvider.of<PanelSectionBloc>(context).add(PanelSectionSelect(
               patientSection: PatientPanelSection.HEALTH_CALENDAR));
           widget.onPush(NavigatorRoutes.panel, widget.partner,
               textPlanRemainedTraffic, null, () => initialApiCall());
@@ -299,8 +296,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
         _myPartnerItem(() {
           /// navigation
 
-          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
-          _panelSectionBloc.add(PanelSectionSelect(
+          BlocProvider.of<PanelSectionBloc>(context).add(PanelSectionSelect(
               patientSection: PatientPanelSection.DOCTOR_INTERFACE));
           widget.onPush(NavigatorRoutes.panel, widget.partner,
               textPlanRemainedTraffic, null, () => initialApiCall());
@@ -311,8 +307,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
         _myPartnerItem(() {
           /// navigation
 
-          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
-          _panelSectionBloc.add(PanelSectionSelect(
+          BlocProvider.of<PanelSectionBloc>(context).add(PanelSectionSelect(
               patientSection: PatientPanelSection.HEALTH_FILE));
           widget.onPush(NavigatorRoutes.panel, widget.partner,
               textPlanRemainedTraffic, null, () => initialApiCall());
@@ -329,8 +324,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
         _myPartnerItem(() {
           /// navigation
 
-          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
-          _panelSectionBloc.add(PanelSectionSelect(
+          BlocProvider.of<PanelSectionBloc>(context).add(PanelSectionSelect(
               patientSection: PatientPanelSection.HEALTH_CALENDAR));
           widget.onPush(NavigatorRoutes.panel, widget.partner,
               textPlanRemainedTraffic, null, () => initialApiCall());
@@ -341,8 +335,7 @@ class _MyPartnerDialogState extends State<MyPartnerDialog> {
 
         _myPartnerItem(() {
           /// navigation
-          var _panelSectionBloc = BlocProvider.of<PanelSectionBloc>(context);
-          _panelSectionBloc.add(PanelSectionSelect(
+          BlocProvider.of<PanelSectionBloc>(context).add(PanelSectionSelect(
               patientSection: PatientPanelSection.HEALTH_FILE));
           var _state = BlocProvider.of<EntityBloc>(context).state;
           widget.onPush(

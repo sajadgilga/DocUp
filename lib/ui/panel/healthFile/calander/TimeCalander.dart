@@ -1,10 +1,7 @@
 import 'package:Neuronio/blocs/MedicineBloc.dart';
-import 'package:Neuronio/constants/colors.dart';
-import 'package:Neuronio/constants/strings.dart';
 import 'package:Neuronio/models/Medicine.dart';
 import 'package:Neuronio/models/UserEntity.dart';
 import 'package:Neuronio/ui/panel/partnerContact/chatPage/PartnerInfo.dart';
-import 'package:Neuronio/ui/widgets/AutoText.dart';
 import 'package:Neuronio/ui/widgets/TimeSelectorWidget.dart';
 import 'package:Neuronio/ui/widgets/VerticalSpace.dart';
 import 'package:Neuronio/utils/Utils.dart';
@@ -45,42 +42,42 @@ class _TimeCalenderState extends State<TimeCalender> {
     super.dispose();
   }
 
-  Widget _drugNameField(context) => TextField(
-        controller: _drugNameController,
-        onSubmitted: (text) {
-          FocusScope.of(context).requestFocus(nodes[0]);
-        },
-        textAlign: TextAlign.end,
-        textDirection: TextDirection.ltr,
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          hintText: InAppStrings.drugNameTextFieldHint,
-        ),
-      );
+  // Widget _drugNameField(context) => TextField(
+  //       controller: _drugNameController,
+  //       onSubmitted: (text) {
+  //         FocusScope.of(context).requestFocus(nodes[0]);
+  //       },
+  //       textAlign: TextAlign.end,
+  //       textDirection: TextDirection.ltr,
+  //       textInputAction: TextInputAction.next,
+  //       decoration: InputDecoration(
+  //         hintText: InAppStrings.drugNameTextFieldHint,
+  //       ),
+  //     );
 
-  Widget _countField(context) => TextField(
-        controller: _countController,
-        focusNode: nodes[0],
-        onSubmitted: (text) {
-          FocusScope.of(context).requestFocus(nodes[1]);
-        },
-        textAlign: TextAlign.end,
-        textDirection: TextDirection.ltr,
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          hintText: InAppStrings.countTextFieldHint,
-        ),
-      );
-
-  Widget _periodField(context) => TextField(
-        controller: _periodController,
-        focusNode: nodes[1],
-        textAlign: TextAlign.end,
-        textDirection: TextDirection.ltr,
-        decoration: InputDecoration(
-          hintText: InAppStrings.periodTextFieldHint,
-        ),
-      );
+  // Widget _countField(context) => TextField(
+  //       controller: _countController,
+  //       focusNode: nodes[0],
+  //       onSubmitted: (text) {
+  //         FocusScope.of(context).requestFocus(nodes[1]);
+  //       },
+  //       textAlign: TextAlign.end,
+  //       textDirection: TextDirection.ltr,
+  //       textInputAction: TextInputAction.next,
+  //       decoration: InputDecoration(
+  //         hintText: InAppStrings.countTextFieldHint,
+  //       ),
+  //     );
+  //
+  // Widget _periodField(context) => TextField(
+  //       controller: _periodController,
+  //       focusNode: nodes[1],
+  //       textAlign: TextAlign.end,
+  //       textDirection: TextDirection.ltr,
+  //       decoration: InputDecoration(
+  //         hintText: InAppStrings.periodTextFieldHint,
+  //       ),
+  //     );
 
   void _submit() {
     String name = _drugNameController.text;
@@ -114,30 +111,30 @@ class _TimeCalenderState extends State<TimeCalender> {
         });
   }
 
-  Widget _submitButton(context) => Container(
-      alignment: Alignment.center,
-      child: InkWell(
-        child: GestureDetector(
-          onTap: () {
-            _submit();
-          },
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-                color: IColors.themeColor),
-            padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
-            margin: EdgeInsets.only(top: 60, bottom: 30),
-            child: AutoText(
-              InAppStrings.submitDrugLabel,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      ));
+  // Widget _submitButton(context) => Container(
+  //     alignment: Alignment.center,
+  //     child: InkWell(
+  //       child: GestureDetector(
+  //         onTap: () {
+  //           _submit();
+  //         },
+  //         child: Container(
+  //           decoration: BoxDecoration(
+  //               borderRadius: BorderRadius.all(Radius.circular(8)),
+  //               color: IColors.themeColor),
+  //           padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
+  //           margin: EdgeInsets.only(top: 60, bottom: 30),
+  //           child: AutoText(
+  //             InAppStrings.submitDrugLabel,
+  //             textAlign: TextAlign.center,
+  //             style: TextStyle(
+  //                 fontSize: 14,
+  //                 color: Colors.white,
+  //                 fontWeight: FontWeight.bold),
+  //           ),
+  //         ),
+  //       ),
+  //     ));
 
   @override
   Widget build(BuildContext context) {

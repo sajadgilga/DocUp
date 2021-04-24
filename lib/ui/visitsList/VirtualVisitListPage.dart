@@ -16,14 +16,11 @@ class VirtualVisitList extends StatelessWidget {
   final Function(String, UserEntity) onPush;
   TextEditingController _controller = TextEditingController();
 
-
   VirtualVisitList({@required this.onPush});
 
   void _search(context) {
-    BlocProvider.of<SearchBloc>(context).add(SearchVisit(
-        text: _controller.text,
-        acceptStatus: 1,
-        visitType: 1));
+    BlocProvider.of<SearchBloc>(context).add(
+        SearchVisit(text: _controller.text, acceptStatus: 1, visitType: 1));
 
 //    FocusScope.of(context).unfocus();
 //     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -31,10 +28,8 @@ class VirtualVisitList extends StatelessWidget {
 
   void _initialSearch(context) {
     BlocProvider.of<SearchBloc>(context).add(SearchLoadingEvent());
-    BlocProvider.of<SearchBloc>(context).add(SearchVisit(
-        text: _controller.text,
-        acceptStatus: 1,
-        visitType: 1));
+    BlocProvider.of<SearchBloc>(context).add(
+        SearchVisit(text: _controller.text, acceptStatus: 1, visitType: 1));
   }
 
   void dispose() {
@@ -205,7 +200,6 @@ class VirtualVisitList extends StatelessWidget {
                     MediaQuery.of(context).size.height * (30 / 100),
                     0,
                     0),
-                selectedIndex: 0,
                 onMenuClick: null,
                 hintText: "نام بیمار",
                 filterPopup: false,

@@ -51,8 +51,8 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
 
   void _doneAndClosePage() {
     if (visitType == 0 || visitType == 1) {
-      BlocProvider.of<SearchBloc>(context).add(
-          SearchVisit(text: '', acceptStatus: 1, visitType: visitType));
+      BlocProvider.of<SearchBloc>(context)
+          .add(SearchVisit(text: '', acceptStatus: 1, visitType: visitType));
     } else {
       BlocProvider.of<SearchBloc>(context)
           .add(SearchVisit(text: '', acceptStatus: 0));
@@ -73,8 +73,6 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
     _bloc.responseVisitStream.listen((data) {
       if (data.status == Status.COMPLETED) {
         submitLoadingToggle = false;
-
-
 
         if (data.data.status == 1) {
           if (CrossPlatformDeviceDetection.isAndroid) {
@@ -292,9 +290,9 @@ class _PatientRequestPageState extends State<PatientRequestPage> {
         ),
       );
 
-  int _calculatePossiblePicCount(width) {
-    return ((width - 50) / 160).toInt();
-  }
+  // int _calculatePossiblePicCount(width) {
+  //   return ((width - 50) / 160).toInt();
+  // }
 
   Widget descriptionBox(String title, Widget titleIcon, {Widget child}) {
     double minHeight =

@@ -226,7 +226,6 @@ class PhysicalVisitList extends StatelessWidget {
                     MediaQuery.of(context).size.height * (30 / 100),
                     0,
                     0),
-                selectedIndex: 0,
                 onMenuClick: null,
                 hintText: "نام بیمار",
                 filterPopup: false,

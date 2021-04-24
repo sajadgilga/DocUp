@@ -52,7 +52,9 @@ class _InputFieldState extends State<InputField> {
       textAlign: TextAlign.right,
       keyboardType: widget.textInputType,
       maxLength: widget.maxChars,
-      maxLengthEnforcement: widget.maxChars == null ? MaxLengthEnforcement.none : MaxLengthEnforcement.enforced,
+      maxLengthEnforcement: widget.maxChars == null
+          ? MaxLengthEnforcement.none
+          : MaxLengthEnforcement.enforced,
       validator: (value) {
         if (widget.validationCallback(value)) {
           return null;

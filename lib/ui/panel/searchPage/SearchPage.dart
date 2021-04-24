@@ -230,7 +230,6 @@ class PartnerSearchPageState extends State<PartnerSearchPage> {
                   0,
                   MediaQuery.of(context).size.width * 2,
                   MediaQuery.of(context).size.height * (2.5 / 100)),
-              selectedIndex: 0,
               onMenuClick: (MenuItemProvider item) {
                 filterString = item.menuTitle;
                 _search(context);

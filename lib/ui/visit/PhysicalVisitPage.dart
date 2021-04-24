@@ -170,64 +170,64 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
     );
   }
 
-  Widget _doctorDurationPlanInfo() {
-    List<Widget> res = [];
-    widget.doctorEntity.plan.physicalVisitDurationPlan?.forEach((values) {
-      res.add(Padding(
-        padding: const EdgeInsets.only(right: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            AutoText(
-              ((values + 1) * DoctorPlan.hourMinutePart).toString() +
-                  " " +
-                  "دقیقه ای",
-              style: TextStyle(fontSize: 13),
-              textAlign: TextAlign.right,
-            ),
-          ],
-        ),
-      ));
-    });
-    if ((widget.doctorEntity?.plan?.physicalVisitDurationPlan ?? []).length ==
-        0) {
-      res.add(Padding(
-        padding: const EdgeInsets.only(right: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            AutoText(
-              "زمانی مورد تایید پزشک وجود ندارد!",
-              style: TextStyle(fontSize: 13),
-              textAlign: TextAlign.right,
-            ),
-          ],
-        ),
-      ));
-    }
-    return Container(
-      margin: EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    AutoText(
-                      "نوع زمان مورد تایید پزشک",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      textAlign: TextAlign.right,
-                    ),
-                  ],
-                ),
-              ),
-            ] +
-            res,
-      ),
-    );
-  }
+  // Widget _doctorDurationPlanInfo() {
+  //   List<Widget> res = [];
+  //   widget.doctorEntity.plan.physicalVisitDurationPlan?.forEach((values) {
+  //     res.add(Padding(
+  //       padding: const EdgeInsets.only(right: 8.0),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         children: <Widget>[
+  //           AutoText(
+  //             ((values + 1) * DoctorPlan.hourMinutePart).toString() +
+  //                 " " +
+  //                 "دقیقه ای",
+  //             style: TextStyle(fontSize: 13),
+  //             textAlign: TextAlign.right,
+  //           ),
+  //         ],
+  //       ),
+  //     ));
+  //   });
+  //   if ((widget.doctorEntity?.plan?.physicalVisitDurationPlan ?? []).length ==
+  //       0) {
+  //     res.add(Padding(
+  //       padding: const EdgeInsets.only(right: 8.0),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         children: <Widget>[
+  //           AutoText(
+  //             "زمانی مورد تایید پزشک وجود ندارد!",
+  //             style: TextStyle(fontSize: 13),
+  //             textAlign: TextAlign.right,
+  //           ),
+  //         ],
+  //       ),
+  //     ));
+  //   }
+  //   return Container(
+  //     margin: EdgeInsets.all(8.0),
+  //     child: Column(
+  //       children: <Widget>[
+  //             Padding(
+  //               padding: const EdgeInsets.only(right: 8.0),
+  //               child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.end,
+  //                 children: <Widget>[
+  //                   AutoText(
+  //                     "نوع زمان مورد تایید پزشک",
+  //                     style:
+  //                         TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+  //                     textAlign: TextAlign.right,
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ] +
+  //           res,
+  //     ),
+  //   );
+  // }
 
   _priceAndDurationWidget() => Column(
         children: [
@@ -245,7 +245,6 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
               AutoText("مدت زمان ویزیت", style: TextStyle(fontSize: 16))
             ],
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -286,49 +285,49 @@ class _PhysicalVisitPageState extends State<PhysicalVisitPage>
         : _planMinuteDurationController.text;
   }
 
-  _visitTypeWidget(String title, Map<int, String> items,
-      {double width = 120, double height = 40, double fontSize = 17}) {
-    List<Widget> res = [];
-    items.forEach((key, value) {
-      res.add(Padding(
-        padding: const EdgeInsets.only(right: 4.0, left: 4.0),
-        child: ActionButton(
-          width: width,
-          height: height,
-          fontSize: fontSize,
-          color: typeSelected[title] == key ? IColors.themeColor : Colors.grey,
-          title: items[key],
-          callBack: () {
-            setState(() {
-              typeSelected[title] = key;
-            });
-          },
-        ),
-      ));
-    });
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              AutoText(
-                title,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                textAlign: TextAlign.right,
-              ),
-            ],
-          ),
-        ),
-        ALittleVerticalSpace(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: res,
-        )
-      ],
-    );
-  }
+  // _visitTypeWidget(String title, Map<int, String> items,
+  //     {double width = 120, double height = 40, double fontSize = 17}) {
+  //   List<Widget> res = [];
+  //   items.forEach((key, value) {
+  //     res.add(Padding(
+  //       padding: const EdgeInsets.only(right: 4.0, left: 4.0),
+  //       child: ActionButton(
+  //         width: width,
+  //         height: height,
+  //         fontSize: fontSize,
+  //         color: typeSelected[title] == key ? IColors.themeColor : Colors.grey,
+  //         title: items[key],
+  //         callBack: () {
+  //           setState(() {
+  //             typeSelected[title] = key;
+  //           });
+  //         },
+  //       ),
+  //     ));
+  //   });
+  //   return Column(
+  //     children: <Widget>[
+  //       Padding(
+  //         padding: const EdgeInsets.only(right: 8.0),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.end,
+  //           children: <Widget>[
+  //             AutoText(
+  //               title,
+  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+  //               textAlign: TextAlign.right,
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       ALittleVerticalSpace(),
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         children: res,
+  //       )
+  //     ],
+  //   );
+  // }
 
   // _getVisitTimes() {
   //   if (widget.doctorEntity.plan.weeklyWorkTimes == null) return [];

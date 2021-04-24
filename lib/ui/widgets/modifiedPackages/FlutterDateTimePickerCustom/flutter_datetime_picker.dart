@@ -239,10 +239,7 @@ class _DatePickerRoute<T> extends PopupRoute<T> {
 
 class _DatePickerComponent extends StatefulWidget {
   _DatePickerComponent(
-      {@required this.route,
-      this.onChanged,
-      this.locale,
-      this.pickerModel});
+      {@required this.route, this.onChanged, this.locale, this.pickerModel});
 
   final DateChangedCallback onChanged;
 
