@@ -259,7 +259,7 @@ There are different kinds of notification types:
   - New Chat Message
   - ...
 
-By clicking on push notifications in android bar or in notoification page app should navigate to a specific page. There is a class defined in **/services/NotificationNavigationService.dart** named **NotificationNavigationService**. Main function of this calss is **navigate** that manage page navigation:
+By clicking on push notifications in android bar or in notification page app should navigate to a specific page. There is a class defined in **/services/NotificationNavigationService.dart** named **NotificationNavigationService**. Main function of this calss is **navigate** that manage page navigation:
 
     void navigate(BuildContext context, NewestNotif newestNotifs) {
        EntityAndPanelUpdater.processOnEntityLoad((entity) {
